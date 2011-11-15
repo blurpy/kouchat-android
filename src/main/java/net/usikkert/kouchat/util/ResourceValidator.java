@@ -1,0 +1,90 @@
+
+/***************************************************************************
+ *   Copyright 2006-2009 by Christian Ihle                                 *
+ *   kontakt@usikkert.net                                                  *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+package net.usikkert.kouchat.util;
+
+import java.net.URL;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * This class validates if any resources are missing.
+ *
+ * @author Christian Ihle
+ */
+public class ResourceValidator
+{
+	/** The map of resources to validate. */
+	private final Map<String, URL> resourceMap;
+
+	/**
+	 * Constructor.
+	 */
+	public ResourceValidator()
+	{
+		resourceMap = new HashMap<String, URL>();
+	}
+
+	/**
+	 * Clears all the added resources from the validation list.
+	 */
+	public void clearResources()
+	{
+		resourceMap.clear();
+	}
+
+	/**
+	 * Adds a resource to be validated.
+	 *
+	 * @param resource The resource to check.
+	 * @param location The location of the resource.
+	 */
+	public void addResource( final URL resource, final String location )
+	{
+		resourceMap.put( location, resource );
+	}
+
+	/**
+	 * Checks if any of the resources were not loaded, and returns a
+	 * string with a list of the locations of the missing resources.
+	 * Each location is on a separate line.
+	 *
+	 * @return A list of the resources that has not been loaded.
+	 */
+	public String validate()
+	{
+		StringBuilder missingResourceList = new StringBuilder();
+
+		for ( String location : resourceMap.keySet() )
+		{
+			if ( resourceMap.get( location ) == null )
+			{
+				if ( missingResourceList.length() != 0 )
+					missingResourceList.append( "\n" );
+
+				missingResourceList.append( location );
+			}
+		}
+
+		return missingResourceList.toString();
+	}
+}

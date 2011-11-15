@@ -1,0 +1,148 @@
+
+- KouChat v1.1.0 Frequently Asked Questions
+
+1. What is Kou?
+
+Kou is a special cow character I've made. You can see Kou at the Super Kou
+project page http://superkou.googlecode.com/
+Kou is pronounced kind of like cows say mooooooo.
+
+
+2. KouChat crashed, doesn't connect, or behaves strangely.
+
+First, make sure you are using the latest version. When you do, the easiest
+way to find the problem is for you to run KouChat from the console, like this:
+'java -jar kouchat-x.x.x.jar'
+
+If you see any errors, write them down. If nothing of interest shows up,
+then you can try enabling debug output by running KouChat like this:
+'java -jar kouchat-x.x.x.jar --debug'
+
+Please check the wiki at http://kouchat.googlecode.com/ for help as well.
+
+When you can reproduce the problem, report it as an issue on
+http://kouchat.googlecode.com/ with as many details as possible.
+
+
+3. I minimized KouChat, and it's not visible on the taskbar anymore.
+
+Have a look in the system tray. There should be a small black and white icon
+there with a cow pattern. Click on it to open KouChat again.
+
+
+4. How do I change my nick name?
+
+Open the Tools menu, and choose Settings.
+
+
+5. How do I send files?
+
+Right click on a user in the user list on the right side, and choose
+"Send file". You can also drag and drop a file on a user in the list,
+or in a private chat window.
+
+
+6. How do I open a private chat?
+
+You can double click on a user in the user list, or you can right click on a
+user in the user list and choose "Private chat".
+
+
+7. The file chooser is horribly slow in Windows XP.
+
+This is a Java bug, see
+http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6578753
+As a workaround you can move any zip-files lying on the desktop
+to some other folder.
+
+
+8. How do I enable console mode?
+
+From a console, run KouChat like this:
+'java -jar kouchat-x.x.x.jar --console'
+See /help for a list of commands you can use while in console mode.
+
+
+9. How come some messages don't show up in other clients?
+
+That's probably because of packet loss. KouChat uses the UDP protocol,
+which does not resend lost packets. Packet loss is usually not a problem
+in wired networks, but wireless networks might have some loss.
+
+
+10. Where do the log files go?
+
+The logs are put in the ~/.kouchat/logs/ folder, sorted by date and time
+of creation. For those wondering, ~ means home folder.
+
+Examples:
+
+* Windows XP - C:\Documents and Settings\Your Username\.kouchat\logs\
+* Windows Vista - C:\Users\Your Username\.kouchat\logs\
+* Linux - /home/username/.kouchat/logs/
+
+
+11. Why do non-ascii characters look wrong when using console mode in Windows?
+
+That's because the Windows console uses the old DOS character sets instead of
+the normal Windows character sets. A common DOS charset is cp850 and a
+common Windows charset is cp1252. I've found 2 ways to go around this problem:
+
+* Change the console charset to match the Windows charset.
+  If your Windows charset is cp1252, just run the command 'chcp 1252' before
+  starting KouChat like normal. For this to work you need a console font
+  which supports the chosen charset, like Lucida Console.
+
+* Change the Java charset to match the console charset.
+  You can get the current console charset by running the command 'chcp'.
+  Then use the charset number when starting KouChat:
+  'java -Dfile.encoding=850 -jar kouchat-x.x.x.jar --console'.
+
+
+12. Why don't I have the Nimbus look and feel?
+
+Nimbus is a new look and feel that comes with Java 6 update 10 and newer.
+If you don't see Nimbus in the list, then you need to update to the
+newest version of Java.
+
+
+13. Where can I find an icon to use for shortcuts?
+
+There is an icon available inside kouchat-x.x.x.jar, in two different
+formats:
+
+* kou_shortcut.ico
+* kou_shortcut.png
+
+To find these, you can just open the jar file in a decompression utility
+like WinZip or 7-Zip.
+
+
+14. Which smileys are available?
+
+There are 11 different smileys available, for different needs. Try them :)
+
+* :)
+* :(
+* :p
+* :D
+* ;)
+* :O
+* :@
+* :S
+* ;(
+* :$
+* 8)
+
+
+15. Why is the window sometimes only maximized vertically or horizontally
+after being unhidden from the system tray?
+
+I don't know! But I'm unable to reproduce the problem using early
+versions of Java 7, so I'm guessing it's not my bug ;) 
+
+
+16. I have a great suggestion for a new feature. What do I do?
+
+Cool :) Just register the suggestion on the issue tracker at
+http://kouchat.googlecode.com/ with "feature request" in the title.
