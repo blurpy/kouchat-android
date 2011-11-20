@@ -19,7 +19,7 @@
  *   along with KouChat. If not, see <http://www.gnu.org/licenses/>.       *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android;
+package net.usikkert.kouchat.android.controller;
 
 import android.app.Activity;
 import android.os.Bundle;

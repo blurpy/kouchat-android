@@ -11,7 +11,7 @@
                android:icon="@drawable/kou_shortcut"
                android:debuggable="true">
 
-    <activity android:name=".MainChatController">
+    <activity android:name=".controller.MainChatController">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
