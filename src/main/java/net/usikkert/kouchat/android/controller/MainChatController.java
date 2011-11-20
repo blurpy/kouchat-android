@@ -29,9 +29,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Controller for the main chat.
@@ -60,6 +65,9 @@ public class MainChatController extends Activity {
 
     private Intent chatServiceIntent;
     private final ChatServiceConnection chatServiceConnection;
+    private EditText mainChatInput;
+    private ListView mainChatUserList;
+    private TextView mainChatView;
 
     public MainChatController() {
         System.out.println("MainChatController " + this + ": constructor !!!!!!!!!!!!!");
@@ -75,8 +83,30 @@ public class MainChatController extends Activity {
 
         setContentView(R.layout.main_chat);
         chatServiceIntent = createChatServiceIntent();
+
+        mainChatInput = (EditText) findViewById(R.id.mainChatInput);
+        mainChatUserList = (ListView) findViewById(R.id.mainChatUserList);
+        mainChatView = (TextView) findViewById(R.id.mainChatView);
+
         startService(chatServiceIntent);
         bindService(chatServiceIntent, chatServiceConnection, Context.BIND_NOT_FOREGROUND);
+
+        registerMainChatInputListener();
+    }
+
+    private void registerMainChatInputListener() {
+        mainChatInput.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    mainChatView.append(mainChatInput.getText() + "\n");
+                    mainChatInput.setText("");
+
+                    return true;
+                }
+
+                return false;
+            }
+        });
     }
 
     @Override
