@@ -19,28 +19,65 @@
  *   along with KouChat. If not, see <http://www.gnu.org/licenses/>.       *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android.controller;
+package net.usikkert.kouchat.android.service;
 
-import android.app.Activity;
-import android.os.Bundle;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
 
 /**
- * Controller for the main chat.
+ * Service for accessing the chat operations in lower layers.
  *
  * @author Christian Ihle
  */
-public class MainChatController extends Activity {
+public class ChatService extends Service {
+
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        System.out.println("MainChatController " + this + ": onCreate !!!!!!!!!!!!!");
+    public void onCreate() {
+        System.out.println("ChatService " + this + ": onCreate !!!!!!!!!!!!!");
 
-        super.onCreate(savedInstanceState);
+        super.onCreate();
     }
 
     @Override
-    protected void onDestroy() {
-        System.out.println("MainChatController " + this + ": onDestroy !!!!!!!!!!!!!");
+    public void onStart(final Intent intent, final int startId) {
+        System.out.println("ChatService " + this + ": onStart !!!!!!!!!!!!! " + startId);
+
+        super.onStart(intent, startId);
+    }
+
+    @Override
+    public int onStartCommand(final Intent intent, final int flags, final int startId) {
+        System.out.println("ChatService " + this + ": onStartCommand !!!!!!!!!!!!! " + startId);
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public IBinder onBind(final Intent intent) {
+        System.out.println("ChatService " + this + ": onBind !!!!!!!!!!!!!");
+
+        return null;
+    }
+
+    @Override
+    public boolean onUnbind(final Intent intent) {
+        System.out.println("ChatService " + this + ": onUnbind !!!!!!!!!!!!!");
+
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onRebind(final Intent intent) {
+        System.out.println("ChatService " + this + ": onRebind !!!!!!!!!!!!!");
+
+        super.onRebind(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        System.out.println("ChatService " + this + ": onDestroy !!!!!!!!!!!!!");
 
         super.onDestroy();
     }
