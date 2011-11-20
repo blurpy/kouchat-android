@@ -19,23 +19,9 @@
  *   along with KouChat. If not, see <http://www.gnu.org/licenses/>.       *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android;
-
-import android.app.Activity;
-import android.os.Bundle;
-
 /**
- * Controller for the main chat.
+ * This package contains Android specific classes.
  *
  * @author Christian Ihle
  */
-public class MainChatController extends Activity {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-}
+package net.usikkert.kouchat.android;
