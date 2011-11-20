@@ -21,6 +21,8 @@
 
 package net.usikkert.kouchat.android.service;
 
+import net.usikkert.kouchat.Constants;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -31,6 +33,11 @@ import android.os.IBinder;
  * @author Christian Ihle
  */
 public class ChatService extends Service {
+
+    public ChatService() {
+        System.out.println("ChatService " + this + ": constructor !!!!!!!!!!!!!");
+        System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
+    }
 
     @Override
     public void onCreate() {

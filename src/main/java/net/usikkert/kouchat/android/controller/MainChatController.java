@@ -35,6 +35,10 @@ import android.os.Bundle;
  */
 public class MainChatController extends Activity {
 
+    public MainChatController() {
+        System.out.println("MainChatController " + this + ": constructor !!!!!!!!!!!!!");
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         System.out.println("MainChatController " + this + ": onCreate !!!!!!!!!!!!!");
