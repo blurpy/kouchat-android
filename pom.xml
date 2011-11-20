@@ -3,10 +3,10 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.usikkert.kouchat</groupId>
-  <artifactId>kouchat</artifactId>
-  <packaging>jar</packaging>
-  <version>1.1.0-dev</version>
-  <name>KouChat</name>
+  <artifactId>kouchat-android</artifactId>
+  <packaging>apk</packaging>
+  <version>0.1-SNAPSHOT</version>
+  <name>KouChat for Android</name>
   <url>http://kouchat.googlecode.com/</url>
   <description>
     KouChat is a simple serverless chat client for local area networks.
@@ -85,10 +85,33 @@
           <testFailureIgnore>true</testFailureIgnore>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+        <artifactId>android-maven-plugin</artifactId>
+        <version>3.0.0-alpha-14</version>
+        <configuration>
+          <sdk>
+            <platform>10</platform>
+          </sdk>
+          <emulator>
+            <avd>Android-2.3.3-API-10</avd>
+          </emulator>
+          <deleteConflictingFiles>true</deleteConflictingFiles>
+          <undeployBeforeDeploy>true</undeployBeforeDeploy>
+        </configuration>
+        <extensions>true</extensions>
+      </plugin>
     </plugins>
   </build>
 
   <dependencies>
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>android</artifactId>
+      <version>2.3.3</version>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
