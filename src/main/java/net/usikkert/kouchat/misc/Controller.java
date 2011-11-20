@@ -45,7 +45,6 @@ import net.usikkert.kouchat.net.PrivateMessageParser;
 import net.usikkert.kouchat.net.PrivateMessageResponder;
 import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.ui.UserInterface;
-import net.usikkert.kouchat.util.JMXAgent;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
@@ -119,7 +118,6 @@ public class Controller implements NetworkConnectionListener
 		networkService.registerNetworkConnectionListener( this );
 		msgController = ui.getMessageController();
 
-		new JMXAgent( this, networkService.getConnectionWorker() );
 		new DayTimer( ui );
 		idleThread.start();
 
