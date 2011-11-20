@@ -21,6 +21,8 @@
 
 package net.usikkert.kouchat.android.controller;
 
+import net.usikkert.kouchat.android.R;
+
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -36,6 +38,8 @@ public class MainChatController extends Activity {
         System.out.println("MainChatController " + this + ": onCreate !!!!!!!!!!!!!");
 
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.main_chat);
     }
 
     @Override

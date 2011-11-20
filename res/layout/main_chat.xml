@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:id="@+id/mainChatView"
+        android:background="#fff"
+        android:layout_weight="1"/>
+
+    <ListView android:id="@+id/mainChatUserList"
+              android:layout_width="110sp"
+              android:layout_height="fill_parent"
+              android:layout_weight="0"/>
+
+  </LinearLayout>
+
+  <EditText android:id="@+id/mainChatInput"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:imeOptions="actionNone"
+            android:layout_weight="0"
+            android:maxLines="1"/>
+
+</LinearLayout>
