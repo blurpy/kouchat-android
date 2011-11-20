@@ -29,6 +29,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Layout;
+import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -92,6 +94,7 @@ public class MainChatController extends Activity {
         bindService(chatServiceIntent, chatServiceConnection, Context.BIND_NOT_FOREGROUND);
 
         registerMainChatInputListener();
+        makeMainChatViewScrollable();
     }
 
     private void registerMainChatInputListener() {
@@ -100,6 +103,7 @@ public class MainChatController extends Activity {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     mainChatView.append(mainChatInput.getText() + "\n");
                     mainChatInput.setText("");
+                    scrollMainChatViewToBottom();
 
                     return true;
                 }
@@ -107,6 +111,31 @@ public class MainChatController extends Activity {
                 return false;
             }
         });
+    }
+
+    private void makeMainChatViewScrollable() {
+        mainChatView.setMovementMethod(new ScrollingMovementMethod());
+    }
+
+    private void scrollMainChatViewToBottom() {
+        final Layout layout = mainChatView.getLayout();
+
+        // Happens sometimes when activity is hidden
+        if (layout == null) {
+            return;
+
+        }
+
+        final int scrollAmount = layout.getLineTop(mainChatView.getLineCount()) - mainChatView.getHeight();
+
+        // if there is no need to scroll, scrollAmount will be <=0
+        if (scrollAmount > 0) {
+            mainChatView.scrollTo(0, scrollAmount);
+        }
+
+        else {
+            mainChatView.scrollTo(0, 0);
+        }
     }
 
     @Override
