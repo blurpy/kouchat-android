@@ -2,6 +2,9 @@
 <!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.1//EN" "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 
 <suppressions>
-  <suppress checks="JavadocMethod" files="[/\\]test[/\\]"/>
-  <suppress checks="JavadocPackage" files="[/\\]test[/\\]"/>
+  <suppress checks="MagicNumber" files="[/\\]test[/\\]java[/\\]"/>
+  <suppress checks="JavadocMethod" files="[/\\]test[/\\]java[/\\]"/>
+  <suppress checks="JavadocPackage" files="[/\\]test[/\\]java[/\\]"/>
+  <suppress checks="HideUtilityClassConstructor" files="[/\\]test[/\\]java[/\\]"/>
+  <suppress checks="VisibilityModifier" files="[/\\]test[/\\]java[/\\]"/>
 </suppressions>
