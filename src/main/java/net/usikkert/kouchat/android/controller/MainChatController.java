@@ -21,9 +21,12 @@
 
 package net.usikkert.kouchat.android.controller;
 
+import java.util.ArrayList;
+
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceConnection;
+import net.usikkert.kouchat.misc.User;
 
 import android.app.Activity;
 import android.content.Context;
@@ -36,6 +39,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -95,6 +99,8 @@ public class MainChatController extends Activity {
 
         registerMainChatInputListener();
         makeMainChatViewScrollable();
+        setupMainChatUserList();
+        openKeyboard();
     }
 
     private void registerMainChatInputListener() {
@@ -115,6 +121,21 @@ public class MainChatController extends Activity {
 
     private void makeMainChatViewScrollable() {
         mainChatView.setMovementMethod(new ScrollingMovementMethod());
+    }
+
+    private void setupMainChatUserList() {
+        final ArrayAdapter<User> users = new ArrayAdapter<User>(this,
+                R.layout.main_chat_user_list_row, R.id.mainChatUserListLabel,
+                new ArrayList<User>());
+
+        users.add(new User("User 1", 1));
+        users.add(new User("User 2", 2));
+
+        mainChatUserList.setAdapter(users);
+    }
+
+    private void openKeyboard() {
+        mainChatInput.requestFocus();
     }
 
     private void scrollMainChatViewToBottom() {
