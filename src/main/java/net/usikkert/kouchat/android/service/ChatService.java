@@ -32,7 +32,6 @@ import android.os.IBinder;
  */
 public class ChatService extends Service {
 
-
     @Override
     public void onCreate() {
         System.out.println("ChatService " + this + ": onCreate !!!!!!!!!!!!!");

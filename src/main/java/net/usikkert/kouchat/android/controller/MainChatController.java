@@ -22,8 +22,10 @@
 package net.usikkert.kouchat.android.controller;
 
 import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.android.service.ChatService;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 /**
@@ -40,6 +42,7 @@ public class MainChatController extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_chat);
+        startService(createChatServiceIntent());
     }
 
     @Override
@@ -47,5 +50,11 @@ public class MainChatController extends Activity {
         System.out.println("MainChatController " + this + ": onDestroy !!!!!!!!!!!!!");
 
         super.onDestroy();
+
+        stopService(createChatServiceIntent());
+    }
+
+    private Intent createChatServiceIntent() {
+        return new Intent(this, ChatService.class);
     }
 }
