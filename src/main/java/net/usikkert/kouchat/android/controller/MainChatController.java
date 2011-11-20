@@ -23,8 +23,10 @@ package net.usikkert.kouchat.android.controller;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.service.ChatService;
+import net.usikkert.kouchat.android.service.ChatServiceConnection;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -34,12 +36,35 @@ import android.view.MenuItem;
 /**
  * Controller for the main chat.
  *
+ * <p>Life cycle:</p>
+ * <ul>
+ *   <li>Application starts:
+ *       <ul>
+ *           <li>ChatService is created</li>
+ *           <li>ChatService is bound</li>
+ *       </ul>
+ *   </li>
+ *   <li>Application is hidden: ChatService is unbound</li>
+ *   <li>Application is shown: ChatService is bound</li>
+ *   <li>Application shuts down:
+ *       <ul>
+ *           <li>ChatService is unbound</li>
+ *           <li>ChatService is stopped</li>
+ *       </ul>
+ *   </li>
+ * </ul>
+ *
  * @author Christian Ihle
  */
 public class MainChatController extends Activity {
 
+    private Intent chatServiceIntent;
+    private final ChatServiceConnection chatServiceConnection;
+
     public MainChatController() {
         System.out.println("MainChatController " + this + ": constructor !!!!!!!!!!!!!");
+
+        chatServiceConnection = new ChatServiceConnection();
     }
 
     @Override
@@ -49,16 +74,18 @@ public class MainChatController extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_chat);
-        startService(createChatServiceIntent());
+        chatServiceIntent = createChatServiceIntent();
+        startService(chatServiceIntent);
+        bindService(chatServiceIntent, chatServiceConnection, Context.BIND_NOT_FOREGROUND);
     }
 
     @Override
     protected void onDestroy() {
         System.out.println("MainChatController " + this + ": onDestroy !!!!!!!!!!!!!");
 
-        super.onDestroy();
+        unbindService(chatServiceConnection);
 
-        stopService(createChatServiceIntent());
+        super.onDestroy();
     }
 
     /**
@@ -94,6 +121,7 @@ public class MainChatController extends Activity {
         System.out.println("MainChatController " + this + ": shutdownApplication !!!!!!!!!!!!!");
 
         finish();
+        stopService(chatServiceIntent);
 
         return true;
     }
