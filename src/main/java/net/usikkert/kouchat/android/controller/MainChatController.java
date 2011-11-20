@@ -27,6 +27,9 @@ import net.usikkert.kouchat.android.service.ChatService;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 /**
  * Controller for the main chat.
@@ -56,6 +59,43 @@ public class MainChatController extends Activity {
         super.onDestroy();
 
         stopService(createChatServiceIntent());
+    }
+
+    /**
+     *  Creates the main chat menu.
+     *
+     *  {@inheritDoc}
+     *
+     */
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        final MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_chat_menu, menu);
+
+        return true;
+    }
+
+    /**
+     * Selects the actions to run after a menu item in the main chat has been selected.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.mainChatMenuQuit:
+                return shutdownApplication();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private boolean shutdownApplication() {
+        System.out.println("MainChatController " + this + ": shutdownApplication !!!!!!!!!!!!!");
+
+        finish();
+
+        return true;
     }
 
     private Intent createChatServiceIntent() {
