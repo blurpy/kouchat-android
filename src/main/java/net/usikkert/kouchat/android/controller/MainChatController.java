@@ -192,9 +192,16 @@ public class MainChatController extends Activity {
         switch (item.getItemId()) {
             case R.id.mainChatMenuQuit:
                 return shutdownApplication();
+            case R.id.mainChatMenuAbout:
+                return showAboutDialog();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private boolean showAboutDialog() {
+        new AboutDialog(this);
+        return true;
     }
 
     private boolean shutdownApplication() {

@@ -3,4 +3,12 @@
 <resources>
   <string name="app_name">KouChat</string>
   <string name="quit">Quit</string>
+  <string name="about">About</string>
+  <string name="about_text">
+    Copyright 2006-2011 by Christian Ihle\n
+    kontakt@usikkert.net\n
+    http://kouchat.googlecode.com\n\n
+    Source available under the GNU GPLv3:\n
+    http://www.gnu.org/licenses/gpl-3.0.html
+  </string>
 </resources>
