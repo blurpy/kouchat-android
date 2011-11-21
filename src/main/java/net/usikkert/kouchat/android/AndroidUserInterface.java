@@ -22,6 +22,7 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.User;
@@ -119,7 +120,9 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
     @Override
     public void appendToChat(final String message, final int color) {
-
+        if (mainChatController != null) {
+            mainChatController.appendToChat(message, color);
+        }
     }
 
     public void logOn() {
@@ -140,5 +143,16 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
     public void unregisterMainChatController() {
         mainChatController = null;
+    }
+
+    public void sendMessage(final String message) {
+        try {
+            controller.sendChatMessage(message);
+            msgController.showOwnMessage(message);
+        }
+
+        catch (final CommandException e) {
+            msgController.showSystemMessage(e.getMessage());
+        }
     }
 }

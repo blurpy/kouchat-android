@@ -37,7 +37,9 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.Layout;
+import android.text.SpannableStringBuilder;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -129,7 +131,7 @@ public class MainChatController extends Activity {
         mainChatInput.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    mainChatView.append(mainChatInput.getText() + "\n");
+                    sendMessage(mainChatInput.getText().toString());
                     mainChatInput.setText("");
                     scrollMainChatViewToBottom();
 
@@ -238,5 +240,21 @@ public class MainChatController extends Activity {
 
     private Intent createChatServiceIntent() {
         return new Intent(this, ChatService.class);
+    }
+
+    public void appendToChat(final String message, final int color) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                final SpannableStringBuilder builder = new SpannableStringBuilder(message + "\n");
+                builder.setSpan(new ForegroundColorSpan(color), 0, message.length(), 0);
+                mainChatView.append(builder);
+            }
+        });
+    }
+
+    public void sendMessage(final String message) {
+        if (message != null && message.trim().length() > 0) {
+            androidUserInterface.sendMessage(message);
+        }
     }
 }
