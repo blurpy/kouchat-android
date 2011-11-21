@@ -204,7 +204,7 @@ public class MessageSender
 
 				mcSocket.joinGroup( address );
 				mcSocket.setTimeToLive( 64 );
-				LOG.log( Level.FINE, "Connected to " + mcSocket.getNetworkInterface().getDisplayName() + "." );
+				LOG.log( Level.FINE, "Connected to " + mcSocket.getNetworkInterface() + "." );
 				connected = true;
 			}
 		}
