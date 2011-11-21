@@ -31,6 +31,9 @@ import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.ui.ChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
 
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+
 /**
  * Implementation of a KouChat user interface that communicates with the Android GUI.
  *
@@ -38,12 +41,14 @@ import net.usikkert.kouchat.ui.UserInterface;
  */
 public class AndroidUserInterface implements UserInterface, ChatWindow {
 
+    private final SpannableStringBuilder savedChat;
     private final MessageController msgController;
     private final Controller controller;
 
     private MainChatController mainChatController;
 
     public AndroidUserInterface() {
+        savedChat = new SpannableStringBuilder();
         msgController = new MessageController(this, this);
         controller = new Controller(this);
     }
@@ -120,6 +125,10 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
     @Override
     public void appendToChat(final String message, final int color) {
+        final SpannableStringBuilder builder = new SpannableStringBuilder(message + "\n");
+        builder.setSpan(new ForegroundColorSpan(color), 0, message.length(), 0);
+        savedChat.append(builder);
+
         if (mainChatController != null) {
             mainChatController.appendToChat(message, color);
         }
@@ -139,6 +148,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
     public void registerMainChatController(final MainChatController mainChatController) {
         this.mainChatController = mainChatController;
+        mainChatController.updateChat(savedChat);
     }
 
     public void unregisterMainChatController() {

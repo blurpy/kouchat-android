@@ -257,4 +257,8 @@ public class MainChatController extends Activity {
             androidUserInterface.sendMessage(message);
         }
     }
+
+    public void updateChat(final CharSequence savedChat) {
+        mainChatView.setText(savedChat);
+    }
 }
