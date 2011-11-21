@@ -22,6 +22,7 @@
 package net.usikkert.kouchat.android.service;
 
 import net.usikkert.kouchat.Constants;
+import net.usikkert.kouchat.android.AndroidUserInterface;
 
 import android.app.Service;
 import android.content.Intent;
@@ -34,9 +35,12 @@ import android.os.IBinder;
  */
 public class ChatService extends Service {
 
+    private final AndroidUserInterface androidUserInterface;
+
     public ChatService() {
         System.out.println("ChatService " + this + ": constructor !!!!!!!!!!!!!");
         System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
+        androidUserInterface = new AndroidUserInterface();
     }
 
     @Override
@@ -49,6 +53,10 @@ public class ChatService extends Service {
     @Override
     public void onStart(final Intent intent, final int startId) {
         System.out.println("ChatService " + this + ": onStart !!!!!!!!!!!!! " + startId);
+
+        if (!androidUserInterface.isLoggedOn()) {
+            androidUserInterface.logOn();
+        }
 
         super.onStart(intent, startId);
     }
@@ -84,6 +92,8 @@ public class ChatService extends Service {
     @Override
     public void onDestroy() {
         System.out.println("ChatService " + this + ": onDestroy !!!!!!!!!!!!!");
+
+        androidUserInterface.logOff();
 
         super.onDestroy();
     }
