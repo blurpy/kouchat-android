@@ -22,6 +22,7 @@
 package net.usikkert.kouchat.android.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.R;
@@ -81,6 +82,8 @@ public class MainChatController extends Activity {
     private ListView mainChatUserList;
     private TextView mainChatView;
     private AndroidUserInterface androidUserInterface;
+    private ArrayAdapter<User> users;
+    private ArrayList<User> usersBackingList;
 
     public MainChatController() {
         System.out.println("MainChatController " + this + ": constructor !!!!!!!!!!!!!");
@@ -148,12 +151,11 @@ public class MainChatController extends Activity {
     }
 
     private void setupMainChatUserList() {
-        final ArrayAdapter<User> users = new ArrayAdapter<User>(this,
-                R.layout.main_chat_user_list_row, R.id.mainChatUserListLabel,
-                new ArrayList<User>());
+        usersBackingList = new ArrayList<User>();
 
-        users.add(new User("User 1", 1));
-        users.add(new User("User 2", 2));
+        users = new ArrayAdapter<User>(this,
+                R.layout.main_chat_user_list_row, R.id.mainChatUserListLabel,
+                usersBackingList);
 
         mainChatUserList.setAdapter(users);
     }
@@ -266,6 +268,24 @@ public class MainChatController extends Activity {
         runOnUiThread(new Runnable() {
             public void run() {
                 setTitle(topic);
+            }
+        });
+    }
+
+    public void addUser(final User user) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                users.add(user);
+                Collections.sort(usersBackingList);
+            }
+        });
+    }
+
+    public void removeUser(final User user) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                users.remove(user);
+                Collections.sort(usersBackingList);
             }
         });
     }

@@ -23,11 +23,13 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.event.UserListListener;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.ui.ChatWindow;
@@ -41,11 +43,12 @@ import android.text.style.ForegroundColorSpan;
  *
  * @author Christian Ihle
  */
-public class AndroidUserInterface implements UserInterface, ChatWindow {
+public class AndroidUserInterface implements UserInterface, ChatWindow, UserListListener {
 
     private final SpannableStringBuilder savedChat;
     private final MessageController msgController;
     private final Controller controller;
+    private final UserList userList;
 
     private MainChatController mainChatController;
 
@@ -53,6 +56,8 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         savedChat = new SpannableStringBuilder();
         msgController = new MessageController(this, this);
         controller = new Controller(this);
+        userList = controller.getUserList();
+        userList.addUserListListener(this);
     }
 
     @Override
@@ -156,6 +161,10 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     public void registerMainChatController(final MainChatController mainChatController) {
         this.mainChatController = mainChatController;
         mainChatController.updateChat(savedChat);
+
+        for (int i = 0; i < userList.size(); i++) {
+            userAdded(i);
+        }
     }
 
     public void unregisterMainChatController() {
@@ -170,6 +179,31 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
         catch (final CommandException e) {
             msgController.showSystemMessage(e.getMessage());
+        }
+    }
+
+    @Override
+    public void userAdded(final int pos) {
+        if (mainChatController != null) {
+            final User user = userList.get(pos);
+            mainChatController.addUser(user);
+        }
+    }
+
+    @Override
+    public void userChanged(final int pos) {
+        if (mainChatController != null) {
+            final User user = userList.get(pos);
+            mainChatController.removeUser(user);
+            mainChatController.addUser(user);
+        }
+    }
+
+    @Override
+    public void userRemoved(final int pos) {
+        if (mainChatController != null) {
+            final User user = userList.get(pos);
+            mainChatController.removeUser(user);
         }
     }
 }
