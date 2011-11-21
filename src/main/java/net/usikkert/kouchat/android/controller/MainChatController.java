@@ -121,6 +121,7 @@ public class MainChatController extends Activity {
                 final ChatServiceBinder binder = (ChatServiceBinder) iBinder;
                 androidUserInterface = binder.getAndroidUserInterface();
                 androidUserInterface.registerMainChatController(MainChatController.this);
+                androidUserInterface.showTopic();
             }
 
             @Override
