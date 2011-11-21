@@ -261,4 +261,12 @@ public class MainChatController extends Activity {
     public void updateChat(final CharSequence savedChat) {
         mainChatView.setText(savedChat);
     }
+
+    public void updateTopic(final String topic) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                setTitle(topic);
+            }
+        });
+    }
 }

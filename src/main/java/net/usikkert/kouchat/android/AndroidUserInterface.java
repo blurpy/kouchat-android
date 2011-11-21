@@ -21,10 +21,12 @@
 
 package net.usikkert.kouchat.android;
 
+import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.MessageController;
+import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
@@ -75,7 +77,12 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
     @Override
     public void showTopic() {
+        if (mainChatController != null) {
+            final String nick = Settings.getSettings().getMe().getNick();
+            final String topic = controller.getTopic().toString();
 
+            mainChatController.updateTopic(nick + " - Topic: " + topic + " - " + Constants.APP_NAME);
+        }
     }
 
     @Override
