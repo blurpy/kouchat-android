@@ -23,15 +23,19 @@ package net.usikkert.kouchat.android.controller;
 
 import java.util.ArrayList;
 
+import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.service.ChatService;
-import net.usikkert.kouchat.android.service.ChatServiceConnection;
+import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.misc.User;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
@@ -70,15 +74,14 @@ import android.widget.TextView;
 public class MainChatController extends Activity {
 
     private Intent chatServiceIntent;
-    private final ChatServiceConnection chatServiceConnection;
+    private ServiceConnection serviceConnection;
     private EditText mainChatInput;
     private ListView mainChatUserList;
     private TextView mainChatView;
+    private AndroidUserInterface androidUserInterface;
 
     public MainChatController() {
         System.out.println("MainChatController " + this + ": constructor !!!!!!!!!!!!!");
-
-        chatServiceConnection = new ChatServiceConnection();
     }
 
     @Override
@@ -95,12 +98,31 @@ public class MainChatController extends Activity {
         mainChatView = (TextView) findViewById(R.id.mainChatView);
 
         startService(chatServiceIntent);
-        bindService(chatServiceIntent, chatServiceConnection, Context.BIND_NOT_FOREGROUND);
+        serviceConnection = createServiceConnection();
+        bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
 
         registerMainChatInputListener();
         makeMainChatViewScrollable();
         setupMainChatUserList();
         openKeyboard();
+    }
+
+    private ServiceConnection createServiceConnection() {
+        return new ServiceConnection() {
+            @Override
+            public void onServiceConnected(final ComponentName componentName, final IBinder iBinder) {
+                System.out.println("MainChatController " + this + ": onServiceConnected !!!!!!!!!!!!!");
+
+                final ChatServiceBinder binder = (ChatServiceBinder) iBinder;
+                androidUserInterface = binder.getAndroidUserInterface();
+                androidUserInterface.registerMainChatController(MainChatController.this);
+            }
+
+            @Override
+            public void onServiceDisconnected(final ComponentName componentName) {
+                System.out.println("MainChatController " + this + ": onServiceDisconnected !!!!!!!!!!!!!");
+            }
+        };
     }
 
     private void registerMainChatInputListener() {
@@ -163,7 +185,8 @@ public class MainChatController extends Activity {
     protected void onDestroy() {
         System.out.println("MainChatController " + this + ": onDestroy !!!!!!!!!!!!!");
 
-        unbindService(chatServiceConnection);
+        androidUserInterface.unregisterMainChatController();
+        unbindService(serviceConnection);
 
         super.onDestroy();
     }

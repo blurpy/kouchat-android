@@ -72,7 +72,7 @@ public class ChatService extends Service {
     public IBinder onBind(final Intent intent) {
         System.out.println("ChatService " + this + ": onBind !!!!!!!!!!!!!");
 
-        return new ChatServiceBinder();
+        return new ChatServiceBinder(androidUserInterface);
     }
 
     @Override

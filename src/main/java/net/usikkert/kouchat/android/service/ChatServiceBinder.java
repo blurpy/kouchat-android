@@ -21,13 +21,24 @@
 
 package net.usikkert.kouchat.android.service;
 
+import net.usikkert.kouchat.android.AndroidUserInterface;
+
 import android.os.Binder;
 
 /**
- * Binder for accessing the {@link ChatService}.
+ * Binder for accessing the {@link AndroidUserInterface}.
  *
  * @author Christian Ihle
  */
 public class ChatServiceBinder extends Binder {
 
+    private final AndroidUserInterface androidUserInterface;
+
+    public ChatServiceBinder(final AndroidUserInterface androidUserInterface) {
+        this.androidUserInterface = androidUserInterface;
+    }
+
+    public AndroidUserInterface getAndroidUserInterface() {
+        return androidUserInterface;
+    }
 }

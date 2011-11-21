@@ -21,6 +21,7 @@
 
 package net.usikkert.kouchat.android;
 
+import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.User;
@@ -38,6 +39,8 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
     private final MessageController msgController;
     private final Controller controller;
+
+    private MainChatController mainChatController;
 
     public AndroidUserInterface() {
         msgController = new MessageController(this, this);
@@ -129,5 +132,13 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
     public boolean isLoggedOn() {
         return controller.isLoggedOn();
+    }
+
+    public void registerMainChatController(final MainChatController mainChatController) {
+        this.mainChatController = mainChatController;
+    }
+
+    public void unregisterMainChatController() {
+        mainChatController = null;
     }
 }
