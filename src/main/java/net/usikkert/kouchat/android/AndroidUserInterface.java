@@ -194,16 +194,14 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     public void userChanged(final int pos) {
         if (mainChatController != null) {
             final User user = userList.get(pos);
-            mainChatController.removeUser(user);
-            mainChatController.addUser(user);
+            mainChatController.updateUser(user);
         }
     }
 
     @Override
     public void userRemoved(final int pos) {
         if (mainChatController != null) {
-            final User user = userList.get(pos);
-            mainChatController.removeUser(user);
+            mainChatController.removeUser(pos);
         }
     }
 }

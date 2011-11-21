@@ -72,6 +72,8 @@ import android.widget.TextView;
  *   </li>
  * </ul>
  *
+ * TODO: support for changing nick name
+ *
  * @author Christian Ihle
  */
 public class MainChatController extends Activity {
@@ -278,15 +280,25 @@ public class MainChatController extends Activity {
             public void run() {
                 users.add(user);
                 Collections.sort(usersBackingList);
+                users.notifyDataSetChanged();
             }
         });
     }
 
-    public void removeUser(final User user) {
+    public void removeUser(final int pos) {
         runOnUiThread(new Runnable() {
             public void run() {
+                final User user = users.getItem(pos);
                 users.remove(user);
+            }
+        });
+    }
+
+    public void updateUser(final User user) {
+        runOnUiThread(new Runnable() {
+            public void run() {
                 Collections.sort(usersBackingList);
+                users.notifyDataSetChanged();
             }
         });
     }
