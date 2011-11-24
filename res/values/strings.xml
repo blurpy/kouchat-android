@@ -4,6 +4,7 @@
   <string name="app_name">KouChat</string>
   <string name="quit">Quit</string>
   <string name="about">About</string>
+  <string name="settings">Settings</string>
   <string name="about_text">
     Copyright 2006-2011 by Christian Ihle\n
     kontakt@usikkert.net\n
@@ -11,4 +12,12 @@
     Source available under the GNU GPLv3:\n
     http://www.gnu.org/licenses/gpl-3.0.html
   </string>
+  <string name="settings_nick_name_dialog_message">
+    A nick name can have between 1 and 10 characters.\n
+    Legal characters are "a-z", "0-9", "-" and "_".
+  </string>
+  <string name="nick_name">Nick name</string>
+  <string name="settings_nick_name_summary">Choose your nick name to use in the chat.</string>
+  <string name="settings_title">Settings - KouChat</string>
+
 </resources>

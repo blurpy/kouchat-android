@@ -21,6 +21,8 @@
       </intent-filter>
     </activity>
 
+    <activity android:name=".controller.SettingsController"/>
+
     <service android:name=".service.ChatService"/>
 
   </application>

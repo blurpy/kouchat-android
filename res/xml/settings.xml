@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:title="@string/settings_title">
+
+  <EditTextPreference
+      android:key="nick_name"
+      android:title="@string/nick_name"
+      android:summary="@string/settings_nick_name_summary"
+      android:maxLength="10"
+      android:dialogTitle="@string/nick_name"
+      android:dialogMessage="@string/settings_nick_name_dialog_message"/>
+
+</PreferenceScreen>

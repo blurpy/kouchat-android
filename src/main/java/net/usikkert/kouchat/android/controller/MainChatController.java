@@ -224,6 +224,8 @@ public class MainChatController extends Activity {
                 return shutdownApplication();
             case R.id.mainChatMenuAbout:
                 return showAboutDialog();
+            case R.id.mainChatMenuSettings:
+                return showSettingsDialog();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -240,6 +242,11 @@ public class MainChatController extends Activity {
         finish();
         stopService(chatServiceIntent);
 
+        return true;
+    }
+
+    private boolean showSettingsDialog() {
+        startActivity(new Intent(this, SettingsController.class));
         return true;
     }
 
