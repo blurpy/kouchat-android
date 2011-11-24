@@ -22,20 +22,41 @@
 package net.usikkert.kouchat.android.controller;
 
 import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.util.Tools;
 
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.widget.Toast;
 
 /**
  * Controller for changing the settings.
  *
  * @author Christian Ihle
  */
-public class SettingsController extends PreferenceActivity {
+public class SettingsController extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
 
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings);
+
+        final Preference nickName = getPreference(R.string.settings_key_nick_name);
+        nickName.setOnPreferenceChangeListener(this);
+    }
+
+    @Override
+    public boolean onPreferenceChange(final Preference preference, final Object value) {
+        if (Tools.isValidNick(value.toString())) {
+            return true;
+        }
+
+        Toast.makeText(SettingsController.this, getString(R.string.error_invalid_nick), Toast.LENGTH_LONG).show();
+
+        return false;
+    }
+
+    private Preference getPreference(final int resourceId) {
+        return getPreferenceScreen().findPreference(getString(resourceId));
     }
 }
