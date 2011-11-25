@@ -35,6 +35,7 @@ import android.os.IBinder;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.view.Window;
 
 /**
  * Controller for changing the settings.
@@ -49,8 +50,9 @@ public class SettingsController extends PreferenceActivity
     private ServiceConnection serviceConnection;
 
     public void onCreate(final Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_LEFT_ICON);
         super.onCreate(savedInstanceState);
-
+        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.kou_shortcut);
         addPreferencesFromResource(R.xml.settings);
 
         final String nickNameKey = getString(R.string.settings_key_nick_name);

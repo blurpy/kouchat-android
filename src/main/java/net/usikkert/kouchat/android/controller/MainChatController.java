@@ -46,6 +46,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -91,7 +92,10 @@ public class MainChatController extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        requestWindowFeature(Window.FEATURE_LEFT_ICON);
         setContentView(R.layout.main_chat);
+        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.kou_shortcut);
+
         chatServiceIntent = createChatServiceIntent();
 
         mainChatInput = (EditText) findViewById(R.id.mainChatInput);
