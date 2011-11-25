@@ -38,22 +38,12 @@ public class ChatService extends Service {
     private final AndroidUserInterface androidUserInterface;
 
     public ChatService() {
-        System.out.println("ChatService " + this + ": constructor !!!!!!!!!!!!!");
         System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
         androidUserInterface = new AndroidUserInterface();
     }
 
     @Override
-    public void onCreate() {
-        System.out.println("ChatService " + this + ": onCreate !!!!!!!!!!!!!");
-
-        super.onCreate();
-    }
-
-    @Override
     public void onStart(final Intent intent, final int startId) {
-        System.out.println("ChatService " + this + ": onStart !!!!!!!!!!!!! " + startId);
-
         if (!androidUserInterface.isLoggedOn()) {
             androidUserInterface.logOn();
         }
@@ -62,37 +52,12 @@ public class ChatService extends Service {
     }
 
     @Override
-    public int onStartCommand(final Intent intent, final int flags, final int startId) {
-        System.out.println("ChatService " + this + ": onStartCommand !!!!!!!!!!!!! " + startId);
-
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
     public IBinder onBind(final Intent intent) {
-        System.out.println("ChatService " + this + ": onBind !!!!!!!!!!!!!");
-
         return new ChatServiceBinder(androidUserInterface);
     }
 
     @Override
-    public boolean onUnbind(final Intent intent) {
-        System.out.println("ChatService " + this + ": onUnbind !!!!!!!!!!!!!");
-
-        return super.onUnbind(intent);
-    }
-
-    @Override
-    public void onRebind(final Intent intent) {
-        System.out.println("ChatService " + this + ": onRebind !!!!!!!!!!!!!");
-
-        super.onRebind(intent);
-    }
-
-    @Override
     public void onDestroy() {
-        System.out.println("ChatService " + this + ": onDestroy !!!!!!!!!!!!!");
-
         androidUserInterface.logOff();
 
         super.onDestroy();

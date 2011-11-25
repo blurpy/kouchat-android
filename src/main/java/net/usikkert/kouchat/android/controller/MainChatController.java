@@ -87,14 +87,8 @@ public class MainChatController extends Activity {
     private ArrayAdapter<User> users;
     private ArrayList<User> usersBackingList;
 
-    public MainChatController() {
-        System.out.println("MainChatController " + this + ": constructor !!!!!!!!!!!!!");
-    }
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        System.out.println("MainChatController " + this + ": onCreate !!!!!!!!!!!!!");
-
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_chat);
@@ -118,8 +112,6 @@ public class MainChatController extends Activity {
         return new ServiceConnection() {
             @Override
             public void onServiceConnected(final ComponentName componentName, final IBinder iBinder) {
-                System.out.println("MainChatController " + this + ": onServiceConnected !!!!!!!!!!!!!");
-
                 final ChatServiceBinder binder = (ChatServiceBinder) iBinder;
                 androidUserInterface = binder.getAndroidUserInterface();
                 androidUserInterface.registerMainChatController(MainChatController.this);
@@ -128,7 +120,7 @@ public class MainChatController extends Activity {
 
             @Override
             public void onServiceDisconnected(final ComponentName componentName) {
-                System.out.println("MainChatController " + this + ": onServiceDisconnected !!!!!!!!!!!!!");
+
             }
         };
     }
@@ -190,8 +182,6 @@ public class MainChatController extends Activity {
 
     @Override
     protected void onDestroy() {
-        System.out.println("MainChatController " + this + ": onDestroy !!!!!!!!!!!!!");
-
         androidUserInterface.unregisterMainChatController();
         unbindService(serviceConnection);
 
@@ -237,8 +227,6 @@ public class MainChatController extends Activity {
     }
 
     private boolean shutdownApplication() {
-        System.out.println("MainChatController " + this + ": shutdownApplication !!!!!!!!!!!!!");
-
         finish();
         stopService(chatServiceIntent);
 
