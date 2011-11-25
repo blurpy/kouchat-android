@@ -47,8 +47,9 @@ public class SettingsController extends PreferenceActivity
 
         final String nickNameKey = getString(R.string.settings_key_nick_name);
         final Preference nickNamePreference = findPreference(nickNameKey);
+
         nickNamePreference.setOnPreferenceChangeListener(this);
-        setValueAsSummary(nickNameKey);
+        setValueAsSummary(nickNamePreference);
     }
 
     /**
@@ -80,27 +81,28 @@ public class SettingsController extends PreferenceActivity
     @Override
     protected void onResume() {
         super.onResume();
-
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    private void setValueAsSummary(final String key) {
+        final Preference preference = findPreference(key);
+        setValueAsSummary(preference);
     }
 
     /**
      * Sets the current value of a setting as the summary, so it's visible without clicking
      * on the setting to change it.
      *
-     * @param key The settings key.
+     * @param preference The setting to update.
      */
-    private void setValueAsSummary(final String key) {
-        final Preference preference = findPreference(key);
+    private void setValueAsSummary(final Preference preference) {
         final EditTextPreference editTextPreference = (EditTextPreference) preference;
-
         preference.setSummary(editTextPreference.getText());
     }
 }
