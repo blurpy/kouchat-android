@@ -21,11 +21,18 @@
 
 package net.usikkert.kouchat.android.controller;
 
+import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.android.service.ChatService;
+import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.util.Tools;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -40,6 +47,9 @@ public class SettingsController extends PreferenceActivity
                                 implements Preference.OnPreferenceChangeListener,
                                            SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private AndroidUserInterface androidUserInterface;
+    private ServiceConnection serviceConnection;
+
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -50,6 +60,10 @@ public class SettingsController extends PreferenceActivity
 
         nickNamePreference.setOnPreferenceChangeListener(this);
         setValueAsSummary(nickNamePreference);
+
+        serviceConnection = createServiceConnection();
+        final Intent chatServiceIntent = createChatServiceIntent();
+        bindService(chatServiceIntent, serviceConnection, BIND_NOT_FOREGROUND);
     }
 
     /**
@@ -86,8 +100,14 @@ public class SettingsController extends PreferenceActivity
 
     @Override
     protected void onPause() {
-        super.onPause();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        unbindService(serviceConnection);
+        super.onDestroy();
     }
 
     private void setValueAsSummary(final String key) {
@@ -104,5 +124,24 @@ public class SettingsController extends PreferenceActivity
     private void setValueAsSummary(final Preference preference) {
         final EditTextPreference editTextPreference = (EditTextPreference) preference;
         preference.setSummary(editTextPreference.getText());
+    }
+
+    private Intent createChatServiceIntent() {
+        return new Intent(this, ChatService.class);
+    }
+
+    private ServiceConnection createServiceConnection() {
+        return new ServiceConnection() {
+            @Override
+            public void onServiceConnected(final ComponentName componentName, final IBinder iBinder) {
+                final ChatServiceBinder binder = (ChatServiceBinder) iBinder;
+                androidUserInterface = binder.getAndroidUserInterface();
+            }
+
+            @Override
+            public void onServiceDisconnected(final ComponentName componentName) {
+
+            }
+        };
     }
 }
