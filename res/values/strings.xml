@@ -20,6 +20,6 @@
   <string name="settings_key_nick_name">nick_name</string>
   <string name="settings_nick_name_summary">Choose your nick name to use in the chat.</string>
   <string name="settings_title">Settings - KouChat</string>
-  <string name="error_invalid_nick">Invalid nick name</string>
+  <string name="error_nick_name_invalid">Invalid nick name</string>
 
 </resources>

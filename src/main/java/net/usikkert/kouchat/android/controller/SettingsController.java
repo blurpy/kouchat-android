@@ -77,7 +77,7 @@ public class SettingsController extends PreferenceActivity
             return true;
         }
 
-        Toast.makeText(SettingsController.this, getString(R.string.error_invalid_nick), Toast.LENGTH_LONG).show();
+        Toast.makeText(SettingsController.this, getString(R.string.error_nick_name_invalid), Toast.LENGTH_LONG).show();
 
         return false;
     }
