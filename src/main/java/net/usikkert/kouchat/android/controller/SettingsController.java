@@ -25,7 +25,6 @@ import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
-import net.usikkert.kouchat.util.Tools;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -36,7 +35,6 @@ import android.os.IBinder;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.widget.Toast;
 
 /**
  * Controller for changing the settings.
