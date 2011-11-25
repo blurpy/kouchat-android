@@ -52,6 +52,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     private final MessageController msgController;
     private final Controller controller;
     private final UserList userList;
+    private final User me;
 
     private MainChatController mainChatController;
 
@@ -63,6 +64,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         controller = new Controller(this);
         userList = controller.getUserList();
         userList.addUserListListener(this);
+        me = Settings.getSettings().getMe();
     }
 
     @Override
@@ -88,7 +90,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     @Override
     public void showTopic() {
         if (mainChatController != null) {
-            final String nick = Settings.getSettings().getMe().getNick();
+            final String nick = me.getNick();
             final String topic = controller.getTopic().toString();
 
             mainChatController.updateTopic(nick + " - Topic: " + topic + " - " + Constants.APP_NAME);
@@ -215,6 +217,6 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         final String nickNameKey = context.getString(R.string.settings_key_nick_name);
         final String nickName = preferences.getString(nickNameKey, null);
 
-        Settings.getSettings().getMe().setNick(nickName);
+        me.setNick(nickName);
     }
 }
