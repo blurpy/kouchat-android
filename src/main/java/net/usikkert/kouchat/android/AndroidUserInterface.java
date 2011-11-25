@@ -35,6 +35,9 @@ import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.ui.ChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 
@@ -53,6 +56,8 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     private MainChatController mainChatController;
 
     public AndroidUserInterface() {
+        System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
+
         savedChat = new SpannableStringBuilder();
         msgController = new MessageController(this, this);
         controller = new Controller(this);
@@ -203,5 +208,13 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         if (mainChatController != null) {
             mainChatController.removeUser(pos);
         }
+    }
+
+    public void setNickNameFromSettings(final Context context) {
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        final String nickNameKey = context.getString(R.string.settings_key_nick_name);
+        final String nickName = preferences.getString(nickNameKey, null);
+
+        Settings.getSettings().getMe().setNick(nickName);
     }
 }
