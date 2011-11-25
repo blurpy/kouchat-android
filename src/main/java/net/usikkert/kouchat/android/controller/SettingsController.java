@@ -24,7 +24,9 @@ package net.usikkert.kouchat.android.controller;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.util.Tools;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.widget.Toast;
@@ -34,17 +36,26 @@ import android.widget.Toast;
  *
  * @author Christian Ihle
  */
-public class SettingsController extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
+public class SettingsController extends PreferenceActivity
+                                implements Preference.OnPreferenceChangeListener,
+                                           SharedPreferences.OnSharedPreferenceChangeListener {
 
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings);
 
-        final Preference nickName = getPreference(R.string.settings_key_nick_name);
-        nickName.setOnPreferenceChangeListener(this);
+        final String nickNameKey = getString(R.string.settings_key_nick_name);
+        final Preference nickNamePreference = findPreference(nickNameKey);
+        nickNamePreference.setOnPreferenceChangeListener(this);
+        setValueAsSummary(nickNameKey);
     }
 
+    /**
+     * Handles validation when a setting is about to be changed.
+     *
+     * {@inheritDoc}
+     */
     @Override
     public boolean onPreferenceChange(final Preference preference, final Object value) {
         if (Tools.isValidNick(value.toString())) {
@@ -56,7 +67,40 @@ public class SettingsController extends PreferenceActivity implements Preference
         return false;
     }
 
-    private Preference getPreference(final int resourceId) {
-        return getPreferenceScreen().findPreference(getString(resourceId));
+    /**
+     * Updates the summary of the setting after it's been changed.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        setValueAsSummary(key);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    /**
+     * Sets the current value of a setting as the summary, so it's visible without clicking
+     * on the setting to change it.
+     *
+     * @param key The settings key.
+     */
+    private void setValueAsSummary(final String key) {
+        final Preference preference = findPreference(key);
+        final EditTextPreference editTextPreference = (EditTextPreference) preference;
+
+        preference.setSummary(editTextPreference.getText());
     }
 }
