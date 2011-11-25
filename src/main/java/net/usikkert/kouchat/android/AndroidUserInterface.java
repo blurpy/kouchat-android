@@ -34,12 +34,14 @@ import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.ui.ChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
+import net.usikkert.kouchat.util.Tools;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.widget.Toast;
 
 /**
  * Implementation of a KouChat user interface that communicates with the Android GUI.
@@ -218,5 +220,37 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         final String nickName = preferences.getString(nickNameKey, null);
 
         me.setNick(nickName);
+    }
+
+    public boolean changeNickName(final Context context, final String nick) {
+        final String trimNick = nick.trim();
+
+        if (trimNick.equals(me.getNick())) {
+            return false;
+        }
+
+        if (!Tools.isValidNick(trimNick)) {
+            Toast.makeText(context, context.getString(R.string.error_nick_name_invalid), Toast.LENGTH_LONG).show();
+        }
+
+        else if (controller.isNickInUse(trimNick)) {
+            Toast.makeText(context, R.string.error_nick_name_in_use, Toast.LENGTH_LONG).show();
+        }
+
+        else {
+            try {
+                controller.changeMyNick(trimNick);
+                msgController.showSystemMessage(context.getString(R.string.message_your_nick_name_changed, me.getNick()));
+                showTopic();
+
+                return true;
+            }
+
+            catch (final CommandException e) {
+                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+
+        return false;
     }
 }

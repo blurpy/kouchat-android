@@ -67,19 +67,13 @@ public class SettingsController extends PreferenceActivity
     }
 
     /**
-     * Handles validation when a setting is about to be changed.
+     * Handles validation when the nick name is about to be changed, and changes the actual nick name if it's valid.
      *
      * {@inheritDoc}
      */
     @Override
     public boolean onPreferenceChange(final Preference preference, final Object value) {
-        if (Tools.isValidNick(value.toString())) {
-            return true;
-        }
-
-        Toast.makeText(SettingsController.this, getString(R.string.error_nick_name_invalid), Toast.LENGTH_LONG).show();
-
-        return false;
+        return androidUserInterface.changeNickName(this, value.toString());
     }
 
     /**
