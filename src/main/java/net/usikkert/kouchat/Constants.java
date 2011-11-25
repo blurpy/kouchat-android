@@ -36,12 +36,12 @@ public interface Constants
 	/**
 	 * The application version.
 	 */
-	String APP_VERSION = "1.1.0-dev";
+	String APP_VERSION = "0.5";
 
 	/**
 	 * Which license the application has.
 	 */
-	String APP_LICENSE_NAME = "GNU GPLv2";
+	String APP_LICENSE_NAME = "GNU GPLv3";
 
 	/**
 	 * The home page of this application.
@@ -51,7 +51,7 @@ public interface Constants
 	/**
 	 * Copyright from year, to year.
 	 */
-	String APP_COPYRIGHT_YEARS = "2006-2009";
+	String APP_COPYRIGHT_YEARS = "2006-2011";
 
 	/**
 	 * Name of the author of this application.

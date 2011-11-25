@@ -5,7 +5,7 @@
   <groupId>net.usikkert.kouchat</groupId>
   <artifactId>kouchat-android</artifactId>
   <packaging>apk</packaging>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.5-SNAPSHOT</version>
   <name>KouChat for Android</name>
   <url>http://kouchat.googlecode.com/</url>
   <description>
