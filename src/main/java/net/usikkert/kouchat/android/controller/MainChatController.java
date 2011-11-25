@@ -73,8 +73,6 @@ import android.widget.TextView;
  *   </li>
  * </ul>
  *
- * TODO: support for changing nick name
- *
  * @author Christian Ihle
  */
 public class MainChatController extends Activity {
