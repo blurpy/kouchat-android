@@ -1,5 +1,25 @@
-This is the Android version of KouChat.
 
+- KouChat README
+
+KouChat is a simple serverless chat client for local area networks.
+
+This is the Android version of KouChat.
 The goal is to implement the same features as the desktop version at http://kouchat.googlecode.com/.
 
-.. Christian Ihle
+Enjoy :)
+
+
+
+Copyright 2006-2011 Christian Ihle
+Source and graphics available under the GNU GPLv3.
+See COPYING for details.
+
+error.wav is created by Nuno Povoa
+and is part of the Oxygen theme (http://www.oxygen-icons.org/),
+available under the GNU Lesser General Public License
+(http://www.gnu.org/licenses/lgpl.html).
+
+The icons in resources/smileys are taken from the KDE 3.5 emoticon theme
+called Default (http://websvn.kde.org/branches/KDE/3.5/kdelibs/pics/emoticons/),
+available under the GNU Lesser General Public License
+(http://www.gnu.org/licenses/lgpl.html).

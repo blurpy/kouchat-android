@@ -24,28 +24,7 @@
         <includes>
           <include>COPYING</include>
           <include>README</include>
-          <include>FAQ</include>
           <include>CHANGES</include>
-          <include>TipsAndTricks.txt</include>
-          <include>kou_shortcut.*</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources/</directory>
-        <includes>
-          <include>sounds/</include>
-          <include>icons/</include>
-          <include>smileys/smile.png</include>
-          <include>smileys/sad.png</include>
-          <include>smileys/tongue.png</include>
-          <include>smileys/teeth.png</include>
-          <include>smileys/wink.png</include>
-          <include>smileys/omg.png</include>
-          <include>smileys/angry.png</include>
-          <include>smileys/confused.png</include>
-          <include>smileys/cry.png</include>
-          <include>smileys/embarrassed.png</include>
-          <include>smileys/shade.png</include>
         </includes>
       </resource>
     </resources>
