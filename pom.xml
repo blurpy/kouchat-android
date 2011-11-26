@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.usikkert.kouchat</groupId>
@@ -183,5 +182,70 @@
       </plugin>
     </plugins>
   </reporting>
+
+  <profiles>
+    <profile>
+      <id>android-release</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-jarsigner-plugin</artifactId>
+            <version>1.2</version>
+            <configuration>
+              <removeExistingSignatures>true</removeExistingSignatures>
+              <archiveDirectory />
+              <archive>${project.build.directory}/${project.build.finalName}.${project.packaging}</archive>
+              <verbose>true</verbose>
+              <certs>true</certs>
+              <keystore>${sign.keystore}</keystore>
+              <alias>${sign.alias}</alias>
+              <storepass>${sign.storepass}</storepass>
+              <keypass>${sign.keypass}</keypass>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-application-apk</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>sign</goal>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+            <artifactId>android-maven-plugin</artifactId>
+            <version>3.0.0-alpha-14</version>
+            <executions>
+              <execution>
+                <id>zipalign-application-apk</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>zipalign</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <zipalign>
+                <verbose>true</verbose>
+                <inputApk>${project.build.directory}/${project.artifactId}-${project.version}.apk</inputApk>
+                <outputApk>${project.build.directory}/${project.artifactId}-${project.version}-signed-aligned.apk</outputApk>
+              </zipalign>
+              <sign>
+                <debug>false</debug>
+              </sign>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
