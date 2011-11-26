@@ -217,9 +217,19 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     public void setNickNameFromSettings(final Context context) {
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         final String nickNameKey = context.getString(R.string.settings_key_nick_name);
-        final String nickName = preferences.getString(nickNameKey, null);
+        final String nickName = getNickNameFromSettings(preferences, nickNameKey);
 
         me.setNick(nickName);
+    }
+
+    private String getNickNameFromSettings(final SharedPreferences preferences, final String nickNameKey) {
+        final String nickNameFromSettings = preferences.getString(nickNameKey, null);
+
+        if (Tools.isValidNick(nickNameFromSettings)) {
+            return nickNameFromSettings;
+        }
+
+        return Integer.toString(me.getCode());
     }
 
     public boolean changeNickName(final Context context, final String nick) {
