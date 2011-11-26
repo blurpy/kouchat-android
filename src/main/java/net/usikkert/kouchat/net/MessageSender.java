@@ -204,7 +204,8 @@ public class MessageSender
 
 				mcSocket.joinGroup( address );
 				mcSocket.setTimeToLive( 64 );
-				LOG.log( Level.FINE, "Connected to " + mcSocket.getNetworkInterface() + "." );
+				// Disabled because of crash in Android emulator
+				// LOG.log( Level.FINE, "Connected to " + mcSocket.getNetworkInterface() + "." );
 				connected = true;
 			}
 		}

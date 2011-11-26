@@ -180,7 +180,8 @@ public class MessageReceiver implements Runnable
 					mcSocket.setNetworkInterface( networkInterface );
 
 				mcSocket.joinGroup( address );
-				LOG.log( Level.FINE, "Connected to " + mcSocket.getNetworkInterface() + "." );
+				// Disabled because of crash in Android emulator
+				// LOG.log( Level.FINE, "Connected to " + mcSocket.getNetworkInterface() + "." );
 				connected = true;
 			}
 		}
