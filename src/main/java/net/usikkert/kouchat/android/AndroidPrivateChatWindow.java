@@ -37,16 +37,24 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
 
     private final User user;
     private final Controller controller;
+    private boolean userNotified;
 
     public AndroidPrivateChatWindow(final User user, final Controller controller) {
         this.user = user;
         this.controller = controller;
+        this.userNotified = false;
     }
 
     @Override
     public void appendToPrivateChat(final String message, final int color) {
+        if (userNotified) {
+            // To avoid spam
+            return;
+        }
+
         try {
             controller.sendPrivateMessage("Private chat not implemented yet!", user);
+            userNotified = true;
         }
 
         catch (final CommandException e) {
