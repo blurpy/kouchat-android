@@ -111,13 +111,16 @@ public class SettingsController extends PreferenceActivity
 
     /**
      * Sets the current value of a setting as the summary, so it's visible without clicking
-     * on the setting to change it.
+     * on the setting to change it. Unless it's not set, in which case the default summary is left untouched.
      *
      * @param preference The setting to update.
      */
     private void setValueAsSummary(final Preference preference) {
         final EditTextPreference editTextPreference = (EditTextPreference) preference;
-        preference.setSummary(editTextPreference.getText());
+
+        if (editTextPreference.getText() != null) {
+            preference.setSummary(editTextPreference.getText());
+        }
     }
 
     private Intent createChatServiceIntent() {
