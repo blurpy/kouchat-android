@@ -133,7 +133,6 @@ public class MainChatController extends Activity {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     sendMessage(mainChatInput.getText().toString());
                     mainChatInput.setText("");
-                    scrollMainChatViewToBottom();
 
                     return true;
                 }
@@ -250,6 +249,7 @@ public class MainChatController extends Activity {
                 final SpannableStringBuilder builder = new SpannableStringBuilder(message + "\n");
                 builder.setSpan(new ForegroundColorSpan(color), 0, message.length(), 0);
                 mainChatView.append(builder);
+                scrollMainChatViewToBottom();
             }
         });
     }
