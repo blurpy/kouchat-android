@@ -78,6 +78,7 @@
         <version>2.2.1</version>
         <configuration>
           <pushChanges>false</pushChanges>
+          <goals>install</goals>
         </configuration>
       </plugin>
     </plugins>
