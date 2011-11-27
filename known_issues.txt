@@ -2,4 +2,4 @@
 - KouChat known issues
 
 * version 0.5:
-  - Crashes on quit in Android 4.0 with a NetworkOnMainThreadException when sending logoff message
+  - Crashes on any network activity in Android 4.0 with a NetworkOnMainThreadException
