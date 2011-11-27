@@ -11,7 +11,7 @@
   <uses-permission android:name="android.permission.INTERNET"/>
 
   <application android:label="@string/app_name"
-               android:icon="@drawable/kou_shortcut"
+               android:icon="@drawable/kou_icon_96x96"
                android:debuggable="true">
 
     <activity android:name=".controller.MainChatController">

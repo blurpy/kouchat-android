@@ -52,7 +52,7 @@ public class SettingsController extends PreferenceActivity
     public void onCreate(final Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
         super.onCreate(savedInstanceState);
-        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.kou_shortcut);
+        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.kou_icon_16x16);
         addPreferencesFromResource(R.xml.settings);
 
         final String nickNameKey = getString(R.string.settings_key_nick_name);

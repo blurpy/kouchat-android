@@ -92,7 +92,7 @@ public class MainChatController extends Activity {
 
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
         setContentView(R.layout.main_chat);
-        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.kou_shortcut);
+        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.kou_icon_16x16);
 
         chatServiceIntent = createChatServiceIntent();
 
