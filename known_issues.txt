@@ -1,5 +1,0 @@
-
-- KouChat known issues
-
-* version 0.5:
-  - Crashes on any network activity in Android 4.0 with a NetworkOnMainThreadException

@@ -123,8 +123,8 @@
   </scm>
 
   <issueManagement>
-    <system>Google Code</system>
-    <url>http://code.google.com/p/kouchat/issues/list</url>
+    <system>GitHub</system>
+    <url>https://github.com/blurpy/kouchat-android/issues</url>
   </issueManagement>
 
   <reporting>
