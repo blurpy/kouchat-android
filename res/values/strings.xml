@@ -16,15 +16,14 @@
     A nick name can have between 1 and 10 characters.\n
     Legal characters are "a-z", "0-9", "-" and "_".
   </string>
-  <string name="settings_nick_name_title">Nick name</string>
+  <string name="settings_nick_name_title">Set nick name</string>
   <string name="settings_key_nick_name">nick_name</string>
   <string name="settings_nick_name_summary">
-    Choose your nick name to use in the chat.
-    The default nick name is a unique generated code.
+    Set your own nick name, so others can identify you in the chat.
   </string>
   <string name="settings_title">Settings - KouChat</string>
   <string name="error_nick_name_invalid">Invalid nick name</string>
-  <string name="error_nick_name_in_use">The nick is in use by someone else.</string>
+  <string name="error_nick_name_in_use">The nick name is in use by someone else.</string>
   <string name="message_your_nick_name_changed">You changed nick to %s</string>
 
 </resources>
