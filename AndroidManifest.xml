@@ -13,7 +13,7 @@
 
   <application android:label="@string/app_name"
                android:icon="@drawable/kou_icon_96x96"
-               android:debuggable="true">
+               android:debuggable="false">
 
     <activity android:name=".controller.MainChatController">
       <intent-filter>
