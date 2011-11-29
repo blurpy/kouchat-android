@@ -1,0 +1,5 @@
+
+- KouChat INSTALL
+
+KouChat is built with Maven.
+Use 'mvn clean package' to create an installable .apk in the target folder.
