@@ -4,7 +4,7 @@
   <artifactId>kouchat-android-impl</artifactId>
   <packaging>apk</packaging>
   <name>KouChat for Android - Implementation</name>
-  
+
   <parent>
     <artifactId>kouchat-android</artifactId>
     <groupId>net.usikkert.kouchat</groupId>
@@ -14,7 +14,7 @@
   <build>
     <resources>
       <resource>
-        <directory>.</directory>
+        <directory>..</directory>
         <includes>
           <include>COPYING</include>
           <include>README</include>
