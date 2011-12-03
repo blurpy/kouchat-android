@@ -23,6 +23,8 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.SettingsController;
 
+import com.jayway.android.robotium.solo.Solo;
+
 import android.test.ActivityInstrumentationTestCase2;
 
 /**
@@ -33,6 +35,8 @@ import android.test.ActivityInstrumentationTestCase2;
 
 public class SettingsControllerTest extends ActivityInstrumentationTestCase2<SettingsController> {
 
+    private Solo solo;
+
     public SettingsControllerTest() {
         super(SettingsController.class);
     }
@@ -41,5 +45,23 @@ public class SettingsControllerTest extends ActivityInstrumentationTestCase2<Set
         final SettingsController activity = getActivity();
         assertNotNull(activity);
     }
-}
 
+    public void setUp() {
+        solo = new Solo(getInstrumentation(), getActivity());
+    }
+
+    public void testPreferenceIsSaved() {
+        solo.sendKey(Solo.MENU);
+        solo.clickOnText("Set nick name");
+        assertTrue(solo.searchText("Set nick name"));
+
+        solo.clearEditText(0);
+        solo.enterText(0, "ape");
+        solo.clickOnButton("OK");
+        assertTrue(solo.searchText("ape"));
+    }
+
+    public void tearDown() {
+        solo.finishOpenedActivities();
+    }
+}
