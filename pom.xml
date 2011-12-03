@@ -43,7 +43,7 @@
 
   <scm>
     <connection>scm:git:file://${basedir}/</connection>
-    <url>https://github.com/blurpy/kouchat-android/</url>
+    <url>https://github.com/blurpy/kouchat-android/blob/master/</url>
   </scm>
 
   <issueManagement>
@@ -64,7 +64,7 @@
         <version>2.8</version>
         <configuration>
           <links>
-            <url>http://java.sun.com/javase/6/docs/api/</url>
+            <url>http://docs.oracle.com/javase/6/docs/api/</url>
           </links>
         </configuration>
       </plugin>
