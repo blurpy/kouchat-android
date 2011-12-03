@@ -2,10 +2,10 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.usikkert.kouchat</groupId>
-  <artifactId>kouchat-android</artifactId>
+  <artifactId>kouchat-android-impl</artifactId>
   <packaging>apk</packaging>
   <version>0.6-SNAPSHOT</version>
-  <name>KouChat for Android</name>
+  <name>KouChat for Android - Implementation</name>
   <url>http://kouchat.googlecode.com/</url>
   <description>
     KouChat is a simple serverless chat client for local area networks.
