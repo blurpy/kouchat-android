@@ -52,7 +52,7 @@ public class MessageTest extends ActivityInstrumentationTestCase2<MainChatContro
         assertTrue(solo.searchText("this is a new message"));
     }
 
-    public void tearDown() throws Exception {
+    public void tearDown() {
         solo.finishOpenedActivities();
     }
 }
