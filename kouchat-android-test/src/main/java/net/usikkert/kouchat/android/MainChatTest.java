@@ -29,16 +29,18 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
 
 /**
- * Test of sending messages.
+ * Tests sending and receiving messages in the main chat.
+ *
+ * TODO receive
  *
  * @author Christian Ihle
  */
 
-public class MessageTest extends ActivityInstrumentationTestCase2<MainChatController> {
+public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private Solo solo;
 
-    public MessageTest() {
+    public MainChatTest() {
         super(MainChatController.class);
     }
 
@@ -46,7 +48,7 @@ public class MessageTest extends ActivityInstrumentationTestCase2<MainChatContro
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void testWrittenMessageIsShownInChat() {
+    public void testOwnMessageIsShownInChat() {
         solo.enterText(0, "this is a new message");
         solo.sendKey(KeyEvent.KEYCODE_ENTER);
         assertTrue(solo.searchText("this is a new message"));
