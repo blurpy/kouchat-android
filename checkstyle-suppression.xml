@@ -7,4 +7,8 @@
   <suppress checks="JavadocPackage" files="[/\\]test[/\\]java[/\\]"/>
   <suppress checks="HideUtilityClassConstructor" files="[/\\]test[/\\]java[/\\]"/>
   <suppress checks="VisibilityModifier" files="[/\\]test[/\\]java[/\\]"/>
+
+  <suppress checks="MagicNumber" files=".Test.java"/>
+  <suppress checks="JavadocMethod" files=".Test.java"/>
+  <suppress checks="JavadocPackage" files=".Test.java"/>
 </suppressions>
