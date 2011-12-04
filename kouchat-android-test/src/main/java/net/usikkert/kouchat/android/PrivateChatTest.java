@@ -44,7 +44,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void setUp() {
-        solo = new Solo(getInstrumentation(), getActivity());
+//        solo = new Solo(getInstrumentation(), getActivity());
     }
 
     public void testFail() {
@@ -52,6 +52,6 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void tearDown() {
-        solo.finishOpenedActivities();
+//        solo.finishOpenedActivities();
     }
 }

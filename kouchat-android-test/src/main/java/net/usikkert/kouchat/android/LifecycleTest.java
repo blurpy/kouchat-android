@@ -44,7 +44,7 @@ public class LifecycleTest extends ActivityInstrumentationTestCase2<MainChatCont
     }
 
     public void setUp() {
-        solo = new Solo(getInstrumentation(), getActivity());
+//        solo = new Solo(getInstrumentation(), getActivity());
     }
 
     public void testFail() {
@@ -52,6 +52,6 @@ public class LifecycleTest extends ActivityInstrumentationTestCase2<MainChatCont
     }
 
     public void tearDown() {
-        solo.finishOpenedActivities();
+//        solo.finishOpenedActivities();
     }
 }
