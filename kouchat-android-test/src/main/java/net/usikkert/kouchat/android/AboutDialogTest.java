@@ -30,8 +30,6 @@ import android.test.ActivityInstrumentationTestCase2;
 /**
  * Test of the about dialog.
  *
- * TODO
- *
  * @author Christian Ihle
  */
 
@@ -47,8 +45,15 @@ public class AboutDialogTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void testFail() {
-        fail("Not implemented");
+    public void testAboutInMenuShouldOpenDialog() {
+        solo.sendKey(Solo.MENU);
+        solo.clickOnText("About");
+        assertTrue(solo.searchText("KouChat v"));
+        assertTrue(solo.searchText("Copyright"));
+        assertTrue(solo.searchText("GPLv3"));
+
+        solo.clickOnButton("OK");
+        assertTrue(solo.searchText("Welcome to KouChat"));
     }
 
     public void tearDown() {
