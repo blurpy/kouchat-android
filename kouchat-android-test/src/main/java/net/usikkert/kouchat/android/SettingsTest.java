@@ -22,6 +22,7 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.misc.Settings;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -35,6 +36,8 @@ import android.test.ActivityInstrumentationTestCase2;
 
 public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
+    private static String originalNickName;
+
     private Solo solo;
 
     public SettingsTest() {
@@ -45,32 +48,39 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void testActivity() {
-        final MainChatController activity = getActivity();
-        assertNotNull(activity);
-    }
+    public void testNickNameCanBeChanged() {
+        originalNickName = Settings.getSettings().getMe().getNick();
 
-    public void testNickNameIsSaved() {
+        // Go to the Settings menu item and choose to set nick name
         solo.sendKey(Solo.MENU);
         solo.clickOnText("Settings");
         solo.clickOnText("Set nick name");
         assertTrue(solo.searchText("Set nick name"));
 
+        // Change nick name to Testing in the popup dialog
         solo.clearEditText(0);
-        solo.enterText(0, "ape");
+        solo.enterText(0, "Testing");
+        solo.goBack(); // hide keyboard
         solo.clickOnButton("OK");
-        assertTrue(solo.searchText("ape"));
+        assertTrue(solo.searchText("Testing"));
 
+        // Go back to main chat and check result
         solo.goBack();
-        assertTrue(solo.searchText("You changed nick to ape")); // This fails for some reason...
+        assertTrue(solo.searchText("You changed nick to Testing"));
     }
 
-    public void testResetNickName() {
+    public void testRestoreNickName() {
+        assertNotNull(originalNickName);
+
+        // Go to the Settings menu item and choose to set nick name
         solo.sendKey(Solo.MENU);
         solo.clickOnText("Settings");
         solo.clickOnText("Set nick name");
+
+        // Change nick name back to the original value in the popup dialog
         solo.clearEditText(0);
-        solo.enterText(0, "test");
+        solo.enterText(0, originalNickName);
+        solo.goBack(); // hide keyboard
         solo.clickOnButton("OK");
     }
 
