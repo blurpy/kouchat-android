@@ -26,6 +26,7 @@ import net.usikkert.kouchat.misc.Settings;
 
 import com.jayway.android.robotium.solo.Solo;
 
+import android.graphics.Rect;
 import android.test.ActivityInstrumentationTestCase2;
 
 /**
@@ -58,9 +59,9 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(solo.searchText("Set nick name"));
 
         // Change nick name to Testing in the popup dialog
+        hideSoftKeyboard();
         solo.clearEditText(0);
         solo.enterText(0, "Testing");
-        solo.goBack(); // hide keyboard
         solo.clickOnButton("OK");
         assertTrue(solo.searchText("Testing"));
 
@@ -78,13 +79,34 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.clickOnText("Set nick name");
 
         // Change nick name back to the original value in the popup dialog
+        hideSoftKeyboard();
         solo.clearEditText(0);
         solo.enterText(0, originalNickName);
-        solo.goBack(); // hide keyboard
         solo.clickOnButton("OK");
     }
 
     public void tearDown() {
         solo.finishOpenedActivities();
+    }
+
+    private void hideSoftKeyboard() {
+        if (softKeyboardIsVisible()) {
+            solo.goBack();
+        }
+    }
+
+    private boolean softKeyboardIsVisible() {
+        final MainChatController activity = getActivity();
+
+        final Rect visibleDisplayFrame = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleDisplayFrame);
+
+        final int statusBarHeight = visibleDisplayFrame.top;
+        final int activityHeight = visibleDisplayFrame.height();
+        final int screenHeight = activity.getWindowManager().getDefaultDisplay().getHeight();
+
+        final int diff = (screenHeight - statusBarHeight) - activityHeight;
+
+        return diff > screenHeight / 3;
     }
 }
