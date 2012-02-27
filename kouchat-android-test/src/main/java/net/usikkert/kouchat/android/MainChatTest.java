@@ -22,6 +22,9 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.misc.CommandException;
+import net.usikkert.kouchat.net.Messages;
+import net.usikkert.kouchat.util.TestClient;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -31,11 +34,8 @@ import android.view.KeyEvent;
 /**
  * Tests sending and receiving messages in the main chat.
  *
- * TODO receive
- *
  * @author Christian Ihle
  */
-
 public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private Solo solo;
@@ -49,9 +49,19 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void testOwnMessageIsShownInChat() {
-        solo.enterText(0, "this is a new message");
+        solo.enterText(0, "This is a new message from myself");
         solo.sendKey(KeyEvent.KEYCODE_ENTER);
-        assertTrue(solo.searchText("this is a new message"));
+        assertTrue(solo.searchText("This is a new message from myself"));
+    }
+
+    public void testOtherClientMessageIsShownInChat() throws CommandException {
+        final TestClient client = new TestClient();
+        final Messages messages = client.logon();
+
+        messages.sendChatMessage("Hello, this is a message from someone else");
+        assertTrue(solo.searchText("Hello, this is a message from someone else"));
+
+        client.logoff();
     }
 
     public void tearDown() {
