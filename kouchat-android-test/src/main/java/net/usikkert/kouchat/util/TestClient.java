@@ -26,11 +26,11 @@ import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.NetworkService;
 
 /**
- * A wrapper around {@link Messages} that can be used for simulating a KouChat client in tests.
+ * A class that can be used for simulating a KouChat client in tests.
  *
  * @author Christian Ihle
  */
-public class TestMessages {
+public class TestClient {
 
     private final NetworkService networkService = new NetworkService();
     private final Messages messages = new Messages(networkService);
