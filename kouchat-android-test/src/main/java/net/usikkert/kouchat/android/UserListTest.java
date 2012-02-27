@@ -22,10 +22,15 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.net.Messages;
+import net.usikkert.kouchat.util.TestClient;
 
 import com.jayway.android.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.ListView;
 
 /**
  * Tests the user list.
@@ -38,20 +43,54 @@ import android.test.ActivityInstrumentationTestCase2;
 public class UserListTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private Solo solo;
+    private TestClient client;
+    private MainChatController activity;
+    private User me;
 
     public UserListTest() {
         super(MainChatController.class);
     }
 
     public void setUp() {
-//        solo = new Solo(getInstrumentation(), getActivity());
+        activity = getActivity();
+        solo = new Solo(getInstrumentation(), activity);
+        client = new TestClient();
+        me = Settings.getSettings().getMe();
     }
 
-    public void testFail() {
-        fail("Not implemented");
+    public void testUserListShouldContainMeOnLogon() {
+        final ListView userList = solo.getCurrentListViews().get(0);
+        assertEquals(1, userList.getCount());
+        assertSame(me, userList.getItemAtPosition(0));
+    }
+
+    public void testUserListShouldAddNewUser() {
+        final ListView userList = solo.getCurrentListViews().get(0);
+        assertEquals(1, userList.getCount());
+
+        final Messages messages = client.logon();
+
+        sleep(500);
+
+        assertEquals(2, userList.getCount());
+        final User item1 = (User) userList.getItemAtPosition(0);
+        final User item2 = (User) userList.getItemAtPosition(1);
+
+        // TODO verify order
     }
 
     public void tearDown() {
-//        solo.finishOpenedActivities();
+        client.logoff();
+        solo.finishOpenedActivities();
+    }
+
+    private void sleep(final int time) {
+        try {
+            Thread.sleep(time);
+        }
+
+        catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
