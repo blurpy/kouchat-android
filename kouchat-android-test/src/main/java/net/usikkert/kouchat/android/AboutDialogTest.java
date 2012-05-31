@@ -32,7 +32,6 @@ import android.test.ActivityInstrumentationTestCase2;
  *
  * @author Christian Ihle
  */
-
 public class AboutDialogTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private Solo solo;

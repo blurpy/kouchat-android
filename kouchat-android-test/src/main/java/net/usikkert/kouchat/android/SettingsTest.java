@@ -34,7 +34,6 @@ import android.test.ActivityInstrumentationTestCase2;
  *
  * @author Christian Ihle
  */
-
 public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private static String originalNickName;

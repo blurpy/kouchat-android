@@ -34,7 +34,6 @@ import android.test.ActivityInstrumentationTestCase2;
  *
  * @author Christian Ihle
  */
-
 public class LifecycleTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private Solo solo;

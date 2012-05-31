@@ -39,7 +39,6 @@ import android.widget.ListView;
  *
  * @author Christian Ihle
  */
-
 public class UserListTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private Solo solo;
