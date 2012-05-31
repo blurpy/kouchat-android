@@ -51,7 +51,7 @@ public interface Constants
 	/**
 	 * Copyright from year, to year.
 	 */
-	String APP_COPYRIGHT_YEARS = "2006-2011";
+	String APP_COPYRIGHT_YEARS = "2006-2012";
 
 	/**
 	 * Name of the author of this application.
