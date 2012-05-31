@@ -165,7 +165,15 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     }
 
     public void logOff() {
-        controller.logOff(false);
+        final AsyncTask<Void, Void, Void> logOffTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(final Void... voids) {
+                controller.logOff(false);
+                return null;
+            }
+        };
+
+        logOffTask.execute((Void) null);
     }
 
     public boolean isLoggedOn() {

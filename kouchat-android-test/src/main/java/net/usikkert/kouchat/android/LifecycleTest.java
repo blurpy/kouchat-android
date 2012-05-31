@@ -43,14 +43,15 @@ public class LifecycleTest extends ActivityInstrumentationTestCase2<MainChatCont
     }
 
     public void setUp() {
-//        solo = new Solo(getInstrumentation(), getActivity());
+        solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void testFail() {
-        fail("Not implemented");
+    public void testQuitShouldNotFail() {
+        solo.sendKey(Solo.MENU);
+        solo.clickOnText("Quit");
     }
 
     public void tearDown() {
-//        solo.finishOpenedActivities();
+        solo.finishOpenedActivities();
     }
 }
