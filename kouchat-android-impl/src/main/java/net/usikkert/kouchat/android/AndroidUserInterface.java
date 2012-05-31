@@ -21,6 +21,8 @@
 
 package net.usikkert.kouchat.android;
 
+import java.util.concurrent.ExecutionException;
+
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.event.UserListListener;
@@ -38,6 +40,7 @@ import net.usikkert.kouchat.util.Tools;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -183,14 +186,23 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     }
 
     public void sendMessage(final String message) {
-        try {
-            controller.sendChatMessage(message);
-            msgController.showOwnMessage(message);
-        }
+        final AsyncTask<Void, Void, Void> sendMessageTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            public Void doInBackground(final Void... voids) {
+                try {
+                    controller.sendChatMessage(message);
+                    msgController.showOwnMessage(message);
+                }
 
-        catch (final CommandException e) {
-            msgController.showSystemMessage(e.getMessage());
-        }
+                catch (final CommandException e) {
+                    msgController.showSystemMessage(e.getMessage());
+                }
+
+                return null;
+            }
+        };
+
+        sendMessageTask.execute((Void) null);
     }
 
     @Override
@@ -250,19 +262,43 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         }
 
         else {
-            try {
-                controller.changeMyNick(trimNick);
-                msgController.showSystemMessage(context.getString(R.string.message_your_nick_name_changed, me.getNick()));
-                showTopic();
-
-                return true;
-            }
-
-            catch (final CommandException e) {
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+            return doChangeNickName(context, trimNick);
         }
 
         return false;
+    }
+
+    private boolean doChangeNickName(final Context context, final String trimNick) {
+        final AsyncTask<Void, Void, Boolean> changeNickNameTask = new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            public Boolean doInBackground(final Void... voids) {
+                try {
+                    controller.changeMyNick(trimNick);
+                    msgController.showSystemMessage(context.getString(R.string.message_your_nick_name_changed, me.getNick()));
+                    showTopic();
+
+                    return true;
+                }
+
+                catch (final CommandException e) {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            }
+        };
+
+        changeNickNameTask.execute((Void) null);
+
+        try {
+            return changeNickNameTask.get();
+        }
+
+        catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
