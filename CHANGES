@@ -1,6 +1,10 @@
 
 - KouChat CHANGES
 
+* version 0.5.1 (03.06.2012):
+  - Added support for Android 4.0, Ice Cream Sandwich
+  - Updated copyright to include 2012
+
 * version 0.5 (29.11.2011):
   - Imported backend code from KouChat v1.1.0 for desktop
   - Added support for main chat
