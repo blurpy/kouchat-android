@@ -45,7 +45,7 @@ public class AboutDialogTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void testAboutInMenuShouldOpenDialog() {
+    public void test01AboutInMenuShouldOpenDialog() {
         solo.sendKey(Solo.MENU);
         solo.clickOnText("About");
         assertTrue(solo.searchText("KouChat v"));
@@ -54,7 +54,9 @@ public class AboutDialogTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         solo.clickOnButton("OK");
         assertTrue(solo.searchText("Welcome to KouChat"));
+    }
 
+    public void test99Quit() {
         TestUtils.quit(solo);
     }
 

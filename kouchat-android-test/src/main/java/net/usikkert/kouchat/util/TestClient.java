@@ -51,6 +51,10 @@ public class TestClient {
     }
 
     public void logoff() {
+        if (!networkService.isNetworkUp()) {
+            return;
+        }
+
         messages.sendLogoffMessage();
         sleep(500);
         networkService.disconnect();

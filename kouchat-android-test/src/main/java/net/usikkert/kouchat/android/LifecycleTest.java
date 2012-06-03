@@ -46,7 +46,7 @@ public class LifecycleTest extends ActivityInstrumentationTestCase2<MainChatCont
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void testQuitShouldNotFail() {
+    public void test01QuitShouldNotFail() {
         solo.sendKey(Solo.MENU);
         solo.clickOnText("Quit");
     }

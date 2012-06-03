@@ -61,7 +61,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         me = Settings.getSettings().getMe();
     }
 
-    public void test1OtherClientSettingTopicIsShownInChatAndTitle() throws CommandException {
+    public void test01OtherClientSettingTopicIsShownInChatAndTitle() throws CommandException {
         messages.sendTopicChangeMessage(new Topic("Original topic", "Test", System.currentTimeMillis()));
         sleep(500);
 
@@ -69,13 +69,16 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         assertEquals(me.getNick() + " - Topic: Original topic (Test) - KouChat", activity.getTitle());
     }
 
-    public void test2OtherClientChangingTopicIsShownInChatAndTitle() throws CommandException {
+    public void test02OtherClientChangingTopicIsShownInChatAndTitle() throws CommandException {
         messages.sendTopicChangeMessage(new Topic("New topic", "Test", System.currentTimeMillis()));
         sleep(500);
 
         assertTrue(solo.searchText("Test changed the topic to: New topic"));
         assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", activity.getTitle());
+    }
 
+    public void test99Quit() {
+        client.logoff();
         TestUtils.quit(solo);
     }
 

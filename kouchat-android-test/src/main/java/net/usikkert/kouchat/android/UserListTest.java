@@ -58,13 +58,13 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         me = Settings.getSettings().getMe();
     }
 
-    public void testUserListShouldContainMeOnLogon() {
+    public void test01UserListShouldContainMeOnLogon() {
         final ListView userList = solo.getCurrentListViews().get(0);
         assertEquals(1, userList.getCount());
         assertSame(me, userList.getItemAtPosition(0));
     }
 
-    public void testUserListShouldAddNewUser() {
+    public void test02UserListShouldAddNewUser() {
         final ListView userList = solo.getCurrentListViews().get(0);
         assertEquals(1, userList.getCount());
 
@@ -77,7 +77,10 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         final User item2 = (User) userList.getItemAtPosition(1);
 
         // TODO verify order
+    }
 
+    public void test99Quit() {
+        client.logoff();
         TestUtils.quit(solo);
     }
 

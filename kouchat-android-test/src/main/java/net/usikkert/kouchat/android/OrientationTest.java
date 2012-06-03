@@ -51,7 +51,7 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
         me = Settings.getSettings().getMe();
     }
 
-    public void testOrientationSwitchShouldKeepState() {
+    public void test01OrientationSwitchShouldKeepState() {
         verifyWelcomeMessage();
         verifyTopic();
         verifyUserInUserList();
@@ -67,7 +67,9 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
         verifyWelcomeMessage();
         verifyTopic();
         verifyUserInUserList();
+    }
 
+    public void test99Quit() {
         TestUtils.quit(solo);
     }
 

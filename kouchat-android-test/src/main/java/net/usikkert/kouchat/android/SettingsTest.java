@@ -49,7 +49,7 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void testNickNameCanBeChanged() {
+    public void test01NickNameCanBeChanged() {
         originalNickName = Settings.getSettings().getMe().getNick();
 
         // Go to the Settings menu item and choose to set nick name
@@ -70,7 +70,7 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(solo.searchText("You changed nick to Testing"));
     }
 
-    public void testRestoreNickName() {
+    public void test02RestoreNickName() {
         assertNotNull(originalNickName);
 
         // Go to the Settings menu item and choose to set nick name
@@ -83,8 +83,9 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.clearEditText(0);
         solo.enterText(0, originalNickName);
         solo.clickOnButton("OK");
+    }
 
-        solo.goBack();
+    public void test99Quit() {
         TestUtils.quit(solo);
     }
 

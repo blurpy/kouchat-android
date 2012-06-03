@@ -49,13 +49,13 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void testOwnMessageIsShownInChat() {
+    public void test01OwnMessageIsShownInChat() {
         solo.enterText(0, "This is a new message from myself");
         solo.sendKey(KeyEvent.KEYCODE_ENTER);
         assertTrue(solo.searchText("This is a new message from myself"));
     }
 
-    public void testOtherClientMessageIsShownInChat() throws CommandException {
+    public void test02OtherClientMessageIsShownInChat() throws CommandException {
         final TestClient client = new TestClient();
         final Messages messages = client.logon();
 
@@ -63,6 +63,9 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(solo.searchText("Hello, this is a message from someone else"));
 
         client.logoff();
+    }
+
+    public void test99Quit() {
         TestUtils.quit(solo);
     }
 
