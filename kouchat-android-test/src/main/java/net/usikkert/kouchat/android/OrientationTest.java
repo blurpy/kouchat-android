@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -66,6 +67,8 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
         verifyWelcomeMessage();
         verifyTopic();
         verifyUserInUserList();
+
+        TestUtils.quit(solo);
     }
 
     private void verifyUserInUserList() {

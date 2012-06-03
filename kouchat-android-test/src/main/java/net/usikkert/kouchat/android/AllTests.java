@@ -25,7 +25,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * Runs all the tests in the correct order.
+ * Runs all the implemented tests.
  *
  * @author Christian Ihle
  */
@@ -34,15 +34,15 @@ public class AllTests extends TestSuite {
     public static Test suite() {
         final TestSuite testSuite = new TestSuite("All Android tests");
 
-        testSuite.addTestSuite(TopicTest.class); // Must run first
         testSuite.addTestSuite(AboutDialogTest.class);
         testSuite.addTestSuite(LifecycleTest.class);
         testSuite.addTestSuite(MainChatTest.class);
         testSuite.addTestSuite(OrientationTest.class);
         testSuite.addTestSuite(SettingsTest.class);
+        testSuite.addTestSuite(TopicTest.class);
         testSuite.addTestSuite(UserListTest.class);
-//        testSuite.addTestSuite(PrivateChatTest.class);
 //        testSuite.addTestSuite(FileTransferTest.class);
+//        testSuite.addTestSuite(PrivateChatTest.class);
 
         return testSuite;
     }

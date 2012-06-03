@@ -24,7 +24,7 @@ package net.usikkert.kouchat.util;
 
 import java.lang.reflect.Field;
 
-import net.usikkert.kouchat.util.Validate;
+import com.jayway.android.robotium.solo.Solo;
 
 /**
  * Utilities for tests.
@@ -68,6 +68,16 @@ public final class TestUtils {
 
         final Field field = getField(object, fieldName);
         setValue(object, value, field);
+    }
+
+    /**
+     * Quits the application by using the quit menu item.
+     *
+     * @param solo The solo tester.
+     */
+    public static void quit(final Solo solo) {
+        solo.sendKey(Solo.MENU);
+        solo.clickOnText("Quit");
     }
 
     private static void setValue(final Object object, final Object value, final Field field) {

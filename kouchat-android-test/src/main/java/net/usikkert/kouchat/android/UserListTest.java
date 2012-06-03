@@ -26,6 +26,7 @@ import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.util.TestClient;
+import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -76,6 +77,8 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         final User item2 = (User) userList.getItemAtPosition(1);
 
         // TODO verify order
+
+        TestUtils.quit(solo);
     }
 
     public void tearDown() {

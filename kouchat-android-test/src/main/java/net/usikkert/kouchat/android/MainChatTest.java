@@ -25,6 +25,7 @@ import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.util.TestClient;
+import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -62,6 +63,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(solo.searchText("Hello, this is a message from someone else"));
 
         client.logoff();
+        TestUtils.quit(solo);
     }
 
     public void tearDown() {

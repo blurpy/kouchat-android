@@ -22,6 +22,7 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -53,6 +54,8 @@ public class AboutDialogTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         solo.clickOnButton("OK");
         assertTrue(solo.searchText("Welcome to KouChat"));
+
+        TestUtils.quit(solo);
     }
 
     public void tearDown() {

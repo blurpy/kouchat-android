@@ -23,6 +23,7 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -82,6 +83,9 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.clearEditText(0);
         solo.enterText(0, originalNickName);
         solo.clickOnButton("OK");
+
+        solo.goBack();
+        TestUtils.quit(solo);
     }
 
     public void tearDown() {
