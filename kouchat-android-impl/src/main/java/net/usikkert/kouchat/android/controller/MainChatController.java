@@ -31,7 +31,6 @@ import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.misc.User;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -150,12 +149,11 @@ public class MainChatController extends Activity {
         mainChatUserList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> userList, final View view, final int position, final long id) {
-                final Object selectedUser = userList.getItemAtPosition(position);
+                final User selectedUser = (User) userList.getItemAtPosition(position);
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(MainChatController.this);
-                builder.setMessage("Private chat with: " + selectedUser);
-                final AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                final Intent privateChatIntent = new Intent(MainChatController.this, PrivateChatController.class);
+                privateChatIntent.putExtra("userCode", selectedUser.getCode());
+                startActivity(privateChatIntent);
             }
         });
     }

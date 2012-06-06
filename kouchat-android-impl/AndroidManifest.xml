@@ -22,6 +22,7 @@
     </activity>
 
     <activity android:name=".controller.SettingsController"/>
+    <activity android:name=".controller.PrivateChatController"/>
 
     <service android:name=".service.ChatService"/>
 
