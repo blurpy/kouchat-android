@@ -31,6 +31,7 @@ import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.misc.User;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -47,6 +48,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -105,6 +107,7 @@ public class MainChatController extends Activity {
         bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
 
         registerMainChatInputListener();
+        registerUserListClickListener();
         makeMainChatViewScrollable();
         setupMainChatUserList();
         openKeyboard();
@@ -129,6 +132,7 @@ public class MainChatController extends Activity {
 
     private void registerMainChatInputListener() {
         mainChatInput.setOnKeyListener(new View.OnKeyListener() {
+            @Override
             public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     sendMessage(mainChatInput.getText().toString());
@@ -138,6 +142,20 @@ public class MainChatController extends Activity {
                 }
 
                 return false;
+            }
+        });
+    }
+
+    private void registerUserListClickListener() {
+        mainChatUserList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(final AdapterView<?> userList, final View view, final int position, final long id) {
+                final Object selectedUser = userList.getItemAtPosition(position);
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(MainChatController.this);
+                builder.setMessage("Private chat with: " + selectedUser);
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
         });
     }
