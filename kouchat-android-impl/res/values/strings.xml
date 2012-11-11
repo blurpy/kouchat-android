@@ -9,8 +9,8 @@
     Copyright 2006-2012 by Christian Ihle\n
     kontakt@usikkert.net\n
     http://kouchat.googlecode.com\n\n
-    Source available under the GNU GPLv3:\n
-    http://www.gnu.org/licenses/gpl-3.0.html
+    Source available under the GNU LGPLv3:\n
+    http://www.gnu.org/licenses/lgpl-3.0.txt
   </string>
   <string name="settings_nick_name_dialog_message">
     A nick name can have between 1 and 10 characters.\n

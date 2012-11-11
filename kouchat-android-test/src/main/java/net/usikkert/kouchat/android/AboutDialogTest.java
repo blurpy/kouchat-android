@@ -50,7 +50,7 @@ public class AboutDialogTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.clickOnText("About");
         assertTrue(solo.searchText("KouChat v"));
         assertTrue(solo.searchText("Copyright"));
-        assertTrue(solo.searchText("GPLv3"));
+        assertTrue(solo.searchText("LGPLv3"));
 
         solo.clickOnButton("OK");
         assertTrue(solo.searchText("Welcome to KouChat"));
