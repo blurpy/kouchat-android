@@ -37,12 +37,12 @@ public interface Constants {
     /**
      * The application version.
      */
-	String APP_VERSION = "0.6";
+    String APP_VERSION = "0.6";
 
     /**
      * Which license the application has.
      */
-	String APP_LICENSE_NAME = "GNU LGPLv3";
+    String APP_LICENSE_NAME = "GNU LGPLv3";
 
     /**
      * The home page of this application.
