@@ -1,22 +1,23 @@
 
 /***************************************************************************
- *   Copyright 2006-2009 by Christian Ihle                                 *
+ *   Copyright 2006-2012 by Christian Ihle                                 *
  *   kontakt@usikkert.net                                                  *
  *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   This file is part of KouChat.                                         *
  *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
+ *   KouChat is free software; you can redistribute it and/or modify       *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of        *
+ *   the License, or (at your option) any later version.                   *
+ *                                                                         *
+ *   KouChat is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      *
+ *   Lesser General Public License for more details.                       *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with KouChat.                                           *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
 package net.usikkert.kouchat.net;
@@ -43,372 +44,350 @@ import net.usikkert.kouchat.util.ByteCounter;
  *
  * @author Christian Ihle
  */
-public class FileSender implements FileTransfer
-{
-	/** The logger. */
-	private static final Logger LOG = Logger.getLogger( FileSender.class.getName() );
+public class FileSender implements FileTransfer {
 
-	/** The user to send a file to. */
-	private final User user;
+    /** The logger. */
+    private static final Logger LOG = Logger.getLogger(FileSender.class.getName());
 
-	/** The file to send to the user. */
-	private final File file;
+    /** The user to send a file to. */
+    private final User user;
 
-	/** Keeps count of the transfer speed. */
-	private final ByteCounter bCounter;
+    /** The file to send to the user. */
+    private final File file;
 
-	/** Percent of the file transferred. */
-	private int percent;
+    /** The unique ID of this file transfer. */
+    private final int id;
 
-	/** Number of bytes transferred. */
-	private long transferred;
+    /** Keeps count of the transfer speed. */
+    private final ByteCounter bCounter;
 
-	/** If the file was successfully sent. */
-	private boolean sent;
+    /** Percent of the file transferred. */
+    private int percent;
 
-	/** If the file transfer is canceled. */
-	private boolean cancel;
+    /** Number of bytes transferred. */
+    private long transferred;
 
-	/** If still waiting for the file transfer to begin. */
-	private boolean waiting;
+    /** If the file was successfully sent. */
+    private boolean sent;
 
-	/** The file transfer listener. */
-	private FileTransferListener listener;
+    /** If the file transfer is canceled. */
+    private boolean cancel;
 
-	/** The input stream from the file. */
-	private FileInputStream fis;
+    /** If still waiting for the file transfer to begin. */
+    private boolean waiting;
 
-	/** The output stream to the other user. */
-	private OutputStream os;
+    /** The file transfer listener. */
+    private FileTransferListener listener;
 
-	/** The socket connection to the other user. */
-	private Socket sock;
+    /** The input stream from the file. */
+    private FileInputStream fis;
 
-	/**
-	 * Constructor. Creates a new file sender.
-	 *
-	 * @param user The user to send the file to.
-	 * @param file The file to send.
-	 */
-	public FileSender( final User user, final File file )
-	{
-		this.user = user;
-		this.file = file;
+    /** The output stream to the other user. */
+    private OutputStream os;
 
-		bCounter = new ByteCounter();
-		waiting = true;
-	}
+    /** The socket connection to the other user. */
+    private Socket sock;
 
-	/**
-	 * Connects to the user at the specified port and transfers the file
-	 * to that user.
-	 *
-	 * @param port The port to use when connecting to the user.
-	 * @return If the file transfer was successful.
-	 */
-	public boolean transfer( final int port )
-	{
-		if ( !cancel )
-		{
-			listener.statusConnecting();
+    /**
+     * Constructor. Creates a new file sender.
+     *
+     * @param user The user to send the file to.
+     * @param file The file to send.
+     * @param id The unique ID of this file transfer.
+     */
+    public FileSender(final User user, final File file, final int id) {
+        this.user = user;
+        this.file = file;
+        this.id = id;
 
-			waiting = false;
-			sent = false;
+        bCounter = new ByteCounter();
+        waiting = true;
+    }
 
-			try
-			{
-				int counter = 0;
+    /**
+     * Connects to the user at the specified port and transfers the file
+     * to that user.
+     *
+     * @param port The port to use when connecting to the user.
+     * @return If the file transfer was successful.
+     */
+    public boolean transfer(final int port) {
+        if (!cancel) {
+            listener.statusConnecting();
 
-				while ( sock == null && counter < 10 )
-				{
-					counter++;
+            waiting = false;
+            sent = false;
 
-					try
-					{
-						sock = new Socket( InetAddress.getByName( user.getIpAddress() ), port );
-					}
+            try {
+                int counter = 0;
 
-					catch ( final UnknownHostException e )
-					{
-						LOG.log( Level.SEVERE, e.toString(), e );
-					}
+                while (sock == null && counter < 10) {
+                    counter++;
 
-					catch ( final IOException e )
-					{
-						LOG.log( Level.SEVERE, e.toString(), e );
-					}
+                    try {
+                        sock = new Socket(InetAddress.getByName(user.getIpAddress()), port);
+                    }
 
-					try
-					{
-						Thread.sleep( 100 );
-					}
+                    catch (final UnknownHostException e) {
+                        LOG.log(Level.SEVERE, e.toString(), e);
+                    }
 
-					catch ( final InterruptedException e )
-					{
-						LOG.log( Level.SEVERE, e.toString(), e );
-					}
-				}
+                    catch (final IOException e) {
+                        LOG.log(Level.SEVERE, e.toString(), e);
+                    }
 
-				if ( sock != null && !cancel )
-				{
-					listener.statusTransferring();
-					fis = new FileInputStream( file );
-					os = sock.getOutputStream();
+                    try {
+                        Thread.sleep(100);
+                    }
 
-					byte[] b = new byte[1024];
-					transferred = 0;
-					percent = 0;
-					int tmpTransferred = 0;
-					int tmpPercent = 0;
-					int transCounter = 0;
-					bCounter.prepare();
+                    catch (final InterruptedException e) {
+                        LOG.log(Level.SEVERE, e.toString(), e);
+                    }
+                }
 
-					while ( !cancel && ( tmpTransferred = fis.read( b ) ) != -1 )
-					{
-						os.write( b, 0, tmpTransferred );
-						transferred += tmpTransferred;
-						percent = (int) ( ( transferred * 100 ) / file.length() );
-						bCounter.addBytes( tmpTransferred );
-						transCounter++;
+                if (sock != null && !cancel) {
+                    listener.statusTransferring();
+                    fis = new FileInputStream(file);
+                    os = sock.getOutputStream();
 
-						if ( percent > tmpPercent || transCounter >= 250 )
-						{
-							transCounter = 0;
-							tmpPercent = percent;
-							listener.transferUpdate();
-						}
-					}
+                    final byte[] b = new byte[1024];
+                    transferred = 0;
+                    percent = 0;
+                    int tmpTransferred = 0;
+                    int tmpPercent = 0;
+                    int transCounter = 0;
+                    bCounter.prepare();
 
-					if ( !cancel && transferred == file.length() )
-					{
-						sent = true;
-						listener.statusCompleted();
-					}
+                    while (!cancel && (tmpTransferred = fis.read(b)) != -1) {
+                        os.write(b, 0, tmpTransferred);
+                        transferred += tmpTransferred;
+                        percent = (int) ((transferred * 100) / file.length());
+                        bCounter.addBytes(tmpTransferred);
+                        transCounter++;
 
-					else
-					{
-						listener.statusFailed();
-					}
-				}
+                        if (percent > tmpPercent || transCounter >= 250) {
+                            transCounter = 0;
+                            tmpPercent = percent;
+                            listener.transferUpdate();
+                        }
+                    }
 
-				else
-				{
-					listener.statusFailed();
-				}
-			}
+                    if (!cancel && transferred == file.length()) {
+                        sent = true;
+                        listener.statusCompleted();
+                    }
 
-			catch ( final UnknownHostException e )
-			{
-				LOG.log( Level.SEVERE, e.toString(), e );
-				listener.statusFailed();
-			}
+                    else {
+                        listener.statusFailed();
+                    }
+                }
 
-			catch ( final IOException e )
-			{
-				LOG.log( Level.SEVERE, e.toString() );
-				listener.statusFailed();
-			}
+                else {
+                    listener.statusFailed();
+                }
+            }
 
-			finally
-			{
-				stopSender();
-				cleanupConnections();
-			}
-		}
+            catch (final UnknownHostException e) {
+                LOG.log(Level.SEVERE, e.toString(), e);
+                listener.statusFailed();
+            }
 
-		return sent;
-	}
+            catch (final IOException e) {
+                LOG.log(Level.SEVERE, e.toString());
+                listener.statusFailed();
+            }
 
-	/**
-	 * Sets all connections to null.
-	 */
-	private void cleanupConnections()
-	{
-		fis = null;
-		os = null;
-		sock = null;
-	}
+            finally {
+                stopSender();
+                cleanupConnections();
+            }
+        }
 
-	/**
-	 * Closes the connection to the user.
-	 */
-	private void stopSender()
-	{
-		try
-		{
-			if ( fis != null )
-				fis.close();
-		}
+        return sent;
+    }
 
-		catch ( final IOException e )
-		{
-			LOG.log( Level.SEVERE, e.toString(), e );
-		}
+    /**
+     * Sets all connections to null.
+     */
+    private void cleanupConnections() {
+        fis = null;
+        os = null;
+        sock = null;
+    }
 
-		try
-		{
-			if ( os != null )
-				os.flush();
-		}
+    /**
+     * Closes the connection to the user.
+     */
+    private void stopSender() {
+        try {
+            if (fis != null) {
+                fis.close();
+            }
+        }
 
-		catch ( final IOException e )
-		{
-			LOG.log( Level.SEVERE, e.toString(), e );
-		}
+        catch (final IOException e) {
+            LOG.log(Level.SEVERE, e.toString(), e);
+        }
 
-		try
-		{
-			if ( os != null )
-				os.close();
-		}
+        try {
+            if (os != null) {
+                os.flush();
+            }
+        }
 
-		catch ( final IOException e )
-		{
-			LOG.log( Level.SEVERE, e.toString(), e );
-		}
+        catch (final IOException e) {
+            LOG.log(Level.SEVERE, e.toString(), e);
+        }
 
-		try
-		{
-			if ( sock != null )
-				sock.close();
-		}
+        try {
+            if (os != null) {
+                os.close();
+            }
+        }
 
-		catch ( final IOException e )
-		{
-			LOG.log( Level.SEVERE, e.toString(), e );
-		}
-	}
+        catch (final IOException e) {
+            LOG.log(Level.SEVERE, e.toString(), e);
+        }
 
-	/**
-	 * Checks if the file transfer has been canceled.
-	 *
-	 * @return If the file transfer has been canceled.
-	 */
-	@Override
-	public boolean isCanceled()
-	{
-		return cancel;
-	}
+        try {
+            if (sock != null) {
+                sock.close();
+            }
+        }
 
-	/**
-	 * Cancels the file transfer.
-	 */
-	@Override
-	public void cancel()
-	{
-		cancel = true;
-		stopSender();
-		listener.statusFailed();
-	}
+        catch (final IOException e) {
+            LOG.log(Level.SEVERE, e.toString(), e);
+        }
+    }
 
-	/**
-	 * Checks if the file transfer is complete.
-	 *
-	 * @return If the file transfer is complete.
-	 */
-	@Override
-	public boolean isTransferred()
-	{
-		return sent;
-	}
+    /**
+     * Checks if the file transfer has been canceled.
+     *
+     * @return If the file transfer has been canceled.
+     */
+    @Override
+    public boolean isCanceled() {
+        return cancel;
+    }
 
-	/**
-	 * The percent of the file transfer that is completed.
-	 *
-	 * @return Percent completed.
-	 */
-	@Override
-	public int getPercent()
-	{
-		return percent;
-	}
+    /**
+     * Cancels the file transfer.
+     */
+    @Override
+    public void cancel() {
+        cancel = true;
+        stopSender();
+        listener.statusFailed();
+    }
 
-	/**
-	 * The other user, which receives a file.
-	 *
-	 * @return The other user.
-	 */
-	@Override
-	public User getUser()
-	{
-		return user;
-	}
+    /**
+     * Checks if the file transfer is complete.
+     *
+     * @return If the file transfer is complete.
+     */
+    @Override
+    public boolean isTransferred() {
+        return sent;
+    }
 
-	/**
-	 * Number of bytes transferred.
-	 *
-	 * @return Bytes transferred.
-	 */
-	@Override
-	public long getTransferred()
-	{
-		return transferred;
-	}
+    /**
+     * The percent of the file transfer that is completed.
+     *
+     * @return Percent completed.
+     */
+    @Override
+    public int getPercent() {
+        return percent;
+    }
 
-	/**
-	 * Gets the size of the file being transferred, in bytes.
-	 *
-	 * @return The file size.
-	 */
-	@Override
-	public long getFileSize()
-	{
-		return file.length();
-	}
+    /**
+     * The other user, which receives a file.
+     *
+     * @return The other user.
+     */
+    @Override
+    public User getUser() {
+        return user;
+    }
 
-	/**
-	 * Gets the direction, which is send.
-	 *
-	 * @return Send, the direction of the file transfer.
-	 */
-	@Override
-	public Direction getDirection()
-	{
-		return Direction.SEND;
-	}
+    /**
+     * Number of bytes transferred.
+     *
+     * @return Bytes transferred.
+     */
+    @Override
+    public long getTransferred() {
+        return transferred;
+    }
 
-	/**
-	 * Gets the number of bytes transferred per second.
-	 *
-	 * @return The speed in bytes per second.
-	 */
-	@Override
-	public long getSpeed()
-	{
-		return bCounter.getBytesPerSec();
-	}
+    /**
+     * Gets the size of the file being transferred, in bytes.
+     *
+     * @return The file size.
+     */
+    @Override
+    public long getFileSize() {
+        return file.length();
+    }
 
-	/**
-	 * Gets the file that is being transferred.
-	 *
-	 * @return The file.
-	 */
-	@Override
-	public File getFile()
-	{
-		return file;
-	}
+    /**
+     * Gets the direction, which is send.
+     *
+     * @return Send, the direction of the file transfer.
+     */
+    @Override
+    public Direction getDirection() {
+        return Direction.SEND;
+    }
 
-	/**
-	 * If still waiting for the file transfer to begin.
-	 *
-	 * @return If waiting or not.
-	 */
-	public boolean isWaiting()
-	{
-		return waiting;
-	}
+    /**
+     * Gets the number of bytes transferred per second.
+     *
+     * @return The speed in bytes per second.
+     */
+    @Override
+    public long getSpeed() {
+        return bCounter.getBytesPerSec();
+    }
 
-	/**
-	 * Registers a file transfer listener, which will receive updates
-	 * when certain events happen in the progression of the file transfer.
-	 *
-	 * @param listener The listener to register.
-	 */
-	@Override
-	public void registerListener( final FileTransferListener listener )
-	{
-		this.listener = listener;
-		listener.statusWaiting();
-	}
+    /**
+     * Gets the ID of this file transfer. The ID is unique during the session, and starts with 1.
+     *
+     * @return The unique ID of this file transfer.
+     */
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Gets the file that is being transferred.
+     *
+     * @return The file.
+     */
+    @Override
+    public File getFile() {
+        return file;
+    }
+
+    /**
+     * If still waiting for the file transfer to begin.
+     *
+     * @return If waiting or not.
+     */
+    public boolean isWaiting() {
+        return waiting;
+    }
+
+    /**
+     * Registers a file transfer listener, which will receive updates
+     * when certain events happen in the progression of the file transfer.
+     *
+     * @param listener The listener to register.
+     */
+    @Override
+    public void registerListener(final FileTransferListener listener) {
+        this.listener = listener;
+        listener.statusWaiting();
+    }
 }

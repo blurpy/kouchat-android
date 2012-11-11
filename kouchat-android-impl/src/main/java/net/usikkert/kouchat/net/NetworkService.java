@@ -1,201 +1,224 @@
 
 /***************************************************************************
- *   Copyright 2006-2009 by Christian Ihle                                 *
+ *   Copyright 2006-2012 by Christian Ihle                                 *
  *   kontakt@usikkert.net                                                  *
  *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   This file is part of KouChat.                                         *
  *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
+ *   KouChat is free software; you can redistribute it and/or modify       *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of        *
+ *   the License, or (at your option) any later version.                   *
+ *                                                                         *
+ *   KouChat is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      *
+ *   Lesser General Public License for more details.                       *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with KouChat.                                           *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
 package net.usikkert.kouchat.net;
 
 import java.net.NetworkInterface;
+import java.util.logging.Logger;
 
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.event.ReceiverListener;
+import net.usikkert.kouchat.misc.Settings;
 
 /**
  * This class has services for connecting to the network.
  *
  * @author Christian Ihle
  */
-public class NetworkService implements NetworkConnectionListener
-{
-	/** The thread responsible for keeping the network connection up. */
-	private final ConnectionWorker connectionWorker;
+public class NetworkService implements NetworkConnectionListener {
 
-	/** The multicast message sender. */
-	private final MessageSender messageSender;
+    /** The logger. */
+    private static final Logger LOG = Logger.getLogger(NetworkService.class.getName());
 
-	/** The multicast message receiver. */
-	private final MessageReceiver messageReceiver;
+    /** The thread responsible for keeping the network connection up. */
+    private final ConnectionWorker connectionWorker;
 
-	/** The private message sender. */
-	private final UDPSender udpSender;
+    /** The multicast message sender. */
+    private final MessageSender messageSender;
 
-	/** The private message receiver. */
-	private final UDPReceiver udpReceiver;
+    /** The multicast message receiver. */
+    private final MessageReceiver messageReceiver;
 
-	/**
-	 * Constructor.
-	 */
-	public NetworkService()
-	{
-		messageReceiver = new MessageReceiver();
-		messageSender = new MessageSender();
-		connectionWorker = new ConnectionWorker();
-		udpReceiver = new UDPReceiver();
-		udpSender = new UDPSender();
-		connectionWorker.registerNetworkConnectionListener( this );
-	}
+    /** The private message sender. */
+    private final UDPSender udpSender;
 
-	/**
-	 * Starts the thread responsible for connecting to the network.
-	 */
-	public void connect()
-	{
-		connectionWorker.start();
-	}
+    /** The private message receiver. */
+    private final UDPReceiver udpReceiver;
 
-	/**
-	 * Stops the thread responsible for connecting to the network.
-	 */
-	public void disconnect()
-	{
-		connectionWorker.stop();
-	}
+    /** If private chat should be enabled. */
+    private final boolean privateChatEnabled;
 
-	/**
-	 * Gets the connection worker.
-	 *
-	 * @return The connection worker.
-	 */
-	public ConnectionWorker getConnectionWorker()
-	{
-		return connectionWorker;
-	}
+    /**
+     * Constructor.
+     */
+    public NetworkService() {
+        LOG.fine("Initializing network");
 
-	/**
-	 * Checks if the connection thread is alive.
-	 *
-	 * @return If the connection thread is alive.
-	 */
-	public boolean isConnectionWorkerAlive()
-	{
-		return connectionWorker.isAlive();
-	}
+        privateChatEnabled = !Settings.getSettings().isNoPrivateChat();
 
-	/**
-	 * Checks if the network is up.
-	 *
-	 * @return If the network is up.
-	 */
-	public boolean isNetworkUp()
-	{
-		return connectionWorker.isNetworkUp();
-	}
+        messageReceiver = new MessageReceiver();
+        messageSender = new MessageSender();
+        connectionWorker = new ConnectionWorker();
 
-	/**
-	 * Registers the listener as a connection listener.
-	 *
-	 * @param listener The listener to register.
-	 */
-	public void registerNetworkConnectionListener( final NetworkConnectionListener listener )
-	{
-		connectionWorker.registerNetworkConnectionListener( listener );
-	}
+        if (privateChatEnabled) {
+            udpReceiver = new UDPReceiver();
+            udpSender = new UDPSender();
+        }
 
-	/**
-	 * Register a listener for incoming messages from the network.
-	 *
-	 * @param listener The listener to register.
-	 */
-	public void registerMessageReceiverListener( final ReceiverListener listener )
-	{
-		messageReceiver.registerReceiverListener( listener );
-	}
+        else {
+            LOG.fine("Private chat is disabled");
+            udpReceiver = null;
+            udpSender = null;
+        }
 
-	/**
-	 * Register a listener for incoming UDP messages from the network.
-	 *
-	 * @param listener The listener to register.
-	 */
-	public void registerUDPReceiverListener( final ReceiverListener listener )
-	{
-		udpReceiver.registerReceiverListener( listener );
-	}
+        connectionWorker.registerNetworkConnectionListener(this);
+    }
 
-	/**
-	 * Send a message with multicast, to all users.
-	 *
-	 * @param message The message to send.
-	 * @return If the message was sent or not.
-	 */
-	public boolean sendMulticastMsg( final String message )
-	{
-		return messageSender.send( message );
-	}
+    /**
+     * Starts the thread responsible for connecting to the network.
+     */
+    public void connect() {
+        connectionWorker.start();
+    }
 
-	/**
-	 * Send a message with UDP, to a single user.
-	 *
-	 * @param message The message to send.
-	 * @param ip The ip address of the user.
-	 * @param port The port to send the message to.
-	 * @return If the message was sent or not.
-	 */
-	public boolean sendUDPMsg( final String message, final String ip, final int port )
-	{
-		return udpSender.send( message, ip, port );
-	}
+    /**
+     * Stops the thread responsible for connecting to the network.
+     */
+    public void disconnect() {
+        connectionWorker.stop();
+    }
 
-	/**
-	 * Checks the state of the network, and tries to keep the best possible
-	 * network connection up.
-	 */
-	public void checkNetwork()
-	{
-		connectionWorker.checkNetwork();
-	}
+    /**
+     * Gets the connection worker.
+     *
+     * @return The connection worker.
+     */
+    public ConnectionWorker getConnectionWorker() {
+        return connectionWorker;
+    }
 
-	/**
-	 * Stops all senders and receivers.
-	 *
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void networkWentDown( final boolean silent )
-	{
-		udpSender.stopSender();
-		udpReceiver.stopReceiver();
-		messageSender.stopSender();
-		messageReceiver.stopReceiver();
-	}
+    /**
+     * Checks if the connection thread is alive.
+     *
+     * @return If the connection thread is alive.
+     */
+    public boolean isConnectionWorkerAlive() {
+        return connectionWorker.isAlive();
+    }
 
-	/**
-	 * Starts all senders and receivers.
-	 *
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void networkCameUp( final boolean silent )
-	{
-		udpSender.startSender();
-		udpReceiver.startReceiver();
-		NetworkInterface currentNetworkInterface = connectionWorker.getCurrentNetworkInterface();
-		messageSender.startSender( currentNetworkInterface );
-		messageReceiver.startReceiver( currentNetworkInterface );
-	}
+    /**
+     * Checks if the network is up.
+     *
+     * @return If the network is up.
+     */
+    public boolean isNetworkUp() {
+        return connectionWorker.isNetworkUp();
+    }
+
+    /**
+     * Registers the listener as a connection listener.
+     *
+     * @param listener The listener to register.
+     */
+    public void registerNetworkConnectionListener(final NetworkConnectionListener listener) {
+        connectionWorker.registerNetworkConnectionListener(listener);
+    }
+
+    /**
+     * Register a listener for incoming messages from the network.
+     *
+     * @param listener The listener to register.
+     */
+    public void registerMessageReceiverListener(final ReceiverListener listener) {
+        messageReceiver.registerReceiverListener(listener);
+    }
+
+    /**
+     * Register a listener for incoming UDP messages from the network.
+     *
+     * @param listener The listener to register.
+     */
+    public void registerUDPReceiverListener(final ReceiverListener listener) {
+        if (privateChatEnabled) {
+            udpReceiver.registerReceiverListener(listener);
+        }
+    }
+
+    /**
+     * Send a message with multicast, to all users.
+     *
+     * @param message The message to send.
+     * @return If the message was sent or not.
+     */
+    public boolean sendMulticastMsg(final String message) {
+        return messageSender.send(message);
+    }
+
+    /**
+     * Send a message with UDP, to a single user.
+     *
+     * @param message The message to send.
+     * @param ip The ip address of the user.
+     * @param port The port to send the message to.
+     * @return If the message was sent or not.
+     */
+    public boolean sendUDPMsg(final String message, final String ip, final int port) {
+        if (privateChatEnabled) {
+            return udpSender.send(message, ip, port);
+        }
+
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks the state of the network, and tries to keep the best possible
+     * network connection up.
+     */
+    public void checkNetwork() {
+        connectionWorker.checkNetwork();
+    }
+
+    /**
+     * Stops all senders and receivers.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public void networkWentDown(final boolean silent) {
+        if (privateChatEnabled) {
+            udpSender.stopSender();
+            udpReceiver.stopReceiver();
+        }
+
+        messageSender.stopSender();
+        messageReceiver.stopReceiver();
+    }
+
+    /**
+     * Starts all senders and receivers.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public void networkCameUp(final boolean silent) {
+        if (privateChatEnabled) {
+            udpSender.startSender();
+            udpReceiver.startReceiver();
+        }
+
+        final NetworkInterface currentNetworkInterface = connectionWorker.getCurrentNetworkInterface();
+        messageSender.startSender(currentNetworkInterface);
+        messageReceiver.startReceiver(currentNetworkInterface);
+    }
 }

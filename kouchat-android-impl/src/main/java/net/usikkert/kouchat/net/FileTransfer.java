@@ -1,22 +1,23 @@
 
 /***************************************************************************
- *   Copyright 2006-2009 by Christian Ihle                                 *
+ *   Copyright 2006-2012 by Christian Ihle                                 *
  *   kontakt@usikkert.net                                                  *
  *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   This file is part of KouChat.                                         *
  *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
+ *   KouChat is free software; you can redistribute it and/or modify       *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of        *
+ *   the License, or (at your option) any later version.                   *
+ *                                                                         *
+ *   KouChat is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      *
+ *   Lesser General Public License for more details.                       *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with KouChat.                                           *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
 package net.usikkert.kouchat.net;
@@ -35,90 +36,96 @@ import net.usikkert.kouchat.misc.User;
  *
  * @author Christian Ihle
  */
-public interface FileTransfer
-{
-	/**
-	 * Enum to describe if a file is being sent or received.
-	 */
-	public enum Direction
-	{
-		SEND,
-		RECEIVE
-	};
+public interface FileTransfer {
 
-	/**
-	 * Gets if the file transfer is sending or receiving.
-	 *
-	 * @return The direction of the file transfer.
-	 */
-	Direction getDirection();
+    /**
+     * Enum to describe if a file is being sent or received.
+     */
+    public enum Direction {
+        SEND,
+        RECEIVE
+    };
 
-	/**
-	 * The other user, which sends or receives a file.
-	 *
-	 * @return The other user.
-	 */
-	User getUser();
+    /**
+     * Gets if the file transfer is sending or receiving.
+     *
+     * @return The direction of the file transfer.
+     */
+    Direction getDirection();
 
-	/**
-	 * The percent of the file transfer that is completed.
-	 *
-	 * @return Percent completed.
-	 */
-	int getPercent();
+    /**
+     * The other user, which sends or receives a file.
+     *
+     * @return The other user.
+     */
+    User getUser();
 
-	/**
-	 * Number of bytes transferred.
-	 *
-	 * @return Bytes transferred.
-	 */
-	long getTransferred();
+    /**
+     * The percent of the file transfer that is completed.
+     *
+     * @return Percent completed.
+     */
+    int getPercent();
 
-	/**
-	 * Gets the file that is being transferred.
-	 *
-	 * @return The file.
-	 */
-	File getFile();
+    /**
+     * Number of bytes transferred.
+     *
+     * @return Bytes transferred.
+     */
+    long getTransferred();
 
-	/**
-	 * Gets the size of the file being transferred, in bytes.
-	 *
-	 * @return The file size.
-	 */
-	long getFileSize();
+    /**
+     * Gets the file that is being transferred.
+     *
+     * @return The file.
+     */
+    File getFile();
 
-	/**
-	 * Gets the number of bytes transferred per second.
-	 *
-	 * @return The speed in bytes per second.
-	 */
-	long getSpeed();
+    /**
+     * Gets the size of the file being transferred, in bytes.
+     *
+     * @return The file size.
+     */
+    long getFileSize();
 
-	/**
-	 * Cancels the file transfer.
-	 */
-	void cancel();
+    /**
+     * Gets the number of bytes transferred per second.
+     *
+     * @return The speed in bytes per second.
+     */
+    long getSpeed();
 
-	/**
-	 * Checks if the file transfer has been canceled.
-	 *
-	 * @return If the file transfer has been canceled.
-	 */
-	boolean isCanceled();
+    /**
+     * Gets the ID of this file transfer. The ID is unique during the session, and starts with 1.
+     *
+     * @return The unique ID of this file transfer.
+     */
+    int getId();
 
-	/**
-	 * Checks if the file transfer is complete.
-	 *
-	 * @return If the file transfer is complete.
-	 */
-	boolean isTransferred();
+    /**
+     * Cancels the file transfer.
+     */
+    void cancel();
 
-	/**
-	 * Registers a file transfer listener, which will receive updates
-	 * when certain events happen in the progression of the file transfer.
-	 *
-	 * @param listener The listener to register.
-	 */
-	void registerListener( FileTransferListener listener );
+    /**
+     * Checks if the file transfer has been canceled.
+     *
+     * @return If the file transfer has been canceled.
+     */
+    boolean isCanceled();
+
+    /**
+     * Checks if the file transfer is complete.
+     *
+     * @return If the file transfer is complete.
+     */
+    boolean isTransferred();
+
+    /**
+     * Registers a file transfer listener, which will receive updates
+     * when certain events happen in the progression of the file transfer.
+     *
+     * @param listener The listener to register.
+     */
+    void registerListener(FileTransferListener listener);
 }

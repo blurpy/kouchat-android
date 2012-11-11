@@ -1,22 +1,23 @@
 
 /***************************************************************************
- *   Copyright 2006-2009 by Christian Ihle                                 *
+ *   Copyright 2006-2012 by Christian Ihle                                 *
  *   kontakt@usikkert.net                                                  *
  *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   This file is part of KouChat.                                         *
  *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
+ *   KouChat is free software; you can redistribute it and/or modify       *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of        *
+ *   the License, or (at your option) any later version.                   *
+ *                                                                         *
+ *   KouChat is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      *
+ *   Lesser General Public License for more details.                       *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with KouChat.                                           *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
 package net.usikkert.kouchat.net;
@@ -24,8 +25,8 @@ package net.usikkert.kouchat.net;
 import java.io.File;
 
 import net.usikkert.kouchat.event.FileTransferListener;
-import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.User;
 
 /**
  * This is a mock implementation of the file transfer class, for use in unit tests.
@@ -34,182 +35,176 @@ import net.usikkert.kouchat.misc.Settings;
  *
  * @author Christian Ihle
  */
-public class MockFileTransfer implements FileTransfer
-{
-	private final Direction direction;
-	private final File file;
-	private final User user;
+public class MockFileTransfer implements FileTransfer {
 
-	private FileTransferListener listener;
-	private int percent;
-	private long transferred;
-	private boolean cancel;
+    private final Direction direction;
+    private final File file;
+    private final User user;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param direction If this mock should send or receive the file.
-	 */
-	public MockFileTransfer( final Direction direction )
-	{
-		this.direction = direction;
-		user = new User( "TestUser", 1234 );
-		user.setIpAddress( "192.168.1.1" );
-		file = new File( "test/this_is_a_fake_test_file_with_a_very_very_long_file_name.txt" );
-		Settings.getSettings().getMe().setIpAddress( "192.168.1.2" );
-	}
+    private FileTransferListener listener;
+    private int percent;
+    private long transferred;
+    private boolean cancel;
 
-	/**
-	 * Aborts the file transfer simulation.
-	 *
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void cancel()
-	{
-		cancel = true;
-	}
+    /**
+     * Constructor.
+     *
+     * @param direction If this mock should send or receive the file.
+     */
+    public MockFileTransfer(final Direction direction) {
+        this.direction = direction;
+        user = new User("TestUser", 1234);
+        user.setIpAddress("192.168.1.1");
+        file = new File("test/this_is_a_fake_test_file_with_a_very_very_long_file_name.txt");
+        Settings.getSettings().getMe().setIpAddress("192.168.1.2");
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Direction getDirection()
-	{
-		return direction;
-	}
+    /**
+     * Aborts the file transfer simulation.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public void cancel() {
+        cancel = true;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public File getFile()
-	{
-		return file;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Direction getDirection() {
+        return direction;
+    }
 
-	/**
-	 * Returns ~500KB.
-	 *
-	 * @return 500000.
-	 */
-	@Override
-	public long getFileSize()
-	{
-		return 500000;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public File getFile() {
+        return file;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public User getUser()
-	{
-		return user;
-	}
+    /**
+     * Returns ~500KB.
+     *
+     * @return 500000.
+     */
+    @Override
+    public long getFileSize() {
+        return 500000;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getPercent()
-	{
-		return percent;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public User getUser() {
+        return user;
+    }
 
-	/**
-	 * Returns ~100K/s.
-	 *
-	 * @return 100000;
-	 */
-	@Override
-	public long getSpeed()
-	{
-		return 100000;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getPercent() {
+        return percent;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public long getTransferred()
-	{
-		return transferred;
-	}
+    /**
+     * Returns ~100K/s.
+     *
+     * @return 100000;
+     */
+    @Override
+    public long getSpeed() {
+        return 100000;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isCanceled()
-	{
-		return cancel;
-	}
+    /**
+     * Returns 1.
+     *
+     * @return 1;
+     */
+    @Override
+    public int getId() {
+        return 1;
+    }
 
-	/**
-	 * Returns false.
-	 *
-	 * @return false.
-	 */
-	@Override
-	public boolean isTransferred()
-	{
-		return false;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long getTransferred() {
+        return transferred;
+    }
 
-	/**
-	 * Registers the listener, and starts the thread which simulates the file transfer.
-	 *
-	 * @param listener The listener to register.
-	 */
-	@Override
-	public void registerListener( final FileTransferListener listener )
-	{
-		this.listener = listener;
-		new MockTransferThread().start();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isCanceled() {
+        return cancel;
+    }
 
-	/**
-	 * This thread simulates the transfer process.
-	 *
-	 * @author Christian Ihle
-	 */
-	private class MockTransferThread extends Thread
-	{
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void run()
-		{
-			try
-			{
-				sleep( 500 );
-				listener.statusWaiting();
-				sleep( 500 );
-				listener.statusConnecting();
-				sleep( 1000 );
-				listener.statusTransferring();
-				sleep( 500 );
+    /**
+     * Returns false.
+     *
+     * @return false.
+     */
+    @Override
+    public boolean isTransferred() {
+        return false;
+    }
 
-				while ( !cancel && transferred < getFileSize() )
-				{
-					transferred += 10000;
-					percent += 2;
-					sleep( 50 );
-					listener.transferUpdate();
-				}
+    /**
+     * Registers the listener, and starts the thread which simulates the file transfer.
+     *
+     * @param listener The listener to register.
+     */
+    @Override
+    public void registerListener(final FileTransferListener listener) {
+        this.listener = listener;
+        new MockTransferThread().start();
+    }
 
-				if ( cancel )
-					listener.statusFailed();
-				else
-					listener.statusCompleted();
-			}
+    /**
+     * This thread simulates the transfer process.
+     *
+     * @author Christian Ihle
+     */
+    private class MockTransferThread extends Thread {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void run() {
+            try {
+                sleep(500);
+                listener.statusWaiting();
+                sleep(500);
+                listener.statusConnecting();
+                sleep(1000);
+                listener.statusTransferring();
+                sleep(500);
 
-			catch ( final InterruptedException e )
-			{
-				e.printStackTrace();
-			}
-		}
-	}
+                while (!cancel && transferred < getFileSize()) {
+                    transferred += 10000;
+                    percent += 2;
+                    sleep(50);
+                    listener.transferUpdate();
+                }
+
+                if (cancel) {
+                    listener.statusFailed();
+                } else {
+                    listener.statusCompleted();
+                }
+            }
+
+            catch (final InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

@@ -1,22 +1,23 @@
 
 /***************************************************************************
- *   Copyright 2006-2009 by Christian Ihle                                 *
+ *   Copyright 2006-2012 by Christian Ihle                                 *
  *   kontakt@usikkert.net                                                  *
  *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   This file is part of KouChat.                                         *
  *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
+ *   KouChat is free software; you can redistribute it and/or modify       *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of        *
+ *   the License, or (at your option) any later version.                   *
+ *                                                                         *
+ *   KouChat is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      *
+ *   Lesser General Public License for more details.                       *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with KouChat.                                           *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
 package net.usikkert.kouchat.net;
@@ -57,274 +58,241 @@ import net.usikkert.kouchat.misc.User;
  *
  * @author Christian Ihle
  */
-public class MessageParser implements ReceiverListener
-{
-	/** The logger. */
-	private static final Logger LOG = Logger.getLogger( MessageParser.class.getName() );
+public class MessageParser implements ReceiverListener {
 
-	/** To handle the different kind of messages parsed here. */
-	private final MessageResponder responder;
+    /** The logger. */
+    private static final Logger LOG = Logger.getLogger(MessageParser.class.getName());
 
-	/** The application settings. */
-	private final Settings settings;
+    /** To handle the different kind of messages parsed here. */
+    private final MessageResponder responder;
 
-	/** If logged on to the chat or not. */
-	private boolean loggedOn;
+    /** The application settings. */
+    private final Settings settings;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param responder To handle the different kind of messages parsed here.
-	 */
-	public MessageParser( final MessageResponder responder )
-	{
-		this.responder = responder;
-		settings = Settings.getSettings();
-	}
+    /** If logged on to the chat or not. */
+    private boolean loggedOn;
 
-	/**
-	 * The parser. Checks what kind of message it is,
-	 * and then gives the correct data to the responder for
-	 * more processing.
-	 *
-	 * @param message The raw message to parse.
-	 * @param ipAddress The IP address of the user who sent the message.
-	 */
-	@Override
-	public void messageArrived( final String message, final String ipAddress )
-	{
-		try
-		{
-			int exclamation = message.indexOf( "!" );
-			int hash = message.indexOf( "#" );
-			int colon = message.indexOf( ":" );
+    /**
+     * Constructor.
+     *
+     * @param responder To handle the different kind of messages parsed here.
+     */
+    public MessageParser(final MessageResponder responder) {
+        this.responder = responder;
+        settings = Settings.getSettings();
+    }
 
-			int msgCode = Integer.parseInt( message.substring( 0, exclamation ) );
-			String type = message.substring( exclamation + 1, hash );
-			String msgNick = message.substring( hash + 1, colon );
-			String msg = message.substring( colon + 1, message.length() );
+    /**
+     * The parser. Checks what kind of message it is,
+     * and then gives the correct data to the responder for
+     * more processing.
+     *
+     * @param message The raw message to parse.
+     * @param ipAddress The IP address of the user who sent the message.
+     */
+    @Override
+    public void messageArrived(final String message, final String ipAddress) {
+        try {
+            final int exclamation = message.indexOf("!");
+            final int hash = message.indexOf("#");
+            final int colon = message.indexOf(":");
 
-			User tempme = settings.getMe();
+            final int msgCode = Integer.parseInt(message.substring(0, exclamation));
+            final String type = message.substring(exclamation + 1, hash);
+            final String msgNick = message.substring(hash + 1, colon);
+            final String msg = message.substring(colon + 1, message.length());
 
-			if ( msgCode != tempme.getCode() && loggedOn )
-			{
-				if ( type.equals( "MSG" ) )
-				{
-					int leftBracket = msg.indexOf( "[" );
-					int rightBracket = msg.indexOf( "]" );
-					int rgb = Integer.parseInt( msg.substring( leftBracket + 1, rightBracket ) );
+            final User tempme = settings.getMe();
 
-					responder.messageArrived( msgCode, msg.substring( rightBracket + 1, msg.length() ), rgb );
-				}
+            if (msgCode != tempme.getCode() && loggedOn) {
+                if (type.equals("MSG")) {
+                    final int leftBracket = msg.indexOf("[");
+                    final int rightBracket = msg.indexOf("]");
+                    final int rgb = Integer.parseInt(msg.substring(leftBracket + 1, rightBracket));
 
-				else if ( type.equals( "LOGON" ) )
-				{
-					User newUser = new User( msgNick, msgCode );
-					newUser.setIpAddress( ipAddress );
-					newUser.setLastIdle( System.currentTimeMillis() );
-					newUser.setLogonTime( System.currentTimeMillis() );
+                    responder.messageArrived(msgCode, msg.substring(rightBracket + 1, msg.length()), rgb);
+                }
 
-					responder.userLogOn( newUser );
-				}
+                else if (type.equals("LOGON")) {
+                    final User newUser = new User(msgNick, msgCode);
+                    newUser.setIpAddress(ipAddress);
+                    newUser.setLastIdle(System.currentTimeMillis());
+                    newUser.setLogonTime(System.currentTimeMillis());
 
-				else if ( type.equals( "EXPOSING" ) )
-				{
-					User user = new User( msgNick, msgCode );
-					user.setIpAddress( ipAddress );
-					user.setAwayMsg( msg );
+                    responder.userLogOn(newUser);
+                }
 
-					if ( msg.length() > 0 )
-						user.setAway( true );
+                else if (type.equals("EXPOSING")) {
+                    final User user = new User(msgNick, msgCode);
+                    user.setIpAddress(ipAddress);
+                    user.setAwayMsg(msg);
 
-					user.setLastIdle( System.currentTimeMillis() );
-					user.setLogonTime( System.currentTimeMillis() );
+                    if (msg.length() > 0) {
+                        user.setAway(true);
+                    }
 
-					responder.userExposing( user );
-				}
+                    user.setLastIdle(System.currentTimeMillis());
+                    user.setLogonTime(System.currentTimeMillis());
 
-				else if ( type.equals( "LOGOFF" ) )
-				{
-					responder.userLogOff( msgCode );
-				}
+                    responder.userExposing(user);
+                }
 
-				else if ( type.equals( "AWAY" ) )
-				{
-					responder.awayChanged( msgCode, true, msg );
-				}
+                else if (type.equals("LOGOFF")) {
+                    responder.userLogOff(msgCode);
+                }
 
-				else if ( type.equals( "BACK" ) )
-				{
-					responder.awayChanged( msgCode, false, "" );
-				}
+                else if (type.equals("AWAY")) {
+                    responder.awayChanged(msgCode, true, msg);
+                }
 
-				else if ( type.equals( "EXPOSE" ) )
-				{
-					responder.exposeRequested();
-				}
+                else if (type.equals("BACK")) {
+                    responder.awayChanged(msgCode, false, "");
+                }
 
-				else if ( type.equals( "NICKCRASH" ) )
-				{
-					if ( tempme.getNick().equals( msg ) )
-					{
-						responder.nickCrash();
-					}
-				}
+                else if (type.equals("EXPOSE")) {
+                    responder.exposeRequested();
+                }
 
-				else if ( type.equals( "WRITING" ) )
-				{
-					responder.writingChanged( msgCode, true );
-				}
+                else if (type.equals("NICKCRASH")) {
+                    if (tempme.getNick().equals(msg)) {
+                        responder.nickCrash();
+                    }
+                }
 
-				else if ( type.equals( "STOPPEDWRITING" ) )
-				{
-					responder.writingChanged( msgCode, false );
-				}
+                else if (type.equals("WRITING")) {
+                    responder.writingChanged(msgCode, true);
+                }
 
-				else if ( type.equals( "GETTOPIC" ) )
-				{
-					responder.topicRequested();
-				}
+                else if (type.equals("STOPPEDWRITING")) {
+                    responder.writingChanged(msgCode, false);
+                }
 
-				else if ( type.equals( "TOPIC" ) )
-				{
-					int leftBracket = msg.indexOf( "[" );
-					int rightBracket = msg.indexOf( "]" );
-					int leftPara = msg.indexOf( "(" );
-					int rightPara = msg.indexOf( ")" );
+                else if (type.equals("GETTOPIC")) {
+                    responder.topicRequested();
+                }
 
-					if ( rightBracket != -1 && leftBracket != -1 )
-					{
-						String theNick = msg.substring( leftPara + 1, rightPara );
-						long theTime = Long.parseLong( msg.substring( leftBracket + 1, rightBracket ) );
-						String theTopic = null;
+                else if (type.equals("TOPIC")) {
+                    final int leftBracket = msg.indexOf("[");
+                    final int rightBracket = msg.indexOf("]");
+                    final int leftPara = msg.indexOf("(");
+                    final int rightPara = msg.indexOf(")");
 
-						if ( msg.length() > rightBracket + 1 )
-						{
-							theTopic = msg.substring( rightBracket + 1, msg.length() );
-						}
+                    if (rightBracket != -1 && leftBracket != -1) {
+                        final String theNick = msg.substring(leftPara + 1, rightPara);
+                        final long theTime = Long.parseLong(msg.substring(leftBracket + 1, rightBracket));
+                        String theTopic = null;
 
-						responder.topicChanged( msgCode, theTopic, theNick, theTime );
-					}
-				}
+                        if (msg.length() > rightBracket + 1) {
+                            theTopic = msg.substring(rightBracket + 1, msg.length());
+                        }
 
-				else if ( type.equals( "NICK" ) )
-				{
-					responder.nickChanged( msgCode, msgNick );
-				}
+                        responder.topicChanged(msgCode, theTopic, theNick, theTime);
+                    }
+                }
 
-				else if ( type.equals( "IDLE" ) )
-				{
-					responder.userIdle( msgCode, ipAddress );
-				}
+                else if (type.equals("NICK")) {
+                    responder.nickChanged(msgCode, msgNick);
+                }
 
-				else if ( type.equals( "SENDFILEACCEPT" ) )
-				{
-					int leftPara = msg.indexOf( "(" );
-					int rightPara = msg.indexOf( ")" );
-					int fileCode = Integer.parseInt( msg.substring( leftPara + 1, rightPara ) );
+                else if (type.equals("IDLE")) {
+                    responder.userIdle(msgCode, ipAddress);
+                }
 
-					if ( fileCode == tempme.getCode() )
-					{
-						int leftCurly = msg.indexOf( "{" );
-						int rightCurly = msg.indexOf( "}" );
-						int leftBracket = msg.indexOf( "[" );
-						int rightBracket = msg.indexOf( "]" );
-						int port = Integer.parseInt( msg.substring( leftBracket + 1, rightBracket ) );
-						int fileHash = Integer.parseInt( msg.substring( leftCurly + 1, rightCurly ) );
-						String fileName = msg.substring( rightCurly + 1, msg.length() );
+                else if (type.equals("SENDFILEACCEPT")) {
+                    final int leftPara = msg.indexOf("(");
+                    final int rightPara = msg.indexOf(")");
+                    final int fileCode = Integer.parseInt(msg.substring(leftPara + 1, rightPara));
 
-						responder.fileSendAccepted( msgCode, fileName, fileHash, port );
-					}
-				}
+                    if (fileCode == tempme.getCode()) {
+                        final int leftCurly = msg.indexOf("{");
+                        final int rightCurly = msg.indexOf("}");
+                        final int leftBracket = msg.indexOf("[");
+                        final int rightBracket = msg.indexOf("]");
+                        final int port = Integer.parseInt(msg.substring(leftBracket + 1, rightBracket));
+                        final int fileHash = Integer.parseInt(msg.substring(leftCurly + 1, rightCurly));
+                        final String fileName = msg.substring(rightCurly + 1, msg.length());
 
-				else if ( type.equals( "SENDFILEABORT" ) )
-				{
-					int leftPara = msg.indexOf( "(" );
-					int rightPara = msg.indexOf( ")" );
-					int fileCode = Integer.parseInt( msg.substring( leftPara + 1, rightPara ) );
+                        responder.fileSendAccepted(msgCode, fileName, fileHash, port);
+                    }
+                }
 
-					if ( fileCode == tempme.getCode() )
-					{
-						int leftCurly = msg.indexOf( "{" );
-						int rightCurly = msg.indexOf( "}" );
-						String fileName = msg.substring( rightCurly + 1, msg.length() );
-						int fileHash = Integer.parseInt( msg.substring( leftCurly + 1, rightCurly ) );
+                else if (type.equals("SENDFILEABORT")) {
+                    final int leftPara = msg.indexOf("(");
+                    final int rightPara = msg.indexOf(")");
+                    final int fileCode = Integer.parseInt(msg.substring(leftPara + 1, rightPara));
 
-						responder.fileSendAborted( msgCode, fileName, fileHash );
-					}
-				}
+                    if (fileCode == tempme.getCode()) {
+                        final int leftCurly = msg.indexOf("{");
+                        final int rightCurly = msg.indexOf("}");
+                        final String fileName = msg.substring(rightCurly + 1, msg.length());
+                        final int fileHash = Integer.parseInt(msg.substring(leftCurly + 1, rightCurly));
 
-				else if ( type.equals( "SENDFILE" ) )
-				{
-					int leftPara = msg.indexOf( "(" );
-					int rightPara = msg.indexOf( ")" );
-					int fileCode = Integer.parseInt( msg.substring( leftPara + 1, rightPara ) );
+                        responder.fileSendAborted(msgCode, fileName, fileHash);
+                    }
+                }
 
-					if ( fileCode == tempme.getCode() )
-					{
-						int leftCurly = msg.indexOf( "{" );
-						int rightCurly = msg.indexOf( "}" );
-						int leftBracket = msg.indexOf( "[" );
-						int rightBracket = msg.indexOf( "]" );
-						long byteSize = Long.parseLong( msg.substring( leftBracket + 1, rightBracket ) );
-						String fileName = msg.substring( rightCurly + 1, msg.length() );
-						int fileHash = Integer.parseInt( msg.substring( leftCurly + 1, rightCurly ) );
+                else if (type.equals("SENDFILE")) {
+                    final int leftPara = msg.indexOf("(");
+                    final int rightPara = msg.indexOf(")");
+                    final int fileCode = Integer.parseInt(msg.substring(leftPara + 1, rightPara));
 
-						responder.fileSend( msgCode, byteSize, fileName, msgNick, fileHash );
-					}
-				}
+                    if (fileCode == tempme.getCode()) {
+                        final int leftCurly = msg.indexOf("{");
+                        final int rightCurly = msg.indexOf("}");
+                        final int leftBracket = msg.indexOf("[");
+                        final int rightBracket = msg.indexOf("]");
+                        final long byteSize = Long.parseLong(msg.substring(leftBracket + 1, rightBracket));
+                        final String fileName = msg.substring(rightCurly + 1, msg.length());
+                        final int fileHash = Integer.parseInt(msg.substring(leftCurly + 1, rightCurly));
 
-				else if ( type.equals( "CLIENT" ) )
-				{
-					int leftPara = msg.indexOf( "(" );
-					int rightPara = msg.indexOf( ")" );
-					int leftBracket = msg.indexOf( "[" );
-					int rightBracket = msg.indexOf( "]" );
-					int leftCurly = msg.indexOf( "{" );
-					int rightCurly = msg.indexOf( "}" );
-					int lessThan = msg.indexOf( "<" );
-					int greaterThan = msg.indexOf( ">" );
+                        responder.fileSend(msgCode, byteSize, fileName, msgNick, fileHash);
+                    }
+                }
 
-					String client = msg.substring( leftPara + 1, rightPara );
-					long timeSinceLogon = Long.parseLong( msg.substring( leftBracket + 1, rightBracket ) );
-					String operatingSystem = msg.substring( leftCurly + 1, rightCurly );
+                else if (type.equals("CLIENT")) {
+                    final int leftPara = msg.indexOf("(");
+                    final int rightPara = msg.indexOf(")");
+                    final int leftBracket = msg.indexOf("[");
+                    final int rightBracket = msg.indexOf("]");
+                    final int leftCurly = msg.indexOf("{");
+                    final int rightCurly = msg.indexOf("}");
+                    final int lessThan = msg.indexOf("<");
+                    final int greaterThan = msg.indexOf(">");
 
-					int privateChatPort = 0;
+                    final String client = msg.substring(leftPara + 1, rightPara);
+                    final long timeSinceLogon = Long.parseLong(msg.substring(leftBracket + 1, rightBracket));
+                    final String operatingSystem = msg.substring(leftCurly + 1, rightCurly);
 
-					try
-					{
-						privateChatPort = Integer.parseInt( msg.substring( lessThan + 1, greaterThan ) );
-					}
+                    int privateChatPort = 0;
 
-					catch ( final NumberFormatException e )
-					{
-						LOG.log( Level.WARNING, e.toString() );
-					}
+                    try {
+                        privateChatPort = Integer.parseInt(msg.substring(lessThan + 1, greaterThan));
+                    }
 
-					responder.clientInfo( msgCode, client, timeSinceLogon, operatingSystem, privateChatPort );
-				}
-			}
+                    catch (final NumberFormatException e) {
+                        LOG.log(Level.WARNING, e.toString());
+                    }
 
-			else if ( msgCode == tempme.getCode() && type.equals( "LOGON" ) )
-			{
-				responder.meLogOn( ipAddress );
-				loggedOn = true;
-			}
+                    responder.clientInfo(msgCode, client, timeSinceLogon, operatingSystem, privateChatPort);
+                }
+            }
 
-			else if ( msgCode == tempme.getCode() && type.equals( "IDLE" ) && loggedOn )
-			{
-				responder.meIdle( ipAddress );
-			}
-		}
+            else if (msgCode == tempme.getCode() && type.equals("LOGON")) {
+                responder.meLogOn(ipAddress);
+                loggedOn = true;
+            }
 
-		catch ( final StringIndexOutOfBoundsException e )
-		{
-			LOG.log( Level.SEVERE, e.toString(), e );
-		}
+            else if (msgCode == tempme.getCode() && type.equals("IDLE") && loggedOn) {
+                responder.meIdle(ipAddress);
+            }
+        }
 
-		catch ( final NumberFormatException e )
-		{
-			LOG.log( Level.SEVERE, e.toString(), e );
-		}
-	}
+        catch (final StringIndexOutOfBoundsException e) {
+            LOG.log(Level.SEVERE, e.toString(), e);
+        }
+
+        catch (final NumberFormatException e) {
+            LOG.log(Level.SEVERE, e.toString(), e);
+        }
+    }
 }

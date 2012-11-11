@@ -1,28 +1,28 @@
 
 /***************************************************************************
- *   Copyright 2006-2009 by Christian Ihle                                 *
+ *   Copyright 2006-2012 by Christian Ihle                                 *
  *   kontakt@usikkert.net                                                  *
  *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   This file is part of KouChat.                                         *
  *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
+ *   KouChat is free software; you can redistribute it and/or modify       *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of        *
+ *   the License, or (at your option) any later version.                   *
+ *                                                                         *
+ *   KouChat is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      *
+ *   Lesser General Public License for more details.                       *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with KouChat.                                           *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
 package net.usikkert.kouchat.util;
 
 import java.net.URL;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,60 +31,55 @@ import java.util.Map;
  *
  * @author Christian Ihle
  */
-public class ResourceValidator
-{
-	/** The map of resources to validate. */
-	private final Map<String, URL> resourceMap;
+public class ResourceValidator {
 
-	/**
-	 * Constructor.
-	 */
-	public ResourceValidator()
-	{
-		resourceMap = new HashMap<String, URL>();
-	}
+    /** The map of resources to validate. */
+    private final Map<String, URL> resourceMap;
 
-	/**
-	 * Clears all the added resources from the validation list.
-	 */
-	public void clearResources()
-	{
-		resourceMap.clear();
-	}
+    /**
+     * Constructor.
+     */
+    public ResourceValidator() {
+        resourceMap = new HashMap<String, URL>();
+    }
 
-	/**
-	 * Adds a resource to be validated.
-	 *
-	 * @param resource The resource to check.
-	 * @param location The location of the resource.
-	 */
-	public void addResource( final URL resource, final String location )
-	{
-		resourceMap.put( location, resource );
-	}
+    /**
+     * Clears all the added resources from the validation list.
+     */
+    public void clearResources() {
+        resourceMap.clear();
+    }
 
-	/**
-	 * Checks if any of the resources were not loaded, and returns a
-	 * string with a list of the locations of the missing resources.
-	 * Each location is on a separate line.
-	 *
-	 * @return A list of the resources that has not been loaded.
-	 */
-	public String validate()
-	{
-		StringBuilder missingResourceList = new StringBuilder();
+    /**
+     * Adds a resource to be validated.
+     *
+     * @param resource The resource to check.
+     * @param location The location of the resource.
+     */
+    public void addResource(final URL resource, final String location) {
+        resourceMap.put(location, resource);
+    }
 
-		for ( String location : resourceMap.keySet() )
-		{
-			if ( resourceMap.get( location ) == null )
-			{
-				if ( missingResourceList.length() != 0 )
-					missingResourceList.append( "\n" );
+    /**
+     * Checks if any of the resources were not loaded, and returns a
+     * string with a list of the locations of the missing resources.
+     * Each location is on a separate line.
+     *
+     * @return A list of the resources that has not been loaded.
+     */
+    public String validate() {
+        final StringBuilder missingResourceList = new StringBuilder();
 
-				missingResourceList.append( location );
-			}
-		}
+        for (final String location : resourceMap.keySet()) {
+            if (resourceMap.get(location) == null) {
+                if (missingResourceList.length() != 0) {
+                    missingResourceList.append("\n");
+                }
 
-		return missingResourceList.toString();
-	}
+                missingResourceList.append(location);
+            }
+        }
+
+        return missingResourceList.toString();
+    }
 }

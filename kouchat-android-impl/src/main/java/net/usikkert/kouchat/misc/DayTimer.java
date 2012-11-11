@@ -1,22 +1,23 @@
 
 /***************************************************************************
- *   Copyright 2006-2009 by Christian Ihle                                 *
+ *   Copyright 2006-2012 by Christian Ihle                                 *
  *   kontakt@usikkert.net                                                  *
  *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   This file is part of KouChat.                                         *
  *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
+ *   KouChat is free software; you can redistribute it and/or modify       *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of        *
+ *   the License, or (at your option) any later version.                   *
+ *                                                                         *
+ *   KouChat is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      *
+ *   Lesser General Public License for more details.                       *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with KouChat.                                           *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
 package net.usikkert.kouchat.misc;
@@ -35,71 +36,62 @@ import net.usikkert.kouchat.util.Tools;
  *
  * @author Christian Ihle
  */
-public class DayTimer extends TimerTask
-{
-	/**
-	 * Which hour of the day the timer should notify about
-	 * day change.
-	 */
-	private static final int NOTIFY_HOUR = 0;
+public class DayTimer extends TimerTask {
 
-	/**
-	 * How often the timer should check if the day has changed,
-	 * in milliseconds. Currently set to 1 hour.
-	 */
-	private static final long TIMER_INTERVAL = 1000 * 60 * 60;
+    /**
+     * Which hour of the day the timer should notify about
+     * day change.
+     */
+    private static final int NOTIFY_HOUR = 0;
 
-	/** The controller for showing messages in the ui. */
-	private final MessageController msgController;
+    /**
+     * How often the timer should check if the day has changed,
+     * in milliseconds. Currently set to 1 hour.
+     */
+    private static final long TIMER_INTERVAL = 1000 * 60 * 60;
 
-	/** If the day changed check is done for the day. */
-	private boolean done;
+    /** The controller for showing messages in the ui. */
+    private final MessageController msgController;
 
-	/**
-	 * Constructor. Starts the timer.
-	 *
-	 * @param ui The user interface.
-	 */
-	public DayTimer( final UserInterface ui )
-	{
-		msgController = ui.getMessageController();
-		Calendar cal = Calendar.getInstance();
-		int currentHour = cal.get( Calendar.HOUR_OF_DAY );
+    /** If the day changed check is done for the day. */
+    private boolean done;
 
-		// To stop the timer from thinking that the day has changed if
-		// the application is started between 00 and 01 o'clock.
-		if ( currentHour == NOTIFY_HOUR )
-			done = true;
+    /**
+     * Constructor. Starts the timer.
+     *
+     * @param ui The user interface.
+     */
+    public DayTimer(final UserInterface ui) {
+        msgController = ui.getMessageController();
+        final Calendar cal = Calendar.getInstance();
 
-		cal.set( Calendar.HOUR_OF_DAY, NOTIFY_HOUR );
-		cal.set( Calendar.MINUTE, 0 );
-		cal.set( Calendar.SECOND, 0 );
+        // Starts the timer at the next hour
+        cal.add(Calendar.HOUR_OF_DAY, 1);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
 
-		Timer timer = new Timer( "DayTimer" );
-		timer.scheduleAtFixedRate( this, new Date( cal.getTimeInMillis() ), TIMER_INTERVAL );
-	}
+        final Timer timer = new Timer("DayTimer");
+        timer.scheduleAtFixedRate(this, new Date(cal.getTimeInMillis()), TIMER_INTERVAL);
+    }
 
-	/**
-	 * This method is run by the timer every hour, and
-	 * compares the current time against the time when
-	 * the day changes.
-	 */
-	@Override
-	public void run()
-	{
-		int hour = Calendar.getInstance().get( Calendar.HOUR_OF_DAY );
+    /**
+     * This method is run by the timer every hour, and
+     * compares the current time against the time when
+     * the day changes.
+     */
+    @Override
+    public void run() {
+        final int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
-		// Needs an extra check, so the message only shows once a day.
-		if ( hour == NOTIFY_HOUR && !done )
-		{
-			String date = Tools.dateToString( null, "EEEE, d MMMM yyyy" );
-			msgController.showSystemMessage( "Day changed to " + date );
-			done = true;
-		}
+        // Needs an extra check, so the message only shows once a day.
+        if (hour == NOTIFY_HOUR && !done) {
+            final String date = Tools.dateToString(null, "EEEE, d MMMM yyyy");
+            msgController.showSystemMessage("Day changed to " + date);
+            done = true;
+        }
 
-		else if ( hour != NOTIFY_HOUR && done )
-		{
-			done = false;
-		}
-	}
+        else if (hour != NOTIFY_HOUR && done) {
+            done = false;
+        }
+    }
 }

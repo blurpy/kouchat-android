@@ -1,22 +1,23 @@
 
 /***************************************************************************
- *   Copyright 2006-2009 by Christian Ihle                                 *
+ *   Copyright 2006-2012 by Christian Ihle                                 *
  *   kontakt@usikkert.net                                                  *
  *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   This file is part of KouChat.                                         *
  *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
+ *   KouChat is free software; you can redistribute it and/or modify       *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of        *
+ *   the License, or (at your option) any later version.                   *
+ *                                                                         *
+ *   KouChat is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      *
+ *   Lesser General Public License for more details.                       *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with KouChat.                                           *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
 package net.usikkert.kouchat.misc;
@@ -31,118 +32,114 @@ import java.util.List;
  *
  * @author Christian Ihle
  */
-public class CommandHistory
-{
-	/**
-	 * Defines the max number of commands to save in the history.
-	 */
-	private static final int MAX_COMMANDS = 50;
+public class CommandHistory {
 
-	/**
-	 * An enumeration to describe the last direction the user
-	 * moved in the command history. This is used to correctly
-	 * synchronize the cursor with the history list.
-	 */
-	private enum Direction
-	{
-		UP,
-		MIDDLE,
-		DOWN
-	};
+    /**
+     * Defines the max number of commands to save in the history.
+     */
+    private static final int MAX_COMMANDS = 50;
 
-	/** The last direction the user moved in the history. */
-	private Direction direction;
+    /**
+     * An enumeration to describe the last direction the user
+     * moved in the command history. This is used to correctly
+     * synchronize the cursor with the history list.
+     */
+    private enum Direction {
+        UP,
+        MIDDLE,
+        DOWN
+    };
 
-	/** The current position in the history. */
-	private int cursor;
+    /** The last direction the user moved in the history. */
+    private Direction direction;
 
-	/** The list of items in the history. */
-	private final List<String> history;
+    /** The current position in the history. */
+    private int cursor;
 
-	/**
-	 * Default constructor.
-	 */
-	public CommandHistory()
-	{
-		history = new ArrayList<String>();
-		direction = Direction.MIDDLE;
-	}
+    /** The list of items in the history. */
+    private final List<String> history;
 
-	/**
-	 * Adds a new command to the list, and resets the cursor.
-	 * The command will only be added if it is not empty, and
-	 * not identical to the previous command.
-	 *
-	 * @param command The command to add to the list.
-	 */
-	public void add( final String command )
-	{
-		boolean add = true;
+    /**
+     * Default constructor.
+     */
+    public CommandHistory() {
+        history = new ArrayList<String>();
+        direction = Direction.MIDDLE;
+    }
 
-		if ( command.trim().length() == 0 )
-			add = false;
-		else if ( history.size() > 0 && command.equals( history.get( history.size() - 1 ) ) )
-			add = false;
+    /**
+     * Adds a new command to the list, and resets the cursor.
+     * The command will only be added if it is not empty, and
+     * not identical to the previous command.
+     *
+     * @param command The command to add to the list.
+     */
+    public void add(final String command) {
+        boolean add = true;
 
-		if ( add )
-		{
-			history.add( command );
+        if (command.trim().length() == 0) {
+            add = false;
+        } else if (history.size() > 0 && command.equals(history.get(history.size() - 1))) {
+            add = false;
+        }
 
-			if ( history.size() > MAX_COMMANDS )
-				history.remove( 0 );
-		}
+        if (add) {
+            history.add(command);
 
-		if ( history.size() > 0 )
-			cursor = history.size() - 1;
+            if (history.size() > MAX_COMMANDS) {
+                history.remove(0);
+            }
+        }
 
-		direction = Direction.MIDDLE;
-	}
+        if (history.size() > 0) {
+            cursor = history.size() - 1;
+        }
 
-	/**
-	 * Moves the cursor up in the history list, to find the previous command.
-	 * If the list is empty, it will return an empty string.
-	 *
-	 * @return The previous command.
-	 */
-	public String goUp()
-	{
-		String up = "";
+        direction = Direction.MIDDLE;
+    }
 
-		if ( history.size() > 0 )
-		{
-			if ( direction != Direction.MIDDLE && cursor > 0 )
-				cursor--;
+    /**
+     * Moves the cursor up in the history list, to find the previous command.
+     * If the list is empty, it will return an empty string.
+     *
+     * @return The previous command.
+     */
+    public String goUp() {
+        String up = "";
 
-			direction = Direction.UP;
-			up = history.get( cursor );
-		}
+        if (history.size() > 0) {
+            if (direction != Direction.MIDDLE && cursor > 0) {
+                cursor--;
+            }
 
-		return up;
-	}
+            direction = Direction.UP;
+            up = history.get(cursor);
+        }
 
-	/**
-	 * Moves the cursor down in the history list, to find the next command.
-	 * If the list is empty, or at the end, it will return an empty string.
-	 *
-	 * @return The next command.
-	 */
-	public String goDown()
-	{
-		String down = "";
+        return up;
+    }
 
-		if ( history.size() > 0 )
-		{
-			if ( cursor < history.size() - 1 )
-			{
-				cursor++;
-				direction = Direction.DOWN;
-				down = history.get( cursor );
-			}
+    /**
+     * Moves the cursor down in the history list, to find the next command.
+     * If the list is empty, or at the end, it will return an empty string.
+     *
+     * @return The next command.
+     */
+    public String goDown() {
+        String down = "";
 
-			else
-				direction = Direction.MIDDLE;
-		}
+        if (history.size() > 0) {
+            if (cursor < history.size() - 1) {
+                cursor++;
+                direction = Direction.DOWN;
+                down = history.get(cursor);
+            }
 
-		return down;
-	}
+            else {
+                direction = Direction.MIDDLE;
+            }
+        }
+
+        return down;
+    }
 }

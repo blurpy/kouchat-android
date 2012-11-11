@@ -1,22 +1,23 @@
 
 /***************************************************************************
- *   Copyright 2006-2009 by Christian Ihle                                 *
+ *   Copyright 2006-2012 by Christian Ihle                                 *
  *   kontakt@usikkert.net                                                  *
  *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   This file is part of KouChat.                                         *
  *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
+ *   KouChat is free software; you can redistribute it and/or modify       *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of        *
+ *   the License, or (at your option) any later version.                   *
+ *                                                                         *
+ *   KouChat is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      *
+ *   Lesser General Public License for more details.                       *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with KouChat.                                           *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
 package net.usikkert.kouchat.net;
@@ -28,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.usikkert.kouchat.event.NetworkConnectionListener;
+import net.usikkert.kouchat.misc.Settings;
 
 /**
  * This thread is responsible for keeping the application connected
@@ -38,285 +40,290 @@ import net.usikkert.kouchat.event.NetworkConnectionListener;
  *
  * @author Christian Ihle
  */
-public class ConnectionWorker implements Runnable
-{
-	/** The logger. */
-	private static final Logger LOG = Logger.getLogger( ConnectionWorker.class.getName() );
+public class ConnectionWorker implements Runnable {
 
-	/** Period of time to sleep if network is up. 60 sec. */
-	private static final int SLEEP_UP = 1000 * 60;
+    /** The logger. */
+    private static final Logger LOG = Logger.getLogger(ConnectionWorker.class.getName());
 
-	/** Period of time to sleep if network is down. 15 sec. */
-	private static final int SLEEP_DOWN = 1000 * 15;
+    /** Period of time to sleep if network is up. 60 sec. */
+    private static final int SLEEP_UP = 1000 * 60;
 
-	/** Indicates whether the thread should run or not. */
-	private boolean run;
+    /** Period of time to sleep if network is down. 15 sec. */
+    private static final int SLEEP_DOWN = 1000 * 15;
 
-	/** Whether the network is up or not. */
-	private boolean networkUp;
+    /** Indicates whether the thread should run or not. */
+    private boolean run;
 
-	/** The current network interface. */
-	private NetworkInterface networkInterface;
+    /** Whether the network is up or not. */
+    private boolean networkUp;
 
-	/** The working thread. */
-	private Thread worker;
+    /** The current network interface. */
+    private NetworkInterface networkInterface;
 
-	/** A list of connection listeners. */
-	private final List<NetworkConnectionListener> listeners;
+    /** The working thread. */
+    private Thread worker;
 
-	/** For locating the operating system's choice of network interface. */
-	private final OperatingSystemNetworkInfo osNetworkInfo;
+    /** A list of connection listeners. */
+    private final List<NetworkConnectionListener> listeners;
 
-	/**
-	 * Constructor.
-	 */
-	public ConnectionWorker()
-	{
-		listeners = new ArrayList<NetworkConnectionListener>();
-		osNetworkInfo = new OperatingSystemNetworkInfo();
-	}
+    /** For locating the operating system's choice of network interface. */
+    private final OperatingSystemNetworkInfo osNetworkInfo;
 
-	/**
-	 * The thread. See {@link #updateNetwork()} for details.
-	 */
-	@Override
-	public void run()
-	{
-		LOG.log( Level.FINE, "Network is starting" );
+    /** The settings to use for the network. */
+    private final Settings settings;
 
-		while ( run )
-		{
-			boolean networkUp = updateNetwork();
+    /**
+     * Constructor.
+     */
+    public ConnectionWorker() {
+        listeners = new ArrayList<NetworkConnectionListener>();
+        osNetworkInfo = new OperatingSystemNetworkInfo();
+        settings = Settings.getSettings();
+    }
 
-			try
-			{
-				if ( networkUp )
-					Thread.sleep( SLEEP_UP );
-				else
-					Thread.sleep( SLEEP_DOWN );
-			}
+    /**
+     * The thread. See {@link #updateNetwork()} for details.
+     */
+    @Override
+    public void run() {
+        LOG.log(Level.FINE, "Network is starting");
 
-			// Sleep interrupted - probably from stop() or checkNetwork()
-			catch ( final InterruptedException e )
-			{
-				LOG.log( Level.FINE, e.toString() );
-			}
-		}
+        while (run) {
+            final boolean networkUp = updateNetwork();
 
-		LOG.log( Level.FINE, "Network is stopping" );
+            try {
+                if (networkUp) {
+                    Thread.sleep(SLEEP_UP);
+                } else {
+                    Thread.sleep(SLEEP_DOWN);
+                }
+            }
 
-		if ( networkUp )
-			notifyNetworkDown( false );
+            // Sleep interrupted - probably from stop() or checkNetwork()
+            catch (final InterruptedException e) {
+                LOG.log(Level.FINE, e.toString());
+            }
+        }
 
-		networkInterface = null;
-	}
+        LOG.log(Level.FINE, "Network is stopping");
 
-	/**
-	 * Asks the thread to check the network now to detect loss of network connectivity.
-	 */
-	public void checkNetwork()
-	{
-		if ( worker != null )
-			worker.interrupt();
-	}
+        if (networkUp) {
+            notifyNetworkDown(false);
+        }
 
-	/**
-	 * Checks the state of the network, and tries to keep the best possible
-	 * network connection up. Listeners are notified of any changes.
-	 *
-	 * @return If the network is up or not after this update is done.
-	 */
-	private synchronized boolean updateNetwork()
-	{
-		NetworkInterface netif = selectNetworkInterface();
+        networkInterface = null;
+    }
 
-		// No network interface to connect with
-		if ( !NetworkUtils.isUsable( netif ) )
-		{
-			LOG.log( Level.FINE, "Network is down" );
+    /**
+     * Asks the thread to check the network now to detect loss of network connectivity.
+     */
+    public void checkNetwork() {
+        if (worker != null) {
+            worker.interrupt();
+        }
+    }
 
-			if ( networkUp )
-				notifyNetworkDown( false );
+    /**
+     * Checks the state of the network, and tries to keep the best possible
+     * network connection up. Listeners are notified of any changes.
+     *
+     * @return If the network is up or not after this update is done.
+     */
+    private synchronized boolean updateNetwork() {
+        final NetworkInterface netif = selectNetworkInterface();
 
-			return false;
-		}
+        // No network interface to connect with
+        if (!NetworkUtils.isUsable(netif)) {
+            LOG.log(Level.FINE, "Network is down");
 
-		// Switching network interface, like going from cable to wireless
-		else if ( isNewNetworkInterface( netif ) )
-		{
-			String origNetwork = networkInterface == null ? "[null]" : networkInterface.getName();
-			LOG.log( Level.FINE, "Changing network from " + origNetwork + " to " + netif.getName() );
-			networkInterface = netif;
+            if (networkUp) {
+                notifyNetworkDown(false);
+            }
 
-			if ( networkUp )
-			{
-				notifyNetworkDown( true );
-				notifyNetworkUp( true );
-			}
+            return false;
+        }
 
-			else
-				notifyNetworkUp( false );
-		}
+        // Switching network interface, like going from cable to wireless
+        else if (isNewNetworkInterface(netif)) {
+            final String origNetwork = networkInterface == null ? "[null]" : networkInterface.getName();
+            LOG.log(Level.FINE, "Changing network from " + origNetwork + " to " + netif.getName());
+            networkInterface = netif;
 
-		// If the connection was lost, like unplugging cable, and plugging back in
-		else if ( !networkUp )
-		{
-			LOG.log( Level.FINE, "Network " + netif.getName() + " is up again" );
-			networkInterface = netif;
-			notifyNetworkUp( false );
-		}
+            if (networkUp) {
+                notifyNetworkDown(true);
+                notifyNetworkUp(true);
+            }
 
-		// Else, the old connection is still up
+            else {
+                notifyNetworkUp(false);
+            }
+        }
 
-		return true;
-	}
+        // If the connection was lost, like unplugging cable, and plugging back in
+        else if (!networkUp) {
+            LOG.log(Level.FINE, "Network " + netif.getName() + " is up again");
+            networkInterface = netif;
+            notifyNetworkUp(false);
+        }
 
-	/**
-	 * Compares <code>netif</code> with the current network interface.
-	 *
-	 * @param netif The new network interface to compare against the original.
-	 * @return True if netif is new.
-	 */
-	private boolean isNewNetworkInterface( final NetworkInterface netif )
-	{
-		return !NetworkUtils.sameNetworkInterface( netif, networkInterface );
-	}
+        // Else, the old connection is still up
 
-	/**
-	 * Notifies all the listeners that the network is up.
-	 *
-	 * @param silent Don't give any messages to the user about the change.
-	 */
-	private synchronized void notifyNetworkUp( final boolean silent )
-	{
-		networkUp = true;
+        return true;
+    }
 
-		for ( NetworkConnectionListener listener : listeners )
-		{
-			listener.networkCameUp( silent );
-		}
-	}
+    /**
+     * Compares <code>netif</code> with the current network interface.
+     *
+     * @param netif The new network interface to compare against the original.
+     * @return True if netif is new.
+     */
+    private boolean isNewNetworkInterface(final NetworkInterface netif) {
+        return !NetworkUtils.sameNetworkInterface(netif, networkInterface);
+    }
 
-	/**
-	 * Notifies all the listeners that the network is down.
-	 *
-	 * @param silent Don't give any messages to the user about the change.
-	 */
-	private synchronized void notifyNetworkDown( final boolean silent )
-	{
-		networkUp = false;
+    /**
+     * Notifies all the listeners that the network is up.
+     *
+     * @param silent Don't give any messages to the user about the change.
+     */
+    private synchronized void notifyNetworkUp(final boolean silent) {
+        networkUp = true;
 
-		for ( NetworkConnectionListener listener : listeners )
-		{
-			listener.networkWentDown( silent );
-		}
-	}
+        for (final NetworkConnectionListener listener : listeners) {
+            listener.networkCameUp(silent);
+        }
+    }
 
-	/**
-	 * Registers the listener as a connection listener.
-	 *
-	 * @param listener The listener to register.
-	 */
-	public void registerNetworkConnectionListener( final NetworkConnectionListener listener )
-	{
-		listeners.add( listener );
-	}
+    /**
+     * Notifies all the listeners that the network is down.
+     *
+     * @param silent Don't give any messages to the user about the change.
+     */
+    private synchronized void notifyNetworkDown(final boolean silent) {
+        networkUp = false;
 
-	/**
-	 * Starts a new thread if no thread is already running.
-	 */
-	public synchronized void start()
-	{
-		if ( !run && !isAlive() )
-		{
-			run = true;
-			worker = new Thread( this, "ConnectionWorker" );
-			worker.start();
-		}
-	}
+        for (final NetworkConnectionListener listener : listeners) {
+            listener.networkWentDown(silent);
+        }
+    }
 
-	/**
-	 * Stops the thread.
-	 */
-	public void stop()
-	{
-		run = false;
+    /**
+     * Registers the listener as a connection listener.
+     *
+     * @param listener The listener to register.
+     */
+    public void registerNetworkConnectionListener(final NetworkConnectionListener listener) {
+        listeners.add(listener);
+    }
 
-		if ( worker != null )
-			worker.interrupt();
-	}
+    /**
+     * Starts a new thread if no thread is already running.
+     */
+    public synchronized void start() {
+        if (!run && !isAlive()) {
+            run = true;
+            worker = new Thread(this, "ConnectionWorker");
+            worker.start();
+        }
+    }
 
-	/**
-	 * Locates the best network interface to use.
-	 *
-	 * <p>The operating system's choice of network interface is prioritized,
-	 * but if the interface is not seen as usable, then the first usable
-	 * interface in the list of available choices is used instead.</p>
-	 *
-	 * <p>If no usable network interfaces are found, then <code>null</code>
-	 * is returned.</p>
-	 *
-	 * @return The network interface found, or <code>null</code>.
-	 * @see NetworkUtils#isUsable(NetworkInterface)
-	 */
-	private NetworkInterface selectNetworkInterface()
-	{
-		NetworkInterface firstUsableNetIf = NetworkUtils.findFirstUsableNetworkInterface();
+    /**
+     * Stops the thread.
+     */
+    public void stop() {
+        run = false;
 
-		if ( firstUsableNetIf == null )
-		{
-			LOG.log( Level.FINER, "No usable network interface detected." );
-			return null;
-		}
+        if (worker != null) {
+            worker.interrupt();
+        }
+    }
 
-		NetworkInterface osNetIf = osNetworkInfo.getOperatingSystemNetworkInterface();
+    /**
+     * Locates the best network interface to use.
+     *
+     * <ol>
+     *   <li>The first priority is the network interface selected in the settings.</li>
+     *   <li>The second priority is the operating system's choice of network interface.</li>
+     *   <li>The last priority is KouChat's own choice of network interface.</li>
+     * </ol>
+     *
+     * <p>If no usable network interfaces are found, then <code>null</code>
+     * is returned.</p>
+     *
+     * @return The network interface found, or <code>null</code>.
+     * @see NetworkUtils#isUsable(NetworkInterface)
+     */
+    private NetworkInterface selectNetworkInterface() {
+        final NetworkInterface firstUsableNetIf = NetworkUtils.findFirstUsableNetworkInterface();
 
-		if ( NetworkUtils.isUsable( osNetIf ) )
-		{
-			LOG.log( Level.FINER, "Using operating system's choice of network interface." );
-			return osNetIf;
-		}
+        if (firstUsableNetIf == null) {
+            LOG.log(Level.FINER, "No usable network interface detected.");
+            return null;
+        }
 
-		LOG.log( Level.FINER, "Overriding operating system's choice of network interface." );
-		return firstUsableNetIf;
-	}
+        final NetworkInterface savedNetworkInterface =
+                NetworkUtils.getNetworkInterfaceByName(settings.getNetworkInterface());
 
-	/**
-	 * Finds the current network interface.
-	 *
-	 * @return The current network interface.
-	 */
-	public NetworkInterface getCurrentNetworkInterface()
-	{
-		NetworkInterface updatedNetworkInterface =
-			NetworkUtils.getUpdatedNetworkInterface( networkInterface );
+        if (NetworkUtils.isUsable(savedNetworkInterface)) {
+            LOG.log(Level.FINER, "Using saved network interface: \n" +
+                    NetworkUtils.getNetworkInterfaceInfo(savedNetworkInterface));
+            return savedNetworkInterface;
+        }
 
-		if ( updatedNetworkInterface != null )
-			return updatedNetworkInterface;
+        LOG.log(Level.FINER, "Saved network interface '" + settings.getNetworkInterface() + "' is invalid: \n" +
+                NetworkUtils.getNetworkInterfaceInfo(savedNetworkInterface));
 
-		return networkInterface;
-	}
+        final NetworkInterface osNetIf = osNetworkInfo.getOperatingSystemNetworkInterface();
 
-	/**
-	 * Checks if the network is up.
-	 *
-	 * @return If the network is up.
-	 */
-	public boolean isNetworkUp()
-	{
-		return networkUp;
-	}
+        if (NetworkUtils.isUsable(osNetIf)) {
+            LOG.log(Level.FINER, "Using operating system's choice of network interface: \n" +
+                    NetworkUtils.getNetworkInterfaceInfo(osNetIf));
+            return osNetIf;
+        }
 
-	/**
-	 * Checks if the thread is alive.
-	 *
-	 * @return If the thread is alive.
-	 */
-	public boolean isAlive()
-	{
-		if ( worker == null )
-			return false;
-		else
-			return worker.isAlive();
-	}
+        LOG.finer("The operating system suggested the following invalid network interface: \n" +
+                NetworkUtils.getNetworkInterfaceInfo(osNetIf));
+        LOG.log(Level.FINER, "Overriding operating system's choice of network interface with: \n" +
+                NetworkUtils.getNetworkInterfaceInfo(firstUsableNetIf));
+
+        return firstUsableNetIf;
+    }
+
+    /**
+     * Finds the current network interface.
+     *
+     * @return The current network interface.
+     */
+    public NetworkInterface getCurrentNetworkInterface() {
+        final NetworkInterface updatedNetworkInterface =
+            NetworkUtils.getUpdatedNetworkInterface(networkInterface);
+
+        if (updatedNetworkInterface != null) {
+            return updatedNetworkInterface;
+        }
+
+        return networkInterface;
+    }
+
+    /**
+     * Checks if the network is up.
+     *
+     * @return If the network is up.
+     */
+    public boolean isNetworkUp() {
+        return networkUp;
+    }
+
+    /**
+     * Checks if the thread is alive.
+     *
+     * @return If the thread is alive.
+     */
+    public boolean isAlive() {
+        if (worker == null) {
+            return false;
+        } else {
+            return worker.isAlive();
+        }
+    }
 }

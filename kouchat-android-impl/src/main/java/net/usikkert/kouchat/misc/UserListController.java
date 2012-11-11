@@ -1,22 +1,23 @@
 
 /***************************************************************************
- *   Copyright 2006-2009 by Christian Ihle                                 *
+ *   Copyright 2006-2012 by Christian Ihle                                 *
  *   kontakt@usikkert.net                                                  *
  *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   This file is part of KouChat.                                         *
  *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
+ *   KouChat is free software; you can redistribute it and/or modify       *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of        *
+ *   the License, or (at your option) any later version.                   *
+ *                                                                         *
+ *   KouChat is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      *
+ *   Lesser General Public License for more details.                       *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with KouChat.                                           *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
 package net.usikkert.kouchat.misc;
@@ -29,242 +30,215 @@ package net.usikkert.kouchat.misc;
  *
  * @author Christian Ihle
  */
-public class UserListController
-{
-	/** The user list. */
-	private final UserList userList;
+public class UserListController {
 
-	/** The application user. */
-	private final User me;
+    /** The user list. */
+    private final UserList userList;
 
-	/** Application settings. */
-	private final Settings settings;
+    /** The application user. */
+    private final User me;
 
-	/**
-	 * Constructor.
-	 *
-	 * Initializes the user list and puts <code>me</code> in the list.
-	 */
-	public UserListController()
-	{
-		settings = Settings.getSettings();
-		userList = new SortedUserList();
-		me = settings.getMe();
-		userList.add( me );
-	}
+    /** Application settings. */
+    private final Settings settings;
 
-	/**
-	 * Gets a user by the user's unique code.
-	 *
-	 * @param code The unique code of the user to get.
-	 * @return The user, or <code>null</code> if the user was not found.
-	 */
-	public User getUser( final int code )
-	{
-		User user = null;
+    /**
+     * Constructor.
+     *
+     * Initializes the user list and puts <code>me</code> in the list.
+     */
+    public UserListController() {
+        settings = Settings.getSettings();
+        userList = new SortedUserList();
+        me = settings.getMe();
+        userList.add(me);
+    }
 
-		for ( int i = 0; i < userList.size(); i++ )
-		{
-			User temp = userList.get( i );
+    /**
+     * Gets a user by the user's unique code.
+     *
+     * @param code The unique code of the user to get.
+     * @return The user, or <code>null</code> if the user was not found.
+     */
+    public User getUser(final int code) {
+        User user = null;
 
-			if ( temp.getCode() == code )
-			{
-				user = temp;
-				break;
-			}
-		}
+        for (int i = 0; i < userList.size(); i++) {
+            final User temp = userList.get(i);
 
-		return user;
-	}
+            if (temp.getCode() == code) {
+                user = temp;
+                break;
+            }
+        }
 
-	/**
-	 * Gets a user by the user's unique nick name.
-	 *
-	 * @param nickname The unique nick name of the user to get.
-	 * @return The user, or <code>null</code> if the user was not found.
-	 */
-	public User getUser( final String nickname )
-	{
-		User user = null;
+        return user;
+    }
 
-		for ( int i = 0; i < userList.size(); i++ )
-		{
-			User temp = userList.get( i );
+    /**
+     * Gets a user by the user's unique nick name.
+     *
+     * @param nickname The unique nick name of the user to get.
+     * @return The user, or <code>null</code> if the user was not found.
+     */
+    public User getUser(final String nickname) {
+        User user = null;
 
-			if ( temp.getNick().equalsIgnoreCase( nickname ) )
-			{
-				user = temp;
-				break;
-			}
-		}
+        for (int i = 0; i < userList.size(); i++) {
+            final User temp = userList.get(i);
 
-		return user;
-	}
+            if (temp.getNick().equalsIgnoreCase(nickname)) {
+                user = temp;
+                break;
+            }
+        }
 
-	/**
-	 * Changes the nick name of a user.
-	 *
-	 * @param code The unique code of the user to change the nick name of.
-	 * @param nickname The new nick name of the user.
-	 */
-	public void changeNickName( final int code, final String nickname )
-	{
-		for ( int i = 0; i < userList.size(); i++ )
-		{
-			User temp = userList.get( i );
+        return user;
+    }
 
-			if ( temp.getCode() == code )
-			{
-				temp.setNick( nickname );
-				userList.set( i, temp );
-				break;
-			}
-		}
-	}
+    /**
+     * Changes the nick name of a user.
+     *
+     * @param code The unique code of the user to change the nick name of.
+     * @param nickname The new nick name of the user.
+     */
+    public void changeNickName(final int code, final String nickname) {
+        for (int i = 0; i < userList.size(); i++) {
+            final User temp = userList.get(i);
 
-	/**
-	 * Changes the away status of a user.
-	 *
-	 * @param code The unique code of the user.
-	 * @param away If the user is away.
-	 * @param awaymsg The new away message.
-	 */
-	public void changeAwayStatus( final int code, final boolean away, final String awaymsg )
-	{
-		for ( int i = 0; i < userList.size(); i++ )
-		{
-			User temp = userList.get( i );
+            if (temp.getCode() == code) {
+                temp.setNick(nickname);
+                userList.set(i, temp);
+                break;
+            }
+        }
+    }
 
-			if ( temp.getCode() == code )
-			{
-				temp.setAway( away );
-				temp.setAwayMsg( awaymsg );
-				userList.set( i, temp );
-				break;
-			}
-		}
-	}
+    /**
+     * Changes the away status of a user.
+     *
+     * @param code The unique code of the user.
+     * @param away If the user is away.
+     * @param awaymsg The new away message.
+     */
+    public void changeAwayStatus(final int code, final boolean away, final String awaymsg) {
+        for (int i = 0; i < userList.size(); i++) {
+            final User temp = userList.get(i);
 
-	/**
-	 * Changes if the user is writing or not.
-	 *
-	 * @param code The unique code of the user.
-	 * @param writing If the user is writing.
-	 */
-	public void changeWriting( final int code, final boolean writing )
-	{
-		for ( int i = 0; i < userList.size(); i++ )
-		{
-			User temp = userList.get( i );
+            if (temp.getCode() == code) {
+                temp.setAway(away);
+                temp.setAwayMsg(awaymsg);
+                userList.set(i, temp);
+                break;
+            }
+        }
+    }
 
-			if ( temp.getCode() == code )
-			{
-				temp.setWriting( writing );
-				userList.set( i, temp );
-				break;
-			}
-		}
-	}
+    /**
+     * Changes if the user is writing or not.
+     *
+     * @param code The unique code of the user.
+     * @param writing If the user is writing.
+     */
+    public void changeWriting(final int code, final boolean writing) {
+        for (int i = 0; i < userList.size(); i++) {
+            final User temp = userList.get(i);
 
-	/**
-	 * Changes if the user has new private messages.
-	 *
-	 * @param code The unique code of the user.
-	 * @param newMsg If the user has new private messages.
-	 */
-	public void changeNewMessage( final int code, final boolean newMsg )
-	{
-		for ( int i = 0; i < userList.size(); i++ )
-		{
-			User temp = userList.get( i );
+            if (temp.getCode() == code) {
+                temp.setWriting(writing);
+                userList.set(i, temp);
+                break;
+            }
+        }
+    }
 
-			if ( temp.getCode() == code )
-			{
-				temp.setNewPrivMsg( newMsg );
-				userList.set( i, temp );
-				break;
-			}
-		}
-	}
+    /**
+     * Changes if the user has new private messages.
+     *
+     * @param code The unique code of the user.
+     * @param newMsg If the user has new private messages.
+     */
+    public void changeNewMessage(final int code, final boolean newMsg) {
+        for (int i = 0; i < userList.size(); i++) {
+            final User temp = userList.get(i);
 
-	/**
-	 * Checks if the nick name is in use by any other users.
-	 *
-	 * @param nickname The nick name to check.
-	 * @return If the nick name is in use.
-	 */
-	public boolean isNickNameInUse( final String nickname )
-	{
-		boolean inUse = false;
+            if (temp.getCode() == code) {
+                temp.setNewPrivMsg(newMsg);
+                userList.set(i, temp);
+                break;
+            }
+        }
+    }
 
-		for ( int i = 0; i < userList.size(); i++ )
-		{
-			User temp = userList.get( i );
+    /**
+     * Checks if the nick name is in use by any other users.
+     *
+     * @param nickname The nick name to check.
+     * @return If the nick name is in use.
+     */
+    public boolean isNickNameInUse(final String nickname) {
+        boolean inUse = false;
 
-			if ( temp.getNick().equalsIgnoreCase( nickname ) && !temp.isMe() )
-			{
-				inUse = true;
-				break;
-			}
-		}
+        for (int i = 0; i < userList.size(); i++) {
+            final User temp = userList.get(i);
 
-		return inUse;
-	}
+            if (temp.getNick().equalsIgnoreCase(nickname) && !temp.isMe()) {
+                inUse = true;
+                break;
+            }
+        }
 
-	/**
-	 * Checks if the user already exists in the user list.
-	 *
-	 * @param code The unique code of the user.
-	 * @return If the user is new, which means it is not in the user list.
-	 */
-	public boolean isNewUser( final int code )
-	{
-		boolean newUser = true;
+        return inUse;
+    }
 
-		for ( int i = 0; i < userList.size(); i++ )
-		{
-			User temp = userList.get( i );
+    /**
+     * Checks if the user already exists in the user list.
+     *
+     * @param code The unique code of the user.
+     * @return If the user is new, which means it is not in the user list.
+     */
+    public boolean isNewUser(final int code) {
+        boolean newUser = true;
 
-			if ( temp.getCode() == code )
-			{
-				newUser = false;
-				break;
-			}
-		}
+        for (int i = 0; i < userList.size(); i++) {
+            final User temp = userList.get(i);
 
-		return newUser;
-	}
+            if (temp.getCode() == code) {
+                newUser = false;
+                break;
+            }
+        }
 
-	/**
-	 * Checks if the user list contains <em>timeout users</em>.
-	 *
-	 * <p>A timeout user is a user which disconnected from the chat without
-	 * logging off, and then logging on the chat again before the original
-	 * user has timed out from the chat. The user will then get a nick name
-	 * which is identical to the user's unique code to avoid nick crash.</p>
-	 *
-	 * @return If there are any timeout users.
-	 */
-	public boolean isTimeoutUsers()
-	{
-		for ( int i = 0; i < userList.size(); i++ )
-		{
-			User temp = userList.get( i );
+        return newUser;
+    }
 
-			if ( temp.getNick().equals( "" + temp.getCode() ) )
-				return true;
-		}
+    /**
+     * Checks if the user list contains <em>timeout users</em>.
+     *
+     * <p>A timeout user is a user which disconnected from the chat without
+     * logging off, and then logging on the chat again before the original
+     * user has timed out from the chat. The user will then get a nick name
+     * which is identical to the user's unique code to avoid nick crash.</p>
+     *
+     * @return If there are any timeout users.
+     */
+    public boolean isTimeoutUsers() {
+        for (int i = 0; i < userList.size(); i++) {
+            final User temp = userList.get(i);
 
-		return false;
-	}
+            if (temp.getNick().equals("" + temp.getCode())) {
+                return true;
+            }
+        }
 
-	/**
-	 * Gets the user list.
-	 *
-	 * @return The user list.
-	 */
-	public UserList getUserList()
-	{
-		return userList;
-	}
+        return false;
+    }
+
+    /**
+     * Gets the user list.
+     *
+     * @return The user list.
+     */
+    public UserList getUserList() {
+        return userList;
+    }
 }

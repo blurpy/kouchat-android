@@ -20,45 +20,48 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.util;
+package net.usikkert.kouchat.misc;
+
+import static org.junit.Assert.*;
+
+import net.usikkert.kouchat.Constants;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * Contains utility methods for validating input.
+ * Test of {@link Settings}.
  *
  * @author Christian Ihle
  */
-public final class Validate {
+public class SettingsTest {
 
-    /**
-     * Private constructor. Only static methods in this class.
-     */
-    private Validate() {
+    private Settings settings;
 
+    @Before
+    public void setUp() throws Exception {
+        settings = Settings.getSettings();
+        System.setProperty("file.separator", "/");
     }
 
-    /**
-     * Checks if <code>obj</code> is <code>null</code>, and throws
-     * an {@link IllegalArgumentException} if that is true.
-     *
-     * @param obj The object to check.
-     * @param errorMsg The error message to use in the exception.
-     */
-    public static void notNull(final Object obj, final String errorMsg) {
-        if (obj == null) {
-            throw new IllegalArgumentException(errorMsg);
-        }
+    @Test
+    public void getLogLocationShouldReturnSetValue() {
+        settings.setLogLocation("/var/log/kouchat/");
+
+        assertEquals("/var/log/kouchat/", settings.getLogLocation());
     }
 
-    /**
-     * Checks if <code>text</code> is <code>null</code> or empty,
-     * and throws an {@link IllegalArgumentException} if that is true.
-     *
-     * @param text The string to check.
-     * @param errorMsg The error message to use in the exception.
-     */
-    public static void notEmpty(final String text, final String errorMsg) {
-        if (text == null || text.trim().length() == 0) {
-            throw new IllegalArgumentException(errorMsg);
-        }
+    @Test
+    public void getLogLocationShouldAlwaysEndWithSlash() {
+        settings.setLogLocation("/var/log/kouchat");
+
+        assertEquals("/var/log/kouchat/", settings.getLogLocation());
+    }
+
+    @Test
+    public void getLogLocationShouldReturnDefaultLocationOfValueNotSet() {
+        settings.setLogLocation(null);
+
+        assertEquals(Constants.APP_LOG_FOLDER, settings.getLogLocation());
     }
 }

@@ -1,22 +1,23 @@
 
 /***************************************************************************
- *   Copyright 2006-2009 by Christian Ihle                                 *
+ *   Copyright 2006-2012 by Christian Ihle                                 *
  *   kontakt@usikkert.net                                                  *
  *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   This file is part of KouChat.                                         *
  *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
+ *   KouChat is free software; you can redistribute it and/or modify       *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of        *
+ *   the License, or (at your option) any later version.                   *
+ *                                                                         *
+ *   KouChat is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      *
+ *   Lesser General Public License for more details.                       *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with KouChat.                                           *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
 package net.usikkert.kouchat.net;
@@ -33,103 +34,100 @@ import net.usikkert.kouchat.util.Validate;
  *
  * @author Christian Ihle
  */
-public class NetworkInformation implements NetworkInformationMBean
-{
-	/** Information and control of the network. */
-	private final ConnectionWorker connectionWorker;
+public class NetworkInformation implements NetworkInformationMBean {
 
-	/**
-	 * Constructor.
-	 *
-	 * @param connectionWorker To get information about the network, and control the network.
-	 */
-	public NetworkInformation( final ConnectionWorker connectionWorker )
-	{
-		Validate.notNull( connectionWorker, "Connection worker can not be null" );
-		this.connectionWorker = connectionWorker;
-	}
+    /** Information and control of the network. */
+    private final ConnectionWorker connectionWorker;
 
-	/** {@inheritDoc} */
-	@Override
-	public String showCurrentNetwork()
-	{
-		NetworkInterface networkInterface = connectionWorker.getCurrentNetworkInterface();
+    /**
+     * Constructor.
+     *
+     * @param connectionWorker To get information about the network, and control the network.
+     */
+    public NetworkInformation(final ConnectionWorker connectionWorker) {
+        Validate.notNull(connectionWorker, "Connection worker can not be null");
+        this.connectionWorker = connectionWorker;
+    }
 
-		if ( networkInterface == null )
-			return "No current network interface.";
-		else
-			return NetworkUtils.getNetworkInterfaceInfo( networkInterface );
-	}
+    /** {@inheritDoc} */
+    @Override
+    public String showCurrentNetwork() {
+        final NetworkInterface networkInterface = connectionWorker.getCurrentNetworkInterface();
 
-	/** {@inheritDoc} */
-	@Override
-	public String showOperatingSystemNetwork()
-	{
-		OperatingSystemNetworkInfo osNicInfo = new OperatingSystemNetworkInfo();
-		NetworkInterface osInterface = osNicInfo.getOperatingSystemNetworkInterface();
+        if (networkInterface == null) {
+            return "No current network interface.";
+        } else {
+            return NetworkUtils.getNetworkInterfaceInfo(networkInterface);
+        }
+    }
 
-		if ( osInterface == null )
-			return "No network interface detected.";
-		else
-			return NetworkUtils.getNetworkInterfaceInfo( osInterface );
-	}
+    /** {@inheritDoc} */
+    @Override
+    public String showOperatingSystemNetwork() {
+        final OperatingSystemNetworkInfo osNicInfo = new OperatingSystemNetworkInfo();
+        final NetworkInterface osInterface = osNicInfo.getOperatingSystemNetworkInterface();
 
-	/** {@inheritDoc} */
-	@Override
-	public String[] showUsableNetworks()
-	{
-		List<String> list = new ArrayList<String>();
+        if (osInterface == null) {
+            return "No network interface detected.";
+        } else {
+            return NetworkUtils.getNetworkInterfaceInfo(osInterface);
+        }
+    }
 
-		Enumeration<NetworkInterface> networkInterfaces = NetworkUtils.getNetworkInterfaces();
+    /** {@inheritDoc} */
+    @Override
+    public String[] showUsableNetworks() {
+        final List<String> list = new ArrayList<String>();
 
-		if ( networkInterfaces == null )
-			return new String[] { "No network interfaces detected." };
+        final Enumeration<NetworkInterface> networkInterfaces = NetworkUtils.getNetworkInterfaces();
 
-		while ( networkInterfaces.hasMoreElements() )
-		{
-			NetworkInterface netif = networkInterfaces.nextElement();
+        if (networkInterfaces == null) {
+            return new String[]{"No network interfaces detected."};
+        }
 
-			if ( NetworkUtils.isUsable( netif ) )
-				list.add( NetworkUtils.getNetworkInterfaceInfo( netif ) );
-		}
+        while (networkInterfaces.hasMoreElements()) {
+            final NetworkInterface netif = networkInterfaces.nextElement();
 
-		if ( list.size() == 0 )
-			return new String[] { "No usable network interfaces detected." };
+            if (NetworkUtils.isUsable(netif)) {
+                list.add(NetworkUtils.getNetworkInterfaceInfo(netif));
+            }
+        }
 
-		return list.toArray( new String[0] );
-	}
+        if (list.size() == 0) {
+            return new String[]{"No usable network interfaces detected."};
+        }
 
-	/** {@inheritDoc} */
-	@Override
-	public String[] showAllNetworks()
-	{
-		List<String> list = new ArrayList<String>();
+        return list.toArray(new String[0]);
+    }
 
-		Enumeration<NetworkInterface> networkInterfaces = NetworkUtils.getNetworkInterfaces();
+    /** {@inheritDoc} */
+    @Override
+    public String[] showAllNetworks() {
+        final List<String> list = new ArrayList<String>();
 
-		if ( networkInterfaces == null )
-			return new String[] { "No network interfaces detected." };
+        final Enumeration<NetworkInterface> networkInterfaces = NetworkUtils.getNetworkInterfaces();
 
-		while ( networkInterfaces.hasMoreElements() )
-		{
-			NetworkInterface netif = networkInterfaces.nextElement();
-			list.add( NetworkUtils.getNetworkInterfaceInfo( netif ) );
-		}
+        if (networkInterfaces == null) {
+            return new String[]{"No network interfaces detected."};
+        }
 
-		return list.toArray( new String[0] );
-	}
+        while (networkInterfaces.hasMoreElements()) {
+            final NetworkInterface netif = networkInterfaces.nextElement();
+            list.add(NetworkUtils.getNetworkInterfaceInfo(netif));
+        }
 
-	/** {@inheritDoc} */
-	@Override
-	public void disconnect()
-	{
-		connectionWorker.stop();
-	}
+        return list.toArray(new String[0]);
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public void connect()
-	{
-		connectionWorker.start();
-	}
+    /** {@inheritDoc} */
+    @Override
+    public void disconnect() {
+        connectionWorker.stop();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void connect() {
+        connectionWorker.start();
+    }
 }
