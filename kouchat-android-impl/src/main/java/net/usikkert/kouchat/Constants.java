@@ -42,7 +42,7 @@ public interface Constants {
     /**
      * Which license the application has.
      */
-    String APP_LICENSE_NAME = "GNU LGPLv3";
+    String APP_LICENSE_NAME = "GNU LGPL v3";
 
     /**
      * The home page of this application.
