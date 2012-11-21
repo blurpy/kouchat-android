@@ -37,11 +37,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.text.util.Linkify;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -109,6 +112,7 @@ public class MainChatController extends Activity {
         registerMainChatInputListener();
         registerUserListClickListener();
         makeMainChatViewScrollable();
+        makeLinksClickable();
         setupMainChatUserList();
         openKeyboard();
     }
@@ -161,6 +165,13 @@ public class MainChatController extends Activity {
 
     private void makeMainChatViewScrollable() {
         mainChatView.setMovementMethod(new ScrollingMovementMethod());
+    }
+
+    private void makeLinksClickable() {
+        // This needs to be done after making the text view scrollable, or else the links wont be clickable.
+        // This also makes the view scrollable, but setting both movement methods seems to make the scrolling
+        // behave better.
+        mainChatView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void setupMainChatUserList() {
@@ -265,6 +276,7 @@ public class MainChatController extends Activity {
             public void run() {
                 final SpannableStringBuilder builder = new SpannableStringBuilder(message + "\n");
                 builder.setSpan(new ForegroundColorSpan(color), 0, message.length(), 0);
+                Linkify.addLinks(builder, Linkify.WEB_URLS);
                 mainChatView.append(builder);
                 scrollMainChatViewToBottom();
             }
@@ -279,6 +291,16 @@ public class MainChatController extends Activity {
 
     public void updateChat(final CharSequence savedChat) {
         mainChatView.setText(savedChat);
+        Linkify.addLinks(mainChatView, Linkify.WEB_URLS);
+
+        // Run this after 1 second, because right after a rotate the layout is null and it's not possible to scroll yet
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scrollMainChatViewToBottom();
+            }
+        }, 1000);
+
     }
 
     public void updateTopic(final String topic) {
