@@ -30,6 +30,7 @@ import net.usikkert.kouchat.util.TestUtils;
 import com.jayway.android.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.KeyEvent;
 
 /**
  * Tests how the application handles orientation changes.
@@ -68,6 +69,32 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
         verifyWelcomeMessage();
         verifyTopic();
         verifyUserInUserList();
+    }
+
+    // Must be verified manually. I haven't found an automated way to verify scrolling yet.
+    public void test02OrientationSwitchShouldScrollToBottom() {
+        for (int i = 1; i <= 30; i++) {
+            solo.enterText(0,
+                    "This is message number " + i + "! " +
+                    "This is message number " + i + "! " +
+                    "This is message number " + i + "! " +
+                    "This is message number " + i + "! " +
+                    "This is message number " + i + "! " +
+                    "This is message number " + i + "! " +
+                    "This is message number " + i + "! " +
+                    "This is message number " + i + "! " +
+                    "This is message number " + i + "! " +
+                    "This is message number " + i + "! " +
+                    "This is message number " + i + "! " +
+                    "This is message number " + i + "! ");
+            solo.sendKey(KeyEvent.KEYCODE_ENTER);
+        }
+
+        solo.setActivityOrientation(Solo.PORTRAIT);
+        solo.sleep(3000); // See if message number 30 is visible
+
+        solo.setActivityOrientation(Solo.LANDSCAPE);
+        solo.sleep(3000); // See if message number 30 is visible
     }
 
     public void test99Quit() {
