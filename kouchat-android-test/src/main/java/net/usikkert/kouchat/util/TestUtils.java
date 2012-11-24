@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import com.jayway.android.robotium.solo.Solo;
 
+import android.text.Layout;
 import android.view.KeyEvent;
 import android.widget.TextView;
 
@@ -157,5 +158,22 @@ public final class TestUtils {
         }
 
         throw new IllegalArgumentException("Could not find TextView with text: " + text);
+    }
+
+    /**
+     * Gets the text on the given line in the textview.
+     *
+     * @param textView The textview to get the text from.
+     * @param line The line in the textview to get the text from.
+     * @return The text on the given line.
+     */
+    public static String getLineOfText(final TextView textView, final int line) {
+        final Layout layout = textView.getLayout();
+        final String text = textView.getText().toString();
+
+        final int lineStart = layout.getLineStart(line);
+        final int lineEnd = layout.getLineEnd(line);
+
+        return text.substring(lineStart, lineEnd);
     }
 }

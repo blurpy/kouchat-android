@@ -152,7 +152,7 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
         final int lineCount = layout.getLineCount();
 
         for (int currentLineNumber = 0; currentLineNumber < lineCount; currentLineNumber++) {
-            final String currentLine = getTextOnLine(textView, currentLineNumber);
+            final String currentLine = TestUtils.getLineOfText(textView, currentLineNumber);
 
             if (currentLine.contains(textToFind)) {
                 return getCoordinatesForLine(textView, textToFind, currentLineNumber, currentLine);
@@ -182,12 +182,5 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
         final int yPosition = layout.getLineBaseline(lineNumber) + textViewXYLocation[1] - textView.getScrollY();
 
         return new Point(xPosition, yPosition);
-    }
-
-    private String getTextOnLine(final TextView textView, final int line) {
-        final Layout layout = textView.getLayout();
-        final String text = textView.getText().toString();
-
-        return text.substring(layout.getLineStart(line), layout.getLineEnd(line));
     }
 }
