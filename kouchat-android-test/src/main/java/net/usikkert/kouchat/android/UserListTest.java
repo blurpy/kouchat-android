@@ -25,7 +25,6 @@ package net.usikkert.kouchat.android;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
 
@@ -45,7 +44,6 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     private Solo solo;
     private TestClient client;
-    private MainChatController activity;
     private User me;
 
     public UserListTest() {
@@ -53,7 +51,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void setUp() {
-        activity = getActivity();
+        final MainChatController activity = getActivity();
         solo = new Solo(getInstrumentation(), activity);
         client = new TestClient();
         me = Settings.getSettings().getMe();
@@ -69,13 +67,13 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         final ListView userList = solo.getCurrentListViews().get(0);
         assertEquals(1, userList.getCount());
 
-        final Messages messages = client.logon();
+        client.logon();
 
-        sleep(500);
+        solo.sleep(500);
 
         assertEquals(2, userList.getCount());
-        final User item1 = (User) userList.getItemAtPosition(0);
-        final User item2 = (User) userList.getItemAtPosition(1);
+//        final User item1 = (User) userList.getItemAtPosition(0);
+//        final User item2 = (User) userList.getItemAtPosition(1);
 
         // TODO verify order
     }
@@ -88,15 +86,5 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     public void tearDown() {
         client.logoff();
         solo.finishOpenedActivities();
-    }
-
-    private void sleep(final int time) {
-        try {
-            Thread.sleep(time);
-        }
-
-        catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
