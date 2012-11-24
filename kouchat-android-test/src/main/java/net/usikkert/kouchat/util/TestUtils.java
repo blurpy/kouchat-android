@@ -26,6 +26,8 @@ import java.lang.reflect.Field;
 
 import com.jayway.android.robotium.solo.Solo;
 
+import android.view.KeyEvent;
+
 /**
  * Utilities for tests.
  *
@@ -122,5 +124,16 @@ public final class TestUtils {
         finally {
             field.setAccessible(originalAccessible);
         }
+    }
+
+    /**
+     * Adds a line of text to the first edittext field, and presses enter.
+     *
+     * @param solo The solo tester.
+     * @param text The line of text to write.
+     */
+    public static void writeLine(final Solo solo, final String text) {
+        solo.enterText(0, text);
+        solo.sendKey(KeyEvent.KEYCODE_ENTER);
     }
 }

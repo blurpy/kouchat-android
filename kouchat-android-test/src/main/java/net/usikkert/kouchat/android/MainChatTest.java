@@ -31,7 +31,6 @@ import net.usikkert.kouchat.util.TestUtils;
 import com.jayway.android.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.view.KeyEvent;
 
 /**
  * Tests sending and receiving messages in the main chat.
@@ -51,8 +50,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void test01OwnMessageIsShownInChat() {
-        solo.enterText(0, "This is a new message from myself");
-        solo.sendKey(KeyEvent.KEYCODE_ENTER);
+        TestUtils.writeLine(solo, "This is a new message from myself");
         assertTrue(solo.searchText("This is a new message from myself"));
     }
 

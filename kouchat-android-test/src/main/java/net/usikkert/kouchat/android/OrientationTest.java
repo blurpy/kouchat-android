@@ -35,7 +35,6 @@ import android.graphics.Point;
 import android.test.ActivityInstrumentationTestCase2;
 import android.text.Layout;
 import android.text.TextPaint;
-import android.view.KeyEvent;
 import android.widget.TextView;
 
 /**
@@ -80,7 +79,7 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
     // Must be verified manually. I haven't found an automated way to verify scrolling yet.
     public void test02OrientationSwitchShouldScrollToBottom() {
         for (int i = 1; i <= 30; i++) {
-            solo.enterText(0,
+            TestUtils.writeLine(solo,
                     "This is message number " + i + "! " +
                     "This is message number " + i + "! " +
                     "This is message number " + i + "! " +
@@ -93,7 +92,6 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
                     "This is message number " + i + "! " +
                     "This is message number " + i + "! " +
                     "This is message number " + i + "! ");
-            solo.sendKey(KeyEvent.KEYCODE_ENTER);
         }
 
         solo.setActivityOrientation(Solo.PORTRAIT);
@@ -104,8 +102,7 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test03OrientationSwitchShouldKeepLinks() {
-        solo.enterText(0, "http://kouchat.googlecode.com/");
-        solo.sendKey(KeyEvent.KEYCODE_ENTER);
+        TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
 
         solo.sleep(500);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
