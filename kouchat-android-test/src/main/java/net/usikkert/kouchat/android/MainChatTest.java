@@ -64,6 +64,15 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         client.logoff();
     }
 
+    public void test03OrientationSwitchShouldKeepText() {
+        assertTrue(solo.searchText("Welcome to KouChat"));
+
+        solo.setActivityOrientation(Solo.PORTRAIT);
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("Welcome to KouChat"));
+    }
+
     public void test99Quit() {
         TestUtils.quit(solo);
     }

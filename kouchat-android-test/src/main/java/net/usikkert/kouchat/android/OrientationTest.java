@@ -46,18 +46,6 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void test01OrientationSwitchShouldKeepState() {
-        verifyWelcomeMessage();
-
-        solo.setActivityOrientation(Solo.PORTRAIT);
-
-        verifyWelcomeMessage();
-
-        solo.setActivityOrientation(Solo.LANDSCAPE);
-
-        verifyWelcomeMessage();
-    }
-
     // Must be verified manually. I haven't found an automated way to verify scrolling yet.
     public void test02OrientationSwitchShouldScrollToBottom() {
         for (int i = 1; i <= 30; i++) {
@@ -104,10 +92,6 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void test99Quit() {
         TestUtils.quit(solo);
-    }
-
-    private void verifyWelcomeMessage() {
-        assertTrue(solo.searchText("Welcome to KouChat"));
     }
 
     public void tearDown() {
