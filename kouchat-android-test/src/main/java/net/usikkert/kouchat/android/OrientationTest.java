@@ -46,25 +46,6 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void test03OrientationSwitchShouldKeepLinks() {
-        TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
-
-        solo.sleep(500);
-        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
-        solo.sleep(1000);
-        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
-
-        solo.sleep(3000); // Close browser manually now!
-        solo.setActivityOrientation(Solo.PORTRAIT);
-
-        solo.sleep(500);
-        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
-        solo.sleep(1000);
-        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
-    }
-
     public void test99Quit() {
         TestUtils.quit(solo);
     }
