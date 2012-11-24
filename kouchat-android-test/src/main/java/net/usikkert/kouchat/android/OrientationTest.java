@@ -31,8 +31,6 @@ import com.jayway.android.robotium.solo.Solo;
 
 import android.graphics.Point;
 import android.test.ActivityInstrumentationTestCase2;
-import android.text.Layout;
-import android.text.TextPaint;
 import android.widget.TextView;
 
 /**
@@ -142,45 +140,8 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
     // solo.clickOnText() is useless. It does not click on the text, it clicks on the view containing the text.
     private void clickOnText(final String linkText) {
         final TextView textView = TestUtils.getTextViewWithText(solo, linkText);
-        final Point coordinates = getCoordinatesForText(textView, linkText);
+        final Point coordinates = TestUtils.getCoordinatesForText(textView, linkText);
 
         solo.clickOnScreen(coordinates.x, coordinates.y);
-    }
-
-    private Point getCoordinatesForText(final TextView textView, final String textToFind) {
-        final Layout layout = textView.getLayout();
-        final int lineCount = layout.getLineCount();
-
-        for (int currentLineNumber = 0; currentLineNumber < lineCount; currentLineNumber++) {
-            final String currentLine = TestUtils.getLineOfText(textView, currentLineNumber);
-
-            if (currentLine.contains(textToFind)) {
-                return getCoordinatesForLine(textView, textToFind, currentLineNumber, currentLine);
-            }
-        }
-
-        throw new RuntimeException("Could not get coordinates for " + textToFind);
-    }
-
-    private Point getCoordinatesForLine(final TextView textView, final String textToFind,
-                                        final int lineNumber, final String line) {
-        final Layout layout = textView.getLayout();
-        final TextPaint paint = textView.getPaint();
-
-        final int textToFindIndex = line.indexOf(textToFind.charAt(0));
-        final String textBeforeTextToFind = line.substring(0, textToFindIndex);
-
-        final int textBeforeTextToFindWidth = (int) Layout.getDesiredWidth(textBeforeTextToFind, paint);
-        final int textToFindWidth = (int) Layout.getDesiredWidth(textToFind, paint);
-
-        final int[] textViewXYLocation = new int[2];
-        textView.getLocationOnScreen(textViewXYLocation);
-
-        // Width: in the middle of the text to find
-        final int xPosition = textBeforeTextToFindWidth + (textToFindWidth / 2);
-        // Height: in the middle of the given line, plus the text view position from the top, minus the amount scrolled
-        final int yPosition = layout.getLineBaseline(lineNumber) + textViewXYLocation[1] - textView.getScrollY();
-
-        return new Point(xPosition, yPosition);
     }
 }

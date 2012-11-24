@@ -27,7 +27,9 @@ import java.util.ArrayList;
 
 import com.jayway.android.robotium.solo.Solo;
 
+import android.graphics.Point;
 import android.text.Layout;
+import android.text.TextPaint;
 import android.view.KeyEvent;
 import android.widget.TextView;
 
@@ -175,5 +177,50 @@ public final class TestUtils {
         final int lineEnd = layout.getLineEnd(line);
 
         return text.substring(lineStart, lineEnd);
+    }
+
+    /**
+     * Gets the coordinates in the textview for the given text.
+     *
+     * @param textView The textview to find the coordinates in.
+     * @param text The text to find coordnates for.
+     * @return The coordinates for the given text.
+     * @throws IllegalArgumentException If no lines in the textview has the given text.
+     */
+    public static Point getCoordinatesForText(final TextView textView, final String text) {
+        final Layout layout = textView.getLayout();
+        final int lineCount = layout.getLineCount();
+
+        for (int currentLineNumber = 0; currentLineNumber < lineCount; currentLineNumber++) {
+            final String currentLine = getLineOfText(textView, currentLineNumber);
+
+            if (currentLine.contains(text)) {
+                return getCoordinatesForLine(textView, text, currentLineNumber, currentLine);
+            }
+        }
+
+        throw new IllegalArgumentException("Could not get coordinates for text: " + text);
+    }
+
+    private static Point getCoordinatesForLine(final TextView textView, final String text,
+                                               final int lineNumber, final String line) {
+        final Layout layout = textView.getLayout();
+        final TextPaint paint = textView.getPaint();
+
+        final int textIndex = line.indexOf(text.charAt(0));
+        final String preText = line.substring(0, textIndex);
+
+        final int textWidth = (int) Layout.getDesiredWidth(text, paint);
+        final int preTextWidth = (int) Layout.getDesiredWidth(preText, paint);
+
+        final int[] textViewXYLocation = new int[2];
+        textView.getLocationOnScreen(textViewXYLocation);
+
+        // Width: in the middle of the text
+        final int xPosition = preTextWidth + (textWidth / 2);
+        // Height: in the middle of the given line, plus the text view position from the top, minus the amount scrolled
+        final int yPosition = layout.getLineBaseline(lineNumber) + textViewXYLocation[1] - textView.getScrollY();
+
+        return new Point(xPosition, yPosition);
     }
 }
