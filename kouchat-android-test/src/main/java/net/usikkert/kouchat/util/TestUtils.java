@@ -27,7 +27,9 @@ import java.util.ArrayList;
 
 import com.jayway.android.robotium.solo.Solo;
 
+import android.app.Activity;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.text.Layout;
 import android.text.TextPaint;
 import android.view.KeyEvent;
@@ -235,5 +237,30 @@ public final class TestUtils {
         final Point coordinates = getCoordinatesForText(textView, text);
 
         solo.clickOnScreen(coordinates.x, coordinates.y);
+    }
+
+    /**
+     * Hides the software keyboard, if it's visible.
+     *
+     * @param solo The solo tester.
+     * @param activity The current activity.
+     */
+    public static void hideSoftwareKeyboard(final Solo solo, final Activity activity) {
+        if (softwareKeyboardIsVisible(activity)) {
+            solo.goBack();
+        }
+    }
+
+    private static boolean softwareKeyboardIsVisible(final Activity activity) {
+        final Rect visibleDisplayFrame = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleDisplayFrame);
+
+        final int statusBarHeight = visibleDisplayFrame.top;
+        final int activityHeight = visibleDisplayFrame.height();
+        final int screenHeight = activity.getWindowManager().getDefaultDisplay().getHeight();
+
+        final int diff = (screenHeight - statusBarHeight) - activityHeight;
+
+        return diff > screenHeight / 3;
     }
 }
