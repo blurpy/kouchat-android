@@ -46,31 +46,6 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    // Must be verified manually. I haven't found an automated way to verify scrolling yet.
-    public void test02OrientationSwitchShouldScrollToBottom() {
-        for (int i = 1; i <= 30; i++) {
-            TestUtils.writeLine(solo,
-                    "This is message number " + i + "! " +
-                    "This is message number " + i + "! " +
-                    "This is message number " + i + "! " +
-                    "This is message number " + i + "! " +
-                    "This is message number " + i + "! " +
-                    "This is message number " + i + "! " +
-                    "This is message number " + i + "! " +
-                    "This is message number " + i + "! " +
-                    "This is message number " + i + "! " +
-                    "This is message number " + i + "! " +
-                    "This is message number " + i + "! " +
-                    "This is message number " + i + "! ");
-        }
-
-        solo.setActivityOrientation(Solo.PORTRAIT);
-        solo.sleep(3000); // See if message number 30 is visible
-
-        solo.setActivityOrientation(Solo.LANDSCAPE);
-        solo.sleep(3000); // See if message number 30 is visible
-    }
-
     public void test03OrientationSwitchShouldKeepLinks() {
         TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
 

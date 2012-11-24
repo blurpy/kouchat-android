@@ -73,6 +73,28 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(solo.searchText("Welcome to KouChat"));
     }
 
+    // Must be verified manually. I haven't found an automated way to verify scrolling yet.
+    public void test04OrientationSwitchShouldScrollToBottom() {
+        for (int i = 1; i <= 30; i++) {
+            TestUtils.writeLine(solo,
+                    "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! ");
+        }
+
+        solo.setActivityOrientation(Solo.PORTRAIT);
+        solo.sleep(3000); // See if message number 30 is visible
+    }
+
     public void test99Quit() {
         TestUtils.quit(solo);
     }
