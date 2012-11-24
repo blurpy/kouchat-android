@@ -78,6 +78,15 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         // TODO verify order
     }
 
+    public void test03OrientationSwitchShouldKeepUserList() {
+        assertEquals(me, solo.getCurrentListViews().get(0).getItemAtPosition(0));
+
+        solo.setActivityOrientation(Solo.PORTRAIT);
+        solo.sleep(500);
+
+        assertEquals(me, solo.getCurrentListViews().get(0).getItemAtPosition(0));
+    }
+
     public void test99Quit() {
         client.logoff();
         TestUtils.quit(solo);

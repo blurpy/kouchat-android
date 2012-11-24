@@ -23,8 +23,6 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
-import net.usikkert.kouchat.misc.Settings;
-import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -39,7 +37,6 @@ import android.test.ActivityInstrumentationTestCase2;
 public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private Solo solo;
-    private User me;
 
     public OrientationTest() {
         super(MainChatController.class);
@@ -47,22 +44,18 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void setUp() {
         solo = new Solo(getInstrumentation(), getActivity());
-        me = Settings.getSettings().getMe();
     }
 
     public void test01OrientationSwitchShouldKeepState() {
         verifyWelcomeMessage();
-        verifyUserInUserList();
 
         solo.setActivityOrientation(Solo.PORTRAIT);
 
         verifyWelcomeMessage();
-        verifyUserInUserList();
 
         solo.setActivityOrientation(Solo.LANDSCAPE);
 
         verifyWelcomeMessage();
-        verifyUserInUserList();
     }
 
     // Must be verified manually. I haven't found an automated way to verify scrolling yet.
@@ -111,10 +104,6 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void test99Quit() {
         TestUtils.quit(solo);
-    }
-
-    private void verifyUserInUserList() {
-        assertEquals(me, solo.getCurrentListViews().get(0).getItemAtPosition(0));
     }
 
     private void verifyWelcomeMessage() {
