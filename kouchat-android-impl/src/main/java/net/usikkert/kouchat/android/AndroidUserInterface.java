@@ -310,4 +310,15 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
             throw new RuntimeException(e);
         }
     }
+
+    public User getUser(final int code) {
+        for (int i = 0; i < userList.size(); i++) {
+            final User user = userList.get(i);
+            if (user.getCode() == code) {
+                return user;
+            }
+        }
+
+        throw new RuntimeException("Unknow user: " + code);
+    }
 }
