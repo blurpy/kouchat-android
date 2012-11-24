@@ -78,6 +78,15 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", activity.getTitle());
     }
 
+    public void test03OrientationSwitchShouldKeepTopic() {
+        assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", activity.getTitle());
+
+        solo.setActivityOrientation(Solo.PORTRAIT);
+        solo.sleep(500);
+
+        assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", activity.getTitle());
+    }
+
     public void test99Quit() {
         client.logoff();
         TestUtils.quit(solo);

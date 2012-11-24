@@ -39,7 +39,6 @@ import android.test.ActivityInstrumentationTestCase2;
 public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private Solo solo;
-    private MainChatController activity;
     private User me;
 
     public OrientationTest() {
@@ -47,26 +46,22 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void setUp() {
-        activity = getActivity();
-        solo = new Solo(getInstrumentation(), activity);
+        solo = new Solo(getInstrumentation(), getActivity());
         me = Settings.getSettings().getMe();
     }
 
     public void test01OrientationSwitchShouldKeepState() {
         verifyWelcomeMessage();
-        verifyTopic();
         verifyUserInUserList();
 
         solo.setActivityOrientation(Solo.PORTRAIT);
 
         verifyWelcomeMessage();
-        verifyTopic();
         verifyUserInUserList();
 
         solo.setActivityOrientation(Solo.LANDSCAPE);
 
         verifyWelcomeMessage();
-        verifyTopic();
         verifyUserInUserList();
     }
 
@@ -124,11 +119,6 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     private void verifyWelcomeMessage() {
         assertTrue(solo.searchText("Welcome to KouChat"));
-    }
-
-    private void verifyTopic() {
-        final String topic = activity.getTitle().toString();
-        assertTrue("wrong topic: " + topic, topic.contains("Topic:  () - KouChat"));
     }
 
     public void tearDown() {
