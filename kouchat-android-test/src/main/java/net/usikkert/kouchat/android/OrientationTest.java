@@ -29,9 +29,7 @@ import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
-import android.graphics.Point;
 import android.test.ActivityInstrumentationTestCase2;
-import android.widget.TextView;
 
 /**
  * Tests how the application handles orientation changes.
@@ -102,7 +100,7 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         solo.sleep(500);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        clickOnText("http://kouchat.googlecode.com/");
+        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
         solo.sleep(1000);
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
 
@@ -111,7 +109,7 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         solo.sleep(500);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        clickOnText("http://kouchat.googlecode.com/");
+        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
         solo.sleep(1000);
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
     }
@@ -135,13 +133,5 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void tearDown() {
         solo.finishOpenedActivities();
-    }
-
-    // solo.clickOnText() is useless. It does not click on the text, it clicks on the view containing the text.
-    private void clickOnText(final String linkText) {
-        final TextView textView = TestUtils.getTextViewWithText(solo, linkText);
-        final Point coordinates = TestUtils.getCoordinatesForText(textView, linkText);
-
-        solo.clickOnScreen(coordinates.x, coordinates.y);
     }
 }

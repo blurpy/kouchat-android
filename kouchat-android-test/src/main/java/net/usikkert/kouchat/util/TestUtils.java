@@ -223,4 +223,17 @@ public final class TestUtils {
 
         return new Point(xPosition, yPosition);
     }
+
+    /**
+     * Clicks on the given text.
+     *
+     * @param solo The solo tester.
+     * @param text The text to click on.
+     */
+    public static void clickOnText(final Solo solo, final String text) {
+        final TextView textView = getTextViewWithText(solo, text);
+        final Point coordinates = getCoordinatesForText(textView, text);
+
+        solo.clickOnScreen(coordinates.x, coordinates.y);
+    }
 }
