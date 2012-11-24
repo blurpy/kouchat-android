@@ -64,7 +64,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
     public void test01OtherClientSettingTopicIsShownInChatAndTitle() throws CommandException {
         messages.sendTopicChangeMessage(new Topic("Original topic", "Test", System.currentTimeMillis()));
-        sleep(500);
+        solo.sleep(500);
 
         assertTrue(solo.searchText("Topic is: Original topic"));
         assertEquals(me.getNick() + " - Topic: Original topic (Test) - KouChat", activity.getTitle());
@@ -72,7 +72,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
     public void test02OtherClientChangingTopicIsShownInChatAndTitle() throws CommandException {
         messages.sendTopicChangeMessage(new Topic("New topic", "Test", System.currentTimeMillis()));
-        sleep(500);
+        solo.sleep(500);
 
         assertTrue(solo.searchText("Test changed the topic to: New topic"));
         assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", activity.getTitle());
@@ -86,15 +86,5 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     public void tearDown() {
         client.logoff();
         solo.finishOpenedActivities();
-    }
-
-    private void sleep(final int time) {
-        try {
-            Thread.sleep(time);
-        }
-
-        catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
