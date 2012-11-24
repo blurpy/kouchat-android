@@ -51,7 +51,9 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void test01OwnMessageIsShownInChat() {
         TestUtils.writeLine(solo, "This is a new message from myself");
-        assertTrue(solo.searchText("This is a new message from myself"));
+        solo.sleep(500);
+
+        assertTrue(TestUtils.searchText(solo, "This is a new message from myself"));
     }
 
     public void test02OtherClientMessageIsShownInChat() throws CommandException {

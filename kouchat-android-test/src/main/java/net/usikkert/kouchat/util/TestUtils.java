@@ -156,7 +156,8 @@ public final class TestUtils {
         final ArrayList<TextView> currentTextViews = solo.getCurrentTextViews(null);
 
         for (final TextView currentTextView : currentTextViews) {
-            if (currentTextView.getText().toString().contains(text)) {
+            if (currentTextView.getClass().equals(TextView.class) &&
+                    currentTextView.getText().toString().contains(text)) {
                 return currentTextView;
             }
         }
@@ -262,5 +263,21 @@ public final class TestUtils {
         final int diff = (screenHeight - statusBarHeight) - activityHeight;
 
         return diff > screenHeight / 3;
+    }
+
+    /**
+     * Searches for a textview with the given text.
+     *
+     * @param solo The solo tester.
+     * @param text The text to search for.
+     * @return If the text was found in any textviews.
+     */
+    public static boolean searchText(final Solo solo, final String text) {
+        try {
+            getTextViewWithText(solo, text);
+            return true;
+        } catch (final IllegalArgumentException e) {
+            return false;
+        }
     }
 }
