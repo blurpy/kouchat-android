@@ -23,10 +23,12 @@
 package net.usikkert.kouchat.util;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import com.jayway.android.robotium.solo.Solo;
 
 import android.view.KeyEvent;
+import android.widget.TextView;
 
 /**
  * Utilities for tests.
@@ -135,5 +137,25 @@ public final class TestUtils {
     public static void writeLine(final Solo solo, final String text) {
         solo.enterText(0, text);
         solo.sendKey(KeyEvent.KEYCODE_ENTER);
+    }
+
+    /**
+     * Gets a textview containing the given text.
+     *
+     * @param solo The solo tester.
+     * @param text The text to look for in textviews.
+     * @return The textview with the text.
+     * @throws IllegalArgumentException If no textview was found with the given text.
+     */
+    public static TextView getTextViewWithText(final Solo solo, final String text) {
+        final ArrayList<TextView> currentTextViews = solo.getCurrentTextViews(null);
+
+        for (final TextView currentTextView : currentTextViews) {
+            if (currentTextView.getText().toString().contains(text)) {
+                return currentTextView;
+            }
+        }
+
+        throw new IllegalArgumentException("Could not find TextView with text: " + text);
     }
 }

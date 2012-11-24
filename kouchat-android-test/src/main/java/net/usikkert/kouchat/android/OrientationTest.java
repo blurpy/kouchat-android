@@ -22,8 +22,6 @@
 
 package net.usikkert.kouchat.android;
 
-import java.util.ArrayList;
-
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
@@ -143,23 +141,10 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     // solo.clickOnText() is useless. It does not click on the text, it clicks on the view containing the text.
     private void clickOnText(final String linkText) {
-        final TextView textView = getTextViewWithText(linkText);
+        final TextView textView = TestUtils.getTextViewWithText(solo, linkText);
         final Point coordinates = getCoordinatesForText(textView, linkText);
 
         solo.clickOnScreen(coordinates.x, coordinates.y);
-    }
-
-    // solo.getText() is useless, it uses equals() instead of contains().
-    private TextView getTextViewWithText(final String textToFind) {
-        final ArrayList<TextView> currentTextViews = solo.getCurrentTextViews(null);
-
-        for (final TextView currentTextView : currentTextViews) {
-            if (currentTextView.getText().toString().contains(textToFind)) {
-                return currentTextView;
-            }
-        }
-
-        throw new RuntimeException("Could not find TextView with " + textToFind);
     }
 
     private Point getCoordinatesForText(final TextView textView, final String textToFind) {
