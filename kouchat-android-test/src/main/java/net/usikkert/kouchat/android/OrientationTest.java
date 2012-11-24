@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.android;
 
+import java.util.ArrayList;
+
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
@@ -29,8 +31,12 @@ import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
+import android.graphics.Point;
 import android.test.ActivityInstrumentationTestCase2;
+import android.text.Layout;
+import android.text.TextPaint;
 import android.view.KeyEvent;
+import android.widget.TextView;
 
 /**
  * Tests how the application handles orientation changes.
@@ -97,6 +103,26 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(3000); // See if message number 30 is visible
     }
 
+    public void test03OrientationSwitchShouldKeepLinks() {
+        solo.enterText(0, "http://kouchat.googlecode.com/");
+        solo.sendKey(KeyEvent.KEYCODE_ENTER);
+
+        solo.sleep(500);
+        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
+        clickOnText("http://kouchat.googlecode.com/");
+        solo.sleep(1000);
+        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
+
+        solo.sleep(3000); // Close browser manually now!
+        solo.setActivityOrientation(Solo.PORTRAIT);
+
+        solo.sleep(500);
+        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
+        clickOnText("http://kouchat.googlecode.com/");
+        solo.sleep(1000);
+        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
+    }
+
     public void test99Quit() {
         TestUtils.quit(solo);
     }
@@ -116,5 +142,70 @@ public class OrientationTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void tearDown() {
         solo.finishOpenedActivities();
+    }
+
+    // solo.clickOnText() is useless. It does not click on the text, it clicks on the view containing the text.
+    private void clickOnText(final String linkText) {
+        final TextView textView = getTextViewWithText(linkText);
+        final Point coordinates = getCoordinatesForText(textView, linkText);
+
+        solo.clickOnScreen(coordinates.x, coordinates.y);
+    }
+
+    // solo.getText() is useless, it uses equals() instead of contains().
+    private TextView getTextViewWithText(final String textToFind) {
+        final ArrayList<TextView> currentTextViews = solo.getCurrentTextViews(null);
+
+        for (final TextView currentTextView : currentTextViews) {
+            if (currentTextView.getText().toString().contains(textToFind)) {
+                return currentTextView;
+            }
+        }
+
+        throw new RuntimeException("Could not find TextView with " + textToFind);
+    }
+
+    private Point getCoordinatesForText(final TextView textView, final String textToFind) {
+        final Layout layout = textView.getLayout();
+        final int lineCount = layout.getLineCount();
+
+        for (int currentLineNumber = 0; currentLineNumber < lineCount; currentLineNumber++) {
+            final String currentLine = getTextOnLine(textView, currentLineNumber);
+
+            if (currentLine.contains(textToFind)) {
+                return getCoordinatesForLine(textView, textToFind, currentLineNumber, currentLine);
+            }
+        }
+
+        throw new RuntimeException("Could not get coordinates for " + textToFind);
+    }
+
+    private Point getCoordinatesForLine(final TextView textView, final String textToFind,
+                                        final int lineNumber, final String line) {
+        final Layout layout = textView.getLayout();
+        final TextPaint paint = textView.getPaint();
+
+        final int textToFindIndex = line.indexOf(textToFind.charAt(0));
+        final String textBeforeTextToFind = line.substring(0, textToFindIndex);
+
+        final int textBeforeTextToFindWidth = (int) Layout.getDesiredWidth(textBeforeTextToFind, paint);
+        final int textToFindWidth = (int) Layout.getDesiredWidth(textToFind, paint);
+
+        final int[] textViewXYLocation = new int[2];
+        textView.getLocationOnScreen(textViewXYLocation);
+
+        // Width: in the middle of the text to find
+        final int xPosition = textBeforeTextToFindWidth + (textToFindWidth / 2);
+        // Height: in the middle of the given line, plus the text view position from the top, minus the amount scrolled
+        final int yPosition = layout.getLineBaseline(lineNumber) + textViewXYLocation[1] - textView.getScrollY();
+
+        return new Point(xPosition, yPosition);
+    }
+
+    private String getTextOnLine(final TextView textView, final int line) {
+        final Layout layout = textView.getLayout();
+        final String text = textView.getText().toString();
+
+        return text.substring(layout.getLineStart(line), layout.getLineEnd(line));
     }
 }
