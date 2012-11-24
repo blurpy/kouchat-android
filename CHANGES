@@ -6,6 +6,7 @@
   - Changed license from GPL v3 to LGPL v3
   - Added support for private chat (work in progress)
   - Made links clickable in the chat
+  - Made sure the text view is scrolled to the bottom when orientation changes
 
 
 * version 0.5.1 (03.06.2012):
