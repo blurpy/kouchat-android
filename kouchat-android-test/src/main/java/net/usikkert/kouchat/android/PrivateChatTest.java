@@ -123,5 +123,6 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         solo.assertCurrentActivity("Should have opened the private chat", PrivateChatController.class);
+        assertEquals("Test - KouChat", solo.getCurrentActivity().getTitle()); // To be sure we are chatting with the right user
     }
 }
