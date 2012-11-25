@@ -70,7 +70,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         client.logoff();
     }
 
-    public void test02OtherClientMessageIsShownInChat() throws CommandException {
+    public void test03OtherClientMessageIsShownInChat() throws CommandException {
         final TestClient client = new TestClient();
         final Messages messages = client.logon();
 
@@ -80,7 +80,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         client.logoff();
     }
 
-    public void test03OrientationSwitchShouldKeepText() {
+    public void test04OrientationSwitchShouldKeepText() {
         assertTrue(solo.searchText("Welcome to KouChat"));
 
         solo.setActivityOrientation(Solo.PORTRAIT);
@@ -90,7 +90,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     // Must be verified manually. I haven't found an automated way to verify scrolling yet.
-    public void test04OrientationSwitchShouldScrollToBottom() {
+    public void test05OrientationSwitchShouldScrollToBottom() {
         for (int i = 1; i <= 30; i++) {
             TestUtils.writeLine(solo,
                     "This is message number " + i + "! " +
@@ -113,7 +113,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     // This test actually fails if scrolling doesn't work,
     // as the link to click is out of sight because of the previous test.
-    public void test05OrientationSwitchShouldKeepLinks() {
+    public void test06OrientationSwitchShouldKeepLinks() {
         TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
 
         solo.sleep(500);
