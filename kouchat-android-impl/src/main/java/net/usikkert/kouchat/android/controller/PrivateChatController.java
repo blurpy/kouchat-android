@@ -39,8 +39,10 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.text.util.Linkify;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -78,6 +80,7 @@ public class PrivateChatController extends Activity {
 
         registerPrivateChatInputListener();
         makePrivateChatViewScrollable();
+        makeLinksClickable();
     }
 
     @Override
@@ -128,6 +131,13 @@ public class PrivateChatController extends Activity {
         privateChatView.setMovementMethod(new ScrollingMovementMethod());
     }
 
+    private void makeLinksClickable() {
+        // This needs to be done after making the text view scrollable, or else the links wont be clickable.
+        // This also makes the view scrollable, but setting both movement methods seems to make the scrolling
+        // behave better.
+        privateChatView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
     private void sendPrivateMessage(final String privateMessage) {
         if (privateMessage != null && privateMessage.trim().length() > 0) {
             androidUserInterface.sendPrivateMessage(privateMessage, user);
@@ -160,6 +170,7 @@ public class PrivateChatController extends Activity {
 
     public void updatePrivateChat(final SpannableStringBuilder savedChat) {
         privateChatView.setText(savedChat);
+        Linkify.addLinks(privateChatView, Linkify.WEB_URLS);
 
         // Run this after 1 second, because right after a rotate the layout is null and it's not possible to scroll yet
         new Handler().postDelayed(new Runnable() {
@@ -175,6 +186,7 @@ public class PrivateChatController extends Activity {
             public void run() {
                 final SpannableStringBuilder builder = new SpannableStringBuilder(message + "\n");
                 builder.setSpan(new ForegroundColorSpan(color), 0, message.length(), 0);
+                Linkify.addLinks(builder, Linkify.WEB_URLS);
                 privateChatView.append(builder);
                 scrollPrivateChatViewToBottom();
             }

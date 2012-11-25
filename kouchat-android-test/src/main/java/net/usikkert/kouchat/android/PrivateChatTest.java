@@ -128,6 +128,29 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(3000); // See if message number 30 is visible
     }
 
+    // This test actually fails if scrolling doesn't work,
+    // as the link to click is out of sight because of the previous test.
+    public void test06OrientationSwitchShouldKeepLinks() {
+        openPrivateChat();
+
+        TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
+
+        solo.sleep(500);
+        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
+        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
+        solo.sleep(1000);
+        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
+
+        solo.sleep(3000); // Close browser manually now!
+        solo.setActivityOrientation(Solo.PORTRAIT);
+
+        solo.sleep(500);
+        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
+        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
+        solo.sleep(1000);
+        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
+    }
+
     // TODO test other user going away
     // TODO test other user going offline
     // TODO test getting private message while in the main chat (envelope)
