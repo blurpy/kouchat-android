@@ -104,6 +104,30 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(solo.searchText("This is the third message"));
     }
 
+    // Must be verified manually. I haven't found an automated way to verify scrolling yet.
+    public void test05OrientationSwitchShouldScrollToBottom() {
+        openPrivateChat();
+
+        for (int i = 1; i <= 30; i++) {
+            TestUtils.writeLine(solo,
+                    "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! " +
+                            "This is message number " + i + "! ");
+        }
+
+        solo.setActivityOrientation(Solo.PORTRAIT);
+        solo.sleep(3000); // See if message number 30 is visible
+    }
+
     // TODO test other user going away
     // TODO test other user going offline
     // TODO test getting private message while in the main chat (envelope)

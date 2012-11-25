@@ -35,8 +35,11 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.text.Layout;
 import android.text.SpannableStringBuilder;
+import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
@@ -74,6 +77,7 @@ public class PrivateChatController extends Activity {
         bindService(chatServiceIntent, serviceConnection, BIND_NOT_FOREGROUND);
 
         registerPrivateChatInputListener();
+        makePrivateChatViewScrollable();
     }
 
     @Override
@@ -120,6 +124,10 @@ public class PrivateChatController extends Activity {
         });
     }
 
+    private void makePrivateChatViewScrollable() {
+        privateChatView.setMovementMethod(new ScrollingMovementMethod());
+    }
+
     private void sendPrivateMessage(final String privateMessage) {
         if (privateMessage != null && privateMessage.trim().length() > 0) {
             androidUserInterface.sendPrivateMessage(privateMessage, user);
@@ -152,6 +160,14 @@ public class PrivateChatController extends Activity {
 
     public void updatePrivateChat(final SpannableStringBuilder savedChat) {
         privateChatView.setText(savedChat);
+
+        // Run this after 1 second, because right after a rotate the layout is null and it's not possible to scroll yet
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scrollPrivateChatViewToBottom();
+            }
+        }, 1000);
     }
 
     public void appendToPrivateChat(final String message, final int color) {
@@ -160,7 +176,29 @@ public class PrivateChatController extends Activity {
                 final SpannableStringBuilder builder = new SpannableStringBuilder(message + "\n");
                 builder.setSpan(new ForegroundColorSpan(color), 0, message.length(), 0);
                 privateChatView.append(builder);
+                scrollPrivateChatViewToBottom();
             }
         });
+    }
+
+    private void scrollPrivateChatViewToBottom() {
+        final Layout layout = privateChatView.getLayout();
+
+        // Happens sometimes when activity is hidden
+        if (layout == null) {
+            return;
+
+        }
+
+        final int scrollAmount = layout.getLineTop(privateChatView.getLineCount()) - privateChatView.getHeight();
+
+        // if there is no need to scroll, scrollAmount will be <=0
+        if (scrollAmount > 0) {
+            privateChatView.scrollTo(0, scrollAmount);
+        }
+
+        else {
+            privateChatView.scrollTo(0, 0);
+        }
     }
 }
