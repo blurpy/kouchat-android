@@ -28,6 +28,8 @@ import net.usikkert.kouchat.net.MessageParser;
 import net.usikkert.kouchat.net.MessageResponderMock;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.NetworkService;
+import net.usikkert.kouchat.net.PrivateMessageParser;
+import net.usikkert.kouchat.net.PrivateMessageResponderMock;
 
 /**
  * A class that can be used for simulating a KouChat client in tests.
@@ -39,6 +41,7 @@ public class TestClient {
     private final NetworkService networkService;
     private final Messages messages;
     private final MessageResponderMock messageResponderMock;
+    private final PrivateMessageResponderMock privateMessageResponderMock;
 
     public TestClient() {
         final User me = new User("Test", 12345678);
@@ -51,11 +54,16 @@ public class TestClient {
         TestUtils.setFieldValue(messages, "me", me);
 
         messageResponderMock = new MessageResponderMock();
-
         final MessageParser messageParser = new MessageParser(messageResponderMock);
         TestUtils.setFieldValue(messageParser, "settings", settings);
 
         networkService.registerMessageReceiverListener(messageParser);
+
+        privateMessageResponderMock = new PrivateMessageResponderMock();
+        final PrivateMessageParser privateMessageParser = new PrivateMessageParser(privateMessageResponderMock);
+        TestUtils.setFieldValue(messageParser, "settings", settings);
+
+        networkService.registerUDPReceiverListener(privateMessageParser);
     }
 
     public Messages logon() {
@@ -84,6 +92,10 @@ public class TestClient {
 
     public MessageResponderMock getMessageResponderMock() {
         return messageResponderMock;
+    }
+
+    public PrivateMessageResponderMock getPrivateMessageResponderMock() {
+        return privateMessageResponderMock;
     }
 
     private void waitForConnection() {
