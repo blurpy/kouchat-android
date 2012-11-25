@@ -97,6 +97,8 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(3000); // See if message number 30 is visible
     }
 
+    // This test actually fails if scrolling doesn't work,
+    // as the link to click is out of sight because of the previous test.
     public void test05OrientationSwitchShouldKeepLinks() {
         TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
 
