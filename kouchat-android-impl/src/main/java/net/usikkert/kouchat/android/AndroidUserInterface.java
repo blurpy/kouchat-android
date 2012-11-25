@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.event.UserListListener;
+import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.MessageController;
@@ -132,6 +133,10 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     public void createPrivChat(final User user) {
         if (user.getPrivchat() == null) {
             user.setPrivchat(new AndroidPrivateChatWindow(user, controller));
+        }
+
+        if (user.getPrivateChatLogger() == null) {
+            user.setPrivateChatLogger(new ChatLogger(user.getNick()));
         }
     }
 
