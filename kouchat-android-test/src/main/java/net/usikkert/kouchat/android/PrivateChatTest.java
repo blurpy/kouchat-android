@@ -64,12 +64,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         }
     }
 
-    public void test01ClickingOnUserShouldOpenPrivateChat() {
-        openPrivateChat();
-        solo.assertCurrentActivity("Should have opened the private chat", PrivateChatController.class);
-    }
-
-    public void test02OwnMessageIsShownInChat() {
+    public void test01OwnMessageIsShownInChat() {
         openPrivateChat();
 
         TestUtils.writeLine(solo, "This is a new message from myself");
@@ -78,7 +73,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(TestUtils.searchText(solo, "This is a new message from myself"));
     }
 
-    public void test03OwnMessageShouldArriveAtOtherClient() throws CommandException {
+    public void test02OwnMessageShouldArriveAtOtherClient() throws CommandException {
         openPrivateChat();
 
         TestUtils.writeLine(solo, "This is the second message");
@@ -87,7 +82,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(privateMessageResponder.gotMessageArrived("This is the second message"));
     }
 
-    public void test04OtherClientMessageIsShownInChat() throws CommandException {
+    public void test03OtherClientMessageIsShownInChat() throws CommandException {
         openPrivateChat();
 
         final User me = Settings.getSettings().getMe();
@@ -97,7 +92,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(solo.searchText("Hello, this is a message from someone else"));
     }
 
-    public void test05OrientationSwitchShouldKeepText() {
+    public void test04OrientationSwitchShouldKeepText() {
         openPrivateChat();
 
         TestUtils.writeLine(solo, "This is the third message");
@@ -126,5 +121,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
         solo.clickInList(2);
         solo.sleep(500);
+
+        solo.assertCurrentActivity("Should have opened the private chat", PrivateChatController.class);
     }
 }
