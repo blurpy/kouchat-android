@@ -25,6 +25,9 @@ package net.usikkert.kouchat.android;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.CommandException;
+import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.PrivateMessageResponderMock;
 import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
@@ -43,6 +46,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     private Solo solo;
     private TestClient client;
     private PrivateMessageResponderMock privateMessageResponder;
+    private Messages messages;
 
     public PrivateChatTest() {
         super(MainChatController.class);
@@ -54,7 +58,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         privateMessageResponder = client.getPrivateMessageResponderMock();
 
-        client.logon();
+        messages = client.logon();
     }
 
     public void test01ClickingOnUserShouldOpenPrivateChat() {
@@ -78,6 +82,16 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         assertTrue(privateMessageResponder.gotMessageArrived("This is the second message"));
+    }
+
+    public void test04OtherClientMessageIsShownInChat() throws CommandException {
+        openPrivateChat();
+
+        final User me = Settings.getSettings().getMe();
+        messages.sendPrivateMessage("Hello, this is a message from someone else", me);
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("Hello, this is a message from someone else"));
     }
 
     public void test99Quit() {
