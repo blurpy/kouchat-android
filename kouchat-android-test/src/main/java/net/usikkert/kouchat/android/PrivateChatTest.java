@@ -94,6 +94,10 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(solo.searchText("Hello, this is a message from someone else"));
     }
 
+    // TODO test other user going away
+    // TODO test other user going offline
+    // TODO test getting private message while in the main chat (envelope)
+
     public void test99Quit() {
         TestUtils.quit(solo);
     }
