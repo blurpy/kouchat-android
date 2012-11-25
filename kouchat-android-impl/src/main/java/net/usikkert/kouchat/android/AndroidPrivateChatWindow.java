@@ -22,15 +22,17 @@
 
 package net.usikkert.kouchat.android;
 
-import net.usikkert.kouchat.misc.CommandException;
+import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.ui.PrivateChatWindow;
+import net.usikkert.kouchat.util.Validate;
+
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 
 /**
  * Represents a private chat window with a user.
- *
- * <p>Not implemented!</p>
  *
  * @author Christian Ihle
  */
@@ -38,29 +40,35 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
 
     private final User user;
     private final Controller controller;
-    private boolean userNotified;
+    private final SpannableStringBuilder savedPrivateChat;
+
+    private PrivateChatController privateChatController;
 
     public AndroidPrivateChatWindow(final User user, final Controller controller) {
         this.user = user;
         this.controller = controller;
-        this.userNotified = false;
+        savedPrivateChat = new SpannableStringBuilder();
+    }
+
+    public void registerPrivateChatController(final PrivateChatController privateChatController) {
+        Validate.notNull(privateChatController, "Private chat controller can not be null");
+
+        this.privateChatController = privateChatController;
+        privateChatController.updatePrivateChat(savedPrivateChat);
+    }
+
+    public void unregisterPrivateChatController() {
+        privateChatController = null;
     }
 
     @Override
-    public void appendToPrivateChat(final String message, final int color) {
-        if (userNotified) {
-            // To avoid spam
-            return;
-        }
+    public void appendToPrivateChat(final String privateMessage, final int color) {
+        final SpannableStringBuilder builder = new SpannableStringBuilder(privateMessage + "\n");
+        builder.setSpan(new ForegroundColorSpan(color), 0, privateMessage.length(), 0);
+        savedPrivateChat.append(builder);
 
-        try {
-            controller.sendPrivateMessage("Private chat not implemented yet!", user);
-            userNotified = true;
-        }
-
-        catch (final CommandException e) {
-            // Don't care ...
-            e.printStackTrace();
+        if (privateChatController != null) {
+            privateChatController.appendToPrivateChat(privateMessage, color);
         }
     }
 

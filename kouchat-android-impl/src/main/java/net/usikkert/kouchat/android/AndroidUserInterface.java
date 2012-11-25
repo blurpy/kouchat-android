@@ -219,6 +219,19 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         sendMessageTask.execute((Void) null);
     }
 
+    public void sendPrivateMessage(final String privateMessage, final User user) {
+        final AsyncTask<Void, Void, Void> sendMessageTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            public Void doInBackground(final Void... voids) {
+                msgController.showPrivateOwnMessage(user, privateMessage);
+
+                return null;
+            }
+        };
+
+        sendMessageTask.execute((Void) null);
+    }
+
     @Override
     public void userAdded(final int pos) {
         if (mainChatController != null) {
