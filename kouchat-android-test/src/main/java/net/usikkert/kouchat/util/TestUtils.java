@@ -89,50 +89,6 @@ public final class TestUtils {
         solo.clickOnText("Quit");
     }
 
-    private static void setValue(final Object object, final Object value, final Field field) {
-        final boolean originalAccessible = field.isAccessible();
-
-        try {
-            field.setAccessible(true);
-            field.set(object, value);
-        }
-
-        catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-
-        finally {
-            field.setAccessible(originalAccessible);
-        }
-    }
-
-    private static Field getField(final Object object, final String fieldName) {
-        try {
-            return object.getClass().getDeclaredField(fieldName);
-        }
-
-        catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static <T> T getValue(final Object object, final Class<T> fieldClass, final Field field) {
-        final boolean originalAccessible = field.isAccessible();
-
-        try {
-            field.setAccessible(true);
-            return fieldClass.cast(field.get(object));
-        }
-
-        catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-
-        finally {
-            field.setAccessible(originalAccessible);
-        }
-    }
-
     /**
      * Adds a line of text to the first edittext field, and presses enter.
      *
@@ -205,28 +161,6 @@ public final class TestUtils {
         throw new IllegalArgumentException("Could not get coordinates for text: " + text);
     }
 
-    private static Point getCoordinatesForLine(final TextView textView, final String text,
-                                               final int lineNumber, final String line) {
-        final Layout layout = textView.getLayout();
-        final TextPaint paint = textView.getPaint();
-
-        final int textIndex = line.indexOf(text.charAt(0));
-        final String preText = line.substring(0, textIndex);
-
-        final int textWidth = (int) Layout.getDesiredWidth(text, paint);
-        final int preTextWidth = (int) Layout.getDesiredWidth(preText, paint);
-
-        final int[] textViewXYLocation = new int[2];
-        textView.getLocationOnScreen(textViewXYLocation);
-
-        // Width: in the middle of the text
-        final int xPosition = preTextWidth + (textWidth / 2);
-        // Height: in the middle of the given line, plus the text view position from the top, minus the amount scrolled
-        final int yPosition = layout.getLineBaseline(lineNumber) + textViewXYLocation[1] - textView.getScrollY();
-
-        return new Point(xPosition, yPosition);
-    }
-
     /**
      * Clicks on the given text.
      *
@@ -252,19 +186,6 @@ public final class TestUtils {
         }
     }
 
-    private static boolean softwareKeyboardIsVisible(final Activity activity) {
-        final Rect visibleDisplayFrame = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleDisplayFrame);
-
-        final int statusBarHeight = visibleDisplayFrame.top;
-        final int activityHeight = visibleDisplayFrame.height();
-        final int screenHeight = activity.getWindowManager().getDefaultDisplay().getHeight();
-
-        final int diff = (screenHeight - statusBarHeight) - activityHeight;
-
-        return diff > screenHeight / 3;
-    }
-
     /**
      * Searches for a textview with the given text.
      *
@@ -279,5 +200,84 @@ public final class TestUtils {
         } catch (final IllegalArgumentException e) {
             return false;
         }
+    }
+
+    private static void setValue(final Object object, final Object value, final Field field) {
+        final boolean originalAccessible = field.isAccessible();
+
+        try {
+            field.setAccessible(true);
+            field.set(object, value);
+        }
+
+        catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        finally {
+            field.setAccessible(originalAccessible);
+        }
+    }
+
+    private static Field getField(final Object object, final String fieldName) {
+        try {
+            return object.getClass().getDeclaredField(fieldName);
+        }
+
+        catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static <T> T getValue(final Object object, final Class<T> fieldClass, final Field field) {
+        final boolean originalAccessible = field.isAccessible();
+
+        try {
+            field.setAccessible(true);
+            return fieldClass.cast(field.get(object));
+        }
+
+        catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        finally {
+            field.setAccessible(originalAccessible);
+        }
+    }
+
+    private static Point getCoordinatesForLine(final TextView textView, final String text,
+                                               final int lineNumber, final String line) {
+        final Layout layout = textView.getLayout();
+        final TextPaint paint = textView.getPaint();
+
+        final int textIndex = line.indexOf(text.charAt(0));
+        final String preText = line.substring(0, textIndex);
+
+        final int textWidth = (int) Layout.getDesiredWidth(text, paint);
+        final int preTextWidth = (int) Layout.getDesiredWidth(preText, paint);
+
+        final int[] textViewXYLocation = new int[2];
+        textView.getLocationOnScreen(textViewXYLocation);
+
+        // Width: in the middle of the text
+        final int xPosition = preTextWidth + (textWidth / 2);
+        // Height: in the middle of the given line, plus the text view position from the top, minus the amount scrolled
+        final int yPosition = layout.getLineBaseline(lineNumber) + textViewXYLocation[1] - textView.getScrollY();
+
+        return new Point(xPosition, yPosition);
+    }
+
+    private static boolean softwareKeyboardIsVisible(final Activity activity) {
+        final Rect visibleDisplayFrame = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleDisplayFrame);
+
+        final int statusBarHeight = visibleDisplayFrame.top;
+        final int activityHeight = visibleDisplayFrame.height();
+        final int screenHeight = activity.getWindowManager().getDefaultDisplay().getHeight();
+
+        final int diff = (screenHeight - statusBarHeight) - activityHeight;
+
+        return diff > screenHeight / 3;
     }
 }
