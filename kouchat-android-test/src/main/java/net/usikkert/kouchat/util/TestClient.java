@@ -22,7 +22,10 @@
 
 package net.usikkert.kouchat.util;
 
+import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.net.MessageParser;
+import net.usikkert.kouchat.net.MessageResponderMock;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.NetworkService;
 
@@ -33,11 +36,29 @@ import net.usikkert.kouchat.net.NetworkService;
  */
 public class TestClient {
 
-    private final NetworkService networkService = new NetworkService();
-    private final Messages messages = new Messages(networkService);
+    private final NetworkService networkService;
+    private final Messages messages;
+    private final MessageResponderMock messageResponderMock;
+
+    public TestClient() {
+        final User me = new User("Test", 12345678);
+        final Settings settings = TestUtils.createInstance(Settings.class);
+        TestUtils.setFieldValue(settings, "me", me);
+
+        networkService = new NetworkService();
+
+        messages = new Messages(networkService);
+        TestUtils.setFieldValue(messages, "me", me);
+
+        messageResponderMock = new MessageResponderMock();
+
+        final MessageParser messageParser = new MessageParser(messageResponderMock);
+        TestUtils.setFieldValue(messageParser, "settings", settings);
+
+        networkService.registerMessageReceiverListener(messageParser);
+    }
 
     public Messages logon() {
-        TestUtils.setFieldValue(messages, "me", new User("Test", 12345678));
         networkService.connect();
 
         waitForConnection();
@@ -59,6 +80,10 @@ public class TestClient {
         messages.sendLogoffMessage();
         sleep(500);
         networkService.disconnect();
+    }
+
+    public MessageResponderMock getMessageResponderMock() {
+        return messageResponderMock;
     }
 
     private void sleep(final int time) {
