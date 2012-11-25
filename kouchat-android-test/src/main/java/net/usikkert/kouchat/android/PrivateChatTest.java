@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
+import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -33,13 +34,12 @@ import android.test.ActivityInstrumentationTestCase2;
 /**
  * Test of private chat.
  *
- * TODO
- *
  * @author Christian Ihle
  */
 public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private Solo solo;
+    private TestClient client;
 
     public PrivateChatTest() {
         super(MainChatController.class);
@@ -47,6 +47,8 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void setUp() {
         solo = new Solo(getInstrumentation(), getActivity());
+        client = new TestClient();
+        client.logon();
     }
 
     public void test01ClickingOnUserShouldOpenPrivateChat() {
@@ -68,11 +70,13 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void tearDown() {
+        client.logoff();
         solo.finishOpenedActivities();
     }
 
     private void openPrivateChat() {
-        solo.clickInList(1);
+        solo.sleep(500);
+        solo.clickInList(2);
         solo.sleep(500);
     }
 }
