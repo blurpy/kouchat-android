@@ -36,13 +36,11 @@ public class AllTests extends TestSuite {
         final TestSuite testSuite = new TestSuite("All Android tests");
 
         testSuite.addTestSuite(AboutDialogTest.class);
-        testSuite.addTestSuite(LifecycleTest.class);
         testSuite.addTestSuite(MainChatTest.class);
+        testSuite.addTestSuite(PrivateChatTest.class);
         testSuite.addTestSuite(SettingsTest.class);
         testSuite.addTestSuite(TopicTest.class);
         testSuite.addTestSuite(UserListTest.class);
-//        testSuite.addTestSuite(FileTransferTest.class);
-//        testSuite.addTestSuite(PrivateChatTest.class);
 
         return testSuite;
     }
