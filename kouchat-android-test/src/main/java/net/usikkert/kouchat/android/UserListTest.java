@@ -36,8 +36,6 @@ import android.widget.ListView;
 /**
  * Tests the user list.
  *
- * TODO
- *
  * @author Christian Ihle
  */
 public class UserListTest extends ActivityInstrumentationTestCase2<MainChatController> {
@@ -72,10 +70,12 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(500);
 
         assertEquals(2, userList.getCount());
-//        final User item1 = (User) userList.getItemAtPosition(0);
-//        final User item2 = (User) userList.getItemAtPosition(1);
 
-        // TODO verify order
+        final User user1 = (User) userList.getItemAtPosition(0);
+        final User user2 = (User) userList.getItemAtPosition(1);
+
+        assertSame(me, user1);
+        assertEquals("Test", user2.getNick());
     }
 
     public void test03OrientationSwitchShouldKeepUserList() {
