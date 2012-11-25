@@ -44,9 +44,10 @@ import android.test.ActivityInstrumentationTestCase2;
 public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private Solo solo;
-    private TestClient client;
-    private PrivateMessageResponderMock privateMessageResponder;
-    private Messages messages;
+
+    private static TestClient client;
+    private static PrivateMessageResponderMock privateMessageResponder;
+    private static Messages messages;
 
     public PrivateChatTest() {
         super(MainChatController.class);
@@ -54,11 +55,13 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void setUp() {
         solo = new Solo(getInstrumentation(), getActivity());
-        client = new TestClient();
 
-        privateMessageResponder = client.getPrivateMessageResponderMock();
-
-        messages = client.logon();
+        // Making sure the test client only logs on once during all the tests
+        if (client == null) {
+            client = new TestClient();
+            privateMessageResponder = client.getPrivateMessageResponderMock();
+            messages = client.logon();
+        }
     }
 
     public void test01ClickingOnUserShouldOpenPrivateChat() {
@@ -99,11 +102,11 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     // TODO test getting private message while in the main chat (envelope)
 
     public void test99Quit() {
+        client.logoff();
         TestUtils.quit(solo);
     }
 
     public void tearDown() {
-        client.logoff();
         solo.finishOpenedActivities();
     }
 
