@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.CommandException;
+import net.usikkert.kouchat.net.MessageResponderMock;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
@@ -54,6 +55,19 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(500);
 
         assertTrue(TestUtils.searchText(solo, "This is a new message from myself"));
+    }
+
+    public void test02OwnMessageShouldArriveAtOtherClient() throws CommandException {
+        final TestClient client = new TestClient();
+        final MessageResponderMock messageResponder = client.getMessageResponderMock();
+        client.logon();
+
+        TestUtils.writeLine(solo, "This is the second message");
+        solo.sleep(500);
+
+        assertTrue(messageResponder.gotMessageArrived("This is the second message"));
+
+        client.logoff();
     }
 
     public void test02OtherClientMessageIsShownInChat() throws CommandException {
