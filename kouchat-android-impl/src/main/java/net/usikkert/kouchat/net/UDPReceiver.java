@@ -32,6 +32,7 @@ import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.ReceiverListener;
 import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.User;
 
 /**
  * Receives UDP packets sent directly to the IP address
@@ -59,11 +60,15 @@ public class UDPReceiver implements Runnable {
     /** The error handler for registering important messages. */
     private final ErrorHandler errorHandler;
 
+    /** The application user. */
+    private final User me;
+
     /**
      * Default constructor.
      */
     public UDPReceiver() {
         errorHandler = ErrorHandler.getErrorHandler();
+        me = Settings.getSettings().getMe();
     }
 
     /**
@@ -121,7 +126,7 @@ public class UDPReceiver implements Runnable {
                     connected = true;
                     worker = new Thread(this, "UDPReceiverWorker");
                     worker.start();
-                    Settings.getSettings().getMe().setPrivateChatPort(port);
+                    me.setPrivateChatPort(port);
                     LOG.log(Level.FINE, "Connected to port " + port);
                 }
 
@@ -130,7 +135,7 @@ public class UDPReceiver implements Runnable {
 
                     counter++;
                     port++;
-                    Settings.getSettings().getMe().setPrivateChatPort(0);
+                    me.setPrivateChatPort(0);
                 }
             }
 
