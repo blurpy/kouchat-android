@@ -67,7 +67,7 @@ public class TestClient {
 
         privateMessageResponderMock = new PrivateMessageResponderMock();
         final PrivateMessageParser privateMessageParser = new PrivateMessageParser(privateMessageResponderMock);
-        TestUtils.setFieldValue(messageParser, "settings", settings);
+        TestUtils.setFieldValue(privateMessageParser, "settings", settings);
 
         networkService.registerUDPReceiverListener(privateMessageParser);
     }
