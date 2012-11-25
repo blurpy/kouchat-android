@@ -30,6 +30,7 @@ import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.NetworkService;
 import net.usikkert.kouchat.net.PrivateMessageParser;
 import net.usikkert.kouchat.net.PrivateMessageResponderMock;
+import net.usikkert.kouchat.net.UDPReceiver;
 
 /**
  * A class that can be used for simulating a KouChat client in tests.
@@ -44,16 +45,21 @@ public class TestClient {
     private final PrivateMessageResponderMock privateMessageResponderMock;
 
     public TestClient() {
-        final User me = new User("Test", 12345678);
         final Settings settings = TestUtils.createInstance(Settings.class);
-        TestUtils.setFieldValue(settings, "me", me);
+
+        final User me = settings.getMe();
+        me.setNick("Test");
+        TestUtils.setFieldValue(me, "code", 12345678);
 
         networkService = new NetworkService();
+
+        final UDPReceiver udpReceiver = TestUtils.getFieldValue(networkService, UDPReceiver.class, "udpReceiver");
+        TestUtils.setFieldValue(udpReceiver, "me", me);
 
         messages = new Messages(networkService);
         TestUtils.setFieldValue(messages, "me", me);
 
-        messageResponderMock = new MessageResponderMock();
+        messageResponderMock = new MessageResponderMock(me);
         final MessageParser messageParser = new MessageParser(messageResponderMock);
         TestUtils.setFieldValue(messageParser, "settings", settings);
 

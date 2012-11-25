@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * This is a mock implementation of {@link MessageResponder}, that just stores the messages in a map.
@@ -39,9 +40,13 @@ public class MessageResponderMock implements MessageResponder {
 
     private static final String MESSAGE_ARRIVED = "messageArrived";
 
+    private final User me;
     private final Map<String, List<Object[]>> messages;
 
-    public MessageResponderMock() {
+    public MessageResponderMock(final User me) {
+        Validate.notNull(me, "User me can not be null");
+
+        this.me = me;
         messages = new HashMap<String, List<Object[]>>();
     }
 
@@ -89,7 +94,7 @@ public class MessageResponderMock implements MessageResponder {
 
     @Override
     public void meLogOn(final String ipAddress) {
-
+        me.setIpAddress(ipAddress);
     }
 
     @Override
