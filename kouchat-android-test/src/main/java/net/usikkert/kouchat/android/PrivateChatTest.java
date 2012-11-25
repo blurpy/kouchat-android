@@ -97,6 +97,18 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(solo.searchText("Hello, this is a message from someone else"));
     }
 
+    public void test05OrientationSwitchShouldKeepText() {
+        openPrivateChat();
+
+        TestUtils.writeLine(solo, "This is the third message");
+
+        solo.sleep(500);
+        solo.setActivityOrientation(Solo.PORTRAIT);
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("This is the third message"));
+    }
+
     // TODO test other user going away
     // TODO test other user going offline
     // TODO test getting private message while in the main chat (envelope)
