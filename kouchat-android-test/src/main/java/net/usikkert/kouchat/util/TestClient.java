@@ -67,7 +67,7 @@ public class TestClient {
         messages.sendClient();
         messages.sendExposeMessage();
 
-        sleep(100);
+        Tools.sleep(100);
 
         return messages;
     }
@@ -78,7 +78,7 @@ public class TestClient {
         }
 
         messages.sendLogoffMessage();
-        sleep(500);
+        Tools.sleep(500);
         networkService.disconnect();
     }
 
@@ -86,20 +86,10 @@ public class TestClient {
         return messageResponderMock;
     }
 
-    private void sleep(final int time) {
-        try {
-            Thread.sleep(time);
-        }
-
-        catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private void waitForConnection() {
         for (int i = 0; i < 20; i++) {
             if (!networkService.isNetworkUp()) {
-                sleep(100);
+                Tools.sleep(100);
             }
         }
 
