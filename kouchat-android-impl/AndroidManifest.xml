@@ -22,7 +22,8 @@
     </activity>
 
     <activity android:name=".controller.SettingsController"/>
-    <activity android:name=".controller.PrivateChatController"/>
+    <activity android:name=".controller.PrivateChatController"
+              android:windowSoftInputMode="adjustResize"/>
 
     <service android:name=".service.ChatService"/>
 
