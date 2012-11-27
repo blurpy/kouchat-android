@@ -154,6 +154,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     // TODO test other user going away
     // TODO test other user going offline
     // TODO test getting private message while in the main chat (envelope)
+    // TODO chat with self
 
     public void test99Quit() {
         client.logoff();
