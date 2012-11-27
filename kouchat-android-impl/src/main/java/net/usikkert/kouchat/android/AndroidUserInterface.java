@@ -346,4 +346,16 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
 
         throw new RuntimeException("Unknow user: " + code);
     }
+
+    /**
+     * Resets the new private message field of the user.
+     *
+     * @param user The user to reset the field for.
+     */
+    public void activatedPrivChat(final User user) {
+        if (user.isNewPrivMsg()) {
+            user.setNewPrivMsg(false); // In case the user has logged off
+            controller.changeNewMessage(user.getCode(), false);
+        }
+    }
 }

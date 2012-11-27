@@ -62,6 +62,7 @@ public class PrivateChatController extends Activity {
     private TextView privateChatView;
     private EditText privateChatInput;
     private AndroidPrivateChatWindow privateChatWindow;
+    private boolean visible;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -88,6 +89,18 @@ public class PrivateChatController extends Activity {
         privateChatWindow.unregisterPrivateChatController();
         unbindService(serviceConnection);
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        visible = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        visible = false;
     }
 
     private Intent createChatServiceIntent() {
@@ -148,6 +161,7 @@ public class PrivateChatController extends Activity {
         setUser();
         setTitle();
         setPrivateChatWindow();
+        resetNewPrivateMessageIcon();
     }
 
     private void setTitle() {
@@ -166,6 +180,10 @@ public class PrivateChatController extends Activity {
 
         privateChatWindow = (AndroidPrivateChatWindow) user.getPrivchat();
         privateChatWindow.registerPrivateChatController(this);
+    }
+
+    private void resetNewPrivateMessageIcon() {
+        androidUserInterface.activatedPrivChat(user);
     }
 
     public void updatePrivateChat(final SpannableStringBuilder savedChat) {
@@ -212,5 +230,14 @@ public class PrivateChatController extends Activity {
         else {
             privateChatView.scrollTo(0, 0);
         }
+    }
+
+    /**
+     * Returns if this private chat view is currently visible.
+     *
+     * @return If the view is visible.
+     */
+    public boolean isVisible() {
+        return visible;
     }
 }

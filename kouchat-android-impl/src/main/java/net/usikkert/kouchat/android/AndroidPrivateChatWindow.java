@@ -94,7 +94,7 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
 
     @Override
     public boolean isVisible() {
-        return false;
+        return privateChatController != null && privateChatController.isVisible();
     }
 
     @Override
@@ -114,6 +114,6 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
 
     @Override
     public boolean isFocused() {
-        return false;
+        return isVisible();
     }
 }
