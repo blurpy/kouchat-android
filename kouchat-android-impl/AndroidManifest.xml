@@ -11,10 +11,14 @@
   <uses-permission android:name="android.permission.INTERNET"/>
 
   <application android:label="@string/app_name"
-               android:icon="@drawable/kou_icon_96x96"
-               android:debuggable="false">
+               android:icon="@drawable/kou_icon_96x96">
 
-    <activity android:name=".controller.MainChatController">
+    <!-- Sets launchMode to singleTask to make sure quit works like expected after using the private chat.
+         If not set, then using quit from the main chat will open the last private chat,
+         and pressing the back button will again open the main chat, and so on.
+     -->
+    <activity android:name=".controller.MainChatController"
+              android:launchMode="singleTask">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
@@ -22,6 +26,10 @@
     </activity>
 
     <activity android:name=".controller.SettingsController"/>
+
+    <!-- Sets windowSoftInputMode to adjustResize to keep the software keyboard from pushing the text view up,
+         making it difficult to see the messages at the top.
+      -->
     <activity android:name=".controller.PrivateChatController"
               android:windowSoftInputMode="adjustResize"/>
 
