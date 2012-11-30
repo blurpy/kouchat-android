@@ -72,7 +72,6 @@
       <!--<property name="option" value="alone"/>-->
     <!--</module>-->
     <module name="AvoidInlineConditionals"/>
-    <module name="DoubleCheckedLocking"/>
     <module name="EmptyStatement"/>
     <module name="EqualsHashCode"/>
     <module name="HiddenField">
