@@ -181,9 +181,16 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertEquals(envelope, getBitmapForTestUser());
     }
 
+    public void test08ShouldNotBeAbleToChatWithSelf() {
+        solo.sleep(500);
+        solo.clickInList(1);
+        solo.sleep(500);
+
+        solo.assertCurrentActivity("Should have stayed in the main chat", MainChatController.class);
+    }
+
     // TODO test other user going away
     // TODO test other user going offline
-    // TODO chat with self
 
     public void test99Quit() {
         client.logoff();

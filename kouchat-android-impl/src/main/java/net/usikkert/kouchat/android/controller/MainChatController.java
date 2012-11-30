@@ -156,6 +156,11 @@ public class MainChatController extends Activity {
             public void onItemClick(final AdapterView<?> userList, final View view, final int position, final long id) {
                 final User selectedUser = (User) userList.getItemAtPosition(position);
 
+                // No point in having a private chat with one self (at least not here)
+                if (selectedUser.isMe()) {
+                    return;
+                }
+
                 final Intent privateChatIntent = new Intent(MainChatController.this, PrivateChatController.class);
                 privateChatIntent.putExtra("userCode", selectedUser.getCode());
                 startActivity(privateChatIntent);
