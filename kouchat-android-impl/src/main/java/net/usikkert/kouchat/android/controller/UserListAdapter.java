@@ -45,6 +45,14 @@ public class UserListAdapter extends ArrayAdapter<User> {
     private final Drawable envelope;
     private final Drawable dot;
 
+    /**
+     * See {@link ArrayAdapter#ArrayAdapter(android.content.Context, int, int, java.util.List)}.
+     *
+     * @param context The controller.
+     * @param resource Id for the row.
+     * @param textViewResourceId Id for the label in the row.
+     * @param objects The users backing list.
+     */
     public UserListAdapter(final Context context, final int resource,
                            final int textViewResourceId, final List<User> objects) {
         super(context, resource, textViewResourceId, objects);
