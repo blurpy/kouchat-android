@@ -175,6 +175,11 @@
         <artifactId>robotium-solo</artifactId>
         <version>3.6</version>
       </dependency>
+      <dependency>
+        <groupId>com.pivotallabs</groupId>
+        <artifactId>robolectric</artifactId>
+        <version>1.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
