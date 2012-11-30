@@ -34,7 +34,11 @@ import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 /**
  * Test of private chat.
@@ -48,6 +52,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     private static TestClient client;
     private static PrivateMessageResponderMock privateMessageResponder;
     private static Messages messages;
+    private User me;
 
     public PrivateChatTest() {
         super(MainChatController.class);
@@ -55,6 +60,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void setUp() {
         solo = new Solo(getInstrumentation(), getActivity());
+        me = Settings.getSettings().getMe();
 
         // Making sure the test client only logs on once during all the tests
         if (client == null) {
@@ -73,7 +79,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(TestUtils.searchText(solo, "This is a new message from myself"));
     }
 
-    public void test02OwnMessageShouldArriveAtOtherClient() throws CommandException {
+    public void test02OwnMessageShouldArriveAtOtherClient() {
         openPrivateChat();
 
         TestUtils.writeLine(solo, "This is the second message");
@@ -82,12 +88,10 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(privateMessageResponder.gotMessageArrived("This is the second message"));
     }
 
-    public void test03OtherClientMessageIsShownInChat() throws CommandException {
+    public void test03OtherClientMessageIsShownInChat() {
         openPrivateChat();
 
-        final User me = Settings.getSettings().getMe();
-        messages.sendPrivateMessage("Hello, this is a message from someone else", me);
-        solo.sleep(500);
+        sendPrivateMessage("Hello, this is a message from someone else");
 
         assertTrue(solo.searchText("Hello, this is a message from someone else"));
     }
@@ -151,9 +155,34 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
     }
 
+    // Manual step: verify that notifications work when application is hidden. Both from main and private chat.
+    public void test07ShouldShowNotificationOnNewPrivateMessageAndRemoveNotificationWhenMessageSeen() {
+        solo.sleep(500);
+        final Bitmap envelope = getBitmap(R.drawable.envelope);
+        final Bitmap dot = getBitmap(R.drawable.dot);
+
+        // Starts with a dot
+        assertEquals(dot, getBitmapForTestUser());
+
+        // Then the envelope for a new message
+        sendPrivateMessage("Hello there!");
+        assertEquals(envelope, getBitmapForTestUser());
+
+        // Look at the message, and receive a new one
+        openPrivateChat();
+        sendPrivateMessage("Look at me");
+
+        // Go back. The envelope should be gone.
+        solo.goBack();
+        assertEquals(dot, getBitmapForTestUser());
+
+        // New message. The envelope returns.
+        sendPrivateMessage("Don't leave");
+        assertEquals(envelope, getBitmapForTestUser());
+    }
+
     // TODO test other user going away
     // TODO test other user going offline
-    // TODO test getting private message while in the main chat (envelope)
     // TODO chat with self
 
     public void test99Quit() {
@@ -172,5 +201,29 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         solo.assertCurrentActivity("Should have opened the private chat", PrivateChatController.class);
         assertEquals("Test - KouChat", solo.getCurrentActivity().getTitle()); // To be sure we are chatting with the right user
+    }
+
+    private void sendPrivateMessage(final String privMsg) {
+        try {
+            messages.sendPrivateMessage(privMsg, me);
+        } catch (CommandException e) {
+            throw new RuntimeException(e);
+        }
+
+        solo.sleep(500);
+    }
+
+    private Bitmap getBitmap(final int resourceId) {
+        final BitmapDrawable drawable = (BitmapDrawable) getActivity().getResources().getDrawable(resourceId);
+
+        return drawable.getBitmap();
+    }
+
+    private Bitmap getBitmapForTestUser() {
+        final LinearLayout row = (LinearLayout) solo.getCurrentListViews().get(0).getChildAt(1);
+        final ImageView imageAtRow = (ImageView) row.getChildAt(0);
+        final BitmapDrawable drawable = (BitmapDrawable) imageAtRow.getDrawable();
+
+        return drawable.getBitmap();
     }
 }
