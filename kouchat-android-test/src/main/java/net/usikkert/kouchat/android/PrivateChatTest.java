@@ -47,12 +47,16 @@ import android.widget.LinearLayout;
  */
 public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
-    private Solo solo;
-
     private static TestClient client;
     private static PrivateMessageResponderMock privateMessageResponder;
     private static Messages messages;
+
+    private Solo solo;
+
     private User me;
+
+    private Bitmap envelope;
+    private Bitmap dot;
 
     public PrivateChatTest() {
         super(MainChatController.class);
@@ -61,6 +65,8 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     public void setUp() {
         solo = new Solo(getInstrumentation(), getActivity());
         me = Settings.getSettings().getMe();
+        envelope = getBitmap(R.drawable.envelope);
+        dot = getBitmap(R.drawable.dot);
 
         // Making sure the test client only logs on once during all the tests
         if (client == null) {
@@ -158,8 +164,6 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     // Manual step: verify that notifications work when application is hidden. Both from main and private chat.
     public void test07ShouldShowNotificationOnNewPrivateMessageAndRemoveNotificationWhenMessageIsSeen() {
         solo.sleep(500);
-        final Bitmap envelope = getBitmap(R.drawable.envelope);
-        final Bitmap dot = getBitmap(R.drawable.dot);
 
         // Starts with a dot
         assertEquals(dot, getBitmapForTestUser());
