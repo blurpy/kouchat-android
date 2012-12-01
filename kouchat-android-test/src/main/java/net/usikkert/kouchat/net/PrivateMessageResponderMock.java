@@ -32,11 +32,11 @@ import java.util.List;
  */
 public class PrivateMessageResponderMock implements PrivateMessageResponder {
 
-    final List<Object[]> messagesArrived = new ArrayList<Object[]>();
+    private final List<Object[]> messagesArrived = new ArrayList<Object[]>();
 
     @Override
     public void messageArrived(final int userCode, final String msg, final int color) {
-        messagesArrived.add(new Object[] { userCode, msg, color });
+        messagesArrived.add(new Object[] {userCode, msg, color});
     }
 
     public boolean gotMessageArrived(final String message) {
