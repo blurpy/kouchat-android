@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.Tools;
 
 /**
@@ -50,12 +51,16 @@ public class OperatingSystemNetworkInfo {
     /** The message sender. */
     private final MessageSender sender;
 
+    /** The application user. **/
+    private final User me;
+
     /**
      * Default constructor.
      */
     public OperatingSystemNetworkInfo() {
         receiver = new MessageReceiver(Constants.NETWORK_TEMP_IP, Constants.NETWORK_TEMP_PORT);
         sender = new MessageSender(Constants.NETWORK_TEMP_IP, Constants.NETWORK_TEMP_PORT);
+        me = Settings.getSettings().getMe();
     }
 
     /**
@@ -155,7 +160,6 @@ public class OperatingSystemNetworkInfo {
      * @return A message.
      */
     private String createMessageToSend() {
-        final int code = Settings.getSettings().getMe().getCode();
-        return "getOperatingSystemNetworkInterface(" + code + ")";
+        return "getOperatingSystemNetworkInterface(" + me.getCode() + ")";
     }
 }
