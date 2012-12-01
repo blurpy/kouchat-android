@@ -70,7 +70,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         }
     }
 
-    public void test01OwnMessageIsShownInChat() {
+    public void test01OwnPrivateMessageShouldBeShownInTheChat() {
         openPrivateChat();
 
         TestUtils.writeLine(solo, "This is a new message from myself");
@@ -79,7 +79,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(TestUtils.searchText(solo, "This is a new message from myself"));
     }
 
-    public void test02OwnMessageShouldArriveAtOtherClient() {
+    public void test02OwnPrivateMessageShouldArriveAtTheOtherClient() {
         openPrivateChat();
 
         TestUtils.writeLine(solo, "This is the second message");
@@ -88,7 +88,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(privateMessageResponder.gotMessageArrived("This is the second message"));
     }
 
-    public void test03OtherClientMessageIsShownInChat() {
+    public void test03PrivateMessageFromAnotherClientShouldBeShownInTheChat() {
         openPrivateChat();
 
         sendPrivateMessage("Hello, this is a message from someone else");
@@ -96,7 +96,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(solo.searchText("Hello, this is a message from someone else"));
     }
 
-    public void test04OrientationSwitchShouldKeepText() {
+    public void test04OrientationSwitchShouldKeepTextInThePrivateChat() {
         openPrivateChat();
 
         TestUtils.writeLine(solo, "This is the third message");
@@ -109,7 +109,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     // Must be verified manually. I haven't found an automated way to verify scrolling yet.
-    public void test05OrientationSwitchShouldScrollToBottom() {
+    public void test05OrientationSwitchShouldScrollToTheBottomOfTheTextInThePrivateChat() {
         openPrivateChat();
 
         for (int i = 1; i <= 30; i++) {
@@ -134,7 +134,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     // This test actually fails if scrolling doesn't work,
     // as the link to click is out of sight because of the previous test.
-    public void test06OrientationSwitchShouldKeepLinks() {
+    public void test06OrientationSwitchShouldKeepLinksInThePrivateChat() {
         openPrivateChat();
 
         TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
@@ -156,7 +156,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     // Manual step: verify that notifications work when application is hidden. Both from main and private chat.
-    public void test07ShouldShowNotificationOnNewPrivateMessageAndRemoveNotificationWhenMessageSeen() {
+    public void test07ShouldShowNotificationOnNewPrivateMessageAndRemoveNotificationWhenMessageIsSeen() {
         solo.sleep(500);
         final Bitmap envelope = getBitmap(R.drawable.envelope);
         final Bitmap dot = getBitmap(R.drawable.dot);
@@ -179,9 +179,12 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         // New message. The envelope returns.
         sendPrivateMessage("Don't leave");
         assertEquals(envelope, getBitmapForTestUser());
+
+        // Read message and make envelope go away for the next tests
+        openPrivateChat();
     }
 
-    public void test08ShouldNotBeAbleToChatWithSelf() {
+    public void test08ShouldNotBeAbleToOpenPrivateChatWithYourself() {
         solo.sleep(500);
         solo.clickInList(1);
         solo.sleep(500);
@@ -191,6 +194,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     // TODO test other user going away
     // TODO test other user going offline
+    // TODO show correct private message from correct user when 2 other users
 
     public void test99Quit() {
         client.logoff();
