@@ -24,10 +24,12 @@ package net.usikkert.kouchat.util;
 
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.net.ConnectionWorker;
 import net.usikkert.kouchat.net.MessageParser;
 import net.usikkert.kouchat.net.MessageResponderMock;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.NetworkService;
+import net.usikkert.kouchat.net.OperatingSystemNetworkInfo;
 import net.usikkert.kouchat.net.PrivateMessageParser;
 import net.usikkert.kouchat.net.PrivateMessageResponderMock;
 import net.usikkert.kouchat.net.UDPReceiver;
@@ -55,6 +57,13 @@ public class TestClient {
 
         final UDPReceiver udpReceiver = TestUtils.getFieldValue(networkService, UDPReceiver.class, "udpReceiver");
         TestUtils.setFieldValue(udpReceiver, "me", me);
+
+        final ConnectionWorker connectionWorker =
+                TestUtils.getFieldValue(networkService, ConnectionWorker.class, "connectionWorker");
+
+        final OperatingSystemNetworkInfo osNetworkInfo =
+                TestUtils.getFieldValue(connectionWorker, OperatingSystemNetworkInfo.class, "osNetworkInfo");
+        TestUtils.setFieldValue(osNetworkInfo, "me", me);
 
         messages = new Messages(networkService);
         TestUtils.setFieldValue(messages, "me", me);
