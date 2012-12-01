@@ -196,6 +196,31 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.assertCurrentActivity("Should have stayed in the main chat", MainChatController.class);
     }
 
+    public void test09GettingPrivateMessageWhileKouChatIsHiddenShouldShowNotificationWhenVisibleAgain() {
+        solo.sleep(500);
+
+        // Verify fresh start
+        assertEquals(dot, getBitmapForTestUser());
+
+        // Hide KouChat
+        getActivity().finish();
+        solo.sleep(500);
+
+        // Receive private message while hidden
+        sendPrivateMessage("You can't see me!");
+        solo.sleep(500);
+
+        // Reopen the main chat
+        reopenMainChat();
+        solo.sleep(500);
+
+        // Should have a notification about the new message
+        assertEquals(envelope, getBitmapForTestUser());
+
+        // Read message and make envelope go away for the next tests
+        openPrivateChat();
+    }
+
     // TODO test other user going away
     // TODO test other user going offline
     // TODO show correct private message from correct user when 2 other users
@@ -240,5 +265,9 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         final BitmapDrawable drawable = (BitmapDrawable) imageAtRow.getDrawable();
 
         return drawable.getBitmap();
+    }
+
+    private void reopenMainChat() {
+        launchActivity(getInstrumentation().getTargetContext().getPackageName(), MainChatController.class, null);
     }
 }
