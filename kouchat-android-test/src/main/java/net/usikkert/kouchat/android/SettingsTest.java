@@ -66,7 +66,7 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(solo.searchText("Testing"));
 
         // Go back to main chat and check result
-        solo.goBack();
+        TestUtils.goBack(solo);
         assertTrue(solo.searchText("You changed nick to Testing"));
     }
 

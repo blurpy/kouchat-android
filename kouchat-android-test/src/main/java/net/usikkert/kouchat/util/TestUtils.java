@@ -231,6 +231,17 @@ public final class TestUtils {
         }
     }
 
+    /**
+     * Goes back to the previous activity, hiding the software keyboard first if necessary.
+     *
+     * @param solo The solo tester.
+     */
+    public static void goBack(final Solo solo) {
+        hideSoftwareKeyboard(solo);
+        solo.goBack();
+        solo.sleep(500);
+    }
+
     private static void setValue(final Object object, final Object value, final Field field) {
         final boolean originalAccessible = field.isAccessible();
 

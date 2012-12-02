@@ -172,8 +172,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         sendPrivateMessage("Look at me");
 
         // Go back. The envelope should be gone.
-        TestUtils.hideSoftwareKeyboard(solo);
-        solo.goBack();
+        TestUtils.goBack(solo);
         assertEquals(dot, getBitmapForTestUser());
 
         // New message. The envelope returns.
@@ -225,8 +224,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         // Pretend to open the main chat from the list of running applications. This does not "resume" the private chat
-        TestUtils.hideSoftwareKeyboard(solo);
-        solo.goBack();
+        TestUtils.goBack(solo);
 
         // There should be a notification about the new private message
         assertEquals(envelope, getBitmapForTestUser());
@@ -246,8 +244,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
 
         // Go back to the main chat
-        TestUtils.hideSoftwareKeyboard(solo);
-        solo.goBack();
+        TestUtils.goBack(solo);
 
         // The notification about the new private message should be gone
         assertEquals(dot, getBitmapForTestUser());
