@@ -250,9 +250,57 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertEquals(dot, getBitmapForTestUser());
     }
 
+    public void test12PrivateChattingWithSeveralUsersShouldCommunicateCorrectly() {
+        final TestClient client2 = new TestClient("Test2", 12345679);
+        final Messages messages2 = client2.logon();
+        final PrivateMessageResponderMock privateMessageResponder2 = client2.getPrivateMessageResponderMock();
+        solo.sleep(1000);
+
+        // New message from first user
+        sendPrivateMessage("First message from user 1");
+        assertEquals(dot, getBitmapForUser(3, 1)); // Me
+        assertEquals(envelope, getBitmapForUser(3, 2)); // Test
+        assertEquals(dot, getBitmapForUser(3, 3)); // Test2
+
+        // New message from second user
+        sendPrivateMessage("First message from user 2", messages2);
+        assertEquals(envelope, getBitmapForUser(3, 3));
+
+        // Chat with first user
+        openPrivateChat(3, 2, "Test");
+        assertTrue(solo.searchText("First message from user 1"));
+        TestUtils.writeLine(solo, "Hello user 1");
+        solo.sleep(500);
+        assertTrue(privateMessageResponder.gotMessageArrived("Hello user 1"));
+        sendPrivateMessage("Second message from user 1");
+        solo.sleep(500);
+        assertTrue(solo.searchText("Second message from user 1"));
+
+        // Check that the messages from the first user has been read
+        TestUtils.goBack(solo);
+        assertEquals(dot, getBitmapForUser(3, 2));
+        assertEquals(envelope, getBitmapForUser(3, 3));
+
+        // Chat with second user
+        openPrivateChat(3, 3, "Test2");
+        assertTrue(solo.searchText("First message from user 2"));
+        TestUtils.writeLine(solo, "Hello user 2");
+        solo.sleep(500);
+        assertTrue(privateMessageResponder2.gotMessageArrived("Hello user 2"));
+        sendPrivateMessage("Second message from user 2", messages2);
+        solo.sleep(500);
+        assertTrue(solo.searchText("Second message from user 2"));
+
+        // Check that the messages from the second user has been read
+        TestUtils.goBack(solo);
+        assertEquals(dot, getBitmapForUser(3, 3));
+
+        solo.sleep(500);
+        client2.logoff();
+    }
+
     // TODO test other user going away
     // TODO test other user going offline
-    // TODO show correct private message from correct user when 2 other users
 
     public void test99Quit() {
         client.logoff();
@@ -266,18 +314,27 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     private void openPrivateChat() {
+        openPrivateChat(2, 2, "Test");
+    }
+
+    private void openPrivateChat(final int numberOfUsers, final int userNumber, final String userName) {
         solo.sleep(500);
-        assertEquals(2, solo.getCurrentListViews().get(0).getCount());
-        solo.clickInList(2);
+        assertEquals(numberOfUsers, solo.getCurrentListViews().get(0).getCount());
+        solo.clickInList(userNumber);
         solo.sleep(500);
 
         solo.assertCurrentActivity("Should have opened the private chat", PrivateChatController.class);
-        assertEquals("Test - KouChat", solo.getCurrentActivity().getTitle()); // To be sure we are chatting with the right user
+        // To be sure we are chatting with the right user
+        assertEquals(userName + " - KouChat", solo.getCurrentActivity().getTitle());
     }
 
     private void sendPrivateMessage(final String privMsg) {
+        sendPrivateMessage(privMsg, messages);
+    }
+
+    private void sendPrivateMessage(final String privMsg, final Messages msg) {
         try {
-            messages.sendPrivateMessage(privMsg, me);
+            msg.sendPrivateMessage(privMsg, me);
         } catch (CommandException e) {
             throw new RuntimeException(e);
         }
@@ -292,9 +349,13 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     private Bitmap getBitmapForTestUser() {
+        return getBitmapForUser(2, 2);
+    }
+
+    private Bitmap getBitmapForUser(final int numberOfUsers, final int userNumber) {
         solo.sleep(500);
-        assertEquals(2, solo.getCurrentListViews().get(0).getCount());
-        final LinearLayout row = (LinearLayout) solo.getCurrentListViews().get(0).getChildAt(1);
+        assertEquals(numberOfUsers, solo.getCurrentListViews().get(0).getCount());
+        final LinearLayout row = (LinearLayout) solo.getCurrentListViews().get(0).getChildAt(userNumber - 1);
         final ImageView imageAtRow = (ImageView) row.getChildAt(0);
         final BitmapDrawable drawable = (BitmapDrawable) imageAtRow.getDrawable();
 
