@@ -114,6 +114,8 @@ public class TestClient {
     }
 
     private void waitForConnection() {
+        Tools.sleep(500);
+
         for (int i = 0; i < 20; i++) {
             if (!networkService.isNetworkUp()) {
                 Tools.sleep(100);
