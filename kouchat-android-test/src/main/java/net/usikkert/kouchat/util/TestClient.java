@@ -47,11 +47,15 @@ public class TestClient {
     private final PrivateMessageResponderMock privateMessageResponderMock;
 
     public TestClient() {
+        this("Test", 12345678);
+    }
+
+    public TestClient(final String nickName, final int userCode) {
         final Settings settings = TestUtils.createInstance(Settings.class);
 
         final User me = settings.getMe();
-        me.setNick("Test");
-        TestUtils.setFieldValue(me, "code", 12345678);
+        me.setNick(nickName);
+        TestUtils.setFieldValue(me, "code", userCode);
 
         networkService = new NetworkService();
 
