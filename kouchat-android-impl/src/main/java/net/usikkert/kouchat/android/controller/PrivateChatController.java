@@ -56,12 +56,14 @@ import android.widget.TextView;
  */
 public class PrivateChatController extends Activity {
 
-    private AndroidUserInterface androidUserInterface;
-    private ServiceConnection serviceConnection;
-    private User user;
     private TextView privateChatView;
     private EditText privateChatInput;
+    private ServiceConnection serviceConnection;
+
+    private AndroidUserInterface androidUserInterface;
     private AndroidPrivateChatWindow privateChatWindow;
+    private User user;
+
     private boolean visible;
 
     @Override
@@ -89,6 +91,10 @@ public class PrivateChatController extends Activity {
         privateChatWindow.unregisterPrivateChatController();
         unbindService(serviceConnection);
         super.onDestroy();
+
+        androidUserInterface = null;
+        privateChatWindow = null;
+        user = null;
     }
 
     @Override
