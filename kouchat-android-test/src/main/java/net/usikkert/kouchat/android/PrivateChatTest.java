@@ -250,6 +250,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertEquals(dot, getBitmapForTestUser());
     }
 
+    // A more complicated scenario
     public void test12PrivateChattingWithSeveralUsersShouldCommunicateCorrectly() {
         final TestClient client2 = new TestClient("Test2", 12345679);
         final Messages messages2 = client2.logon();
@@ -291,9 +292,22 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
         assertTrue(solo.searchText("Second message from user 2"));
 
-        // Check that the messages from the second user has been read
+        // Get another message from the first user, while still in the chat with the second
+        sendPrivateMessage("Third message from user 1");
+        solo.sleep(500);
+
+        // Check that the messages from the second user has been read, and that a new has arrived from the first
         TestUtils.goBack(solo);
+        assertEquals(envelope, getBitmapForUser(3, 2));
         assertEquals(dot, getBitmapForUser(3, 3));
+
+        // Check message from first user
+        openPrivateChat(3, 2, "Test");
+        assertTrue(solo.searchText("Third message from user 1"));
+
+        // Check that the message has been read
+        TestUtils.goBack(solo);
+        assertEquals(dot, getBitmapForUser(3, 2));
 
         solo.sleep(500);
         client2.logoff();
