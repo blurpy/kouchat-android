@@ -114,8 +114,29 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(solo.searchText("This is the third message"));
     }
 
+    public void test05OrientationSwitchShouldKeepLinksInThePrivateChat() {
+        openPrivateChat();
+
+        TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
+
+        solo.sleep(500);
+        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
+        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
+        solo.sleep(1000);
+        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
+
+        solo.sleep(3000); // Close browser manually now!
+        solo.setActivityOrientation(Solo.PORTRAIT);
+
+        solo.sleep(2000);
+        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
+        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
+        solo.sleep(1000);
+        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
+    }
+
     // Must be verified manually. I haven't found an automated way to verify scrolling yet.
-    public void test05OrientationSwitchShouldScrollToTheBottomOfTheTextInThePrivateChat() {
+    public void test06OrientationSwitchShouldScrollToTheBottomOfTheTextInThePrivateChat() {
         openPrivateChat();
 
         for (int i = 1; i <= 30; i++) {
@@ -138,31 +159,6 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(3000); // See if message number 30 is visible
     }
 
-    // This test actually fails if scrolling doesn't work,
-    // as the link to click is out of sight because of the previous test.
-    public void test06OrientationSwitchShouldKeepLinksInThePrivateChat() {
-        openPrivateChat();
-        TestUtils.hideSoftwareKeyboard(solo);
-
-        TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
-
-        solo.sleep(500);
-        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
-        solo.sleep(1000);
-        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
-
-        solo.sleep(3000); // Close browser manually now!
-        solo.setActivityOrientation(Solo.PORTRAIT);
-
-        solo.sleep(2000);
-        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
-        solo.sleep(1000);
-        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
-    }
-
-    // Manual step: verify that notifications work when application is hidden. Both from main and private chat.
     public void test07ShouldShowNotificationOnNewPrivateMessageAndRemoveNotificationWhenMessageIsSeen() {
         // Starts with a dot
         assertEquals(dot, getBitmapForTestUser());
