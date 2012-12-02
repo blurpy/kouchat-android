@@ -218,6 +218,45 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         openPrivateChat();
     }
 
+    public void test10GettingPrivateMessageWhilePrivateChatIsHiddenAndReturningToMainChatShouldShowNotification() {
+        openPrivateChat();
+
+        // Pretend to click "home" while in the private chat
+        getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+
+        // Receive private message while "home"
+        sendPrivateMessage("You are not looking!");
+        solo.sleep(500);
+
+        // Pretend to open the main chat from the list of running applications. This does not "resume" the private chat
+        TestUtils.hideSoftwareKeyboard(solo);
+        solo.goBack();
+
+        // There should be a notification about the new private message
+        assertEquals(envelope, getBitmapForTestUser());
+    }
+
+    public void test11GettingPrivateMessageWhilePrivateChatIsHiddenAndReturningToPrivateChatShouldHideNotification() {
+        openPrivateChat();
+
+        // Pretend to turn off the screen while in the private chat
+        getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+
+        // Receive private message while the screen is "off"
+        sendPrivateMessage("You are still not looking!");
+        solo.sleep(500);
+
+        // Turn the screen back "on" again and return to the private chat
+        getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
+
+        // Go back to the main chat
+        TestUtils.hideSoftwareKeyboard(solo);
+        solo.goBack();
+
+        // The notification about the new private message should be gone
+        assertEquals(dot, getBitmapForTestUser());
+    }
+
     // TODO test other user going away
     // TODO test other user going offline
     // TODO show correct private message from correct user when 2 other users

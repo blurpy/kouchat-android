@@ -101,6 +101,13 @@ public class PrivateChatController extends Activity {
     protected void onResume() {
         super.onResume();
         visible = true;
+
+        if (androidUserInterface != null) {
+            // Make sure that new private message notifications are hidden when the private chat is shown again
+            // after being hidden. Happens when the screen is turned off and on again, or after pressing home,
+            // and returning to the application, or clicking a link and returning, and so on.
+            resetNewPrivateMessageIcon();
+        }
     }
 
     @Override
