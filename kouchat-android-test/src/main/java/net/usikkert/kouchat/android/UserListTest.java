@@ -110,6 +110,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     public void tearDown() {
         client.logoff();
         solo.setActivityOrientation(Solo.LANDSCAPE);
+        solo.sleep(500);
         solo.finishOpenedActivities();
     }
 
