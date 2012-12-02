@@ -144,7 +144,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         openPrivateChat();
 
         TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
-        TestUtils.hideSoftwareKeyboard(solo, solo.getCurrentActivity());
+        TestUtils.hideSoftwareKeyboard(solo);
 
         solo.sleep(500);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
@@ -176,7 +176,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         sendPrivateMessage("Look at me");
 
         // Go back. The envelope should be gone.
-        TestUtils.hideSoftwareKeyboard(solo, solo.getCurrentActivity());
+        TestUtils.hideSoftwareKeyboard(solo);
         solo.goBack();
         assertEquals(dot, getBitmapForTestUser());
 

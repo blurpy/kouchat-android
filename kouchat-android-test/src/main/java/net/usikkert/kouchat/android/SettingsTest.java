@@ -59,7 +59,7 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(solo.searchText("Set nick name"));
 
         // Change nick name to Testing in the popup dialog
-        TestUtils.hideSoftwareKeyboard(solo, getActivity());
+        TestUtils.hideSoftwareKeyboard(solo);
         solo.clearEditText(0);
         solo.enterText(0, "Testing");
         solo.clickOnButton("OK");
@@ -79,7 +79,7 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.clickOnText("Set nick name");
 
         // Change nick name back to the original value in the popup dialog
-        TestUtils.hideSoftwareKeyboard(solo, getActivity());
+        TestUtils.hideSoftwareKeyboard(solo);
         solo.clearEditText(0);
         solo.enterText(0, originalNickName);
         solo.clickOnButton("OK");

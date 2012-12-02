@@ -208,10 +208,9 @@ public final class TestUtils {
      * Hides the software keyboard, if it's visible.
      *
      * @param solo The solo tester.
-     * @param activity The current activity.
      */
-    public static void hideSoftwareKeyboard(final Solo solo, final Activity activity) {
-        if (softwareKeyboardIsVisible(activity)) {
+    public static void hideSoftwareKeyboard(final Solo solo) {
+        if (softwareKeyboardIsVisible(solo.getCurrentActivity())) {
             solo.goBack();
         }
     }
