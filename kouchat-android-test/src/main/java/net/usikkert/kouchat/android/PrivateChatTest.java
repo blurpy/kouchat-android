@@ -142,9 +142,9 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     // as the link to click is out of sight because of the previous test.
     public void test06OrientationSwitchShouldKeepLinksInThePrivateChat() {
         openPrivateChat();
+        TestUtils.hideSoftwareKeyboard(solo);
 
         TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
-        TestUtils.hideSoftwareKeyboard(solo);
 
         solo.sleep(500);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
@@ -155,7 +155,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(3000); // Close browser manually now!
         solo.setActivityOrientation(Solo.PORTRAIT);
 
-        solo.sleep(500);
+        solo.sleep(2000);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
         TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
         solo.sleep(1000);
