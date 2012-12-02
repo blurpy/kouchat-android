@@ -89,8 +89,27 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(solo.searchText("Welcome to KouChat"));
     }
 
+    public void test05OrientationSwitchShouldKeepLinks() {
+        TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
+
+        solo.sleep(500);
+        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
+        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
+        solo.sleep(1000);
+        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
+
+        solo.sleep(3000); // Close browser manually now!
+        solo.setActivityOrientation(Solo.PORTRAIT);
+
+        solo.sleep(2000);
+        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
+        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
+        solo.sleep(1000);
+        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
+    }
+
     // Must be verified manually. I haven't found an automated way to verify scrolling yet.
-    public void test05OrientationSwitchShouldScrollToBottom() {
+    public void test06OrientationSwitchShouldScrollToBottom() {
         for (int i = 1; i <= 30; i++) {
             TestUtils.writeLine(solo,
                     "This is message number " + i + "! " +
@@ -111,32 +130,13 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(3000); // See if message number 30 is visible
     }
 
-    // This test actually fails if scrolling doesn't work,
-    // as the link to click is out of sight because of the previous test.
-    public void test06OrientationSwitchShouldKeepLinks() {
-        TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
-
-        solo.sleep(500);
-        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
-        solo.sleep(1000);
-        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
-
-        solo.sleep(3000); // Close browser manually now!
-        solo.setActivityOrientation(Solo.PORTRAIT);
-
-        solo.sleep(500);
-        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
-        solo.sleep(1000);
-        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
-    }
-
     public void test99Quit() {
         TestUtils.quit(solo);
     }
 
     public void tearDown() {
+        solo.setActivityOrientation(Solo.LANDSCAPE);
+        solo.sleep(500);
         solo.finishOpenedActivities();
     }
 }
