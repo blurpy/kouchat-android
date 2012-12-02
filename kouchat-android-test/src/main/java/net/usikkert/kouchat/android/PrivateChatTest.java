@@ -313,6 +313,39 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         client2.logoff();
     }
 
+    public void test13SuspendingPrivateChatWithOneUserAndStartingANewChatWithAnotherUserShouldShownTheCorrectMessage() {
+        final TestClient client2 = new TestClient("Test2", 12345679);
+        final Messages messages2 = client2.logon();
+        solo.sleep(1000);
+
+        // Get message from first user, and open the chat
+        sendPrivateMessage("Message from user 1");
+        openPrivateChat(3, 2, "Test");
+        assertTrue(solo.searchText("Message from user 1"));
+
+        // Pretend to click "home" while in the private chat
+        getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+
+        // Pretend to open the main chat from the list of running applications. This does not "resume" the private chat
+        TestUtils.goBack(solo);
+
+        // Get message from the second user, and open the chat
+        sendPrivateMessage("Message from user 2", messages2);
+        openPrivateChat(3, 3, "Test2");
+        assertTrue(solo.searchText("Message from user 2"));
+
+        // Get new message from the first user, while still in the chat with the second user
+        sendPrivateMessage("New message from user 1");
+
+        // Go back and look at the new message from the first user
+        TestUtils.goBack(solo);
+        openPrivateChat(3, 2, "Test");
+        assertTrue(solo.searchText("New message from user 1"));
+
+        solo.sleep(500);
+        client2.logoff();
+    }
+
     // TODO test other user going away
     // TODO test other user going offline
 
