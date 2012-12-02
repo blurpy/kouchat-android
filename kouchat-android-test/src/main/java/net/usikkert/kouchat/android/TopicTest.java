@@ -94,6 +94,8 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
     public void tearDown() {
         client.logoff();
+        solo.setActivityOrientation(Solo.LANDSCAPE);
+        solo.sleep(500);
         solo.finishOpenedActivities();
     }
 }
