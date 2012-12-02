@@ -264,6 +264,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void tearDown() {
         solo.setActivityOrientation(Solo.LANDSCAPE);
+        solo.sleep(500);
         solo.finishOpenedActivities();
     }
 
