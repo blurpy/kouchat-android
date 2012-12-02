@@ -144,6 +144,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         openPrivateChat();
 
         TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
+        TestUtils.hideSoftwareKeyboard(solo, solo.getCurrentActivity());
 
         solo.sleep(500);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
@@ -163,8 +164,6 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     // Manual step: verify that notifications work when application is hidden. Both from main and private chat.
     public void test07ShouldShowNotificationOnNewPrivateMessageAndRemoveNotificationWhenMessageIsSeen() {
-        solo.sleep(500);
-
         // Starts with a dot
         assertEquals(dot, getBitmapForTestUser());
 
@@ -177,6 +176,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         sendPrivateMessage("Look at me");
 
         // Go back. The envelope should be gone.
+        TestUtils.hideSoftwareKeyboard(solo, solo.getCurrentActivity());
         solo.goBack();
         assertEquals(dot, getBitmapForTestUser());
 
@@ -197,8 +197,6 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test09GettingPrivateMessageWhileKouChatIsHiddenShouldShowNotificationWhenVisibleAgain() {
-        solo.sleep(500);
-
         // Verify fresh start
         assertEquals(dot, getBitmapForTestUser());
 
@@ -212,7 +210,6 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         // Reopen the main chat
         reopenMainChat();
-        solo.sleep(500);
 
         // Should have a notification about the new message
         assertEquals(envelope, getBitmapForTestUser());
@@ -231,11 +228,13 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void tearDown() {
+        solo.setActivityOrientation(Solo.LANDSCAPE);
         solo.finishOpenedActivities();
     }
 
     private void openPrivateChat() {
         solo.sleep(500);
+        assertEquals(2, solo.getCurrentListViews().get(0).getCount());
         solo.clickInList(2);
         solo.sleep(500);
 
@@ -260,6 +259,8 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     private Bitmap getBitmapForTestUser() {
+        solo.sleep(500);
+        assertEquals(2, solo.getCurrentListViews().get(0).getCount());
         final LinearLayout row = (LinearLayout) solo.getCurrentListViews().get(0).getChildAt(1);
         final ImageView imageAtRow = (ImageView) row.getChildAt(0);
         final BitmapDrawable drawable = (BitmapDrawable) imageAtRow.getDrawable();
