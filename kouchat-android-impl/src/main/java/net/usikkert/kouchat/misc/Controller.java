@@ -570,7 +570,7 @@ public class Controller implements NetworkConnectionListener {
      *                          or the private message is empty,
      *                          or the private message is too long,
      *                          or the specified user has no port to send the private message to,
-     *                          or the specified user is away.
+     *                          or the specified user is away or offline.
      */
     public void sendPrivateMessage(final String privmsg, final User user) throws CommandException {
         if (!isConnected()) {
@@ -585,6 +585,8 @@ public class Controller implements NetworkConnectionListener {
             throw new CommandException("You can not send a private chat message to a user with no available port number");
         } else if (user.isAway()) {
             throw new CommandException("You can not send a private chat message to a user that is away");
+        } else if (!user.isOnline()) {
+            throw new CommandException("You can not send a private chat message to a user that is offline");
         } else if (Settings.getSettings().isNoPrivateChat()) {
             throw new CommandException("You can not send a private chat message when private chat is disabled");
         } else {
