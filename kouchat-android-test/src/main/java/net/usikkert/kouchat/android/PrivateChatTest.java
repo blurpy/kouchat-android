@@ -346,8 +346,61 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         client2.logoff();
     }
 
-    // TODO test other user going away
-    // TODO test other user going offline
+    public void test14ShouldNotBeAbleToSendPrivateMessageToUserThatGoesAway() {
+        openPrivateChat();
+
+        solo.sleep(500);
+        messages.sendAwayMessage("Going away now");
+        solo.sleep(500);
+
+        assertEquals("Test (away: Going away now) - KouChat", solo.getCurrentActivity().getTitle());
+
+        TestUtils.writeLine(solo, "Don't leave me!");
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("You can not send a private chat message to a user that is away"));
+        assertFalse(privateMessageResponder.gotAnyMessage());
+
+        solo.sleep(500);
+        messages.sendBackMessage();
+        solo.sleep(500);
+
+        assertEquals("Test - KouChat", solo.getCurrentActivity().getTitle());
+
+        TestUtils.writeLine(solo, "You are back!");
+        solo.sleep(500);
+        assertTrue(privateMessageResponder.gotMessageArrived("You are back!"));
+    }
+
+    public void test15ShouldNotBeAbleToSendPrivateMessageToUserThatIsAway() {
+        solo.sleep(500);
+        messages.sendAwayMessage("Going away now");
+        solo.sleep(500);
+
+        openPrivateChat(2, 2, "Test (away: Going away now)");
+
+        TestUtils.writeLine(solo, "Don't leave me!");
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("You can not send a private chat message to a user that is away"));
+        assertFalse(privateMessageResponder.gotAnyMessage());
+    }
+
+    public void test16ShouldNotBeAbleToSendPrivateMessageToUserThatIsOffline() {
+        openPrivateChat();
+
+        solo.sleep(500);
+        client.logoff();
+        solo.sleep(500);
+
+        assertEquals("Test (offline) - KouChat", solo.getCurrentActivity().getTitle());
+
+        TestUtils.writeLine(solo, "Don't leave me!");
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("You can not send a private chat message to a user that is offline"));
+        assertFalse(privateMessageResponder.gotAnyMessage());
+    }
 
     public void test99Quit() {
         client.logoff();

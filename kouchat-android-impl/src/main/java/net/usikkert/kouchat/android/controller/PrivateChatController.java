@@ -178,7 +178,24 @@ public class PrivateChatController extends Activity {
     }
 
     private void setTitle() {
-        setTitle(user.getNick() + " - " + Constants.APP_NAME);
+        final StringBuilder title = new StringBuilder();
+
+        title.append(user.getNick());
+
+        if (!user.isOnline()) {
+            title.append(" (offline)");
+        }
+
+        else if (user.isAway()) {
+            title.append(" (away: ");
+            title.append(user.getAwayMsg());
+            title.append(")");
+        }
+
+        title.append(" - ");
+        title.append(Constants.APP_NAME);
+
+        setTitle(title.toString());
     }
 
     private void setUser() {
@@ -252,5 +269,14 @@ public class PrivateChatController extends Activity {
      */
     public boolean isVisible() {
         return visible;
+    }
+
+    public void updateTitle() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setTitle();
+            }
+        });
     }
 }
