@@ -48,4 +48,8 @@ public class PrivateMessageResponderMock implements PrivateMessageResponder {
 
         return false;
     }
+
+    public boolean gotAnyMessage() {
+        return !messagesArrived.isEmpty();
+    }
 }
