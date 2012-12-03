@@ -4,7 +4,7 @@
 * version 0.6 (xx.xx.2012)
   - Imported backend code from KouChat v1.2.0 for desktop
   - Changed license from GPL v3 to LGPL v3
-  - Added support for private chat (work in progress)
+  - Added support for private chat
   - Made links clickable in the chat
   - Made sure the text view is scrolled to the bottom when orientation changes
 
