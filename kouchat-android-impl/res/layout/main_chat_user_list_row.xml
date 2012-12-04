@@ -8,6 +8,7 @@
       android:id="@+id/mainChatUserListIcon"
       android:layout_width="wrap_content"
       android:layout_height="fill_parent"
+      android:padding="5sp"
       android:src="@drawable/dot"/>
 
   <TextView
