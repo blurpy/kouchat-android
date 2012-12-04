@@ -32,6 +32,7 @@ import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.net.FileReceiver;
@@ -94,13 +95,29 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
 
     }
 
+    /**
+     * Updates the title of the main chat to the current topic. Looks like this:
+     *
+     * <p><code>Nick name - Topic: the topic (nick name of the user that set the topic) - KouChat</code>.</p>
+     *
+     * <p>Example: <code>Penny - Topic: Knock knock (Sheldon) - KouChat</code>.</p>
+     */
     @Override
     public void showTopic() {
         if (mainChatController != null) {
-            final String nick = me.getNick();
-            final String topic = controller.getTopic().toString();
+            final StringBuilder title = new StringBuilder();
 
-            mainChatController.updateTopic(nick + " - Topic: " + topic + " - " + Constants.APP_NAME);
+            title.append(me.getNick());
+
+            final Topic topic = controller.getTopic();
+
+            if (!topic.getTopic().isEmpty()) {
+                title.append(" - Topic: ").append(topic);
+            }
+
+            title.append(" - ").append(Constants.APP_NAME);
+
+            mainChatController.updateTopic(title.toString());
         }
     }
 
