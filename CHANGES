@@ -8,6 +8,7 @@
   - Made links clickable in the chat
   - Made sure the text view is scrolled to the bottom when orientation changes
   - Updated the title of the main chat to not mention a topic if the topic is not set
+  - Made it easier to see who you are in the user list by making "you" appear in bold text
 
 
 * version 0.5.1 (03.06.2012):

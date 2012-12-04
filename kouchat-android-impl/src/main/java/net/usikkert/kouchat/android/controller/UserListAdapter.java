@@ -28,12 +28,14 @@ import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.misc.User;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * The adapter used for creating the list items in the user list.
@@ -62,7 +64,12 @@ public class UserListAdapter extends ArrayAdapter<User> {
     }
 
     /**
-     * Creates a user item in the user list. Shows when a new message has arrived by changing the icon to an envelope.
+     * Creates a user item in the user list.
+     *
+     * <ul>
+     *   <li>Shows when a new message has arrived by changing the icon to an envelope.</li>
+     *   <li>Shows who you are in the user list by making "you" appear in bold text.</li>
+     * </ul>
      *
      * {@inheritDoc}
      */
@@ -70,12 +77,19 @@ public class UserListAdapter extends ArrayAdapter<User> {
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         final LinearLayout linearLayout = (LinearLayout) super.getView(position, convertView, parent);
         final ImageView imageView = (ImageView) linearLayout.getChildAt(0);
+        final TextView textView = (TextView) linearLayout.getChildAt(1);
         final User user = getItem(position);
 
         if (user.isNewPrivMsg()) {
             imageView.setImageDrawable(envelope);
         } else {
             imageView.setImageDrawable(dot);
+        }
+
+        if (user.isMe()) {
+            textView.setTypeface(Typeface.DEFAULT_BOLD);
+        } else {
+            textView.setTypeface(Typeface.DEFAULT);
         }
 
         return linearLayout;

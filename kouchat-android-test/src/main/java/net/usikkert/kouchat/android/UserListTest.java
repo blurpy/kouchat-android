@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.Messages;
@@ -31,8 +32,11 @@ import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
+import android.graphics.Typeface;
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Tests the user list.
@@ -102,6 +106,36 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertEquals("Test", getUserNameAtPosition(1));
     }
 
+    public void test05MeShouldBeBold() throws CommandException {
+        final Messages messages = client.logon();
+        solo.sleep(500);
+
+        // By default
+        assertTrue(userIsBold("Kou", 0));
+        assertFalse(userIsBold("Test", 1));
+
+        messages.sendNickMessage("Ape");
+        solo.sleep(500);
+
+        // After sorting of the user list
+        assertFalse(userIsBold("Ape", 0));
+        assertTrue(userIsBold("Kou", 1));
+
+        messages.sendPrivateMessage("Look!", me);
+        solo.sleep(500);
+
+        // After new private message
+        assertFalse(userIsBold("Ape", 0));
+        assertTrue(userIsBold("Kou", 1));
+
+        solo.setActivityOrientation(Solo.PORTRAIT);
+        solo.sleep(500);
+
+        // After orientation switch
+        assertFalse(userIsBold("Ape", 0));
+        assertTrue(userIsBold("Kou", 1));
+    }
+
     public void test99Quit() {
         client.logoff();
         TestUtils.quit(solo);
@@ -120,5 +154,16 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     private User getUserAtPosition(final int position) {
         return (User) userList.getItemAtPosition(position);
+    }
+
+    private boolean userIsBold(final String nickName, final int userNumber) {
+        solo.sleep(500);
+        assertEquals(nickName, getUserNameAtPosition(userNumber));
+
+        final LinearLayout row = (LinearLayout) solo.getCurrentListViews().get(0).getChildAt(userNumber);
+        final TextView textView = (TextView) row.getChildAt(1);
+        final Typeface typeface = textView.getTypeface();
+
+        return typeface != null && typeface.isBold();
     }
 }

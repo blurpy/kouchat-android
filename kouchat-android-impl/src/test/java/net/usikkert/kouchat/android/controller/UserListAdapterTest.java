@@ -30,15 +30,18 @@ import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.misc.User;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * Test of {@link UserListAdapter}.
@@ -93,6 +96,23 @@ public class UserListAdapterTest {
 
         assertEquals(dot, getCurrentUserImage(0));
         assertEquals(envelope, getCurrentUserImage(1));
+    }
+
+    @Test
+    @Ignore("This does not work with Robolectric yet.")
+    public void meShouldBeBold() {
+        user1.setMe(true);
+
+        assertTrue(userIsBold(0));
+        assertFalse(userIsBold(1));
+    }
+
+    private boolean userIsBold(final int userPosition) {
+        final LinearLayout linearLayout = (LinearLayout)  userListAdapter.getView(userPosition, null, null);
+        final TextView textView = (TextView) linearLayout.getChildAt(1);
+        final Typeface typeface = textView.getTypeface();
+
+        return typeface != null && typeface.isBold();
     }
 
     private Drawable getCurrentUserImage(final int userPosition) {
