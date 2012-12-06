@@ -49,6 +49,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     private Messages messages;
     private MainChatController activity;
     private User me;
+    private int defaultOrientation;
 
     public TopicTest() {
         super(MainChatController.class);
@@ -60,6 +61,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         client = new TestClient();
         messages = client.logon();
         me = Settings.getSettings().getMe();
+        defaultOrientation = solo.getCurrentActivity().getRequestedOrientation();
     }
 
     public void test01OtherClientSettingTopicIsShownInChatAndTitle() throws CommandException {
@@ -81,8 +83,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     public void test03OrientationSwitchShouldKeepTopic() {
         assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", activity.getTitle());
 
-        solo.setActivityOrientation(Solo.PORTRAIT);
-        solo.sleep(500);
+        TestUtils.switchOrientation(solo);
 
         assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", activity.getTitle());
     }
@@ -105,8 +106,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
     public void tearDown() {
         client.logoff();
-        solo.setActivityOrientation(Solo.LANDSCAPE);
-        solo.sleep(500);
+        TestUtils.resetOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }
 }
