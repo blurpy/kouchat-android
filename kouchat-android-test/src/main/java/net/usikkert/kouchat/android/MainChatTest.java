@@ -41,6 +41,7 @@ import android.test.ActivityInstrumentationTestCase2;
 public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private Solo solo;
+    private int defaultOrientation;
 
     public MainChatTest() {
         super(MainChatController.class);
@@ -48,6 +49,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void setUp() {
         solo = new Solo(getInstrumentation(), getActivity());
+        defaultOrientation = solo.getCurrentActivity().getRequestedOrientation();
     }
 
     public void test01OwnMessageIsShownInChat() {
@@ -83,8 +85,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
     public void test04OrientationSwitchShouldKeepText() {
         assertTrue(solo.searchText("Welcome to KouChat"));
 
-        solo.setActivityOrientation(Solo.PORTRAIT);
-        solo.sleep(500);
+        TestUtils.switchOrientation(solo);
 
         assertTrue(solo.searchText("Welcome to KouChat"));
     }
@@ -94,12 +95,14 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
         solo.sleep(500);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
+
+        // The 2.3.3 emulator can't fit the whole url on a single line, so have to use a shorter text to locate
+        TestUtils.clickOnText(solo, "kouchat.googlecode.com");
         solo.sleep(1000);
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
 
         solo.sleep(3000); // Close browser manually now!
-        solo.setActivityOrientation(Solo.PORTRAIT);
+        TestUtils.switchOrientation(solo);
 
         solo.sleep(2000);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
@@ -126,7 +129,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
                             "This is message number " + i + "! ");
         }
 
-        solo.setActivityOrientation(Solo.PORTRAIT);
+        TestUtils.switchOrientation(solo);
         solo.sleep(3000); // See if message number 30 is visible
     }
 
@@ -135,8 +138,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void tearDown() {
-        solo.setActivityOrientation(Solo.LANDSCAPE);
-        solo.sleep(500);
+        TestUtils.resetOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }
 }
