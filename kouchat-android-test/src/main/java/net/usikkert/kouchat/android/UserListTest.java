@@ -49,6 +49,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     private TestClient client;
     private User me;
     private ListView userList;
+    private int defaultOrientation;
 
     public UserListTest() {
         super(MainChatController.class);
@@ -65,6 +66,8 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(100);
 
         userList = solo.getCurrentListViews().get(0);
+
+        defaultOrientation = solo.getCurrentActivity().getRequestedOrientation();
     }
 
     public void test01UserListShouldContainMeOnLogon() {
@@ -99,8 +102,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         client.logon();
         solo.sleep(500);
 
-        solo.setActivityOrientation(Solo.PORTRAIT);
-        solo.sleep(500);
+        TestUtils.switchOrientation(solo);
 
         assertEquals("Kou", getUserNameAtPosition(0));
         assertEquals("Test", getUserNameAtPosition(1));
@@ -128,8 +130,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertFalse(userIsBold("Ape", 0));
         assertTrue(userIsBold("Kou", 1));
 
-        solo.setActivityOrientation(Solo.PORTRAIT);
-        solo.sleep(500);
+        TestUtils.switchOrientation(solo);
 
         // After orientation switch
         assertFalse(userIsBold("Ape", 0));
@@ -143,8 +144,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void tearDown() {
         client.logoff();
-        solo.setActivityOrientation(Solo.LANDSCAPE);
-        solo.sleep(500);
+        TestUtils.resetOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }
 

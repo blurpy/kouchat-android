@@ -242,6 +242,38 @@ public final class TestUtils {
         solo.sleep(500);
     }
 
+    /**
+     * Switches the orientation between landscape and portrait.
+     *
+     * @param solo The solo tester.
+     */
+    public static void switchOrientation(final Solo solo) {
+        if (solo.getCurrentActivity().getRequestedOrientation() == Solo.LANDSCAPE) {
+            solo.setActivityOrientation(Solo.PORTRAIT);
+        } else {
+            solo.setActivityOrientation(Solo.LANDSCAPE);
+        }
+
+        solo.sleep(500);
+    }
+
+    /**
+     * Resets the orientation to the default.
+     *
+     * @param solo The solo tester.
+     * @param defaultOrientation The default orientation, that must be registered at the beginning of a test
+     *                           using <code>solo.getCurrentActivity().getRequestedOrientation()</code>.
+     */
+    public static void resetOrientation(final Solo solo, final int defaultOrientation) {
+        if (defaultOrientation == Solo.LANDSCAPE) {
+            solo.setActivityOrientation(Solo.LANDSCAPE);
+        } else {
+            solo.setActivityOrientation(Solo.PORTRAIT);
+        }
+
+        solo.sleep(500);
+    }
+
     private static void setValue(final Object object, final Object value, final Field field) {
         final boolean originalAccessible = field.isAccessible();
 
