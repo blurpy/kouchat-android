@@ -76,6 +76,8 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
             privateMessageResponder = client.getPrivateMessageResponderMock();
             messages = client.logon();
         }
+
+        privateMessageResponder.resetMessages();
     }
 
     public void test01OwnPrivateMessageShouldBeShownInTheChat() {
@@ -387,6 +389,9 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         assertTrue(solo.searchText("You can not send a private chat message to a user that is away"));
         assertFalse(privateMessageResponder.gotAnyMessage());
+
+        messages.sendBackMessage();
+        solo.sleep(500);
     }
 
     public void test16ShouldNotBeAbleToSendPrivateMessageToUserThatIsOffline() {

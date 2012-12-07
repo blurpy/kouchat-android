@@ -52,4 +52,8 @@ public class PrivateMessageResponderMock implements PrivateMessageResponder {
     public boolean gotAnyMessage() {
         return !messagesArrived.isEmpty();
     }
+
+    public void resetMessages() {
+        messagesArrived.clear();
+    }
 }
