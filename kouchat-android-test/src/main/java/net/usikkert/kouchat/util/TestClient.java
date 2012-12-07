@@ -45,6 +45,7 @@ public class TestClient {
     private final Messages messages;
     private final MessageResponderMock messageResponderMock;
     private final PrivateMessageResponderMock privateMessageResponderMock;
+    private TestClient.SimpleIdleThread simpleIdleThread;
 
     public TestClient() {
         this("Test", 12345678);
@@ -94,6 +95,9 @@ public class TestClient {
         messages.sendClient();
         messages.sendExposeMessage();
 
+        simpleIdleThread = new SimpleIdleThread();
+        simpleIdleThread.start();
+
         Tools.sleep(100);
 
         return messages;
@@ -104,6 +108,7 @@ public class TestClient {
             return;
         }
 
+        simpleIdleThread.die();
         messages.sendLogoffMessage();
         Tools.sleep(500);
         networkService.disconnect();
@@ -128,6 +133,30 @@ public class TestClient {
 
         if (!networkService.isNetworkUp()) {
             throw new RuntimeException("Could not connect");
+        }
+    }
+
+    /**
+     * A very simplified idle thread. Its only purpose is to make sure the test client
+     * doesn't time out during the longer tests.
+     */
+    private class SimpleIdleThread extends Thread {
+
+        private boolean run;
+
+        @Override
+        public void run() {
+            run = true;
+            Tools.sleep(15000);
+
+            while (run) {
+                messages.sendIdleMessage();
+                Tools.sleep(15000);
+            }
+        }
+
+        public void die() {
+            run = false;
         }
     }
 }
