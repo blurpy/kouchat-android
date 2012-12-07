@@ -460,7 +460,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     private Bitmap getBitmapForUser(final int numberOfUsers, final int userNumber) {
-        solo.sleep(500);
+        solo.sleep(1000);
         assertEquals(numberOfUsers, solo.getCurrentListViews().get(0).getCount());
         final LinearLayout row = (LinearLayout) solo.getCurrentListViews().get(0).getChildAt(userNumber - 1);
         final ImageView imageAtRow = (ImageView) row.getChildAt(0);
