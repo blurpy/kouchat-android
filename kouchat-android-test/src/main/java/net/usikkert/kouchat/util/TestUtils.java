@@ -238,8 +238,16 @@ public final class TestUtils {
      * @param solo The solo tester.
      */
     public static void goBack(final Solo solo) {
-        hideSoftwareKeyboard(solo);
+        final Activity currentActivity = solo.getCurrentActivity();
+
         solo.goBack();
+
+        // No change in activity by going back. Assuming it's because the software keyboard was visible.
+        // Need to go back once more to actually "go back".
+        if (currentActivity == solo.getCurrentActivity()) {
+            solo.goBack();
+        }
+
         solo.sleep(500);
     }
 
