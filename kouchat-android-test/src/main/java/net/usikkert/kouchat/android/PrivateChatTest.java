@@ -68,7 +68,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         me = Settings.getSettings().getMe();
         envelope = getBitmap(R.drawable.envelope);
         dot = getBitmap(R.drawable.dot);
-        defaultOrientation = solo.getCurrentActivity().getRequestedOrientation();
+        defaultOrientation = TestUtils.getCurrentOrientation(solo);
 
         // Making sure the test client only logs on once during all the tests
         if (client == null) {
@@ -416,7 +416,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void tearDown() {
-        TestUtils.resetOrientation(solo, defaultOrientation);
+        TestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }
 

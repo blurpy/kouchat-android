@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import com.jayway.android.robotium.solo.Solo;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.text.Layout;
@@ -248,7 +249,7 @@ public final class TestUtils {
      * @param solo The solo tester.
      */
     public static void switchOrientation(final Solo solo) {
-        if (solo.getCurrentActivity().getRequestedOrientation() == Solo.LANDSCAPE) {
+        if (getCurrentOrientation(solo) == Configuration.ORIENTATION_LANDSCAPE) {
             solo.setActivityOrientation(Solo.PORTRAIT);
         } else {
             solo.setActivityOrientation(Solo.LANDSCAPE);
@@ -258,20 +259,29 @@ public final class TestUtils {
     }
 
     /**
-     * Resets the orientation to the default.
+     * Sets the orientation to the requested new orientation.
      *
      * @param solo The solo tester.
-     * @param defaultOrientation The default orientation, that must be registered at the beginning of a test
-     *                           using <code>solo.getCurrentActivity().getRequestedOrientation()</code>.
+     * @param newOrientation The new orientation to set,
      */
-    public static void resetOrientation(final Solo solo, final int defaultOrientation) {
-        if (defaultOrientation == Solo.LANDSCAPE) {
+    public static void setOrientation(final Solo solo, final int newOrientation) {
+        if (newOrientation == Configuration.ORIENTATION_LANDSCAPE) {
             solo.setActivityOrientation(Solo.LANDSCAPE);
         } else {
             solo.setActivityOrientation(Solo.PORTRAIT);
         }
 
         solo.sleep(500);
+    }
+
+    /**
+     * Gets the orientation of the activity.
+     *
+     * @param solo The solo tester.
+     * @return The current orientation.
+     */
+    public static int getCurrentOrientation(final Solo solo) {
+        return solo.getCurrentActivity().getResources().getConfiguration().orientation;
     }
 
     private static void setValue(final Object object, final Object value, final Field field) {

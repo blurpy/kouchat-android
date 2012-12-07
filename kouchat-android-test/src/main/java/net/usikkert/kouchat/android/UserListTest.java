@@ -67,7 +67,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
 
         userList = solo.getCurrentListViews().get(0);
 
-        defaultOrientation = solo.getCurrentActivity().getRequestedOrientation();
+        defaultOrientation = TestUtils.getCurrentOrientation(solo);
     }
 
     public void test01UserListShouldContainMeOnLogon() {
@@ -144,7 +144,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void tearDown() {
         client.logoff();
-        TestUtils.resetOrientation(solo, defaultOrientation);
+        TestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }
 

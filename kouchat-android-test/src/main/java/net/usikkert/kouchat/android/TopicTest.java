@@ -61,7 +61,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         client = new TestClient();
         messages = client.logon();
         me = Settings.getSettings().getMe();
-        defaultOrientation = solo.getCurrentActivity().getRequestedOrientation();
+        defaultOrientation = TestUtils.getCurrentOrientation(solo);
     }
 
     public void test01OtherClientSettingTopicIsShownInChatAndTitle() throws CommandException {
@@ -106,7 +106,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
     public void tearDown() {
         client.logoff();
-        TestUtils.resetOrientation(solo, defaultOrientation);
+        TestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }
 }

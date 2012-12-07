@@ -49,7 +49,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void setUp() {
         solo = new Solo(getInstrumentation(), getActivity());
-        defaultOrientation = solo.getCurrentActivity().getRequestedOrientation();
+        defaultOrientation = TestUtils.getCurrentOrientation(solo);
     }
 
     public void test01OwnMessageIsShownInChat() {
@@ -138,7 +138,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void tearDown() {
-        TestUtils.resetOrientation(solo, defaultOrientation);
+        TestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }
 }
