@@ -4,7 +4,7 @@
   <groupId>net.usikkert.kouchat</groupId>
   <artifactId>kouchat-android</artifactId>
   <packaging>pom</packaging>
-  <version>0.6.0</version>
+  <version>0.7.0-SNAPSHOT</version>
   <name>KouChat for Android</name>
   <url>http://kouchat.googlecode.com/</url>
   <description>
@@ -45,7 +45,7 @@
   <scm>
     <connection>scm:git:file://${basedir}/</connection>
     <url>https://github.com/blurpy/kouchat-android/blob/master/</url>
-    <tag>kouchat-android-0.6.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
