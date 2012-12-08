@@ -1,7 +1,7 @@
 
 - KouChat CHANGES
 
-* version 0.6.0 (xx.xx.2012)
+* version 0.6.0 (08.12.2012)
   - Imported backend code from KouChat v1.2.0 for desktop
   - Changed license from GPL v3 to LGPL v3
   - Added support for private chat
