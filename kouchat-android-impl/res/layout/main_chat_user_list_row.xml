@@ -3,14 +3,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:paddingBottom="6sp"
-              android:paddingTop="6sp">
+              android:paddingBottom="7sp"
+              android:paddingTop="7sp">
 
   <ImageView
       android:id="@+id/mainChatUserListIcon"
       android:layout_width="wrap_content"
       android:layout_height="fill_parent"
-      android:padding="5sp"
+      android:paddingLeft="5sp"
+      android:paddingRight="4sp"
       android:src="@drawable/dot"/>
 
   <TextView
