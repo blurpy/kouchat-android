@@ -2,9 +2,10 @@
 - KouChat v0.7.0 README
 
 KouChat is a simple serverless chat client for local area networks.
+It's written in Java, and is free software.
 
 This is the Android version of KouChat.
-The goal is to implement the same features as the desktop version at http://kouchat.googlecode.com/.
+The goal is to implement the same features as the desktop version.
 
 Requirements: Android v2.3.3 or newer.
 
@@ -13,8 +14,10 @@ Enjoy :)
 
 
 Copyright 2006-2012 Christian Ihle
-Source and graphics available under the GNU LGPLv3. See COPYING for details.
-https://github.com/blurpy/kouchat-android
+http://kouchat.googlecode.com/
+
+Source and graphics available under the GNU LGPL v3.
+See COPYING for details.
 
 error.wav is created by Nuno Povoa
 and is part of the Oxygen theme (http://www.oxygen-icons.org/),
