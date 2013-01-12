@@ -40,11 +40,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.Layout;
-import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
-import android.text.style.ForegroundColorSpan;
-import android.text.util.Linkify;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -276,13 +273,10 @@ public class MainChatController extends Activity {
         return new Intent(this, ChatService.class);
     }
 
-    public void appendToChat(final String message, final int color) {
+    public void appendToChat(final CharSequence message) {
         runOnUiThread(new Runnable() {
             public void run() {
-                final SpannableStringBuilder builder = new SpannableStringBuilder(message + "\n");
-                builder.setSpan(new ForegroundColorSpan(color), 0, message.length(), 0);
-                Linkify.addLinks(builder, Linkify.WEB_URLS);
-                mainChatView.append(builder);
+                mainChatView.append(message);
                 scrollMainChatViewToBottom();
             }
         });
@@ -296,7 +290,6 @@ public class MainChatController extends Activity {
 
     public void updateChat(final CharSequence savedChat) {
         mainChatView.setText(savedChat);
-        Linkify.addLinks(mainChatView, Linkify.WEB_URLS);
 
         // Run this after 1 second, because right after a rotate the layout is null and it's not possible to scroll yet
         new Handler().postDelayed(new Runnable() {

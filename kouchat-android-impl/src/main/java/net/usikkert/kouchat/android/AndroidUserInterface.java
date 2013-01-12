@@ -47,6 +47,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.text.util.Linkify;
 import android.widget.Toast;
 
 /**
@@ -176,10 +177,12 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     public void appendToChat(final String message, final int color) {
         final SpannableStringBuilder builder = new SpannableStringBuilder(message + "\n");
         builder.setSpan(new ForegroundColorSpan(color), 0, message.length(), 0);
+        Linkify.addLinks(builder, Linkify.WEB_URLS);
+
         savedChat.append(builder);
 
         if (mainChatController != null) {
-            mainChatController.appendToChat(message, color);
+            mainChatController.appendToChat(builder);
         }
     }
 
