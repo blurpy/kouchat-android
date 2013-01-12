@@ -38,11 +38,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.Layout;
-import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
-import android.text.style.ForegroundColorSpan;
-import android.text.util.Linkify;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -216,9 +213,8 @@ public class PrivateChatController extends Activity {
         androidUserInterface.activatedPrivChat(user);
     }
 
-    public void updatePrivateChat(final SpannableStringBuilder savedChat) {
+    public void updatePrivateChat(final CharSequence savedChat) {
         privateChatView.setText(savedChat);
-        Linkify.addLinks(privateChatView, Linkify.WEB_URLS);
 
         // Run this after 1 second, because right after a rotate the layout is null and it's not possible to scroll yet
         new Handler().postDelayed(new Runnable() {
@@ -229,13 +225,10 @@ public class PrivateChatController extends Activity {
         }, 1000);
     }
 
-    public void appendToPrivateChat(final String message, final int color) {
+    public void appendToPrivateChat(final CharSequence privateMessage) {
         runOnUiThread(new Runnable() {
             public void run() {
-                final SpannableStringBuilder builder = new SpannableStringBuilder(message + "\n");
-                builder.setSpan(new ForegroundColorSpan(color), 0, message.length(), 0);
-                Linkify.addLinks(builder, Linkify.WEB_URLS);
-                privateChatView.append(builder);
+                privateChatView.append(privateMessage);
                 scrollPrivateChatViewToBottom();
             }
         });

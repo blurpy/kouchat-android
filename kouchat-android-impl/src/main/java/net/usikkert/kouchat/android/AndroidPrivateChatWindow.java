@@ -30,6 +30,7 @@ import net.usikkert.kouchat.util.Validate;
 
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.text.util.Linkify;
 
 /**
  * Represents a private chat window with a user.
@@ -65,10 +66,12 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
     public void appendToPrivateChat(final String privateMessage, final int color) {
         final SpannableStringBuilder builder = new SpannableStringBuilder(privateMessage + "\n");
         builder.setSpan(new ForegroundColorSpan(color), 0, privateMessage.length(), 0);
+        Linkify.addLinks(builder, Linkify.WEB_URLS);
+
         savedPrivateChat.append(builder);
 
         if (privateChatController != null) {
-            privateChatController.appendToPrivateChat(privateMessage, color);
+            privateChatController.appendToPrivateChat(builder);
         }
     }
 
