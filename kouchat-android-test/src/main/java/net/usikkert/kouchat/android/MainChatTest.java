@@ -133,6 +133,15 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(3000); // See if message number 30 is visible
     }
 
+    // Must be verified manually
+    public void test07OrientationSwitchShouldKeepSmileys() {
+        TestUtils.writeLine(solo, ":) :( :p :D ;) :O :@ :S ;( :$ 8)");
+
+        solo.sleep(2000);
+        TestUtils.switchOrientation(solo);
+        solo.sleep(2000);
+    }
+
     public void test99Quit() {
         TestUtils.quit(solo);
     }
