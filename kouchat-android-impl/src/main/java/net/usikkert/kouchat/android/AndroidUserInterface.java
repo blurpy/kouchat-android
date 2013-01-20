@@ -22,10 +22,14 @@
 
 package net.usikkert.kouchat.android;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.smiley.Smiley;
+import net.usikkert.kouchat.android.smiley.SmileyLocator;
+import net.usikkert.kouchat.android.smiley.SmileyMap;
 import net.usikkert.kouchat.event.UserListListener;
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
@@ -40,13 +44,17 @@ import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.ui.ChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.Tools;
+import net.usikkert.kouchat.util.Validate;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.text.util.Linkify;
 import android.widget.Toast;
 
@@ -62,11 +70,18 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     private final Controller controller;
     private final UserList userList;
     private final User me;
+    private final SmileyLocator smileyLocator;
+    private final SmileyMap smileyMap;
 
     private MainChatController mainChatController;
 
-    public AndroidUserInterface() {
+    public AndroidUserInterface(final Context context) {
+        Validate.notNull(context, "Context can not be null");
+
         System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
+
+        smileyMap = new SmileyMap(context);
+        smileyLocator = new SmileyLocator(smileyMap.getSmileyCodes());
 
         savedChat = new SpannableStringBuilder();
         msgController = new MessageController(this, this);
@@ -177,12 +192,24 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     public void appendToChat(final String message, final int color) {
         final SpannableStringBuilder builder = new SpannableStringBuilder(message + "\n");
         builder.setSpan(new ForegroundColorSpan(color), 0, message.length(), 0);
+        addSmileys(message, builder);
         Linkify.addLinks(builder, Linkify.WEB_URLS);
 
         savedChat.append(builder);
 
         if (mainChatController != null) {
             mainChatController.appendToChat(builder);
+        }
+    }
+
+    private void addSmileys(final String message, final SpannableStringBuilder builder) {
+        final List<Smiley> smileys = smileyLocator.findSmileys(message);
+
+        for (final Smiley smiley : smileys) {
+            final Drawable drawableSmiley = smileyMap.getSmiley(smiley.getCode());
+            final ImageSpan smileySpan = new ImageSpan(drawableSmiley, ImageSpan.ALIGN_BOTTOM);
+
+            builder.setSpan(smileySpan, smiley.getStartPosition(), smiley.getEndPosition(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         }
     }
 
@@ -206,9 +233,9 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         return controller.isLoggedOn();
     }
 
-    public void registerMainChatController(final MainChatController mainChatController) {
-        this.mainChatController = mainChatController;
-        mainChatController.updateChat(savedChat);
+    public void registerMainChatController(final MainChatController theMainChatController) {
+        this.mainChatController = theMainChatController;
+        theMainChatController.updateChat(savedChat);
 
         for (int i = 0; i < userList.size(); i++) {
             userAdded(i);

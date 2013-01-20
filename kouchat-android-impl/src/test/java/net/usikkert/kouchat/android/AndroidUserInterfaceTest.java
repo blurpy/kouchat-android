@@ -51,7 +51,7 @@ public class AndroidUserInterfaceTest {
 
     @Before
     public void setUp() {
-        androidUserInterface = new AndroidUserInterface();
+        androidUserInterface = new AndroidUserInterface(new MainChatController());
 
         TestUtils.setFieldValue(androidUserInterface, "me", new User("Me", 1234));
 

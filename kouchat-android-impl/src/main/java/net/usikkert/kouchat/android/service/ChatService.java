@@ -35,14 +35,11 @@ import android.os.IBinder;
  */
 public class ChatService extends Service {
 
-    private final AndroidUserInterface androidUserInterface;
-
-    public ChatService() {
-        androidUserInterface = new AndroidUserInterface();
-    }
+    private AndroidUserInterface androidUserInterface;
 
     @Override
     public void onCreate() {
+        androidUserInterface = new AndroidUserInterface(this);
         androidUserInterface.setNickNameFromSettings(this);
         super.onCreate();
     }
