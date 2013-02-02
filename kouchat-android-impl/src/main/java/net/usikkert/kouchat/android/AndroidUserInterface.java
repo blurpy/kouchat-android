@@ -60,6 +60,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     private final UserList userList;
     private final User me;
     private final MessageStylerWithHistory messageStyler;
+    private final Context context;
 
     private MainChatController mainChatController;
 
@@ -68,6 +69,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
 
         System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
 
+        this.context = context;
         messageStyler = new MessageStylerWithHistory(context);
         msgController = new MessageController(this, this);
         controller = new Controller(this);
@@ -150,7 +152,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     @Override
     public void createPrivChat(final User user) {
         if (user.getPrivchat() == null) {
-            user.setPrivchat(new AndroidPrivateChatWindow(user));
+            user.setPrivchat(new AndroidPrivateChatWindow(context, user));
         }
 
         if (user.getPrivateChatLogger() == null) {
@@ -278,7 +280,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         }
     }
 
-    public void setNickNameFromSettings(final Context context) {
+    public void setNickNameFromSettings(final Context context) { // TODO
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         final String nickNameKey = context.getString(R.string.settings_key_nick_name);
         final String nickName = getNickNameFromSettings(preferences, nickNameKey);
@@ -296,7 +298,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         return Integer.toString(me.getCode());
     }
 
-    public boolean changeNickName(final Context context, final String nick) {
+    public boolean changeNickName(final Context context, final String nick) { // TODO
         final String trimNick = nick.trim();
 
         if (trimNick.equals(me.getNick())) {
@@ -318,7 +320,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         return false;
     }
 
-    private boolean doChangeNickName(final Context context, final String trimNick) {
+    private boolean doChangeNickName(final Context context, final String trimNick) { // TODO
         final AsyncTask<Void, Void, Boolean> changeNickNameTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
             public Boolean doInBackground(final Void... voids) {

@@ -27,6 +27,7 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.ui.PrivateChatWindow;
 import net.usikkert.kouchat.util.Validate;
 
+import android.content.Context;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.util.Linkify;
@@ -43,7 +44,8 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
 
     private PrivateChatController privateChatController;
 
-    public AndroidPrivateChatWindow(final User user) {
+    public AndroidPrivateChatWindow(final Context context, final User user) {
+        Validate.notNull(context, "Context can not be null");
         Validate.notNull(user, "User can not be null");
 
         this.user = user;
