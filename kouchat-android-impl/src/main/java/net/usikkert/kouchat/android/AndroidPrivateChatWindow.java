@@ -23,7 +23,6 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.PrivateChatController;
-import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.ui.PrivateChatWindow;
 import net.usikkert.kouchat.util.Validate;
@@ -40,22 +39,22 @@ import android.text.util.Linkify;
 public class AndroidPrivateChatWindow implements PrivateChatWindow {
 
     private final User user;
-    private final Controller controller;
     private final SpannableStringBuilder savedPrivateChat;
 
     private PrivateChatController privateChatController;
 
-    public AndroidPrivateChatWindow(final User user, final Controller controller) {
+    public AndroidPrivateChatWindow(final User user) {
+        Validate.notNull(user, "User can not be null");
+
         this.user = user;
-        this.controller = controller;
         savedPrivateChat = new SpannableStringBuilder();
     }
 
-    public void registerPrivateChatController(final PrivateChatController privateChatController) {
-        Validate.notNull(privateChatController, "Private chat controller can not be null");
+    public void registerPrivateChatController(final PrivateChatController thePrivateChatController) {
+        Validate.notNull(thePrivateChatController, "Private chat controller can not be null");
 
-        this.privateChatController = privateChatController;
-        privateChatController.updatePrivateChat(savedPrivateChat);
+        this.privateChatController = thePrivateChatController;
+        thePrivateChatController.updatePrivateChat(savedPrivateChat);
     }
 
     public void unregisterPrivateChatController() {

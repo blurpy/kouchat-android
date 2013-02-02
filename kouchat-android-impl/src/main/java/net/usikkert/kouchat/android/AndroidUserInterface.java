@@ -150,7 +150,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     @Override
     public void createPrivChat(final User user) {
         if (user.getPrivchat() == null) {
-            user.setPrivchat(new AndroidPrivateChatWindow(user, controller));
+            user.setPrivchat(new AndroidPrivateChatWindow(user));
         }
 
         if (user.getPrivateChatLogger() == null) {
