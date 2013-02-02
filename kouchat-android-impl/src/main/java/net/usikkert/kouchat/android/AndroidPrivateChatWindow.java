@@ -28,9 +28,6 @@ import net.usikkert.kouchat.ui.PrivateChatWindow;
 import net.usikkert.kouchat.util.Validate;
 
 import android.content.Context;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.util.Linkify;
 
 /**
  * Represents a private chat window with a user.
@@ -40,7 +37,7 @@ import android.text.util.Linkify;
 public class AndroidPrivateChatWindow implements PrivateChatWindow {
 
     private final User user;
-    private final SpannableStringBuilder savedPrivateChat;
+    private final MessageStylerWithHistory messageStyler;
 
     private PrivateChatController privateChatController;
 
@@ -49,14 +46,15 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
         Validate.notNull(user, "User can not be null");
 
         this.user = user;
-        savedPrivateChat = new SpannableStringBuilder();
+
+        messageStyler = new MessageStylerWithHistory(context);
     }
 
     public void registerPrivateChatController(final PrivateChatController thePrivateChatController) {
         Validate.notNull(thePrivateChatController, "Private chat controller can not be null");
 
         this.privateChatController = thePrivateChatController;
-        thePrivateChatController.updatePrivateChat(savedPrivateChat);
+        thePrivateChatController.updatePrivateChat(messageStyler.getHistory());
     }
 
     public void unregisterPrivateChatController() {
@@ -65,14 +63,10 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
 
     @Override
     public void appendToPrivateChat(final String privateMessage, final int color) {
-        final SpannableStringBuilder builder = new SpannableStringBuilder(privateMessage + "\n");
-        builder.setSpan(new ForegroundColorSpan(color), 0, privateMessage.length(), 0);
-        Linkify.addLinks(builder, Linkify.WEB_URLS);
-
-        savedPrivateChat.append(builder);
+        final CharSequence styledPrivateMessage = messageStyler.styleAndAppend(privateMessage, color);
 
         if (privateChatController != null) {
-            privateChatController.appendToPrivateChat(builder);
+            privateChatController.appendToPrivateChat(styledPrivateMessage);
         }
     }
 

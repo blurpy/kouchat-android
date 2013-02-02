@@ -164,7 +164,18 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(3000); // See if message number 30 is visible
     }
 
-    public void test07ShouldShowNotificationOnNewPrivateMessageAndRemoveNotificationWhenMessageIsSeen() {
+    // Must be verified manually
+    public void test07OrientationSwitchShouldKeepSmileys() {
+        openPrivateChat();
+
+        TestUtils.writeLine(solo, ":) :( :p :D ;) :O :@ :S ;( :$ 8)");
+
+        solo.sleep(2000);
+        TestUtils.switchOrientation(solo);
+        solo.sleep(2000);
+    }
+
+    public void test08ShouldShowNotificationOnNewPrivateMessageAndRemoveNotificationWhenMessageIsSeen() {
         // Starts with a dot
         assertEquals(dot, getBitmapForTestUser());
 
@@ -188,7 +199,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         openPrivateChat();
     }
 
-    public void test08ShouldNotBeAbleToOpenPrivateChatWithYourself() {
+    public void test09ShouldNotBeAbleToOpenPrivateChatWithYourself() {
         solo.sleep(500);
         solo.clickInList(1);
         solo.sleep(500);
@@ -196,7 +207,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.assertCurrentActivity("Should have stayed in the main chat", MainChatController.class);
     }
 
-    public void test09GettingPrivateMessageWhileKouChatIsHiddenShouldShowNotificationWhenVisibleAgain() {
+    public void test10GettingPrivateMessageWhileKouChatIsHiddenShouldShowNotificationWhenVisibleAgain() {
         // Verify fresh start
         assertEquals(dot, getBitmapForTestUser());
 
@@ -218,7 +229,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         openPrivateChat();
     }
 
-    public void test10GettingPrivateMessageWhilePrivateChatIsHiddenAndReturningToMainChatShouldShowNotification() {
+    public void test11GettingPrivateMessageWhilePrivateChatIsHiddenAndReturningToMainChatShouldShowNotification() {
         openPrivateChat();
 
         // Pretend to click "home" while in the private chat
@@ -235,7 +246,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertEquals(envelope, getBitmapForTestUser());
     }
 
-    public void test11GettingPrivateMessageWhilePrivateChatIsHiddenAndReturningToPrivateChatShouldHideNotification() {
+    public void test12GettingPrivateMessageWhilePrivateChatIsHiddenAndReturningToPrivateChatShouldHideNotification() {
         openPrivateChat();
 
         // Pretend to turn off the screen while in the private chat
@@ -256,7 +267,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     // A more complicated scenario
-    public void test12PrivateChattingWithSeveralUsersShouldCommunicateCorrectly() {
+    public void test13PrivateChattingWithSeveralUsersShouldCommunicateCorrectly() {
         final TestClient client2 = new TestClient("Test2", 12345679);
         final Messages messages2 = client2.logon();
         final PrivateMessageResponderMock privateMessageResponder2 = client2.getPrivateMessageResponderMock();
@@ -318,7 +329,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         client2.logoff();
     }
 
-    public void test13SuspendingPrivateChatWithOneUserAndStartingANewChatWithAnotherUserShouldShownTheCorrectMessage() {
+    public void test14SuspendingPrivateChatWithOneUserAndStartingANewChatWithAnotherUserShouldShownTheCorrectMessage() {
         final TestClient client2 = new TestClient("Test2", 12345679);
         final Messages messages2 = client2.logon();
         solo.sleep(1000);
@@ -351,7 +362,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         client2.logoff();
     }
 
-    public void test14ShouldNotBeAbleToSendPrivateMessageToUserThatGoesAway() {
+    public void test15ShouldNotBeAbleToSendPrivateMessageToUserThatGoesAway() {
         openPrivateChat();
 
         solo.sleep(500);
@@ -377,7 +388,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(privateMessageResponder.gotMessageArrived("You are back!"));
     }
 
-    public void test15ShouldNotBeAbleToSendPrivateMessageToUserThatIsAway() {
+    public void test16ShouldNotBeAbleToSendPrivateMessageToUserThatIsAway() {
         solo.sleep(500);
         messages.sendAwayMessage("Going away now");
         solo.sleep(500);
@@ -394,7 +405,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
     }
 
-    public void test16ShouldNotBeAbleToSendPrivateMessageToUserThatIsOffline() {
+    public void test17ShouldNotBeAbleToSendPrivateMessageToUserThatIsOffline() {
         openPrivateChat();
 
         solo.sleep(500);

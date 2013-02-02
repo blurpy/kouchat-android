@@ -70,6 +70,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
 
         this.context = context;
+
         messageStyler = new MessageStylerWithHistory(context);
         msgController = new MessageController(this, this);
         controller = new Controller(this);
