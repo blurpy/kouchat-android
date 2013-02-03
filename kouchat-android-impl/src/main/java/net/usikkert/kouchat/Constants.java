@@ -1,6 +1,6 @@
 
 /***************************************************************************
- *   Copyright 2006-2012 by Christian Ihle                                 *
+ *   Copyright 2006-2013 by Christian Ihle                                 *
  *   kontakt@usikkert.net                                                  *
  *                                                                         *
  *   This file is part of KouChat.                                         *
@@ -52,7 +52,7 @@ public interface Constants {
     /**
      * Copyright from year, to year.
      */
-    String APP_COPYRIGHT_YEARS = "2006-2012";
+    String APP_COPYRIGHT_YEARS = "2006-2013";
 
     /**
      * Name of the author of this application.
