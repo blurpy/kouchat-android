@@ -20,8 +20,9 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android;
+package net.usikkert.kouchat.android.testcase;
 
+import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.CommandException;

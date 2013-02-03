@@ -49,7 +49,7 @@
         <configuration>
           <test>
             <classes>
-              <class>net.usikkert.kouchat.android.NoTests</class>
+              <class>net.usikkert.kouchat.android.testsuite.NoTests</class>
             </classes>
           </test>
         </configuration>

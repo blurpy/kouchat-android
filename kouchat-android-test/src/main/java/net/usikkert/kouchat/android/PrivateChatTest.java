@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android;
 
+import net.usikkert.kouchat.android.testcase.PrivateChatTestCase;
 import net.usikkert.kouchat.util.TestUtils;
 
 /**

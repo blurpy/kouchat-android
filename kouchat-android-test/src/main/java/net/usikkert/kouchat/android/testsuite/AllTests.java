@@ -20,19 +20,37 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android;
+package net.usikkert.kouchat.android.testsuite;
+
+import net.usikkert.kouchat.android.AboutDialogTest;
+import net.usikkert.kouchat.android.MainChatTest;
+import net.usikkert.kouchat.android.PrivateChatStateTest;
+import net.usikkert.kouchat.android.PrivateChatTest;
+import net.usikkert.kouchat.android.SettingsTest;
+import net.usikkert.kouchat.android.TopicTest;
+import net.usikkert.kouchat.android.UserListTest;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * An empty test suite. Used when releasing, because the tests are not a 100% "stable".
+ * Runs all the implemented tests.
  *
  * @author Christian Ihle
  */
-public class NoTests extends TestSuite {
+public class AllTests extends TestSuite {
 
     public static Test suite() {
-        return new TestSuite("No Android tests");
+        final TestSuite testSuite = new TestSuite("All Android tests");
+
+        testSuite.addTestSuite(AboutDialogTest.class);
+        testSuite.addTestSuite(MainChatTest.class);
+        testSuite.addTestSuite(PrivateChatTest.class);
+        testSuite.addTestSuite(PrivateChatStateTest.class);
+        testSuite.addTestSuite(SettingsTest.class);
+        testSuite.addTestSuite(TopicTest.class);
+        testSuite.addTestSuite(UserListTest.class);
+
+        return testSuite;
     }
 }
