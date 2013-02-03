@@ -91,8 +91,19 @@ public class PrivateChatTest extends PrivateChatTestCase {
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
     }
 
+    // Must be verified manually
+    public void test06OrientationSwitchShouldKeepSmileys() {
+        openPrivateChat();
+
+        TestUtils.writeLine(solo, ":) :( :p :D ;) :O :@ :S ;( :$ 8)");
+
+        solo.sleep(2000);
+        TestUtils.switchOrientation(solo);
+        solo.sleep(2000);
+    }
+
     // Must be verified manually. I haven't found an automated way to verify scrolling yet.
-    public void test06OrientationSwitchShouldScrollToBottom() {
+    public void test07OrientationSwitchShouldScrollToBottom() {
         openPrivateChat();
 
         for (int i = 1; i <= 30; i++) {
@@ -113,16 +124,5 @@ public class PrivateChatTest extends PrivateChatTestCase {
 
         TestUtils.switchOrientation(solo);
         solo.sleep(3000); // See if message number 30 is visible
-    }
-
-    // Must be verified manually
-    public void test07OrientationSwitchShouldKeepSmileys() {
-        openPrivateChat();
-
-        TestUtils.writeLine(solo, ":) :( :p :D ;) :O :@ :S ;( :$ 8)");
-
-        solo.sleep(2000);
-        TestUtils.switchOrientation(solo);
-        solo.sleep(2000);
     }
 }
