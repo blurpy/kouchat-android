@@ -40,7 +40,7 @@ public class ChatService extends Service {
     @Override
     public void onCreate() {
         androidUserInterface = new AndroidUserInterface(this);
-        androidUserInterface.setNickNameFromSettings(this);
+        androidUserInterface.setNickNameFromSettings();
         super.onCreate();
     }
 

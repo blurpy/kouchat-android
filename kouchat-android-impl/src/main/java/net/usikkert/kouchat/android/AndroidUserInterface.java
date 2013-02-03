@@ -281,7 +281,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         }
     }
 
-    public void setNickNameFromSettings(final Context context) { // TODO
+    public void setNickNameFromSettings() {
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         final String nickNameKey = context.getString(R.string.settings_key_nick_name);
         final String nickName = getNickNameFromSettings(preferences, nickNameKey);
@@ -299,7 +299,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         return Integer.toString(me.getCode());
     }
 
-    public boolean changeNickName(final Context context, final String nick) { // TODO
+    public boolean changeNickName(final String nick) {
         final String trimNick = nick.trim();
 
         if (trimNick.equals(me.getNick())) {
@@ -315,13 +315,13 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         }
 
         else {
-            return doChangeNickName(context, trimNick);
+            return doChangeNickName(trimNick);
         }
 
         return false;
     }
 
-    private boolean doChangeNickName(final Context context, final String trimNick) { // TODO
+    private boolean doChangeNickName(final String trimNick) {
         final AsyncTask<Void, Void, Boolean> changeNickNameTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
             public Boolean doInBackground(final Void... voids) {

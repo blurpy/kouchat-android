@@ -74,7 +74,7 @@ public class SettingsController extends PreferenceActivity
      */
     @Override
     public boolean onPreferenceChange(final Preference preference, final Object value) {
-        return androidUserInterface.changeNickName(this, value.toString());
+        return androidUserInterface.changeNickName(value.toString());
     }
 
     /**
