@@ -23,6 +23,8 @@
 package net.usikkert.kouchat.android.controller;
 
 import android.text.Layout;
+import android.text.method.LinkMovementMethod;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 /**
@@ -63,5 +65,26 @@ public final class ControllerUtils {
         else {
             textView.scrollTo(0, 0);
         }
+    }
+
+    /**
+     * Makes sure you can scroll the text view up and down using touch.
+     *
+     * @param textView The text view to make scrollable.
+     */
+    public static void makeTextViewScrollable(final TextView textView) {
+        textView.setMovementMethod(new ScrollingMovementMethod());
+    }
+
+    /**
+     * Makes sure the links you click on opens in the browser.
+     *
+     * @param textView The text view to activate link clicking on.
+     */
+    public static void makeLinksClickable(final TextView textView) {
+        // This needs to be done after making the text view scrollable, or else the links wont be clickable.
+        // This also makes the view scrollable, but setting both movement methods seems to make the scrolling
+        // behave better.
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }

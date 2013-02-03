@@ -37,8 +37,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.text.method.LinkMovementMethod;
-import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -78,8 +76,8 @@ public class PrivateChatController extends Activity {
         bindService(chatServiceIntent, serviceConnection, BIND_NOT_FOREGROUND);
 
         registerPrivateChatInputListener();
-        makePrivateChatViewScrollable();
-        makeLinksClickable();
+        ControllerUtils.makeTextViewScrollable(privateChatView);
+        ControllerUtils.makeLinksClickable(privateChatView);
     }
 
     @Override
@@ -147,17 +145,6 @@ public class PrivateChatController extends Activity {
                 return false;
             }
         });
-    }
-
-    private void makePrivateChatViewScrollable() {
-        privateChatView.setMovementMethod(new ScrollingMovementMethod());
-    }
-
-    private void makeLinksClickable() {
-        // This needs to be done after making the text view scrollable, or else the links wont be clickable.
-        // This also makes the view scrollable, but setting both movement methods seems to make the scrolling
-        // behave better.
-        privateChatView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void sendPrivateMessage(final String privateMessage) {
