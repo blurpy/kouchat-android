@@ -38,8 +38,6 @@ import net.usikkert.kouchat.util.Validate;
  */
 public class SmileyLocator {
 
-    private static final int SMILEY_GROUP = 2;
-
     private final Set<Pattern> smileyPatterns;
 
     /**
@@ -77,21 +75,30 @@ public class SmileyLocator {
     }
 
     private Smiley createSmileyFromMatch(final Matcher matcher) {
-        return new Smiley(matcher.group(SMILEY_GROUP), matcher.start(SMILEY_GROUP), matcher.end(SMILEY_GROUP));
+        return new Smiley(matcher.group(), matcher.start(), matcher.end());
     }
 
     /**
      * Creates regex patterns required to locate each of the smileys in the set of smiley codes.
      *
-     * Group 1: beginning of line or whitespace
-     * Group 2: smiley
-     * Group 3: whitespace or end of line
+     * <pre>
+     *   Group 1: beginning of line or whitespace (not consumed)
+     *   Group 2: smiley
+     *   Group 3: whitespace or end of line (not consumed)
+     * </pre>
+     *
+     * <p>Uses lookahead (<code>?<=</code>) and lookbehind (<code>?=</code>).
+     * See http://www.regular-expressions.info/lookaround.html.</p>
+     *
+     * <p>This makes it possible to require a space between smileys, without the space being seen as part of the
+     * match. If the space became part of the match, then it would require 2 spaces to match 2 smileys
+     * next to each other.</p>
      *
      * @param smileyCodes The smileys to create patterns for.
      */
     private void addSmileyPatterns(final Set<String> smileyCodes) {
         for (final String smileyCode : smileyCodes) {
-            smileyPatterns.add(Pattern.compile("(^|\\s)(" + Pattern.quote(smileyCode) + ")(\\s|$)"));
+            smileyPatterns.add(Pattern.compile("(?<=^|\\s)(" + Pattern.quote(smileyCode) + ")(?=\\s|$)"));
         }
     }
 }

@@ -103,7 +103,7 @@ public class SmileyLocatorTest {
     }
 
     @Test
-    public void findSmileysShouldFindMultipleSmileys() {
+    public void findSmileysShouldFindMultipleSmileysWithOtherCharactersBetween() {
         final List<Smiley> smileys = locator.findSmileys(":) - :D - :(");
 
         assertEquals(3, smileys.size());
@@ -114,7 +114,18 @@ public class SmileyLocatorTest {
     }
 
     @Test
-    public void findSmileysShouldFindMultipleOfTheSameSmiley() {
+    public void findSmileysShouldFindMultipleSmileysWithJustSpaceBetween() {
+        final List<Smiley> smileys = locator.findSmileys(":) :D :(");
+
+        assertEquals(3, smileys.size());
+
+        verifySmiley(smileys, ":)", 0, 2);
+        verifySmiley(smileys, ":D", 3, 5);
+        verifySmiley(smileys, ":(", 6, 8);
+    }
+
+    @Test
+    public void findSmileysShouldFindMultipleOfTheSameSmileyWithOtherCharactersBetween() {
         final List<Smiley> smileys = locator.findSmileys(":) - :) - :)");
 
         assertEquals(3, smileys.size());
@@ -122,6 +133,28 @@ public class SmileyLocatorTest {
         verifySmiley(smileys, ":)", 0, 2);
         verifySmiley(smileys, ":)", 5, 7);
         verifySmiley(smileys, ":)", 10, 12);
+    }
+
+    @Test
+    public void findSmileysShouldFindMultipleOfTheSameSmileyWithJustSpaceBetween() {
+        final List<Smiley> smileys = locator.findSmileys(":) :) :)");
+
+        assertEquals(3, smileys.size());
+
+        verifySmiley(smileys, ":)", 0, 2);
+        verifySmiley(smileys, ":)", 3, 5);
+        verifySmiley(smileys, ":)", 6, 8);
+    }
+
+    @Test
+    public void findSmileysShouldFindMultipleOfTheSameSmileyWithSeveralSpacesBetween() {
+        final List<Smiley> smileys = locator.findSmileys(":)  :)   :)");
+
+        assertEquals(3, smileys.size());
+
+        verifySmiley(smileys, ":)", 0, 2);
+        verifySmiley(smileys, ":)", 4, 6);
+        verifySmiley(smileys, ":)", 9, 11);
     }
 
     @Test
