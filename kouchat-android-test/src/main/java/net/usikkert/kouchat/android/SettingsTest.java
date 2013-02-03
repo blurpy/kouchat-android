@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -61,13 +62,13 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         // Change nick name to Testing in the popup dialog
         TestUtils.hideSoftwareKeyboard(solo);
         solo.clearEditText(0);
-        solo.enterText(0, "Testing");
+        solo.enterText(0, "Kou");
         solo.clickOnButton("OK");
-        assertTrue(solo.searchText("Testing"));
+        assertTrue(solo.searchText("Kou"));
 
         // Go back to main chat and check result
         TestUtils.goBack(solo);
-        assertTrue(solo.searchText("You changed nick to Testing"));
+        assertTrue(solo.searchText("You changed nick to Kou"));
     }
 
     public void test02RestoreNickName() {
@@ -83,6 +84,27 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.clearEditText(0);
         solo.enterText(0, originalNickName);
         solo.clickOnButton("OK");
+    }
+
+    public void test03ChangingToNickNameInUseShouldOnlyShowToast() {
+        final TestClient client = new TestClient();
+        client.logon();
+
+        // Go to the Settings menu item and choose to set nick name
+        solo.sendKey(Solo.MENU);
+        solo.clickOnText("Settings");
+        solo.clickOnText("Set nick name");
+
+        // Change nick name back to the original value in the popup dialog
+        TestUtils.hideSoftwareKeyboard(solo);
+        solo.clearEditText(0);
+        solo.enterText(0, "Test");
+        solo.clickOnButton("OK");
+
+        assertTrue(solo.searchText("The nick name is in use by someone else.")); // Toast
+        assertFalse(solo.searchText("Test"));
+
+        client.logoff();
     }
 
     public void test99Quit() {
