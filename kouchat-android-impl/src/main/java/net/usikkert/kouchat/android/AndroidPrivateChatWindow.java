@@ -53,8 +53,8 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
     public void registerPrivateChatController(final PrivateChatController thePrivateChatController) {
         Validate.notNull(thePrivateChatController, "Private chat controller can not be null");
 
-        this.privateChatController = thePrivateChatController;
-        thePrivateChatController.updatePrivateChat(messageStyler.getHistory());
+        privateChatController = thePrivateChatController;
+        privateChatController.updatePrivateChat(messageStyler.getHistory());
     }
 
     public void unregisterPrivateChatController() {

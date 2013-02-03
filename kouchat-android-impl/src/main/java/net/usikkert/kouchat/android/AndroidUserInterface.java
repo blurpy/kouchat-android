@@ -206,8 +206,8 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     }
 
     public void registerMainChatController(final MainChatController theMainChatController) {
-        this.mainChatController = theMainChatController;
-        theMainChatController.updateChat(messageStyler.getHistory());
+        mainChatController = theMainChatController;
+        mainChatController.updateChat(messageStyler.getHistory());
 
         for (int i = 0; i < userList.size(); i++) {
             userAdded(i);

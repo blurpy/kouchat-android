@@ -31,7 +31,6 @@ import net.usikkert.kouchat.util.Validate;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
@@ -65,14 +64,15 @@ public class MessageStylerWithHistory {
      * @return The styled message.
      */
     public CharSequence styleAndAppend(final String message, final int color) {
-        final SpannableStringBuilder builder = new SpannableStringBuilder(message + "\n");
-        builder.setSpan(new ForegroundColorSpan(color), 0, message.length(), 0);
-        addSmileys(message, builder);
-        Linkify.addLinks(builder, Linkify.WEB_URLS);
+        final SpannableStringBuilder messageBuilder = new SpannableStringBuilder(message + "\n");
 
-        history.append(builder);
+        addColor(message, color, messageBuilder);
+        addSmileys(message, messageBuilder);
+        addLinks(messageBuilder);
 
-        return builder;
+        history.append(messageBuilder);
+
+        return messageBuilder;
     }
 
     /**
@@ -84,14 +84,22 @@ public class MessageStylerWithHistory {
         return history;
     }
 
-    private void addSmileys(final String message, final SpannableStringBuilder builder) {
+    private void addColor(final String message, final int color, final SpannableStringBuilder messageBuilder) {
+        messageBuilder.setSpan(new ForegroundColorSpan(color), 0, message.length(), 0);
+    }
+
+    private void addLinks(final SpannableStringBuilder messageBuilder) {
+        Linkify.addLinks(messageBuilder, Linkify.WEB_URLS);
+    }
+
+    private void addSmileys(final String message, final SpannableStringBuilder messageBuilder) {
         final List<Smiley> smileys = smileyLocator.findSmileys(message);
 
         for (final Smiley smiley : smileys) {
             final Drawable drawableSmiley = smileyMap.getSmiley(smiley.getCode());
             final ImageSpan smileySpan = new ImageSpan(drawableSmiley, ImageSpan.ALIGN_BOTTOM);
 
-            builder.setSpan(smileySpan, smiley.getStartPosition(), smiley.getEndPosition(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            messageBuilder.setSpan(smileySpan, smiley.getStartPosition(), smiley.getEndPosition(), 0);
         }
     }
 }
