@@ -38,6 +38,7 @@ public class AllTests extends TestSuite {
         testSuite.addTestSuite(AboutDialogTest.class);
         testSuite.addTestSuite(MainChatTest.class);
         testSuite.addTestSuite(PrivateChatTest.class);
+        testSuite.addTestSuite(PrivateChatStateTest.class);
         testSuite.addTestSuite(SettingsTest.class);
         testSuite.addTestSuite(TopicTest.class);
         testSuite.addTestSuite(UserListTest.class);
