@@ -23,62 +23,17 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
-import net.usikkert.kouchat.android.controller.PrivateChatController;
-import net.usikkert.kouchat.misc.CommandException;
-import net.usikkert.kouchat.misc.Settings;
-import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.PrivateMessageResponderMock;
 import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
-
-import com.jayway.android.robotium.solo.Solo;
-
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.test.ActivityInstrumentationTestCase2;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 /**
  * Test of private chat.
  *
  * @author Christian Ihle
  */
-public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatController> {
-
-    private static TestClient client;
-    private static PrivateMessageResponderMock privateMessageResponder;
-    private static Messages messages;
-
-    private Solo solo;
-
-    private User me;
-
-    private Bitmap envelope;
-    private Bitmap dot;
-    private int defaultOrientation;
-
-    public PrivateChatTest() {
-        super(MainChatController.class);
-    }
-
-    public void setUp() {
-        solo = new Solo(getInstrumentation(), getActivity());
-        me = Settings.getSettings().getMe();
-        envelope = getBitmap(R.drawable.envelope);
-        dot = getBitmap(R.drawable.dot);
-        defaultOrientation = TestUtils.getCurrentOrientation(solo);
-
-        // Making sure the test client only logs on once during all the tests
-        if (client == null) {
-            client = new TestClient();
-            privateMessageResponder = client.getPrivateMessageResponderMock();
-            messages = client.logon();
-        }
-
-        privateMessageResponder.resetMessages();
-    }
+public class PrivateChatTest extends PrivateChatTestCase {
 
     public void test01OwnPrivateMessageShouldBeShownInTheChat() {
         openPrivateChat();
@@ -419,68 +374,5 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         assertTrue(solo.searchText("You can not send a private chat message to a user that is offline"));
         assertFalse(privateMessageResponder.gotAnyMessage());
-    }
-
-    public void test99Quit() {
-        client.logoff();
-        TestUtils.quit(solo);
-    }
-
-    public void tearDown() {
-        TestUtils.setOrientation(solo, defaultOrientation);
-        solo.finishOpenedActivities();
-    }
-
-    private void openPrivateChat() {
-        openPrivateChat(2, 2, "Test");
-    }
-
-    private void openPrivateChat(final int numberOfUsers, final int userNumber, final String userName) {
-        solo.sleep(500);
-        assertEquals(numberOfUsers, solo.getCurrentListViews().get(0).getCount());
-        solo.clickInList(userNumber);
-        solo.sleep(500);
-
-        solo.assertCurrentActivity("Should have opened the private chat", PrivateChatController.class);
-        // To be sure we are chatting with the right user
-        assertEquals(userName + " - KouChat", solo.getCurrentActivity().getTitle());
-    }
-
-    private void sendPrivateMessage(final String privMsg) {
-        sendPrivateMessage(privMsg, messages);
-    }
-
-    private void sendPrivateMessage(final String privMsg, final Messages msg) {
-        try {
-            msg.sendPrivateMessage(privMsg, me);
-        } catch (CommandException e) {
-            throw new RuntimeException(e);
-        }
-
-        solo.sleep(500);
-    }
-
-    private Bitmap getBitmap(final int resourceId) {
-        final BitmapDrawable drawable = (BitmapDrawable) getActivity().getResources().getDrawable(resourceId);
-
-        return drawable.getBitmap();
-    }
-
-    private Bitmap getBitmapForTestUser() {
-        return getBitmapForUser(2, 2);
-    }
-
-    private Bitmap getBitmapForUser(final int numberOfUsers, final int userNumber) {
-        solo.sleep(1000);
-        assertEquals(numberOfUsers, solo.getCurrentListViews().get(0).getCount());
-        final LinearLayout row = (LinearLayout) solo.getCurrentListViews().get(0).getChildAt(userNumber - 1);
-        final ImageView imageAtRow = (ImageView) row.getChildAt(0);
-        final BitmapDrawable drawable = (BitmapDrawable) imageAtRow.getDrawable();
-
-        return drawable.getBitmap();
-    }
-
-    private void reopenMainChat() {
-        launchActivity(getInstrumentation().getTargetContext().getPackageName(), MainChatController.class, null);
     }
 }
