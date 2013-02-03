@@ -36,6 +36,11 @@ import net.usikkert.kouchat.util.TestUtils;
  */
 public class PrivateChatStateTest extends PrivateChatTestCase {
 
+    public void test001NoOp() {
+        // The first test seems to fail on the newest 2.3.3 emulator for some reason.
+        // Adding an empty test to work around the issue.
+    }
+
     public void test01ShouldShowNotificationOnNewPrivateMessageAndRemoveNotificationWhenMessageIsSeen() {
         // Starts with a dot
         assertEquals(dot, getBitmapForTestUser());
