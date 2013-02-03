@@ -53,17 +53,10 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
     public void test01NickNameCanBeChanged() {
         originalNickName = Settings.getSettings().getMe().getNick();
 
-        // Go to the Settings menu item and choose to set nick name
-        solo.sendKey(Solo.MENU);
-        solo.clickOnText("Settings");
-        solo.clickOnText("Set nick name");
+        clickOnChangeNickNameInTheSettings();
         assertTrue(solo.searchText("Set nick name"));
 
-        // Change nick name to Testing in the popup dialog
-        TestUtils.hideSoftwareKeyboard(solo);
-        solo.clearEditText(0);
-        solo.enterText(0, "Kou");
-        solo.clickOnButton("OK");
+        changeNickNameTo("Kou");
         assertTrue(solo.searchText("Kou"));
 
         // Go back to main chat and check result
@@ -74,32 +67,19 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
     public void test02RestoreNickName() {
         assertNotNull(originalNickName);
 
-        // Go to the Settings menu item and choose to set nick name
-        solo.sendKey(Solo.MENU);
-        solo.clickOnText("Settings");
-        solo.clickOnText("Set nick name");
+        clickOnChangeNickNameInTheSettings();
 
         // Change nick name back to the original value in the popup dialog
-        TestUtils.hideSoftwareKeyboard(solo);
-        solo.clearEditText(0);
-        solo.enterText(0, originalNickName);
-        solo.clickOnButton("OK");
+        changeNickNameTo(originalNickName);
+        assertTrue(solo.searchText(originalNickName));
     }
 
     public void test03ChangingToNickNameInUseShouldOnlyShowToast() {
         final TestClient client = new TestClient();
         client.logon();
 
-        // Go to the Settings menu item and choose to set nick name
-        solo.sendKey(Solo.MENU);
-        solo.clickOnText("Settings");
-        solo.clickOnText("Set nick name");
-
-        // Change nick name back to the original value in the popup dialog
-        TestUtils.hideSoftwareKeyboard(solo);
-        solo.clearEditText(0);
-        solo.enterText(0, "Test");
-        solo.clickOnButton("OK");
+        clickOnChangeNickNameInTheSettings();
+        changeNickNameTo("Test");
 
         assertTrue(solo.searchText("The nick name is in use by someone else.")); // Toast
         assertFalse(solo.searchText("Test"));
@@ -113,5 +93,19 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void tearDown() {
         solo.finishOpenedActivities();
+    }
+
+    private void clickOnChangeNickNameInTheSettings() {
+        // Go to the Settings menu item and choose to set nick name
+        solo.sendKey(Solo.MENU);
+        solo.clickOnText("Settings");
+        solo.clickOnText("Set nick name");
+    }
+
+    private void changeNickNameTo(final String nickName) {
+        TestUtils.hideSoftwareKeyboard(solo);
+        solo.clearEditText(0);
+        solo.enterText(0, nickName);
+        solo.clickOnButton("OK");
     }
 }
