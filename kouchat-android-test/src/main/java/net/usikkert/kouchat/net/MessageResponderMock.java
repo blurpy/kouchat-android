@@ -64,7 +64,7 @@ public class MessageResponderMock implements MessageResponder {
 
     @Override
     public void messageArrived(final int userCode, final String msg, final int color) {
-        addMessage(MESSAGE_ARRIVED, new Object[] { userCode, msg, color });
+        addMessage(MESSAGE_ARRIVED, new Object[] {userCode, msg, color});
     }
 
     @Override
