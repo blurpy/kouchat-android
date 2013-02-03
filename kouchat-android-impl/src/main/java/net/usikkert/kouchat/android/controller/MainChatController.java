@@ -293,6 +293,7 @@ public class MainChatController extends Activity {
         });
     }
 
+    @SuppressWarnings("unused") // user
     public void updateUser(final User user) {
         runOnUiThread(new Runnable() {
             public void run() {

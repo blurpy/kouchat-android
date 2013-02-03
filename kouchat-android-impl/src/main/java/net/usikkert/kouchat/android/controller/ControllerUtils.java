@@ -52,7 +52,6 @@ public final class ControllerUtils {
         // Happens sometimes when activity is hidden
         if (layout == null) {
             return;
-
         }
 
         final int scrollAmount = layout.getLineTop(textView.getLineCount()) - textView.getHeight();
