@@ -39,7 +39,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.text.Layout;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
@@ -190,27 +189,6 @@ public class MainChatController extends Activity {
         mainChatInput.requestFocus();
     }
 
-    private void scrollMainChatViewToBottom() {
-        final Layout layout = mainChatView.getLayout();
-
-        // Happens sometimes when activity is hidden
-        if (layout == null) {
-            return;
-
-        }
-
-        final int scrollAmount = layout.getLineTop(mainChatView.getLineCount()) - mainChatView.getHeight();
-
-        // if there is no need to scroll, scrollAmount will be <=0
-        if (scrollAmount > 0) {
-            mainChatView.scrollTo(0, scrollAmount);
-        }
-
-        else {
-            mainChatView.scrollTo(0, 0);
-        }
-    }
-
     @Override
     protected void onDestroy() {
         androidUserInterface.unregisterMainChatController();
@@ -277,7 +255,7 @@ public class MainChatController extends Activity {
         runOnUiThread(new Runnable() {
             public void run() {
                 mainChatView.append(message);
-                scrollMainChatViewToBottom();
+                ControllerUtils.scrollTextViewToBottom(mainChatView);
             }
         });
     }
@@ -295,9 +273,9 @@ public class MainChatController extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                scrollMainChatViewToBottom();
+                ControllerUtils.scrollTextViewToBottom(mainChatView);
             }
-        }, 1000);
+        }, ControllerUtils.ONE_SECOND);
 
     }
 

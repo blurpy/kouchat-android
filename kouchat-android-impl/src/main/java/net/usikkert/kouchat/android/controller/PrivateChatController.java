@@ -37,7 +37,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.text.Layout;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
@@ -220,39 +219,18 @@ public class PrivateChatController extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                scrollPrivateChatViewToBottom();
+                ControllerUtils.scrollTextViewToBottom(privateChatView);
             }
-        }, 1000);
+        }, ControllerUtils.ONE_SECOND);
     }
 
     public void appendToPrivateChat(final CharSequence privateMessage) {
         runOnUiThread(new Runnable() {
             public void run() {
                 privateChatView.append(privateMessage);
-                scrollPrivateChatViewToBottom();
+                ControllerUtils.scrollTextViewToBottom(privateChatView);
             }
         });
-    }
-
-    private void scrollPrivateChatViewToBottom() {
-        final Layout layout = privateChatView.getLayout();
-
-        // Happens sometimes when activity is hidden
-        if (layout == null) {
-            return;
-
-        }
-
-        final int scrollAmount = layout.getLineTop(privateChatView.getLineCount()) - privateChatView.getHeight();
-
-        // if there is no need to scroll, scrollAmount will be <=0
-        if (scrollAmount > 0) {
-            privateChatView.scrollTo(0, scrollAmount);
-        }
-
-        else {
-            privateChatView.scrollTo(0, 0);
-        }
     }
 
     /**
