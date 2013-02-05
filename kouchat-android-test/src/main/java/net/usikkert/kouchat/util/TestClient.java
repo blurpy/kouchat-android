@@ -73,7 +73,7 @@ public class TestClient {
         messages = new Messages(networkService);
         TestUtils.setFieldValue(messages, "me", me);
 
-        messageResponderMock = new MessageResponderMock(me);
+        messageResponderMock = new MessageResponderMock(me, messages);
         final MessageParser messageParser = new MessageParser(messageResponderMock);
         TestUtils.setFieldValue(messageParser, "settings", settings);
 

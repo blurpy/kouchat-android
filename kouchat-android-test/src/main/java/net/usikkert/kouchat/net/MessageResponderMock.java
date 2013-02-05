@@ -41,12 +41,16 @@ public class MessageResponderMock implements MessageResponder {
     private static final String MESSAGE_ARRIVED = "messageArrived";
 
     private final User me;
+    private final Messages messages;
+
     private final Map<String, List<Object[]>> storedMessages;
 
-    public MessageResponderMock(final User me) {
+    public MessageResponderMock(final User me, final Messages messages) {
         Validate.notNull(me, "User me can not be null");
+        Validate.notNull(messages, "Messages can not be null");
 
         this.me = me;
+        this.messages = messages;
         storedMessages = new HashMap<String, List<Object[]>>();
     }
 
@@ -114,7 +118,7 @@ public class MessageResponderMock implements MessageResponder {
 
     @Override
     public void exposeRequested() {
-
+        messages.sendExposingMessage();
     }
 
     @Override
