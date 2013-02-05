@@ -41,17 +41,17 @@ public class MessageResponderMock implements MessageResponder {
     private static final String MESSAGE_ARRIVED = "messageArrived";
 
     private final User me;
-    private final Map<String, List<Object[]>> messages;
+    private final Map<String, List<Object[]>> storedMessages;
 
     public MessageResponderMock(final User me) {
         Validate.notNull(me, "User me can not be null");
 
         this.me = me;
-        messages = new HashMap<String, List<Object[]>>();
+        storedMessages = new HashMap<String, List<Object[]>>();
     }
 
     public boolean gotMessageArrived(final String message) {
-        final List<Object[]> messagesArrived = getMessages(MESSAGE_ARRIVED);
+        final List<Object[]> messagesArrived = getStoredMessages(MESSAGE_ARRIVED);
 
         for (final Object[] messageArrived : messagesArrived) {
             if (messageArrived[1].equals(message)) {
@@ -64,7 +64,7 @@ public class MessageResponderMock implements MessageResponder {
 
     @Override
     public void messageArrived(final int userCode, final String msg, final int color) {
-        addMessage(MESSAGE_ARRIVED, new Object[] {userCode, msg, color});
+        storeMessage(MESSAGE_ARRIVED, new Object[] {userCode, msg, color});
     }
 
     @Override
@@ -153,18 +153,18 @@ public class MessageResponderMock implements MessageResponder {
 
     }
 
-    private void addMessage(final String key, final Object[] value) {
-        if (!messages.containsKey(key)) {
-            messages.put(key, new ArrayList<Object[]>());
+    private void storeMessage(final String key, final Object[] value) {
+        if (!storedMessages.containsKey(key)) {
+            storedMessages.put(key, new ArrayList<Object[]>());
         }
 
-        final List<Object[]> values = messages.get(key);
+        final List<Object[]> values = storedMessages.get(key);
         values.add(value);
     }
 
-    private List<Object[]> getMessages(final String key) {
-        if (messages.containsKey(key)) {
-            return messages.get(key);
+    private List<Object[]> getStoredMessages(final String key) {
+        if (storedMessages.containsKey(key)) {
+            return storedMessages.get(key);
         } else {
             return Collections.emptyList();
         }
