@@ -119,6 +119,7 @@ public class MessageResponderMock implements MessageResponder {
     @Override
     public void exposeRequested() {
         messages.sendExposingMessage();
+        messages.sendClient();
     }
 
     @Override
