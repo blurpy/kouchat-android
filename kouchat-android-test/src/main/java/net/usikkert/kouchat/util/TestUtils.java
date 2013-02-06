@@ -292,6 +292,33 @@ public final class TestUtils {
         return solo.getCurrentActivity().getResources().getConfiguration().orientation;
     }
 
+    /**
+     * Goes to the settings in the menu, and selects the option to change the nick name.
+     *
+     * @param solo The solo tester.
+     */
+    public static void clickOnChangeNickNameInTheSettings(final Solo solo) {
+        // Go to the Settings menu item and choose to set nick name
+        solo.sendKey(Solo.MENU);
+        solo.clickOnText("Settings");
+        solo.clickOnText("Set nick name");
+    }
+
+    /**
+     * Changes the nick name, if already in the correct menu.
+     *
+     * Use {@link #clickOnChangeNickNameInTheSettings(com.jayway.android.robotium.solo.Solo)} first.
+     *
+     * @param solo The solo tester.
+     * @param nickName The nick name to change to.
+     */
+    public static void changeNickNameTo(final Solo solo, final String nickName) {
+        TestUtils.hideSoftwareKeyboard(solo);
+        solo.clearEditText(0);
+        solo.enterText(0, nickName);
+        solo.clickOnButton("OK");
+    }
+
     private static void setValue(final Object object, final Object value, final Field field) {
         final boolean originalAccessible = field.isAccessible();
 
