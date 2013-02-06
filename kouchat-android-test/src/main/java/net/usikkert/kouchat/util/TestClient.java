@@ -45,14 +45,23 @@ public class TestClient {
     private final Messages messages;
     private final MessageResponderMock messageResponderMock;
     private final PrivateMessageResponderMock privateMessageResponderMock;
+
     private TestClient.SimpleIdleThread simpleIdleThread;
 
     public TestClient() {
-        this("Test", 12345678);
+        this("Test", 12345678, 0);
     }
 
     public TestClient(final String nickName, final int userCode) {
+        this(nickName, userCode, 0);
+    }
+
+    public TestClient(final String nickName, final int userCode, final int ownColor) {
         final Settings settings = TestUtils.createInstance(Settings.class);
+
+        if (ownColor != 0) {
+            settings.setOwnColor(ownColor);
+        }
 
         final User me = settings.getMe();
         me.setNick(nickName);
@@ -72,6 +81,7 @@ public class TestClient {
 
         messages = new Messages(networkService);
         TestUtils.setFieldValue(messages, "me", me);
+        TestUtils.setFieldValue(messages, "settings", settings);
 
         messageResponderMock = new MessageResponderMock(me, messages);
         final MessageParser messageParser = new MessageParser(messageResponderMock);
