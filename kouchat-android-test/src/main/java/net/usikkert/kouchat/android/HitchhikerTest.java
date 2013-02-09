@@ -76,22 +76,20 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
 
             trillianClient = new TestClient("Trillian", 12345673);
             trillian = trillianClient.logon();
+
+            arthur.sendTopicRequestedMessage(new Topic("DON'T PANIC", "Ford", getDateInPast()));
         }
 
         solo = new Solo(getInstrumentation(), getActivity());
         me = Settings.getSettings().getMe();
-
-        arthur.sendTopicRequestedMessage(new Topic("DON'T PANIC", "Ford", getDateInPast()));
     }
 
-    public void test01SetNickName() {
+    public void test01SetNickNameAndQuit() {
         originalNickName = Settings.getSettings().getMe().getNick();
 
         TestUtils.clickOnChangeNickNameInTheSettings(solo);
         TestUtils.changeNickNameTo(solo, "Christian");
-    }
 
-    public void test02Quit() {
         TestUtils.quit(solo);
     }
 
@@ -106,7 +104,7 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
      * *** Trillian went away: It won't affect me, I'm already a woman.
      * <Christian>: interesting!
      */
-    public void test03DoChat() throws CommandException {
+    public void test02DoChat() throws CommandException {
         solo.sleep(7000);
         TestUtils.writeLine(solo, "hey :)");
 
@@ -136,14 +134,14 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         // TODO take screenshot??
     }
 
-    public void test04RestoreNickName() {
+    public void test03RestoreNickNameAndQuit() {
         assertNotNull(originalNickName);
 
         TestUtils.clickOnChangeNickNameInTheSettings(solo);
         TestUtils.changeNickNameTo(solo, originalNickName);
-    }
 
-    public void test99Quit() {
+        TestUtils.goHome(solo);
+
         arthurClient.logoff();
         fordClient.logoff();
         trillianClient.logoff();
