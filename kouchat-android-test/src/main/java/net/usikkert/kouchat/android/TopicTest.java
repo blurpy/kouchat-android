@@ -25,9 +25,7 @@ package net.usikkert.kouchat.android;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Settings;
-import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
 
@@ -44,9 +42,9 @@ import android.test.ActivityInstrumentationTestCase2;
  */
 public class TopicTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
+    private static TestClient client;
+
     private Solo solo;
-    private TestClient client;
-    private Messages messages;
     private MainChatController activity;
     private User me;
     private int defaultOrientation;
@@ -58,22 +56,23 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     public void setUp() {
         activity = getActivity();
         solo = new Solo(getInstrumentation(), activity);
-        client = new TestClient();
-        messages = client.logon();
+
+        if (client == null) {
+            client = new TestClient();
+            client.logon();
+        }
+
         me = Settings.getSettings().getMe();
         defaultOrientation = TestUtils.getCurrentOrientation(solo);
     }
 
-    public void test01OtherClientSettingTopicIsShownInChatAndTitle() throws CommandException {
-        messages.sendTopicChangeMessage(new Topic("Original topic", "Test", System.currentTimeMillis()));
+    public void test01TopicShouldBeEmptyOnStart() {
         solo.sleep(500);
-
-        assertTrue(solo.searchText("Topic is: Original topic"));
-        assertEquals(me.getNick() + " - Topic: Original topic (Test) - KouChat", activity.getTitle());
+        assertEquals(me.getNick() + " - KouChat", activity.getTitle());
     }
 
     public void test02OtherClientChangingTopicIsShownInChatAndTitle() throws CommandException {
-        messages.sendTopicChangeMessage(new Topic("New topic", "Test", System.currentTimeMillis()));
+        client.changeTopic("New topic");
         solo.sleep(500);
 
         assertTrue(solo.searchText("Test changed the topic to: New topic"));
@@ -91,12 +90,25 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     public void test04RemovingTheTopicShouldRemoveTopicFromTitle() {
         assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", activity.getTitle());
 
-        messages.sendTopicChangeMessage(new Topic("", "Test", System.currentTimeMillis()));
-
+        client.changeTopic("");
         solo.sleep(500);
 
         assertTrue(solo.searchText("Test removed the topic"));
         assertEquals(me.getNick() + " - KouChat", activity.getTitle());
+    }
+
+    public void test05SettingTopicAndLoggingOffToPrepareForTest06() {
+        client.changeTopic("Original topic");
+        solo.sleep(500);
+
+        TestUtils.quit(solo);
+    }
+
+    public void test06OtherClientSettingTopicBeforeStartIsShownInChatAndTitle() {
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("Topic is: Original topic"));
+        assertEquals(me.getNick() + " - Topic: Original topic (Test) - KouChat", activity.getTitle());
     }
 
     public void test99Quit() {
@@ -105,7 +117,6 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     public void tearDown() {
-        client.logoff();
         TestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }
