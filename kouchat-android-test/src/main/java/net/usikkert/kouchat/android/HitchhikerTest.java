@@ -129,9 +129,8 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         solo.sleep(1000);
         arthur.sendPrivateMessage("Show me the envelope!", me);
 
+        // For taking screenshot manually. Robotium screenshots don't include status bars.
         solo.sleep(10000);
-
-        // TODO take screenshot??
     }
 
     public void test03RestoreNickNameAndQuit() {
