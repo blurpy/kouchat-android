@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.android.testsuite;
 
 import net.usikkert.kouchat.android.AboutDialogTest;
+import net.usikkert.kouchat.android.HitchhikerTest;
 import net.usikkert.kouchat.android.MainChatTest;
 import net.usikkert.kouchat.android.PrivateChatStateTest;
 import net.usikkert.kouchat.android.PrivateChatTest;
@@ -50,6 +51,7 @@ public class AllTests extends TestSuite {
         testSuite.addTestSuite(SettingsTest.class);
         testSuite.addTestSuite(TopicTest.class);
         testSuite.addTestSuite(UserListTest.class);
+        testSuite.addTestSuite(HitchhikerTest.class);
 
         return testSuite;
     }
