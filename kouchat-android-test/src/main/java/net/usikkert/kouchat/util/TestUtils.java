@@ -27,6 +27,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import net.usikkert.kouchat.android.controller.MainChatController;
+
 import com.jayway.android.robotium.solo.Solo;
 
 import android.app.Activity;
@@ -111,13 +113,25 @@ public final class TestUtils {
     }
 
     /**
-     * Quits the application by using the quit menu item.
+     * Quits the application by using the quit menu item. Works from any activity.
      *
      * @param solo The solo tester.
      */
     public static void quit(final Solo solo) {
+        goHome(solo);
         solo.sendKey(Solo.MENU);
         solo.clickOnText("Quit");
+    }
+
+    /**
+     * Returns to the main chat.
+     *
+     * @param solo The solo tester.
+     */
+    public static void goHome(final Solo solo) {
+        solo.sleep(500);
+        solo.goBackToActivity(MainChatController.class.getSimpleName());
+        solo.sleep(500);
     }
 
     /**
