@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.Validate;
 
@@ -42,6 +43,7 @@ public class MessageResponderMock implements MessageResponder {
 
     private final User me;
     private final Messages messages;
+    private Topic topic;
 
     private final Map<String, List<Object[]>> storedMessages;
 
@@ -73,12 +75,16 @@ public class MessageResponderMock implements MessageResponder {
 
     @Override
     public void topicChanged(final int userCode, final String newTopic, final String nick, final long time) {
-
+        if (topic == null || topic.getTime() != time) {
+            topic = new Topic(newTopic, nick, time);
+        }
     }
 
     @Override
     public void topicRequested() {
-
+        if (topic != null) {
+            messages.sendTopicRequestedMessage(topic);
+        }
     }
 
     @Override
