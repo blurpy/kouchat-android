@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.util;
 
 import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.ConnectionWorker;
 import net.usikkert.kouchat.net.MessageParser;
@@ -45,6 +46,7 @@ public class TestClient {
     private final Messages messages;
     private final MessageResponderMock messageResponderMock;
     private final PrivateMessageResponderMock privateMessageResponderMock;
+    private final User me;
 
     private TestClient.SimpleIdleThread simpleIdleThread;
 
@@ -63,7 +65,7 @@ public class TestClient {
             settings.setOwnColor(ownColor);
         }
 
-        final User me = settings.getMe();
+        me = settings.getMe();
         me.setNick(nickName);
         TestUtils.setFieldValue(me, "code", userCode);
 
@@ -104,6 +106,7 @@ public class TestClient {
         messages.sendLogonMessage();
         messages.sendClient();
         messages.sendExposeMessage();
+        messages.sendGetTopicMessage();
 
         simpleIdleThread = new SimpleIdleThread();
         simpleIdleThread.start();
@@ -122,6 +125,13 @@ public class TestClient {
         messages.sendLogoffMessage();
         Tools.sleep(500);
         networkService.disconnect();
+    }
+
+    public void changeTopic(final String topic) {
+        final long time = System.currentTimeMillis();
+
+        messages.sendTopicChangeMessage(new Topic(topic, me.getNick(), time));
+        messageResponderMock.topicChanged(me.getCode(), topic, me.getNick(), time);
     }
 
     public MessageResponderMock getMessageResponderMock() {
