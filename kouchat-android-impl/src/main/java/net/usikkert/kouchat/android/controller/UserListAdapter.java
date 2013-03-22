@@ -64,11 +64,13 @@ public class UserListAdapter extends ArrayAdapter<User> {
     }
 
     /**
-     * Creates a user item in the user list.
+     * Creates the view that displays the user at the given position in the user list
+     * according to the rules defined below.
      *
      * <ul>
      *   <li>Shows when a new message has arrived by changing the icon to an envelope.</li>
      *   <li>Shows who you are in the user list by making "you" appear in bold text.</li>
+     *   <li>Shows who is currently writing by appending a <code>*</code> after the nick name.</li>
      * </ul>
      *
      * {@inheritDoc}
@@ -80,18 +82,34 @@ public class UserListAdapter extends ArrayAdapter<User> {
         final TextView textView = (TextView) linearLayout.getChildAt(1);
         final User user = getItem(position);
 
+        showIfNewPrivateMessage(imageView, user);
+        showIfMe(textView, user);
+        showIfCurrentlyWriting(textView, user);
+
+        return linearLayout;
+    }
+
+    private void showIfNewPrivateMessage(final ImageView imageView, final User user) {
         if (user.isNewPrivMsg()) {
             imageView.setImageDrawable(envelope);
         } else {
             imageView.setImageDrawable(dot);
         }
+    }
 
+    private void showIfMe(final TextView textView, final User user) {
         if (user.isMe()) {
             textView.setTypeface(Typeface.DEFAULT_BOLD);
         } else {
             textView.setTypeface(Typeface.DEFAULT);
         }
+    }
 
-        return linearLayout;
+    private void showIfCurrentlyWriting(final TextView textView, final User user) {
+        if (user.isWriting()) {
+            textView.setText(user.getNick() + " *");
+        } else {
+            textView.setText(user.getNick());
+        }
     }
 }

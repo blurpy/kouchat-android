@@ -137,6 +137,34 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(userIsBold("Kou", 1));
     }
 
+    public void test06ShouldShowStarOnOtherUserThatIsWriting() throws CommandException {
+        final Messages messages = client.logon();
+        solo.sleep(500);
+
+        assertFalse(userIsWriting("Kou", 0));
+        assertFalse(userIsWriting("Test", 1));
+
+        messages.sendWritingMessage();
+        solo.sleep(500);
+
+        assertFalse(userIsWriting("Kou", 0));
+        assertTrue(userIsWriting("Test", 1));
+
+        TestUtils.switchOrientation(solo);
+
+        assertFalse(userIsWriting("Kou", 0));
+        assertTrue(userIsWriting("Test", 1));
+
+        TestUtils.switchOrientation(solo);
+        solo.sleep(500);
+
+        messages.sendStoppedWritingMessage();
+        solo.sleep(500);
+
+        assertFalse(userIsWriting("Kou", 0));
+        assertFalse(userIsWriting("Test", 1));
+    }
+
     public void test99Quit() {
         client.logoff();
         TestUtils.quit(solo);
@@ -165,5 +193,23 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         final Typeface typeface = textView.getTypeface();
 
         return typeface != null && typeface.isBold();
+    }
+
+    private boolean userIsWriting(final String nickName, final int userNumber) {
+        solo.sleep(500);
+        assertEquals(nickName, getUserNameAtPosition(userNumber));
+
+        final LinearLayout row = (LinearLayout) solo.getCurrentListViews().get(0).getChildAt(userNumber);
+        final TextView textView = (TextView) row.getChildAt(1);
+        final CharSequence displayText = textView.getText();
+
+        if (displayText.equals(nickName + " *")) {
+            return true;
+        } else if (displayText.equals(nickName)) {
+            return false;
+        }
+
+        fail("Invalid display text of user in user list: " + displayText);
+        return false;
     }
 }

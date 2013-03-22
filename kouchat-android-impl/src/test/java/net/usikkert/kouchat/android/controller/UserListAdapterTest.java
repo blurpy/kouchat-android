@@ -107,6 +107,30 @@ public class UserListAdapterTest {
         assertFalse(userIsBold(1));
     }
 
+    @Test
+    public void userThatIsWritingShouldHaveStar() {
+        user1.setMe(true);
+
+        assertEquals("User1", getDisplayTextForUser(0));
+        assertEquals("User2", getDisplayTextForUser(1));
+
+        user1.setWriting(true);
+
+        assertEquals("User1 *", getDisplayTextForUser(0));
+        assertEquals("User2", getDisplayTextForUser(1));
+
+        user2.setWriting(true);
+
+        assertEquals("User1 *", getDisplayTextForUser(0));
+        assertEquals("User2 *", getDisplayTextForUser(1));
+
+        user1.setWriting(false);
+        user2.setWriting(false);
+
+        assertEquals("User1", getDisplayTextForUser(0));
+        assertEquals("User2", getDisplayTextForUser(1));
+    }
+
     private boolean userIsBold(final int userPosition) {
         final LinearLayout linearLayout = (LinearLayout)  userListAdapter.getView(userPosition, null, null);
         final TextView textView = (TextView) linearLayout.getChildAt(1);
@@ -119,5 +143,12 @@ public class UserListAdapterTest {
         final LinearLayout linearLayout = (LinearLayout)  userListAdapter.getView(userPosition, null, null);
 
         return ((ImageView) linearLayout.getChildAt(0)).getDrawable();
+    }
+
+    private String getDisplayTextForUser(final int userPosition) {
+        final LinearLayout linearLayout = (LinearLayout)  userListAdapter.getView(userPosition, null, null);
+        final TextView textView = (TextView) linearLayout.getChildAt(1);
+
+        return textView.getText().toString();
     }
 }

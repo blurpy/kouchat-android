@@ -2,7 +2,8 @@
 - KouChat CHANGES
 
 * version 0.8.0 (xx.xx.2013)
-  - Nothing yet
+  - Added support for showing when someone is currently writing,
+    by appending a star after the nick name in the user list (TODO missing self)
 
 
 * version 0.7.0 (09.02.2013)
