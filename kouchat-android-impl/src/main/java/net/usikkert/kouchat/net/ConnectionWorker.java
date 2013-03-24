@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * This thread is responsible for keeping the application connected
@@ -74,11 +75,16 @@ public class ConnectionWorker implements Runnable {
 
     /**
      * Constructor.
+     *
+     * @param settings The settings to use.
      */
-    public ConnectionWorker() {
+    public ConnectionWorker(final Settings settings) {
+        Validate.notNull(settings, "Settings can not be null");
+
+        this.settings = settings;
+
         listeners = new ArrayList<NetworkConnectionListener>();
-        osNetworkInfo = new OperatingSystemNetworkInfo();
-        settings = Settings.getSettings();
+        osNetworkInfo = new OperatingSystemNetworkInfo(settings);
     }
 
     /**

@@ -30,6 +30,7 @@ import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.ui.UserInterface;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * This class responds to events from the message parser.
@@ -58,12 +59,18 @@ public class DefaultPrivateMessageResponder implements PrivateMessageResponder {
      *
      * @param controller The controller.
      * @param ui The user interface.
+     * @param settings The settings to use.
      */
-    public DefaultPrivateMessageResponder(final Controller controller, final UserInterface ui) {
+    public DefaultPrivateMessageResponder(final Controller controller, final UserInterface ui,
+                                          final Settings settings) {
+        Validate.notNull(controller, "Controller can not be null");
+        Validate.notNull(ui, "UserInterface can not be null");
+        Validate.notNull(settings, "Settings can not be null");
+
         this.controller = controller;
         this.ui = ui;
-        me = Settings.getSettings().getMe();
 
+        me = settings.getMe();
         msgController = ui.getMessageController();
     }
 

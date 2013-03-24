@@ -20,48 +20,53 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.misc;
+package net.usikkert.kouchat.jmx;
 
-import static org.junit.Assert.*;
+import java.util.Arrays;
+import java.util.List;
 
-import net.usikkert.kouchat.Constants;
-
-import org.junit.Before;
-import org.junit.Test;
+import net.usikkert.kouchat.misc.Controller;
+import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.net.ConnectionWorker;
+import net.usikkert.kouchat.util.Validate;
 
 /**
- * Test of {@link Settings}.
+ * Class for getting instances of JMX MBeans.
+ *
+ * <p>The following beans are registered:</p>
+ *
+ * <ul>
+ *   <li>{@link NetworkInformation}</li>
+ *   <li>{@link ControllerInformation}</li>
+ *   <li>{@link GeneralInformation}</li>
+ * </ul>
  *
  * @author Christian Ihle
  */
-public class SettingsTest {
+public class JMXBeanLoader {
 
-    private Settings settings;
+    private final List<JMXBean> jmxBeans;
 
-    @Before
-    public void setUp() throws Exception {
-        settings = new Settings();
-        System.setProperty("file.separator", "/");
+    /**
+     * Initializes the bean loader, and the JMX beans.
+     *
+     * @param controller The controller.
+     * @param connectionWorker The connection worker.
+     * @param settings The settings.
+     */
+    public JMXBeanLoader(final Controller controller, final ConnectionWorker connectionWorker,
+                         final Settings settings) {
+        Validate.notNull(controller, "Controller can not be null");
+        Validate.notNull(connectionWorker, "ConnectionWorker can not be null");
+        Validate.notNull(settings, "Settings can not be null");
+
+        jmxBeans = Arrays.asList(
+                new NetworkInformation(connectionWorker, settings),
+                new ControllerInformation(controller),
+                new GeneralInformation(settings));
     }
 
-    @Test
-    public void getLogLocationShouldReturnSetValue() {
-        settings.setLogLocation("/var/log/kouchat/");
-
-        assertEquals("/var/log/kouchat/", settings.getLogLocation());
-    }
-
-    @Test
-    public void getLogLocationShouldAlwaysEndWithSlash() {
-        settings.setLogLocation("/var/log/kouchat");
-
-        assertEquals("/var/log/kouchat/", settings.getLogLocation());
-    }
-
-    @Test
-    public void getLogLocationShouldReturnDefaultLocationOfValueNotSet() {
-        settings.setLogLocation(null);
-
-        assertEquals(Constants.APP_LOG_FOLDER, settings.getLogLocation());
+    public List<JMXBean> getJMXBeans() {
+        return jmxBeans;
     }
 }

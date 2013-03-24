@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import net.usikkert.kouchat.event.ReceiverListener;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * This class listens for udp messages from the network,
@@ -53,10 +54,14 @@ public class PrivateMessageParser implements ReceiverListener {
      * Constructor.
      *
      * @param privmsgResponder The private message responder.
+     * @param settings The settings to use.
      */
-    public PrivateMessageParser(final PrivateMessageResponder privmsgResponder) {
+    public PrivateMessageParser(final PrivateMessageResponder privmsgResponder, final Settings settings) {
+        Validate.notNull(privmsgResponder, "PrivateMessageResponder can not be null");
+        Validate.notNull(settings, "Settings can not be null");
+
         this.privmsgResponder = privmsgResponder;
-        settings = Settings.getSettings();
+        this.settings = settings;
     }
 
     /**

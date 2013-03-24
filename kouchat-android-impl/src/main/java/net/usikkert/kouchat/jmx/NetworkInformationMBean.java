@@ -20,48 +20,56 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.misc;
+package net.usikkert.kouchat.jmx;
 
-import static org.junit.Assert.*;
-
-import net.usikkert.kouchat.Constants;
-
-import org.junit.Before;
-import org.junit.Test;
+import java.net.SocketException;
 
 /**
- * Test of {@link Settings}.
+ * This is the JMX MBean interface for the network service.
  *
  * @author Christian Ihle
  */
-public class SettingsTest {
+public interface NetworkInformationMBean extends JMXBean {
 
-    private Settings settings;
+    /**
+     * Shows the current connected network.
+     *
+     * @return A string with information.
+     * @throws SocketException In case of network errors.
+     */
+    String showCurrentNetwork() throws SocketException;
 
-    @Before
-    public void setUp() throws Exception {
-        settings = new Settings();
-        System.setProperty("file.separator", "/");
-    }
+    /**
+     * Shows the network that the operation system would have chosen.
+     *
+     * @return A string with information.
+     * @throws SocketException In case of network errors.
+     */
+    String showOperatingSystemNetwork() throws SocketException;
 
-    @Test
-    public void getLogLocationShouldReturnSetValue() {
-        settings.setLogLocation("/var/log/kouchat/");
+    /**
+     * Shows the available networks that are usable for chat.
+     *
+     * @return A string with information.
+     * @throws SocketException In case of network errors.
+     */
+    String[] showUsableNetworks() throws SocketException;
 
-        assertEquals("/var/log/kouchat/", settings.getLogLocation());
-    }
+    /**
+     * Shows all the available networks.
+     *
+     * @return A string with information.
+     * @throws SocketException In case of network errors.
+     */
+    String[] showAllNetworks() throws SocketException;
 
-    @Test
-    public void getLogLocationShouldAlwaysEndWithSlash() {
-        settings.setLogLocation("/var/log/kouchat");
+    /**
+     * Disconnects from the network, without logging off.
+     */
+    void disconnect();
 
-        assertEquals("/var/log/kouchat/", settings.getLogLocation());
-    }
-
-    @Test
-    public void getLogLocationShouldReturnDefaultLocationOfValueNotSet() {
-        settings.setLogLocation(null);
-
-        assertEquals(Constants.APP_LOG_FOLDER, settings.getLogLocation());
-    }
+    /**
+     * Connects to the network.
+     */
+    void connect();
 }

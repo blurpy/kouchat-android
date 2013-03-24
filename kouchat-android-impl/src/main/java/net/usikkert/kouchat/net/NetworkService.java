@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.event.ReceiverListener;
 import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * This class has services for connecting to the network.
@@ -59,18 +60,22 @@ public class NetworkService implements NetworkConnectionListener {
 
     /**
      * Constructor.
+     *
+     * @param settings The settings to use.
      */
-    public NetworkService() {
+    public NetworkService(final Settings settings) {
+        Validate.notNull(settings, "Settings can not be null");
+
         LOG.fine("Initializing network");
 
-        privateChatEnabled = !Settings.getSettings().isNoPrivateChat();
+        privateChatEnabled = !settings.isNoPrivateChat();
 
         messageReceiver = new MessageReceiver();
         messageSender = new MessageSender();
-        connectionWorker = new ConnectionWorker();
+        connectionWorker = new ConnectionWorker(settings);
 
         if (privateChatEnabled) {
-            udpReceiver = new UDPReceiver();
+            udpReceiver = new UDPReceiver(settings);
             udpSender = new UDPSender();
         }
 

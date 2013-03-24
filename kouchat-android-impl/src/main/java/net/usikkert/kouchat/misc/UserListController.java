@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.misc;
 
+import net.usikkert.kouchat.util.Validate;
+
 /**
  * This is the controller responsible for the user list.
  *
@@ -35,22 +37,18 @@ public class UserListController {
     /** The user list. */
     private final UserList userList;
 
-    /** The application user. */
-    private final User me;
-
-    /** Application settings. */
-    private final Settings settings;
-
     /**
      * Constructor.
      *
      * Initializes the user list and puts <code>me</code> in the list.
+     *
+     * @param settings The settings to use.
      */
-    public UserListController() {
-        settings = Settings.getSettings();
+    public UserListController(final Settings settings) {
+        Validate.notNull(settings, "Settings can not be null");
+
         userList = new SortedUserList();
-        me = settings.getMe();
-        userList.add(me);
+        userList.add(settings.getMe());
     }
 
     /**

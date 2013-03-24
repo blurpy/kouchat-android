@@ -33,6 +33,7 @@ import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.Tools;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * This class can find information about the network interface
@@ -56,11 +57,15 @@ public class OperatingSystemNetworkInfo {
 
     /**
      * Default constructor.
+     *
+     * @param settings The settings to use.
      */
-    public OperatingSystemNetworkInfo() {
+    public OperatingSystemNetworkInfo(final Settings settings) {
+        Validate.notNull(settings, "Settings can not be null");
+
         receiver = new MessageReceiver(Constants.NETWORK_TEMP_IP, Constants.NETWORK_TEMP_PORT);
         sender = new MessageSender(Constants.NETWORK_TEMP_IP, Constants.NETWORK_TEMP_PORT);
-        me = Settings.getSettings().getMe();
+        me = settings.getMe();
     }
 
     /**

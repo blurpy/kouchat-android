@@ -34,6 +34,7 @@ import net.usikkert.kouchat.autocomplete.AutoCompleter;
 import net.usikkert.kouchat.autocomplete.CommandAutoCompleteList;
 import net.usikkert.kouchat.autocomplete.UserAutoCompleteList;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
+import net.usikkert.kouchat.jmx.JMXBeanLoader;
 import net.usikkert.kouchat.net.DefaultMessageResponder;
 import net.usikkert.kouchat.net.DefaultPrivateMessageResponder;
 import net.usikkert.kouchat.net.FileReceiver;
@@ -69,26 +70,27 @@ public class Controller implements NetworkConnectionListener {
     private final UserListController userListController;
     private final NetworkService networkService;
     private final Messages messages;
-    private final MessageParser msgParser;
-    private final PrivateMessageParser privmsgParser;
-    private final MessageResponder msgResponder;
-    private final PrivateMessageResponder privmsgResponder;
     private final IdleThread idleThread;
     private final TransferList tList;
     private final WaitingList wList;
     private final User me;
     private final UserInterface ui;
     private final MessageController msgController;
+    private final Settings settings;
 
     /**
      * Constructor. Initializes the controller, but does not log on to
      * the network.
      *
      * @param ui The active user interface object.
+     * @param settings The settings to use.
      */
-    public Controller(final UserInterface ui) {
+    public Controller(final UserInterface ui, final Settings settings) {
         Validate.notNull(ui, "User interface can not be null");
+        Validate.notNull(settings, "Settings can not be null");
+
         this.ui = ui;
+        this.settings = settings;
 
         Runtime.getRuntime().addShutdownHook(new Thread("ControllerShutdownHook") {
             @Override
@@ -98,21 +100,20 @@ public class Controller implements NetworkConnectionListener {
             }
         });
 
-        me = Settings.getSettings().getMe();
-
-        userListController = new UserListController();
+        me = settings.getMe();
+        userListController = new UserListController(settings);
         chatState = new ChatState();
         tList = new TransferList();
         wList = new WaitingList();
-        idleThread = new IdleThread(this, ui);
-        networkService = new NetworkService();
-        msgResponder = new DefaultMessageResponder(this, ui);
-        privmsgResponder = new DefaultPrivateMessageResponder(this, ui);
-        msgParser = new MessageParser(msgResponder);
+        idleThread = new IdleThread(this, ui, settings);
+        networkService = new NetworkService(settings);
+        final MessageResponder msgResponder = new DefaultMessageResponder(this, ui, settings);
+        final PrivateMessageResponder privmsgResponder = new DefaultPrivateMessageResponder(this, ui, settings);
+        final MessageParser msgParser = new MessageParser(msgResponder, settings);
         networkService.registerMessageReceiverListener(msgParser);
-        privmsgParser = new PrivateMessageParser(privmsgResponder);
+        final PrivateMessageParser privmsgParser = new PrivateMessageParser(privmsgResponder, settings);
         networkService.registerUDPReceiverListener(privmsgParser);
-        messages = new Messages(networkService);
+        messages = new Messages(networkService, settings);
         networkService.registerNetworkConnectionListener(this);
         msgController = ui.getMessageController();
 
@@ -178,6 +179,26 @@ public class Controller implements NetworkConnectionListener {
     }
 
     /**
+     * Updates whether the user is currently writing or not. This makes sure a star is shown
+     * by the nick name in the user list, and sends a notice to other users so they can show the same thing.
+     *
+     * @param isCurrentlyWriting If the application user is currently writing.
+     */
+    public void updateMeWriting(final boolean isCurrentlyWriting) {
+        if (isCurrentlyWriting) {
+            if (!isWrote()) {
+                changeWriting(me.getCode(), true);
+            }
+        }
+
+        else {
+            if (isWrote()) {
+                changeWriting(me.getCode(), false);
+            }
+        }
+    }
+
+    /**
      * Updates the away status and the away message for the user.
      *
      * @param code The user code for the user to update.
@@ -238,7 +259,7 @@ public class Controller implements NetworkConnectionListener {
 
         messages.sendNickMessage(newNick);
         changeNick(me.getCode(), newNick);
-        Settings.getSettings().saveSettings();
+        settings.saveSettings();
     }
 
     /**
@@ -587,7 +608,7 @@ public class Controller implements NetworkConnectionListener {
             throw new CommandException("You can not send a private chat message to a user that is away");
         } else if (!user.isOnline()) {
             throw new CommandException("You can not send a private chat message to a user that is offline");
-        } else if (Settings.getSettings().isNoPrivateChat()) {
+        } else if (settings.isNoPrivateChat()) {
             throw new CommandException("You can not send a private chat message when private chat is disabled");
         } else {
             messages.sendPrivateMessage(privmsg, user);
@@ -730,5 +751,14 @@ public class Controller implements NetworkConnectionListener {
      */
     public ChatState getChatState() {
         return chatState;
+    }
+
+    /**
+     * Creates an instance of a JMX bean loader, and returns it.
+     *
+     * @return A JMX bean loader.
+     */
+    public JMXBeanLoader createJMXBeanLoader() {
+        return new JMXBeanLoader(this, networkService.getConnectionWorker(), settings);
     }
 }

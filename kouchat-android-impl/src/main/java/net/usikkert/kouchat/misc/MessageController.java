@@ -25,6 +25,7 @@ package net.usikkert.kouchat.misc;
 import net.usikkert.kouchat.ui.ChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.Tools;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * Formats different kind of messages for display in a chat window,
@@ -45,14 +46,19 @@ public class MessageController {
      *
      * @param chat The user interface object to write the formatted messages to.
      * @param ui The user interface.
+     * @param settings The settings to use.
      */
-    public MessageController(final ChatWindow chat, final UserInterface ui) {
+    public MessageController(final ChatWindow chat, final UserInterface ui, final Settings settings) {
+        Validate.notNull(chat, "ChatWindow can not be null");
+        Validate.notNull(ui, "UserInterface can not be null");
+        Validate.notNull(settings, "Settings can not be null");
+
         this.chat = chat;
         this.ui = ui;
+        this.settings = settings;
 
-        settings = Settings.getSettings();
         me = settings.getMe();
-        cLog = new ChatLogger();
+        cLog = new ChatLogger(settings);
     }
 
     /**

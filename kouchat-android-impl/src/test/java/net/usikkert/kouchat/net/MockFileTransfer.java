@@ -25,8 +25,8 @@ package net.usikkert.kouchat.net;
 import java.io.File;
 
 import net.usikkert.kouchat.event.FileTransferListener;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * This is a mock implementation of the file transfer class, for use in unit tests.
@@ -52,11 +52,13 @@ public class MockFileTransfer implements FileTransfer {
      * @param direction If this mock should send or receive the file.
      */
     public MockFileTransfer(final Direction direction) {
+        Validate.notNull(direction, "Direction can not be null");
         this.direction = direction;
+
         user = new User("TestUser", 1234);
         user.setIpAddress("192.168.1.1");
+
         file = new File("test/this_is_a_fake_test_file_with_a_very_very_long_file_name.txt");
-        Settings.getSettings().getMe().setIpAddress("192.168.1.2");
     }
 
     /**

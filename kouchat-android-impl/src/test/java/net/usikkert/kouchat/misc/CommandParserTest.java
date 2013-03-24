@@ -48,6 +48,7 @@ public class CommandParserTest {
     private MessageController messageController;
     private Controller controller;
     private TransferList transferList;
+    private User me;
 
     @Before
     public void setUp() {
@@ -61,7 +62,12 @@ public class CommandParserTest {
         messageController = mock(MessageController.class);
         when(userInterface.getMessageController()).thenReturn(messageController);
 
-        parser = new CommandParser(controller, userInterface);
+        me = new User("MySelf", 123);
+
+        final Settings settings = mock(Settings.class);
+        when(settings.getMe()).thenReturn(me);
+
+        parser = new CommandParser(controller, userInterface, settings);
     }
 
     /*
@@ -98,8 +104,7 @@ public class CommandParserTest {
 
     @Test
     public void rejectShouldReturnIfUserIsMe() {
-        Settings.getSettings().getMe().setNick("MySelf");
-        when(controller.getUser("MySelf")).thenReturn(Settings.getSettings().getMe());
+        when(controller.getUser("MySelf")).thenReturn(me);
 
         parser.parse("/reject MySelf 1");
 
@@ -196,8 +201,7 @@ public class CommandParserTest {
 
     @Test
     public void receiveShouldReturnIfUserIsMe() {
-        Settings.getSettings().getMe().setNick("MySelf");
-        when(controller.getUser("MySelf")).thenReturn(Settings.getSettings().getMe());
+        when(controller.getUser("MySelf")).thenReturn(me);
 
         parser.parse("/receive MySelf 1");
 
@@ -315,8 +319,7 @@ public class CommandParserTest {
 
     @Test
     public void cancelShouldReturnIfUserIsMe() {
-        Settings.getSettings().getMe().setNick("MySelf");
-        when(controller.getUser("MySelf")).thenReturn(Settings.getSettings().getMe());
+        when(controller.getUser("MySelf")).thenReturn(me);
 
         parser.parse("/cancel MySelf 1");
 

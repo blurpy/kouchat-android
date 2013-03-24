@@ -428,4 +428,14 @@ public final class Tools {
 
         return newFile;
     }
+
+    /**
+     * Checks if the user interface is Android.
+     *
+     * @return If the current user interface is Android.
+     */
+    public static boolean isAndroid() {
+        final String client = System.getProperty(Constants.PROPERTY_CLIENT_UI);
+        return client != null && client.equals("Android");
+    }
 }

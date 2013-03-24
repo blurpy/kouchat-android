@@ -69,14 +69,17 @@ public class IdleThread extends Thread {
      *
      * @param controller The controller.
      * @param ui The user interface.
+     * @param settings The settings to use.
      */
-    public IdleThread(final Controller controller, final UserInterface ui) {
+    public IdleThread(final Controller controller, final UserInterface ui, final Settings settings) {
         Validate.notNull(controller, "Controller can not be null");
         Validate.notNull(ui, "User interface can not be null");
+        Validate.notNull(settings, "Settings can not be null");
+
         this.controller = controller;
 
         userList = controller.getUserList();
-        me = Settings.getSettings().getMe();
+        me = settings.getMe();
         msgController = ui.getMessageController();
 
         run = true;

@@ -20,22 +20,49 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.misc;
+package net.usikkert.kouchat.jmx;
+
+import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.Validate;
 
 /**
- * This is a JMX MBean interface for general information.
+ * This is a JMX MBean for general information.
  *
  * @author Christian Ihle
  */
-public interface GeneralInformationMBean {
+public class GeneralInformation implements GeneralInformationMBean {
 
-    /** The name of this MBean. */
-    String NAME = "General";
+    /** The application user. */
+    private final User me;
+
+    public GeneralInformation(final Settings settings) {
+        Validate.notNull(settings, "Settings can not be null");
+
+        me = settings.getMe();
+    }
 
     /**
-     * Shows information about the client and user.
-     *
-     * @return Information about the client and user.
+     * {@inheritDoc}
      */
-    String about();
+    @Override
+    public String about() {
+        final StringBuilder sb = new StringBuilder();
+
+        sb.append("Client: " + me.getClient() + "\n");
+        sb.append("User name: " + me.getNick() + "\n");
+        sb.append("IP address: " + me.getIpAddress() + "\n");
+        sb.append("Host name: " + me.getHostName() + "\n");
+        sb.append("Operating System: " + me.getOperatingSystem());
+
+        return sb.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getBeanName() {
+        return "General";
+    }
 }

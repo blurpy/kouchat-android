@@ -27,6 +27,8 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 
+import net.usikkert.kouchat.Constants;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -203,6 +205,32 @@ public class ToolsTest {
 
         assertEquals("donkeys.jpg.2", file.getName());
         assertEquals(home, file.getParent());
+    }
+
+    @Test
+    public void isAndroidShouldBeFalseByDefault() {
+        assertFalse(Tools.isAndroid());
+    }
+
+    @Test
+    public void isAndroidShouldBeFalseIfSwing() {
+        System.setProperty(Constants.PROPERTY_CLIENT_UI, "Swing");
+
+        assertFalse(Tools.isAndroid());
+    }
+
+    @Test
+    public void isAndroidShouldBeFalseIfConsole() {
+        System.setProperty(Constants.PROPERTY_CLIENT_UI, "Console");
+
+        assertFalse(Tools.isAndroid());
+    }
+
+    @Test
+    public void isAndroidShouldBeTrueIfAndroid() {
+        System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
+
+        assertTrue(Tools.isAndroid());
     }
 
     private File createTemporaryFile(final String fileName) throws IOException {

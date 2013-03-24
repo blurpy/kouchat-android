@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import net.usikkert.kouchat.event.ReceiverListener;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * This class listens for multicast messages from the network,
@@ -76,10 +77,14 @@ public class MessageParser implements ReceiverListener {
      * Constructor.
      *
      * @param responder To handle the different kind of messages parsed here.
+     * @param settings The settings to use.
      */
-    public MessageParser(final MessageResponder responder) {
+    public MessageParser(final MessageResponder responder, final Settings settings) {
+        Validate.notNull(responder, "MessageResponder can not be null");
+        Validate.notNull(settings, "Settings can not be null");
+
         this.responder = responder;
-        settings = Settings.getSettings();
+        this.settings = settings;
     }
 
     /**

@@ -20,48 +20,52 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.misc;
+package net.usikkert.kouchat.jmx;
 
-import static org.junit.Assert.*;
-
-import net.usikkert.kouchat.Constants;
-
-import org.junit.Before;
-import org.junit.Test;
+import net.usikkert.kouchat.misc.Controller;
+import net.usikkert.kouchat.util.Validate;
 
 /**
- * Test of {@link Settings}.
+ * This is a JMX MBean for the controller.
  *
  * @author Christian Ihle
  */
-public class SettingsTest {
+public class ControllerInformation implements ControllerInformationMBean {
 
-    private Settings settings;
+    /** The controller. */
+    private final Controller controller;
 
-    @Before
-    public void setUp() throws Exception {
-        settings = new Settings();
-        System.setProperty("file.separator", "/");
+    /**
+     * Constructor.
+     *
+     * @param controller The controller.
+     */
+    public ControllerInformation(final Controller controller) {
+        Validate.notNull(controller, "Controller can not be null");
+        this.controller = controller;
     }
 
-    @Test
-    public void getLogLocationShouldReturnSetValue() {
-        settings.setLogLocation("/var/log/kouchat/");
-
-        assertEquals("/var/log/kouchat/", settings.getLogLocation());
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void logOn() {
+        controller.logOn();
     }
 
-    @Test
-    public void getLogLocationShouldAlwaysEndWithSlash() {
-        settings.setLogLocation("/var/log/kouchat");
-
-        assertEquals("/var/log/kouchat/", settings.getLogLocation());
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void logOff() {
+        controller.logOff(true);
     }
 
-    @Test
-    public void getLogLocationShouldReturnDefaultLocationOfValueNotSet() {
-        settings.setLogLocation(null);
-
-        assertEquals(Constants.APP_LOG_FOLDER, settings.getLogLocation());
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getBeanName() {
+        return "Controller";
     }
 }

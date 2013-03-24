@@ -23,10 +23,12 @@
 package net.usikkert.kouchat.net;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.util.TestUtils;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -36,11 +38,18 @@ import org.junit.Test;
  */
 public class NetworkServiceTest {
 
+    private Settings settings;
+
+    @Before
+    public void setUp() {
+        settings = mock(Settings.class);
+    }
+
     @Test
     public void networkServiceShouldLoadPrivateChatObjectsWhenEnabled() {
-        Settings.getSettings().setNoPrivateChat(false);
+        when(settings.isNoPrivateChat()).thenReturn(false);
 
-        final NetworkService networkService = new NetworkService();
+        final NetworkService networkService = new NetworkService(settings);
 
         assertNotNull(TestUtils.getFieldValue(networkService, UDPReceiver.class, "udpReceiver"));
         assertNotNull(TestUtils.getFieldValue(networkService, UDPSender.class, "udpSender"));
@@ -48,9 +57,9 @@ public class NetworkServiceTest {
 
     @Test
     public void networkServiceShouldNotLoadPrivateChatObjectsWhenDisabled() {
-        Settings.getSettings().setNoPrivateChat(true);
+        when(settings.isNoPrivateChat()).thenReturn(true);
 
-        final NetworkService networkService = new NetworkService();
+        final NetworkService networkService = new NetworkService(settings);
 
         assertNull(TestUtils.getFieldValue(networkService, UDPReceiver.class, "udpReceiver"));
         assertNull(TestUtils.getFieldValue(networkService, UDPSender.class, "udpSender"));
@@ -58,36 +67,36 @@ public class NetworkServiceTest {
 
     @Test
     public void registerUDPReceiverListenerShouldNotFailWhenPrivateChatDisabled() {
-        Settings.getSettings().setNoPrivateChat(true);
+        when(settings.isNoPrivateChat()).thenReturn(true);
 
-        final NetworkService networkService = new NetworkService();
+        final NetworkService networkService = new NetworkService(settings);
 
         networkService.registerUDPReceiverListener(null);
     }
 
     @Test
     public void networkCameUpShouldNotFailWhenPrivateChatDisabled() {
-        Settings.getSettings().setNoPrivateChat(true);
+        when(settings.isNoPrivateChat()).thenReturn(true);
 
-        final NetworkService networkService = new NetworkService();
+        final NetworkService networkService = new NetworkService(settings);
 
         networkService.networkCameUp(false);
     }
 
     @Test
     public void networkWentDownShouldNotFailWhenPrivateChatDisabled() {
-        Settings.getSettings().setNoPrivateChat(true);
+        when(settings.isNoPrivateChat()).thenReturn(true);
 
-        final NetworkService networkService = new NetworkService();
+        final NetworkService networkService = new NetworkService(settings);
 
         networkService.networkWentDown(false);
     }
 
     @Test
     public void sendUDPMsgShouldNotSendMessageWhenPrivateChatDisabled() {
-        Settings.getSettings().setNoPrivateChat(true);
+        when(settings.isNoPrivateChat()).thenReturn(true);
 
-        final NetworkService networkService = new NetworkService();
+        final NetworkService networkService = new NetworkService(settings);
 
         final boolean messageSent = networkService.sendUDPMsg("Nothing", "192.168.1.1", 1234);
         assertFalse(messageSent);

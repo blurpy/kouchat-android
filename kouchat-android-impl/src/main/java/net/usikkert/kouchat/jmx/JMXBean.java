@@ -20,27 +20,19 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.misc;
+package net.usikkert.kouchat.jmx;
 
 /**
- * This is a JMX MBean for general information.
+ * Interface used to identify JMX beans.
  *
  * @author Christian Ihle
  */
-public class GeneralInformation implements GeneralInformationMBean {
+public interface JMXBean {
 
-    /** {@inheritDoc} */
-    @Override
-    public String about() {
-        final User me = Settings.getSettings().getMe();
-        final StringBuilder sb = new StringBuilder();
-
-        sb.append("Client: " + me.getClient() + "\n");
-        sb.append("User name: " + me.getNick() + "\n");
-        sb.append("IP address: " + me.getIpAddress() + "\n");
-        sb.append("Host name: " + me.getHostName() + "\n");
-        sb.append("Operating System: " + me.getOperatingSystem());
-
-        return sb.toString();
-    }
+    /**
+     * Gets the name to display for the bean.
+     *
+     * @return The name of the bean.
+     */
+    String getBeanName();
 }

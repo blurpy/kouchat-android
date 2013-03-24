@@ -34,6 +34,7 @@ import net.usikkert.kouchat.net.FileTransfer;
 import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.Tools;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * Parses and executes commands. A command starts with a slash, and can
@@ -55,13 +56,18 @@ public class CommandParser {
      *
      * @param controller The controller.
      * @param ui The user interface.
+     * @param settings The settings to use.
      */
-    public CommandParser(final Controller controller, final UserInterface ui) {
+    public CommandParser(final Controller controller, final UserInterface ui, final Settings settings) {
+        Validate.notNull(controller, "Controller can not be null");
+        Validate.notNull(ui, "UserInterface can not be null");
+        Validate.notNull(settings, "Settings can not be null");
+
         this.controller = controller;
         this.ui = ui;
+        this.settings = settings;
 
         msgController = ui.getMessageController();
-        settings = Settings.getSettings();
         me = settings.getMe();
         tList = controller.getTransferList();
     }

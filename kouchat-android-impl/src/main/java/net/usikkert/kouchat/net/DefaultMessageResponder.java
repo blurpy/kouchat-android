@@ -37,6 +37,7 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.WaitingList;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.Tools;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * This class responds to events from the message parser.
@@ -60,13 +61,18 @@ public class DefaultMessageResponder implements MessageResponder {
      *
      * @param controller The controller to use for communication.
      * @param ui The user interface to update.
+     * @param settings The settings to use.
      */
-    public DefaultMessageResponder(final Controller controller, final UserInterface ui) {
+    public DefaultMessageResponder(final Controller controller, final UserInterface ui, final Settings settings) {
+        Validate.notNull(controller, "Controller can not be null");
+        Validate.notNull(ui, "UserInterface can not be null");
+        Validate.notNull(settings, "Settings can not be null");
+
         this.controller = controller;
         this.ui = ui;
 
         msgController = ui.getMessageController();
-        me = Settings.getSettings().getMe();
+        me = settings.getMe();
         tList = controller.getTransferList();
         wList = controller.getWaitingList();
         chatState = controller.getChatState();

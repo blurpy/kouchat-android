@@ -20,13 +20,17 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.net;
+package net.usikkert.kouchat.jmx;
 
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.net.ConnectionWorker;
+import net.usikkert.kouchat.net.NetworkUtils;
+import net.usikkert.kouchat.net.OperatingSystemNetworkInfo;
 import net.usikkert.kouchat.util.Validate;
 
 /**
@@ -39,17 +43,25 @@ public class NetworkInformation implements NetworkInformationMBean {
     /** Information and control of the network. */
     private final ConnectionWorker connectionWorker;
 
+    private final Settings settings;
+
     /**
      * Constructor.
      *
      * @param connectionWorker To get information about the network, and control the network.
+     * @param settings The settings to use.
      */
-    public NetworkInformation(final ConnectionWorker connectionWorker) {
+    public NetworkInformation(final ConnectionWorker connectionWorker, final Settings settings) {
         Validate.notNull(connectionWorker, "Connection worker can not be null");
+        Validate.notNull(settings, "Settings can not be null");
+
         this.connectionWorker = connectionWorker;
+        this.settings = settings;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String showCurrentNetwork() {
         final NetworkInterface networkInterface = connectionWorker.getCurrentNetworkInterface();
@@ -61,10 +73,12 @@ public class NetworkInformation implements NetworkInformationMBean {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String showOperatingSystemNetwork() {
-        final OperatingSystemNetworkInfo osNicInfo = new OperatingSystemNetworkInfo();
+        final OperatingSystemNetworkInfo osNicInfo = new OperatingSystemNetworkInfo(settings);
         final NetworkInterface osInterface = osNicInfo.getOperatingSystemNetworkInterface();
 
         if (osInterface == null) {
@@ -74,7 +88,9 @@ public class NetworkInformation implements NetworkInformationMBean {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String[] showUsableNetworks() {
         final List<String> list = new ArrayList<String>();
@@ -97,10 +113,12 @@ public class NetworkInformation implements NetworkInformationMBean {
             return new String[]{"No usable network interfaces detected."};
         }
 
-        return list.toArray(new String[0]);
+        return list.toArray(new String[list.size()]);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String[] showAllNetworks() {
         final List<String> list = new ArrayList<String>();
@@ -116,18 +134,30 @@ public class NetworkInformation implements NetworkInformationMBean {
             list.add(NetworkUtils.getNetworkInterfaceInfo(netif));
         }
 
-        return list.toArray(new String[0]);
+        return list.toArray(new String[list.size()]);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void disconnect() {
         connectionWorker.stop();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void connect() {
         connectionWorker.start();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getBeanName() {
+        return "Network";
     }
 }

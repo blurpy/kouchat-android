@@ -23,10 +23,15 @@
 package net.usikkert.kouchat.net;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 
+import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.User;
+
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -36,6 +41,14 @@ import org.junit.Test;
  */
 public class OperatingSystemNetworkInfoTest {
 
+    private Settings settings;
+
+    @Before
+    public void setUp() {
+        settings = mock(Settings.class);
+        when(settings.getMe()).thenReturn(new User("testuser", 123));
+    }
+
     /**
      * Tests if the network interface for the operating system can be found.
      *
@@ -44,7 +57,7 @@ public class OperatingSystemNetworkInfoTest {
     @Test
     public void testFindingTheOSNetworkInterface() {
         final Enumeration<NetworkInterface> networkInterfaces = NetworkUtils.getNetworkInterfaces();
-        final OperatingSystemNetworkInfo osNicInfo = new OperatingSystemNetworkInfo();
+        final OperatingSystemNetworkInfo osNicInfo = new OperatingSystemNetworkInfo(settings);
         final NetworkInterface osInterface = osNicInfo.getOperatingSystemNetworkInterface();
 
         if (networkInterfaces == null) {

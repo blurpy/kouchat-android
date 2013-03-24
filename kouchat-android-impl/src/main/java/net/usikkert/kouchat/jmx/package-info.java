@@ -20,21 +20,9 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.misc;
-
 /**
- * This is a JMX MBean interface for the controller.
+ * This package has classes for setting up the JMX support in KouChat.
  *
  * @author Christian Ihle
  */
-public interface ControllerInformationMBean {
-
-    /** The name of this MBean. */
-    String NAME = "Controller";
-
-    /** Logs the client on to the network. */
-    void logOn();
-
-    /** Logs the client off the network. */
-    void logOff();
-}
+package net.usikkert.kouchat.jmx;

@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.ReceiverListener;
 import net.usikkert.kouchat.misc.ErrorHandler;
+import net.usikkert.kouchat.util.Tools;
 
 /**
  * This is the thread that listens for multicast messages from
@@ -59,9 +60,6 @@ public class MessageReceiver implements Runnable {
 
     /** The background thread watching for messages from the network. */
     private Thread worker;
-
-    /** The error handler for registering important messages. */
-    private final ErrorHandler errorHandler;
 
     /** The port to receive messages on. */
     private final int port;
@@ -90,7 +88,6 @@ public class MessageReceiver implements Runnable {
         LOG.fine("Creating MessageReceiver on " + ipAddress + ":" + port);
 
         this.port = port;
-        errorHandler = ErrorHandler.getErrorHandler();
 
         try {
             address = InetAddress.getByName(ipAddress);
@@ -98,8 +95,11 @@ public class MessageReceiver implements Runnable {
 
         catch (final IOException e) {
             LOG.log(Level.SEVERE, e.toString(), e);
+
+            final ErrorHandler errorHandler = ErrorHandler.getErrorHandler();
             errorHandler.showCriticalError("Failed to initialize the network:\n" + e + "\n" +
                     Constants.APP_NAME + " will now shutdown.");
+
             System.exit(1);
         }
     }
@@ -175,8 +175,11 @@ public class MessageReceiver implements Runnable {
                 }
 
                 mcSocket.joinGroup(address);
-                // Disabled because of crash in Android 2.3.3 emulator
-                // LOG.log(Level.FINE, "Connected to " + mcSocket.getNetworkInterface());
+
+                if (!Tools.isAndroid()) { // Crashes in Android 2.3.3 emulator
+                    LOG.log(Level.FINE, "Connected to " + mcSocket.getNetworkInterface());
+                }
+
                 connected = true;
             }
         }

@@ -56,12 +56,14 @@ public class MessagesTest {
      * Constructor.
      */
     public MessagesTest() {
-        settings = Settings.getSettings();
-        me = settings.getMe();
+        settings = mock(Settings.class);
+        me = new User("TestUser", 123);
+        when(settings.getMe()).thenReturn(me);
+
         service = mock(NetworkService.class);
         when(service.sendMulticastMsg(anyString())).thenReturn(true);
         when(service.sendUDPMsg(anyString(), anyString(), anyInt())).thenReturn(true);
-        messages = new Messages(service);
+        messages = new Messages(service, settings);
     }
 
     /**

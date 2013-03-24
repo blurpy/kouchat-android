@@ -51,11 +51,14 @@ public class Messages {
      * Constructor.
      *
      * @param networkService The network service used for sending the actual messages.
+     * @param settings The settings to use.
      */
-    public Messages(final NetworkService networkService) {
+    public Messages(final NetworkService networkService, final Settings settings) {
         Validate.notNull(networkService, "Network service can not be null");
+        Validate.notNull(settings, "Settings can not be null");
+
         this.networkService = networkService;
-        settings = Settings.getSettings();
+        this.settings = settings;
         me = settings.getMe();
     }
 
