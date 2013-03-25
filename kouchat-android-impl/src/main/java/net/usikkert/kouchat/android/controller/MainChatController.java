@@ -39,6 +39,8 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -104,6 +106,7 @@ public class MainChatController extends Activity {
         bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
 
         registerMainChatInputListener();
+        registerMainChatTextListener();
         registerUserListClickListener();
         ControllerUtils.makeTextViewScrollable(mainChatView);
         ControllerUtils.makeLinksClickable(mainChatView);
@@ -122,9 +125,7 @@ public class MainChatController extends Activity {
             }
 
             @Override
-            public void onServiceDisconnected(final ComponentName componentName) {
-
-            }
+            public void onServiceDisconnected(final ComponentName componentName) { }
         };
     }
 
@@ -140,6 +141,26 @@ public class MainChatController extends Activity {
                 }
 
                 return false;
+            }
+        });
+    }
+
+    private void registerMainChatTextListener() {
+        mainChatInput.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                if (androidUserInterface != null) { // Might be null on orientation changes
+                    androidUserInterface.updateMeWriting(!mainChatInput.getText().toString().isEmpty());
+                }
             }
         });
     }

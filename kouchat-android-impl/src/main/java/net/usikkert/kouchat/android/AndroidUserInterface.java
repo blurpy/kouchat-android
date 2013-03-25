@@ -380,4 +380,22 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
             controller.changeNewMessage(user.getCode(), false);
         }
     }
+
+    /**
+     * Updates whether the user is currently writing or not. This makes sure a star is shown
+     * by the nick name in the user list, and sends a notice to other users so they can show the same thing.
+     *
+     * @param isCurrentlyWriting If the application user is currently writing.
+     */
+    public void updateMeWriting(final boolean isCurrentlyWriting) {
+        final AsyncTask<Void, Void, Void> updateMeWritingTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            public Void doInBackground(final Void... voids) {
+                controller.updateMeWriting(isCurrentlyWriting);
+                return null;
+            }
+        };
+
+        updateMeWritingTask.execute((Void) null);
+    }
 }

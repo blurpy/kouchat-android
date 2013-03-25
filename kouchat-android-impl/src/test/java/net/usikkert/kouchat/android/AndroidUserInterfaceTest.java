@@ -90,4 +90,18 @@ public class AndroidUserInterfaceTest {
 
         verify(mainChatController).updateTopic("Me - Topic: This rocks! (OtherGuy) - KouChat");
     }
+
+    @Test
+    public void updateMeWritingShouldPassTrueToController() {
+        androidUserInterface.updateMeWriting(true);
+
+        verify(controller).updateMeWriting(true);
+    }
+
+    @Test
+    public void updateMeWritingShouldPassFalseToController() {
+        androidUserInterface.updateMeWriting(false);
+
+        verify(controller).updateMeWriting(false);
+    }
 }

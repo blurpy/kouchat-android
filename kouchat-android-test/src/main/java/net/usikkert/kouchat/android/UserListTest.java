@@ -33,6 +33,7 @@ import com.jayway.android.robotium.solo.Solo;
 
 import android.graphics.Typeface;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.KeyEvent;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -137,7 +138,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(userIsBold("Kou", 1));
     }
 
-    public void test06ShouldShowStarOnOtherUserThatIsWriting() throws CommandException {
+    public void test06ShouldShowStarOnOtherUserThatIsWriting() {
         final Messages messages = client.logon();
         solo.sleep(500);
 
@@ -159,6 +160,47 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(500);
 
         messages.sendStoppedWritingMessage();
+        solo.sleep(500);
+
+        assertFalse(userIsWriting("Kou", 0));
+        assertFalse(userIsWriting("Test", 1));
+    }
+
+    public void test07ShouldShowStarOnMeWhenWriting() {
+        client.logon();
+        solo.sleep(500);
+
+        assertFalse(userIsWriting("Kou", 0));
+        assertFalse(userIsWriting("Test", 1));
+
+        solo.enterText(0, "h"); // Write a single character
+        solo.sleep(500);
+
+        assertTrue(userIsWriting("Kou", 0));
+        assertFalse(userIsWriting("Test", 1));
+
+        solo.clearEditText(0); // Remove the character without sending (KeyEvent.KEYCODE_DEL does not seem to work)
+        solo.sleep(500);
+
+        assertFalse(userIsWriting("Kou", 0));
+        assertFalse(userIsWriting("Test", 1));
+
+        solo.enterText(0, "hello"); // Write a word
+        solo.sleep(500);
+
+        assertTrue(userIsWriting("Kou", 0));
+        assertFalse(userIsWriting("Test", 1));
+
+        TestUtils.switchOrientation(solo);
+        solo.sleep(500);
+
+        assertTrue(userIsWriting("Kou", 0));
+        assertFalse(userIsWriting("Test", 1));
+
+        TestUtils.switchOrientation(solo);
+        solo.sleep(500);
+
+        solo.sendKey(KeyEvent.KEYCODE_ENTER); // Send the word
         solo.sleep(500);
 
         assertFalse(userIsWriting("Kou", 0));
