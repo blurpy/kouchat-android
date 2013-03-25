@@ -4,6 +4,7 @@
 * version 0.8.0 (xx.xx.2013)
   - Added support for showing when someone is currently writing,
     by appending a star after the nick name in the user list
+  - Increased the width of the user list to make space for showing a star next to longer nick names
 
 
 * version 0.7.0 (09.02.2013)

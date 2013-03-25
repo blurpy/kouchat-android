@@ -19,7 +19,7 @@
         android:layout_weight="1"/>
 
     <ListView android:id="@+id/mainChatUserList"
-              android:layout_width="110sp"
+              android:layout_width="120sp"
               android:layout_height="fill_parent"
               android:layout_weight="0"/>
 
