@@ -209,6 +209,8 @@ public class ToolsTest {
 
     @Test
     public void isAndroidShouldBeFalseByDefault() {
+        System.clearProperty(Constants.PROPERTY_CLIENT_UI); // The test fails on CloudBees Jenkins without this
+
         assertFalse(Tools.isAndroid());
     }
 
