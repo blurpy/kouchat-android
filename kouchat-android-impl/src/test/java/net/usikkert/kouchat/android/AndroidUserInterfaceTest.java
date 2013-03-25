@@ -26,6 +26,7 @@ import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.Controller;
+import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestUtils;
@@ -51,9 +52,10 @@ public class AndroidUserInterfaceTest {
 
     @Before
     public void setUp() {
-        androidUserInterface = new AndroidUserInterface(new MainChatController());
+        final Settings settings = mock(Settings.class);
+        when(settings.getMe()).thenReturn(new User("Me", 1234));
 
-        TestUtils.setFieldValue(androidUserInterface, "me", new User("Me", 1234));
+        androidUserInterface = new AndroidUserInterface(new MainChatController(), settings);
 
         controller = mock(Controller.class);
         TestUtils.setFieldValue(androidUserInterface, "controller", controller);

@@ -25,15 +25,12 @@ package net.usikkert.kouchat.util;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.net.ConnectionWorker;
 import net.usikkert.kouchat.net.MessageParser;
 import net.usikkert.kouchat.net.MessageResponderMock;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.NetworkService;
-import net.usikkert.kouchat.net.OperatingSystemNetworkInfo;
 import net.usikkert.kouchat.net.PrivateMessageParser;
 import net.usikkert.kouchat.net.PrivateMessageResponderMock;
-import net.usikkert.kouchat.net.UDPReceiver;
 
 /**
  * A class that can be used for simulating a KouChat client in tests.
@@ -59,7 +56,7 @@ public class TestClient {
     }
 
     public TestClient(final String nickName, final int userCode, final int ownColor) {
-        final Settings settings = TestUtils.createInstance(Settings.class);
+        final Settings settings = new Settings();
 
         if (ownColor != 0) {
             settings.setOwnColor(ownColor);
@@ -69,33 +66,14 @@ public class TestClient {
         me.setNick(nickName);
         TestUtils.setFieldValue(me, "code", userCode);
 
-        networkService = new NetworkService();
-
-        final UDPReceiver udpReceiver = TestUtils.getFieldValue(networkService, UDPReceiver.class, "udpReceiver");
-        TestUtils.setFieldValue(udpReceiver, "me", me);
-
-        final ConnectionWorker connectionWorker =
-                TestUtils.getFieldValue(networkService, ConnectionWorker.class, "connectionWorker");
-
-        final OperatingSystemNetworkInfo osNetworkInfo =
-                TestUtils.getFieldValue(connectionWorker, OperatingSystemNetworkInfo.class, "osNetworkInfo");
-        TestUtils.setFieldValue(osNetworkInfo, "me", me);
-
-        messages = new Messages(networkService);
-        TestUtils.setFieldValue(messages, "me", me);
-        TestUtils.setFieldValue(messages, "settings", settings);
+        networkService = new NetworkService(settings);
+        messages = new Messages(networkService, settings);
 
         messageResponderMock = new MessageResponderMock(me, messages);
-        final MessageParser messageParser = new MessageParser(messageResponderMock);
-        TestUtils.setFieldValue(messageParser, "settings", settings);
-
-        networkService.registerMessageReceiverListener(messageParser);
+        networkService.registerMessageReceiverListener(new MessageParser(messageResponderMock, settings));
 
         privateMessageResponderMock = new PrivateMessageResponderMock();
-        final PrivateMessageParser privateMessageParser = new PrivateMessageParser(privateMessageResponderMock);
-        TestUtils.setFieldValue(privateMessageParser, "settings", settings);
-
-        networkService.registerUDPReceiverListener(privateMessageParser);
+        networkService.registerUDPReceiverListener(new PrivateMessageParser(privateMessageResponderMock, settings));
     }
 
     public Messages logon() {

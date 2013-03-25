@@ -26,7 +26,6 @@ import java.util.Calendar;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.CommandException;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.Messages;
@@ -80,12 +79,14 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
             arthur.sendTopicRequestedMessage(new Topic("DON'T PANIC", "Ford", getDateInPast()));
         }
 
-        solo = new Solo(getInstrumentation(), getActivity());
-        me = Settings.getSettings().getMe();
+        final MainChatController activity = getActivity();
+
+        solo = new Solo(getInstrumentation(), activity);
+        me = TestUtils.getMe(activity);
     }
 
     public void test01SetNickNameAndQuit() {
-        originalNickName = Settings.getSettings().getMe().getNick();
+        originalNickName = me.getNick();
 
         TestUtils.clickOnChangeNickNameInTheSettings(solo);
         TestUtils.changeNickNameTo(solo, "Christian");

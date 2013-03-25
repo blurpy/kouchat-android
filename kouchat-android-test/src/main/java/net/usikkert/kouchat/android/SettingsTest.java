@@ -23,7 +23,7 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
-import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
 
@@ -41,17 +41,21 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
     private static String originalNickName;
 
     private Solo solo;
+    private User me;
 
     public SettingsTest() {
         super(MainChatController.class);
     }
 
     public void setUp() {
-        solo = new Solo(getInstrumentation(), getActivity());
+        final MainChatController activity = getActivity();
+
+        solo = new Solo(getInstrumentation(), activity);
+        me = TestUtils.getMe(activity);
     }
 
     public void test01NickNameCanBeChanged() {
-        originalNickName = Settings.getSettings().getMe().getNick();
+        originalNickName = me.getNick();
 
         TestUtils.clickOnChangeNickNameInTheSettings(solo);
         assertTrue(solo.searchText("Set nick name"));

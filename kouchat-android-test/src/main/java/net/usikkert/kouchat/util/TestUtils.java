@@ -27,7 +27,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.misc.User;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -331,6 +333,19 @@ public final class TestUtils {
         solo.clearEditText(0);
         solo.enterText(0, nickName);
         solo.clickOnButton("OK");
+    }
+
+    /**
+     * Extracts "me", using the main chat controller.
+     *
+     * @param mainChatController The main chat controller.
+     * @return The application user.
+     */
+    public static User getMe(final MainChatController mainChatController) {
+        final AndroidUserInterface androidUserInterface =
+                getFieldValue(mainChatController, AndroidUserInterface.class, "androidUserInterface");
+
+        return getFieldValue(androidUserInterface, User.class, "me");
     }
 
     private static void setValue(final Object object, final Object value, final Field field) {

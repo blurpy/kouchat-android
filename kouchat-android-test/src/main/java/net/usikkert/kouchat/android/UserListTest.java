@@ -24,7 +24,6 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.CommandException;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.util.TestClient;
@@ -56,10 +55,11 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void setUp() {
-        me = Settings.getSettings().getMe();
+        final MainChatController activity = getActivity();
+
+        me = TestUtils.getMe(activity);
         me.setNick("Kou");
 
-        final MainChatController activity = getActivity();
         solo = new Solo(getInstrumentation(), activity);
         client = new TestClient();
 

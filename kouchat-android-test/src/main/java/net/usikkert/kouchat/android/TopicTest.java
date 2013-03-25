@@ -24,7 +24,6 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.CommandException;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
@@ -62,7 +61,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
             client.logon();
         }
 
-        me = Settings.getSettings().getMe();
+        me = TestUtils.getMe(activity);
         defaultOrientation = TestUtils.getCurrentOrientation(solo);
     }
 

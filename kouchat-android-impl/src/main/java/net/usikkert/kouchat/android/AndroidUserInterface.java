@@ -61,22 +61,25 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     private final User me;
     private final MessageStylerWithHistory messageStyler;
     private final Context context;
+    private final Settings settings;
 
     private MainChatController mainChatController;
 
-    public AndroidUserInterface(final Context context) {
+    public AndroidUserInterface(final Context context, final Settings settings) {
         Validate.notNull(context, "Context can not be null");
+        Validate.notNull(settings, "Settings can not be null");
 
         System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
 
         this.context = context;
+        this.settings = settings;
 
         messageStyler = new MessageStylerWithHistory(context);
-        msgController = new MessageController(this, this);
-        controller = new Controller(this);
+        msgController = new MessageController(this, this, settings);
+        controller = new Controller(this, settings);
         userList = controller.getUserList();
         userList.addUserListListener(this);
-        me = Settings.getSettings().getMe();
+        me = settings.getMe();
     }
 
     @Override
@@ -157,7 +160,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         }
 
         if (user.getPrivateChatLogger() == null) {
-            user.setPrivateChatLogger(new ChatLogger(user.getNick()));
+            user.setPrivateChatLogger(new ChatLogger(user.getNick(), settings));
         }
     }
 

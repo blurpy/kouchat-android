@@ -26,7 +26,6 @@ import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.CommandException;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.PrivateMessageResponderMock;
@@ -65,8 +64,10 @@ public class PrivateChatTestCase extends ActivityInstrumentationTestCase2<MainCh
     }
 
     public void setUp() {
-        solo = new Solo(getInstrumentation(), getActivity());
-        me = Settings.getSettings().getMe();
+        final MainChatController activity = getActivity();
+
+        solo = new Solo(getInstrumentation(), activity);
+        me = TestUtils.getMe(activity);
         envelope = getBitmap(R.drawable.envelope);
         dot = getBitmap(R.drawable.dot);
         defaultOrientation = TestUtils.getCurrentOrientation(solo);
