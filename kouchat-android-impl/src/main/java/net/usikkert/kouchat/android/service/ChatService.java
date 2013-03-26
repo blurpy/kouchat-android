@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android.service;
 
+import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.misc.Settings;
 
@@ -40,6 +41,8 @@ public class ChatService extends Service {
 
     @Override
     public void onCreate() {
+        System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
+
         androidUserInterface = new AndroidUserInterface(this, new Settings());
         androidUserInterface.setNickNameFromSettings();
 

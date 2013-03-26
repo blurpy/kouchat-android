@@ -69,8 +69,6 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(settings, "Settings can not be null");
 
-        System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
-
         this.context = context;
         this.settings = settings;
 
