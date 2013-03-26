@@ -5,6 +5,9 @@
   - Added support for showing when someone is currently writing,
     by appending a star after the nick name in the user list
   - Increased the width of the user list to make space for showing a star next to longer nick names
+  - Changed the chat service to a foreground service instead of a background service,
+    to avoid it being killed randomly. This also means a notification is available at all times
+    in the notification area
 
 
 * version 0.7.0 (09.02.2013)
