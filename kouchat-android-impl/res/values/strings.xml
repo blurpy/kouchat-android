@@ -27,5 +27,6 @@
   <string name="message_your_nick_name_changed">You changed nick to %s</string>
   <string name="notification_startup">KouChat is up and running</string>
   <string name="notification_running">Running</string>
+  <string name="notification_new_message">New unread messages</string>
 
 </resources>

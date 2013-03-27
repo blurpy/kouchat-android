@@ -25,6 +25,7 @@ package net.usikkert.kouchat.android;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.Topic;
@@ -49,6 +50,7 @@ public class AndroidUserInterfaceTest {
 
     private MainChatController mainChatController;
     private Controller controller;
+    private NotificationService notificationService;
 
     @Before
     public void setUp() {
@@ -59,6 +61,9 @@ public class AndroidUserInterfaceTest {
 
         controller = mock(Controller.class);
         TestUtils.setFieldValue(androidUserInterface, "controller", controller);
+
+        notificationService = mock(NotificationService.class);
+        TestUtils.setFieldValue(androidUserInterface, "notificationService", notificationService);
 
         mainChatController = mock(MainChatController.class);
         androidUserInterface.registerMainChatController(mainChatController);
@@ -103,5 +108,19 @@ public class AndroidUserInterfaceTest {
         androidUserInterface.updateMeWriting(false);
 
         verify(controller).updateMeWriting(false);
+    }
+
+    @Test
+    public void notifyMessageArrivedShouldAddNotification() {
+        androidUserInterface.notifyMessageArrived(null);
+
+        verify(notificationService).notifyNewMessage();
+    }
+
+    @Test
+    public void notifyPrivateMessageArrivedShouldAddNotification() {
+        androidUserInterface.notifyPrivateMessageArrived(null);
+
+        verify(notificationService).notifyNewMessage();
     }
 }

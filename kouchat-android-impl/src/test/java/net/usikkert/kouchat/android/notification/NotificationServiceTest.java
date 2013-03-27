@@ -23,15 +23,18 @@
 package net.usikkert.kouchat.android.notification;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -40,6 +43,7 @@ import com.xtremelabs.robolectric.shadows.ShadowNotification;
 import com.xtremelabs.robolectric.shadows.ShadowPendingIntent;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 
 /**
  * Test of {@link NotificationService}.
@@ -54,9 +58,14 @@ public class NotificationServiceTest {
 
     private NotificationService notificationService;
 
+    private NotificationManager notificationManager;
+
     @Before
     public void setUp() {
-        notificationService = new NotificationService(new MainChatController());
+        notificationService = new NotificationService(Robolectric.application.getApplicationContext());
+
+        notificationManager = mock(NotificationManager.class);
+        TestUtils.setFieldValue(notificationService, "notificationManager", notificationManager);
     }
 
     @Test
@@ -70,7 +79,6 @@ public class NotificationServiceTest {
     @Test
     public void createServiceNotificationShouldSetIconAndStartupMessage() {
         final Notification notification = notificationService.createServiceNotification();
-        assertNotNull(notification);
 
         assertEquals(R.drawable.kou_icon_24x24, notification.icon);
         assertEquals("KouChat is up and running", notification.tickerText);
@@ -88,6 +96,48 @@ public class NotificationServiceTest {
     @Test
     public void createServiceNotificationShouldCreatePendingIntentForOpeningTheMainChat() {
         final Notification notification = notificationService.createServiceNotification();
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+        final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
+
+        assertEquals(MainChatController.class, pendingIntent.getIntentClass());
+    }
+
+    @Test
+    public void notifyNewMessageShouldSetActivityIcon() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.notifyNewMessage();
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        assertEquals(R.drawable.kou_icon_activity_24x24, notification.icon);
+    }
+
+    @Test
+    public void notifyNewMessageShouldSetNotificationTextForTheDrawer() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.notifyNewMessage();
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+
+        assertEquals("KouChat", latestEventInfo.getContentTitle());
+        assertEquals("New unread messages", latestEventInfo.getContentText());
+    }
+
+    @Test
+    public void notifyNewMessageShouldCreatePendingIntentForOpeningTheMainChat() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.notifyNewMessage();
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
         final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
         final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
 

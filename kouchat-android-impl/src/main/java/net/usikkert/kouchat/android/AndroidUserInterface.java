@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.event.UserListListener;
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
@@ -62,6 +63,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     private final MessageStylerWithHistory messageStyler;
     private final Context context;
     private final Settings settings;
+    private final NotificationService notificationService;
 
     private MainChatController mainChatController;
 
@@ -75,6 +77,8 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         messageStyler = new MessageStylerWithHistory(context);
         msgController = new MessageController(this, this, settings);
         controller = new Controller(this, settings);
+        notificationService = new NotificationService(context);
+
         userList = controller.getUserList();
         userList.addUserListListener(this);
         me = settings.getMe();
@@ -138,12 +142,14 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
 
     @Override
     public void notifyMessageArrived(final User user) {
-
+        // TODO only if not visible
+        notificationService.notifyNewMessage();
     }
 
     @Override
     public void notifyPrivateMessageArrived(final User user) {
-
+        // TODO only if not visible
+        notificationService.notifyNewMessage();
     }
 
     @Override

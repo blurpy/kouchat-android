@@ -22,12 +22,12 @@
 
 package net.usikkert.kouchat.android.notification;
 
-import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.util.Validate;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -42,6 +42,7 @@ public class NotificationService {
     public static final int SERVICE_NOTIFICATION_ID = 1001;
 
     private final Context context;
+    private final NotificationManager notificationManager;
 
     /**
      * Constructor.
@@ -51,25 +52,41 @@ public class NotificationService {
     public NotificationService(final Context context) {
         Validate.notNull(context, "Context can not be null");
         this.context = context;
+
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     /**
      * Creates a notification for association with a foreground service.
      *
+     * <p>The latest info text is set to "Running".</p>
+     *
      * @return A complete notification.
      */
     public Notification createServiceNotification() {
-        final Notification notification = createNotification();
+        final Notification notification = createNotification(R.drawable.kou_icon_24x24);
         final PendingIntent pendingIntent = createPendingIntent();
 
-        setLatestEventInfo(notification, pendingIntent);
+        setLatestEventInfo(notification, pendingIntent, R.string.notification_running);
 
         return notification;
     }
 
-    private Notification createNotification() {
+    /**
+     * Updates the foreground service notification and sets the latest info text to "New unread messages".
+     */
+    public void notifyNewMessage() {
+        final Notification notification = createNotification(R.drawable.kou_icon_activity_24x24);
+        final PendingIntent pendingIntent = createPendingIntent();
+
+        setLatestEventInfo(notification, pendingIntent, R.string.notification_new_message);
+
+        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
+    }
+
+    private Notification createNotification(final int iconId) {
         return new Notification(
-                R.drawable.kou_icon_24x24,
+                iconId,
                 context.getText(R.string.notification_startup), // Text shown when starting KouChat
                 System.currentTimeMillis());
     }
@@ -79,10 +96,11 @@ public class NotificationService {
         return PendingIntent.getActivity(context, 0, new Intent(context, MainChatController.class), 0);
     }
 
-    private void setLatestEventInfo(final Notification notification, final PendingIntent pendingIntent) {
+    private void setLatestEventInfo(final Notification notification, final PendingIntent pendingIntent,
+                                    final int latestInfoTextId) {
         notification.setLatestEventInfo(context,
-                Constants.APP_NAME, // First line of the notification in the drawer
-                context.getText(R.string.notification_running), // Second line of the notification in the drawer
+                context.getText(R.string.app_name), // First line of the notification in the drawer
+                context.getText(latestInfoTextId), // Second line of the notification in the drawer
                 pendingIntent);
     }
 }
