@@ -22,26 +22,43 @@
 
 package net.usikkert.kouchat.android.service;
 
-import net.usikkert.kouchat.android.AndroidUserInterface;
-import net.usikkert.kouchat.util.Validate;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-import android.os.Binder;
+import net.usikkert.kouchat.android.AndroidUserInterface;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+
+import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
- * Binder for accessing the {@link AndroidUserInterface}.
+ * Test of {@link ChatServiceBinder}.
  *
  * @author Christian Ihle
  */
-public class ChatServiceBinder extends Binder {
+@RunWith(RobolectricTestRunner.class)
+public class ChatServiceBinderTest {
 
-    private final AndroidUserInterface androidUserInterface;
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
-    public ChatServiceBinder(final AndroidUserInterface androidUserInterface) {
-        Validate.notNull(androidUserInterface, "AndroidUserInterface can not be null");
-        this.androidUserInterface = androidUserInterface;
+    @Test
+    public void constructorShouldThrowExceptionIfAndroidUserInterfaceIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("AndroidUserInterface can not be null");
+
+        new ChatServiceBinder(null);
     }
 
-    public AndroidUserInterface getAndroidUserInterface() {
-        return androidUserInterface;
+    @Test
+    public void getAndroidUserInterfaceShouldReturnObjectFromConstructor() {
+        final AndroidUserInterface ui = mock(AndroidUserInterface.class);
+
+        final ChatServiceBinder binder = new ChatServiceBinder(ui);
+
+        assertSame(ui, binder.getAndroidUserInterface());
     }
 }
