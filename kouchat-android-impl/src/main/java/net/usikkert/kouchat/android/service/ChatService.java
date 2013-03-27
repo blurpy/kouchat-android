@@ -24,12 +24,9 @@ package net.usikkert.kouchat.android.service;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.AndroidUserInterface;
-import net.usikkert.kouchat.android.R;
-import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.misc.Settings;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -44,9 +41,8 @@ import android.os.IBinder;
  */
 public class ChatService extends Service {
 
-    private static final int STARTUP_NOTIFICATION_ID = 1001;
-
     private AndroidUserInterface androidUserInterface;
+    private NotificationService notificationService;
 
     @Override
     public void onCreate() {
@@ -54,6 +50,8 @@ public class ChatService extends Service {
 
         androidUserInterface = new AndroidUserInterface(this, new Settings());
         androidUserInterface.setNickNameFromSettings();
+
+        notificationService = new NotificationService(this);
 
         super.onCreate();
     }
@@ -64,7 +62,7 @@ public class ChatService extends Service {
             androidUserInterface.logOn();
         }
 
-        startForeground(STARTUP_NOTIFICATION_ID, createStartupNotification());
+        startForeground(NotificationService.SERVICE_NOTIFICATION_ID, notificationService.createServiceNotification());
 
         super.onStart(intent, startId);
     }
@@ -79,23 +77,5 @@ public class ChatService extends Service {
         androidUserInterface.logOff();
 
         super.onDestroy();
-    }
-
-    private Notification createStartupNotification() {
-        final Notification notification = new Notification(
-                R.drawable.kou_icon_24x24,
-                getText(R.string.notification_startup), // Text shown when starting KouChat
-                System.currentTimeMillis());
-
-        // Used to launch KouChat when clicking on the notification in the drawer
-        final PendingIntent pendingIntent =
-                PendingIntent.getActivity(this, 0, new Intent(this, MainChatController.class), 0);
-
-        notification.setLatestEventInfo(this,
-                Constants.APP_NAME, // First line of the notification in the drawer
-                getText(R.string.notification_running), // Second line of the notification in the drawer
-                pendingIntent);
-
-        return notification;
     }
 }
