@@ -46,7 +46,34 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void test01() {
+    // TODO remember to verify icon reset when going to the main chat
+    // TODO implement tests
+
+    public void test01ShouldShowNotificationWhenKouChatIsHiddenAndSomeoneWritesInTheMainChat() {
+
+    }
+
+    public void test02ShouldShowNotificationWhenKouChatIsHiddenAndSomeoneWritesInThePrivateChat() {
+
+    }
+
+    public void test03ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInTheMainChat() {
+
+    }
+
+    public void test04ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInThePrivateChat() {
+
+    }
+
+    public void test05ShouldNotShowNotificationWhenPrivateChatIsVisibleAndCurrentUserWritesInThePrivateChat() {
+
+    }
+
+    public void test06ShouldShowNotificationWhenPrivateChatIsVisibleAndOtherUserWritesInAnotherPrivateChat() {
+
+    }
+
+    public void test07ShouldShowNotificationWhenPrivateChatIsVisibleAndSomeUserWritesInTheMainChat() {
 
     }
 
