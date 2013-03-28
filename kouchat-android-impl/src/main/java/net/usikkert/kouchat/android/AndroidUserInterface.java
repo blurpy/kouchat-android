@@ -140,16 +140,25 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
 
     }
 
+    /**
+     * Notifies about a new message if the main chat is not visible.
+     */
     @Override
     public void notifyMessageArrived(final User user) {
-        // TODO only if not visible
-        notificationService.notifyNewMessage();
+        if (!isVisible()) {
+            notificationService.notifyNewMessage();
+        }
     }
 
+    /**
+     * Notifies about a new message if neither the main chat nor the private chat with
+     * the user who sent the message is visible.
+     */
     @Override
     public void notifyPrivateMessageArrived(final User user) {
-        // TODO only if not visible
-        notificationService.notifyNewMessage();
+        if (!isVisible() && !user.getPrivchat().isVisible()) {
+            notificationService.notifyNewMessage();
+        }
     }
 
     @Override

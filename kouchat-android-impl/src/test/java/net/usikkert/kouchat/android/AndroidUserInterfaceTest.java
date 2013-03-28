@@ -112,17 +112,66 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void notifyMessageArrivedShouldAddNotification() {
+    public void notifyMessageArrivedShouldAddNotificationIfMainChatNotVisible() {
+        assertFalse(mainChatController.isVisible());
+
         androidUserInterface.notifyMessageArrived(null);
 
         verify(notificationService).notifyNewMessage();
     }
 
     @Test
-    public void notifyPrivateMessageArrivedShouldAddNotification() {
-        androidUserInterface.notifyPrivateMessageArrived(null);
+    public void notifyMessageArrivedShouldNotAddNotificationIfMainChatVisible() {
+        when(mainChatController.isVisible()).thenReturn(true);
+
+        androidUserInterface.notifyMessageArrived(null);
+
+        verifyZeroInteractions(notificationService);
+    }
+
+    @Test
+    public void notifyPrivateMessageArrivedShouldAddNotificationIfNotMainChatOrPrivateChatWithSpecifiedUserIsVisible() {
+        final AndroidPrivateChatWindow privchat = mock(AndroidPrivateChatWindow.class);
+        assertFalse(privchat.isVisible());
+
+        final User testUser = new User("TestUser", 1234);
+        testUser.setPrivchat(privchat);
+
+        assertFalse(mainChatController.isVisible());
+
+        androidUserInterface.notifyPrivateMessageArrived(testUser);
 
         verify(notificationService).notifyNewMessage();
+    }
+
+    @Test
+    public void notifyPrivateMessageArrivedShouldNotAddNotificationIfMainChatIsVisible() {
+        final AndroidPrivateChatWindow privchat = mock(AndroidPrivateChatWindow.class);
+        assertFalse(privchat.isVisible());
+
+        final User testUser = new User("TestUser", 1234);
+        testUser.setPrivchat(privchat);
+
+        when(mainChatController.isVisible()).thenReturn(true);
+
+        androidUserInterface.notifyPrivateMessageArrived(testUser);
+
+        verifyZeroInteractions(notificationService);
+    }
+
+    @Test
+    public void notifyPrivateMessageArrivedShouldNotAddNotificationIfPrivateChatWithSpecifiedUserIsVisible() {
+        final AndroidPrivateChatWindow privchat = mock(AndroidPrivateChatWindow.class);
+        when(privchat.isVisible()).thenReturn(true);
+
+        final User testUser = new User("TestUser", 1234);
+        testUser.setPrivchat(privchat);
+
+        assertFalse(mainChatController.isVisible());
+
+        androidUserInterface.notifyPrivateMessageArrived(testUser);
+
+        verifyZeroInteractions(notificationService);
     }
 
     @Test
