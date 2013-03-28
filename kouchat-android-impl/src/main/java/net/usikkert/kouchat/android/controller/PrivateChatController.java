@@ -61,7 +61,7 @@ public class PrivateChatController extends Activity {
     private boolean visible;
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
