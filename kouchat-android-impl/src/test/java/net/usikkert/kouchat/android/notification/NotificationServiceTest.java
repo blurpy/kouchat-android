@@ -144,6 +144,48 @@ public class NotificationServiceTest {
         assertEquals(MainChatController.class, pendingIntent.getIntentClass());
     }
 
+    @Test
+    public void resetNotificationShouldSetRegularIcon() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.resetNotification();
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        assertEquals(R.drawable.kou_icon_24x24, notification.icon);
+    }
+
+    @Test
+    public void resetNotificationShouldResetNotificationTextForTheDrawer() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.resetNotification();
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+
+        assertEquals("KouChat", latestEventInfo.getContentTitle());
+        assertEquals("Running", latestEventInfo.getContentText());
+    }
+
+    @Test
+    public void resetNotificationShouldCreatePendingIntentForOpeningTheMainChat() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.resetNotification();
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+        final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
+
+        assertEquals(MainChatController.class, pendingIntent.getIntentClass());
+    }
+
     private ShadowNotification.LatestEventInfo getLatestEventInfo(final Notification notification) {
         final ShadowNotification shadowNotification = Robolectric.shadowOf(notification);
         return shadowNotification.getLatestEventInfo();

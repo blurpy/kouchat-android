@@ -73,13 +73,27 @@ public class NotificationService {
     }
 
     /**
-     * Updates the foreground service notification and sets the latest info text to "New unread messages".
+     * Updates the foreground service notification and sets the latest info text to "New unread messages",
+     * and changes to the "activity" icon.
      */
     public void notifyNewMessage() {
         final Notification notification = createNotification(R.drawable.kou_icon_activity_24x24);
         final PendingIntent pendingIntent = createPendingIntent();
 
         setLatestEventInfo(notification, pendingIntent, R.string.notification_new_message);
+
+        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
+    }
+
+    /**
+     * Updates the foreground service notification and sets the latest info text back to "Running",
+     * and changes back to the regular icon.
+     */
+    public void resetNotification() {
+        final Notification notification = createNotification(R.drawable.kou_icon_24x24);
+        final PendingIntent pendingIntent = createPendingIntent();
+
+        setLatestEventInfo(notification, pendingIntent, R.string.notification_running);
 
         notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
     }
