@@ -170,12 +170,12 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
 
     @Override
     public boolean isVisible() {
-        return false;
+        return mainChatController != null && mainChatController.isVisible();
     }
 
     @Override
     public boolean isFocused() {
-        return false;
+        return isVisible();
     }
 
     @Override

@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
@@ -122,5 +123,39 @@ public class AndroidUserInterfaceTest {
         androidUserInterface.notifyPrivateMessageArrived(null);
 
         verify(notificationService).notifyNewMessage();
+    }
+
+    @Test
+    public void unregisterMainChatControllerShouldSetControllerToNull() {
+        final String fieldName = "mainChatController";
+        final Class<MainChatController> fieldClass = MainChatController.class;
+
+        assertNotNull(TestUtils.getFieldValue(androidUserInterface, fieldClass, fieldName));
+        androidUserInterface.unregisterMainChatController();
+        assertNull(TestUtils.getFieldValue(androidUserInterface, fieldClass, fieldName));
+    }
+
+    @Test
+    public void isVisibleAndIsFocusedShouldBeFalseIfMainChatControllerIsNull() {
+        androidUserInterface.unregisterMainChatController();
+
+        assertFalse(androidUserInterface.isVisible());
+        assertFalse(androidUserInterface.isFocused());
+    }
+
+    @Test
+    public void isVisibleAndIsFocusedShouldBeFalseIfMainChatControllerIsNotVisible() {
+        assertFalse(mainChatController.isVisible());
+
+        assertFalse(androidUserInterface.isVisible());
+        assertFalse(androidUserInterface.isFocused());
+    }
+
+    @Test
+    public void isVisibleAndIsFocusedShouldBeTrueIfMainChatControllerIsVisible() {
+        when(mainChatController.isVisible()).thenReturn(true);
+
+        assertTrue(androidUserInterface.isVisible());
+        assertTrue(androidUserInterface.isFocused());
     }
 }
