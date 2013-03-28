@@ -207,4 +207,11 @@ public class AndroidUserInterfaceTest {
         assertTrue(androidUserInterface.isVisible());
         assertTrue(androidUserInterface.isFocused());
     }
+
+    @Test
+    public void resetNotificationShouldUseTheNotificationService() {
+        androidUserInterface.resetNotification();
+
+        verify(notificationService).resetNotification();
+    }
 }

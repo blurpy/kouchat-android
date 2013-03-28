@@ -411,4 +411,11 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
 
         updateMeWritingTask.execute((Void) null);
     }
+
+    /**
+     * Resets the current notification using the notification service.
+     */
+    public void resetNotification() {
+        notificationService.resetNotification();
+    }
 }

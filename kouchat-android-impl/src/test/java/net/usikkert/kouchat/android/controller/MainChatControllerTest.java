@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -70,5 +71,22 @@ public class MainChatControllerTest {
 
         controller.onDestroy();
         assertFalse(controller.isVisible());
+    }
+
+    @Test
+    public void onResumeShouldResetNotification() {
+        final AndroidUserInterface ui = mock(AndroidUserInterface.class);
+        TestUtils.setFieldValue(controller, "androidUserInterface", ui);
+
+        controller.onResume();
+
+        verify(ui).resetNotification();
+    }
+
+    @Test
+    public void onResumeShouldHandleIfAndroidUserInterfaceIsNotInitializedYet() {
+        assertNull(TestUtils.getFieldValue(controller, AndroidUserInterface.class, "androidUserInterface"));
+
+        controller.onResume();
     }
 }

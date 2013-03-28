@@ -204,6 +204,10 @@ public class MainChatController extends Activity {
     protected void onResume() {
         super.onResume();
         visible = true;
+
+        if (androidUserInterface != null) { // Is null during initial startup. Doesn't matter.
+            androidUserInterface.resetNotification();
+        }
     }
 
     @Override
