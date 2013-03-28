@@ -20,41 +20,41 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android.testsuite;
+package net.usikkert.kouchat.android;
 
-import net.usikkert.kouchat.android.AboutDialogTest;
-import net.usikkert.kouchat.android.HitchhikerTest;
-import net.usikkert.kouchat.android.MainChatTest;
-import net.usikkert.kouchat.android.NotificationTest;
-import net.usikkert.kouchat.android.PrivateChatStateTest;
-import net.usikkert.kouchat.android.PrivateChatTest;
-import net.usikkert.kouchat.android.SettingsTest;
-import net.usikkert.kouchat.android.TopicTest;
-import net.usikkert.kouchat.android.UserListTest;
+import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.util.TestUtils;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import com.jayway.android.robotium.solo.Solo;
+
+import android.test.ActivityInstrumentationTestCase2;
 
 /**
- * Runs all the implemented tests.
+ * Tests notifications.
  *
  * @author Christian Ihle
  */
-public class AllTests extends TestSuite {
+public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
-    public static Test suite() {
-        final TestSuite testSuite = new TestSuite("All Android tests");
+    private Solo solo;
 
-        testSuite.addTestSuite(AboutDialogTest.class);
-        testSuite.addTestSuite(MainChatTest.class);
-        testSuite.addTestSuite(PrivateChatTest.class);
-        testSuite.addTestSuite(PrivateChatStateTest.class);
-        testSuite.addTestSuite(SettingsTest.class);
-        testSuite.addTestSuite(TopicTest.class);
-        testSuite.addTestSuite(UserListTest.class);
-        testSuite.addTestSuite(HitchhikerTest.class);
-        testSuite.addTestSuite(NotificationTest.class);
+    public NotificationTest() {
+        super(MainChatController.class);
+    }
 
-        return testSuite;
+    public void setUp() {
+        solo = new Solo(getInstrumentation(), getActivity());
+    }
+
+    public void test01() {
+
+    }
+
+    public void test99Quit() {
+        TestUtils.quit(solo);
+    }
+
+    public void tearDown() {
+        solo.finishOpenedActivities();
     }
 }
