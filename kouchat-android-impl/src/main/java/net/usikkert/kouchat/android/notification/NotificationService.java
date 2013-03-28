@@ -64,12 +64,7 @@ public class NotificationService {
      * @return A complete notification.
      */
     public Notification createServiceNotification() {
-        final Notification notification = createNotification(R.drawable.kou_icon_24x24);
-        final PendingIntent pendingIntent = createPendingIntent();
-
-        setLatestEventInfo(notification, pendingIntent, R.string.notification_running);
-
-        return notification;
+        return createNotificationWithLatestInfo(R.drawable.kou_icon_24x24, R.string.notification_running);
     }
 
     /**
@@ -77,10 +72,8 @@ public class NotificationService {
      * and changes to the "activity" icon.
      */
     public void notifyNewMessage() {
-        final Notification notification = createNotification(R.drawable.kou_icon_activity_24x24);
-        final PendingIntent pendingIntent = createPendingIntent();
-
-        setLatestEventInfo(notification, pendingIntent, R.string.notification_new_message);
+        final Notification notification =
+                createNotificationWithLatestInfo(R.drawable.kou_icon_activity_24x24, R.string.notification_new_message);
 
         notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
     }
@@ -90,12 +83,19 @@ public class NotificationService {
      * and changes back to the regular icon.
      */
     public void resetNotification() {
-        final Notification notification = createNotification(R.drawable.kou_icon_24x24);
-        final PendingIntent pendingIntent = createPendingIntent();
-
-        setLatestEventInfo(notification, pendingIntent, R.string.notification_running);
+        final Notification notification =
+                createNotificationWithLatestInfo(R.drawable.kou_icon_24x24, R.string.notification_running);
 
         notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
+    }
+
+    private Notification createNotificationWithLatestInfo(final int iconId, final int latestInfoTextId) {
+        final Notification notification = createNotification(iconId);
+        final PendingIntent pendingIntent = createPendingIntent();
+
+        setLatestEventInfo(notification, pendingIntent, latestInfoTextId);
+
+        return notification;
     }
 
     private Notification createNotification(final int iconId) {
