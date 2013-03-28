@@ -87,6 +87,9 @@ public class MainChatController extends Activity {
     private ArrayAdapter<User> users;
     private ArrayList<User> usersBackingList;
 
+    /** If the main chat is currently visible. */
+    private boolean visible;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,6 +198,18 @@ public class MainChatController extends Activity {
 
     private void openKeyboard() {
         mainChatInput.requestFocus();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        visible = true;
+    }
+
+    @Override
+    protected void onPause() {
+        visible = false;
+        super.onPause();
     }
 
     @Override
@@ -322,5 +337,14 @@ public class MainChatController extends Activity {
                 users.notifyDataSetChanged();
             }
         });
+    }
+
+    /**
+     * Returns if the main chat view is currently visible.
+     *
+     * @return If the view is visible.
+     */
+    public boolean isVisible() {
+        return visible;
     }
 }

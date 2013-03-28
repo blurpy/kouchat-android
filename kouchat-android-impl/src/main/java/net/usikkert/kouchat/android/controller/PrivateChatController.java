@@ -58,6 +58,7 @@ public class PrivateChatController extends Activity {
     private AndroidPrivateChatWindow privateChatWindow;
     private User user;
 
+    /** If this private chat is currently visible. */
     private boolean visible;
 
     @Override
@@ -106,8 +107,8 @@ public class PrivateChatController extends Activity {
 
     @Override
     protected void onPause() {
-        super.onPause();
         visible = false;
+        super.onPause();
     }
 
     private Intent createChatServiceIntent() {
