@@ -2,40 +2,38 @@
 - KouChat CHANGES
 
 * version 0.8.0 (xx.xx.2013)
-  - Added support for showing when someone is currently writing,
-    by appending a star after the nick name in the user list
-  - Increased the width of the user list to make space for showing a star next to longer nick names
+  - Added support for showing who is currently writing, using a "*" next to the nick name in the user list.
+  - Increased the width of the user list to make space for the star.
   - Changed the chat service to a foreground service instead of a background service,
-    to avoid it being killed randomly. This also means a notification is available at all times
-    in the notification area
-  - The icon in the notification area changes to green to indicate new messages
-    when KouChat is in the background
+    to avoid it being killed randomly, removing the chat history and losing the connection.
+  - Added notification support, with an icon and a status text shown in the notification area.
+    White icon means nothing to notify. Green icon means new unread messages.
 
 
 * version 0.7.0 (09.02.2013)
-  - Added support for smileys
-  - Updated copyright to include 2013
+  - Added support for smileys.
+  - Updated copyright to include 2013.
 
 
 * version 0.6.0 (08.12.2012)
-  - Imported backend code from KouChat v1.2.0 for desktop
-  - Changed license from GPL v3 to LGPL v3
-  - Added support for private chat
-  - Made links clickable in the chat
-  - Made sure the text view is scrolled to the bottom when orientation changes
-  - Updated the title of the main chat to not mention a topic if the topic is not set
-  - Made it easier to see who you are in the user list by making "you" appear in bold text
+  - Imported backend code from KouChat v1.2.0 for desktop.
+  - Changed license from GPL v3 to LGPL v3.
+  - Added support for private chat.
+  - Made links clickable in the chat.
+  - Made sure the text view is scrolled to the bottom when orientation changes.
+  - Updated the title of the main chat to not mention a topic if the topic is not set.
+  - Made it easier to see who you are in the user list by making "you" appear in bold text.
 
 
 * version 0.5.1 (03.06.2012):
-  - Added support for Android 4.0, Ice Cream Sandwich
-  - Updated copyright to include 2012
+  - Added support for Android 4.0, Ice Cream Sandwich.
+  - Updated copyright to include 2012.
 
 
 * version 0.5 (29.11.2011):
-  - Imported backend code from KouChat v1.1.0 for desktop
-  - Added support for main chat
-  - Added list of online users
-  - Added support for changing nick name
-  - Added display of topic
-  - Added About dialog
+  - Imported backend code from KouChat v1.1.0 for desktop.
+  - Added support for main chat.
+  - Added list of online users.
+  - Added support for changing nick name.
+  - Added display of topic.
+  - Added About dialog.
