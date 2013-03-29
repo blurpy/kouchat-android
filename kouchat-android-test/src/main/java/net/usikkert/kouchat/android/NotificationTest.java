@@ -91,7 +91,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertDefaultNotification();
 
-        client.sendPrivateChatMessage(me, "You have a new hidden private message!");
+        client.sendPrivateChatMessage("You have a new hidden private message!", me);
         solo.sleep(1500);
         assertNewMessageNotification();
 
@@ -115,7 +115,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertDefaultNotification();
 
-        client.sendPrivateChatMessage(me, "You have another hidden private message!");
+        client.sendPrivateChatMessage("You have another hidden private message!", me);
         solo.sleep(1500);
         assertDefaultNotification();
 
@@ -128,7 +128,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
 
         openPrivateChat();
 
-        client.sendPrivateChatMessage(me, "You have a new visible private message!");
+        client.sendPrivateChatMessage("You have a new visible private message!", me);
         solo.sleep(1500);
         assertDefaultNotification();
     }
@@ -142,7 +142,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
 
         TestUtils.openPrivateChat(solo, 3, 3, "Test");
 
-        otherUser.sendPrivateChatMessage(me, "You should get a notification now!");
+        otherUser.sendPrivateChatMessage("You should get a notification now!", me);
         solo.sleep(1500);
         assertNewMessageNotification();
 

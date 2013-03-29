@@ -129,10 +129,10 @@ public class TestClient {
     /**
      * Sends the specified chat message to the private chat of the specified user.
      *
-     * @param toUser The user to send the private message to.
      * @param message The message to send.
+     * @param toUser The user to send the private message to.
      */
-    public void sendPrivateChatMessage(final User toUser, final String message) {
+    public void sendPrivateChatMessage(final String message, final User toUser) {
         try {
             messages.sendPrivateMessage(message, toUser);
         } catch (CommandException e) {
