@@ -37,6 +37,7 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.test.ActivityInstrumentationTestCase2;
 import android.test.InstrumentationTestCase;
 import android.text.Layout;
 import android.text.TextPaint;
@@ -360,6 +361,21 @@ public final class TestUtils {
     public static void launchMainChat(final InstrumentationTestCase testCase) {
         final String packageName = testCase.getInstrumentation().getTargetContext().getPackageName();
         testCase.launchActivity(packageName, MainChatController.class, null);
+    }
+
+    /**
+     * Closes the main chat, by finishing it.
+     *
+     * @param testCase The test that needs to close the main chat.
+     */
+    public static void closeMainChat(final ActivityInstrumentationTestCase2 testCase) {
+        final Activity activity = testCase.getActivity();
+
+        if (!activity.getClass().equals(MainChatController.class)) {
+            throw new IllegalArgumentException("Can only close main chat: " + activity);
+        }
+
+        activity.finish();
     }
 
     private static void setValue(final Object object, final Object value, final Field field) {
