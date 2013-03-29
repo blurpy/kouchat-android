@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.util;
 
+import static junit.framework.Assert.*;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 
 import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.User;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -370,12 +373,29 @@ public final class TestUtils {
      */
     public static void closeMainChat(final ActivityInstrumentationTestCase2 testCase) {
         final Activity activity = testCase.getActivity();
-
-        if (!activity.getClass().equals(MainChatController.class)) {
-            throw new IllegalArgumentException("Can only close main chat: " + activity);
-        }
+        assertEquals(MainChatController.class, activity.getClass());
 
         activity.finish();
+    }
+
+    /**
+     * Opens a private chat with the specified user.
+     *
+     * @param solo The solo tester.
+     * @param numberOfUsers Number of users to expect in the main chat.
+     * @param userNumber The number to expect the specified user to be in the list.
+     * @param userName User name of the user to open the private chat with.
+     */
+    public static void openPrivateChat(final Solo solo, final int numberOfUsers, final int userNumber,
+                                       final String userName) {
+        solo.sleep(500);
+        assertEquals(numberOfUsers, solo.getCurrentListViews().get(0).getCount());
+        solo.clickInList(userNumber);
+        solo.sleep(500);
+
+        solo.assertCurrentActivity("Should have opened the private chat", PrivateChatController.class);
+        // To be sure we are chatting with the right user
+        assertEquals(userName + " - KouChat", solo.getCurrentActivity().getTitle());
     }
 
     private static void setValue(final Object object, final Object value, final Field field) {
