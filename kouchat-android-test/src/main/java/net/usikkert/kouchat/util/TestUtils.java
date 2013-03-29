@@ -26,7 +26,6 @@ import static junit.framework.Assert.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import net.usikkert.kouchat.android.AndroidUserInterface;
@@ -89,34 +88,6 @@ public final class TestUtils {
 
         final Field field = getField(object, fieldName);
         setValue(object, value, field);
-    }
-
-    /**
-     * Creates an instance of the class by using the default constructor.
-     * Does not respect the visibility of the constructor,
-     *
-     * @param theClass The class to create an instance of.
-     * @param <T> The type to create an instance of.
-     * @return An instance of the class.
-     */
-    public static <T> T createInstance(final Class<T> theClass) {
-        final Constructor<T> defaultConstructor = getDefaultConstructor(theClass);
-        final boolean originalAccessible = defaultConstructor.isAccessible();
-
-        try {
-            defaultConstructor.setAccessible(true);
-            return defaultConstructor.newInstance();
-
-        } catch (final InstantiationException e) {
-            throw new IllegalArgumentException("Failed to create instance of " + theClass, e);
-        } catch (final IllegalAccessException e) {
-            throw new IllegalArgumentException("Failed to create instance of " + theClass, e);
-        } catch (InvocationTargetException e) {
-            throw new IllegalArgumentException("Failed to create instance of " + theClass, e);
-
-        } finally {
-            defaultConstructor.setAccessible(originalAccessible);
-        }
     }
 
     /**
