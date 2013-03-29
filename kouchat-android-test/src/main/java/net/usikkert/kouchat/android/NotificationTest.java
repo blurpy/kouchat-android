@@ -133,13 +133,40 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         assertDefaultNotification();
     }
 
-//    public void test06ShouldShowNotificationWhenPrivateChatIsVisibleAndOtherUserWritesInAnotherPrivateChat() {
-//
-//    }
-//
-//    public void test07ShouldShowNotificationWhenPrivateChatIsVisibleAndSomeUserWritesInTheMainChat() {
-//
-//    }
+    public void test06ShouldShowNotificationWhenPrivateChatIsVisibleAndOtherUserWritesInAnotherPrivateChat() {
+        final TestClient otherUser = new TestClient("OtherUser", 12345);
+        otherUser.logon();
+
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        TestUtils.openPrivateChat(solo, 3, 3, "Test");
+
+        otherUser.sendPrivateChatMessage(me, "You should get a notification now!");
+        solo.sleep(1500);
+        assertNewMessageNotification();
+
+        TestUtils.goHome(solo);
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        otherUser.logoff();
+    }
+
+    public void test07ShouldShowNotificationWhenPrivateChatIsVisibleAndSomeUserWritesInTheMainChat() {
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        openPrivateChat();
+
+        client.sendChatMessage("You have been notified!");
+        solo.sleep(1500);
+        assertNewMessageNotification();
+
+        TestUtils.goHome(solo);
+        solo.sleep(1500);
+        assertDefaultNotification();
+    }
 
     public void test99Quit() {
         client.logoff();
