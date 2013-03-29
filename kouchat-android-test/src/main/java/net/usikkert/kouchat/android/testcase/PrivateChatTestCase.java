@@ -56,7 +56,8 @@ public class PrivateChatTestCase extends ActivityInstrumentationTestCase2<MainCh
     protected Bitmap envelope;
     protected Bitmap dot;
 
-    private User me;
+    protected User me;
+
     private int defaultOrientation;
 
     public PrivateChatTestCase() {
@@ -105,20 +106,6 @@ public class PrivateChatTestCase extends ActivityInstrumentationTestCase2<MainCh
         solo.assertCurrentActivity("Should have opened the private chat", PrivateChatController.class);
         // To be sure we are chatting with the right user
         assertEquals(userName + " - KouChat", solo.getCurrentActivity().getTitle());
-    }
-
-    protected void sendPrivateMessage(final String privMsg) {
-        sendPrivateMessage(privMsg, messages);
-    }
-
-    protected void sendPrivateMessage(final String privMsg, final Messages msg) {
-        try {
-            msg.sendPrivateMessage(privMsg, me);
-        } catch (CommandException e) {
-            throw new RuntimeException(e);
-        }
-
-        solo.sleep(500);
     }
 
     protected Bitmap getBitmapForTestUser() {

@@ -53,7 +53,7 @@ public class PrivateChatTest extends PrivateChatTestCase {
     public void test03OtherClientMessageIsShownInChat() {
         openPrivateChat();
 
-        sendPrivateMessage("Hello, this is a message from someone else");
+        client.sendPrivateChatMessage("Hello, this is a message from someone else", me);
 
         assertTrue(solo.searchText("Hello, this is a message from someone else"));
     }

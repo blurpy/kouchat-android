@@ -46,19 +46,19 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         assertEquals(dot, getBitmapForTestUser());
 
         // Then the envelope for a new message
-        sendPrivateMessage("Hello there!");
+        client.sendPrivateChatMessage("Hello there!", me);
         assertEquals(envelope, getBitmapForTestUser());
 
         // Look at the message, and receive a new one
         openPrivateChat();
-        sendPrivateMessage("Look at me");
+        client.sendPrivateChatMessage("Look at me", me);
 
         // Go back. The envelope should be gone.
         TestUtils.goBack(solo);
         assertEquals(dot, getBitmapForTestUser());
 
         // New message. The envelope returns.
-        sendPrivateMessage("Don't leave");
+        client.sendPrivateChatMessage("Don't leave", me);
         assertEquals(envelope, getBitmapForTestUser());
 
         // Read message and make envelope go away for the next tests
@@ -82,7 +82,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         solo.sleep(500);
 
         // Receive private message while hidden
-        sendPrivateMessage("You can't see me!");
+        client.sendPrivateChatMessage("You can't see me!", me);
         solo.sleep(500);
 
         // Reopen the main chat
@@ -102,7 +102,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
 
         // Receive private message while "home"
-        sendPrivateMessage("You are not looking!");
+        client.sendPrivateChatMessage("You are not looking!", me);
         solo.sleep(500);
 
         // Pretend to open the main chat from the list of running applications. This does not "resume" the private chat
@@ -119,7 +119,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
 
         // Receive private message while the screen is "off"
-        sendPrivateMessage("You are still not looking!");
+        client.sendPrivateChatMessage("You are still not looking!", me);
         solo.sleep(500);
 
         // Turn the screen back "on" again and return to the private chat
@@ -135,18 +135,18 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
     // A more complicated scenario
     public void test06PrivateChattingWithSeveralUsersShouldCommunicateCorrectly() {
         final TestClient client2 = new TestClient("Test2", 12345679);
-        final Messages messages2 = client2.logon();
+        client2.logon();
         final PrivateMessageResponderMock privateMessageResponder2 = client2.getPrivateMessageResponderMock();
         solo.sleep(1000);
 
         // New message from first user
-        sendPrivateMessage("First message from user 1");
+        client.sendPrivateChatMessage("First message from user 1", me);
         assertEquals(dot, getBitmapForUser(3, 1)); // Me
         assertEquals(envelope, getBitmapForUser(3, 2)); // Test
         assertEquals(dot, getBitmapForUser(3, 3)); // Test2
 
         // New message from second user
-        sendPrivateMessage("First message from user 2", messages2);
+        client2.sendPrivateChatMessage("First message from user 2", me);
         assertEquals(envelope, getBitmapForUser(3, 3));
 
         // Chat with first user
@@ -155,7 +155,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         TestUtils.writeLine(solo, "Hello user 1");
         solo.sleep(500);
         assertTrue(privateMessageResponder.gotMessageArrived("Hello user 1"));
-        sendPrivateMessage("Second message from user 1");
+        client.sendPrivateChatMessage("Second message from user 1", me);
         solo.sleep(500);
         assertTrue(solo.searchText("Second message from user 1"));
 
@@ -170,12 +170,12 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         TestUtils.writeLine(solo, "Hello user 2");
         solo.sleep(500);
         assertTrue(privateMessageResponder2.gotMessageArrived("Hello user 2"));
-        sendPrivateMessage("Second message from user 2", messages2);
+        client2.sendPrivateChatMessage("Second message from user 2", me);
         solo.sleep(500);
         assertTrue(solo.searchText("Second message from user 2"));
 
         // Get another message from the first user, while still in the chat with the second
-        sendPrivateMessage("Third message from user 1");
+        client.sendPrivateChatMessage("Third message from user 1", me);
         solo.sleep(500);
 
         // Check that the messages from the second user has been read, and that a new has arrived from the first
@@ -197,11 +197,11 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
 
     public void test07SuspendingPrivateChatWithOneUserAndStartingANewChatWithAnotherUserShouldShownTheCorrectMessage() {
         final TestClient client2 = new TestClient("Test2", 12345679);
-        final Messages messages2 = client2.logon();
+        client2.logon();
         solo.sleep(1000);
 
         // Get message from first user, and open the chat
-        sendPrivateMessage("Message from user 1");
+        client.sendPrivateChatMessage("Message from user 1", me);
         openPrivateChat(3, 2, "Test");
         assertTrue(solo.searchText("Message from user 1"));
 
@@ -212,12 +212,12 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         TestUtils.goBack(solo);
 
         // Get message from the second user, and open the chat
-        sendPrivateMessage("Message from user 2", messages2);
+        client2.sendPrivateChatMessage("Message from user 2", me);
         openPrivateChat(3, 3, "Test2");
         assertTrue(solo.searchText("Message from user 2"));
 
         // Get new message from the first user, while still in the chat with the second user
-        sendPrivateMessage("New message from user 1");
+        client.sendPrivateChatMessage("New message from user 1", me);
 
         // Go back and look at the new message from the first user
         TestUtils.goBack(solo);
