@@ -44,6 +44,10 @@ public class NotificationService {
     private final Context context;
     private final NotificationManager notificationManager;
 
+    // These are necessary because it's not otherwise possible to get the current notification in integration tests
+    private int currentIconId;
+    private int currentLatestInfoTextId;
+
     /**
      * Constructor.
      *
@@ -89,6 +93,24 @@ public class NotificationService {
         notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
     }
 
+    /**
+     * Gets the ID of the icon used in the last notification sent.
+     *
+     * @return The ID of the icon used in the currently visible notification.
+     */
+    public int getCurrentIconId() {
+        return currentIconId;
+    }
+
+    /**
+     * Gets the ID of the latest info text used in the last notification sent.
+     *
+     * @return The ID of the latest info text used in the currently visible notification.
+     */
+    public int getCurrentLatestInfoTextId() {
+        return currentLatestInfoTextId;
+    }
+
     private Notification createNotificationWithLatestInfo(final int iconId, final int latestInfoTextId) {
         final Notification notification = createNotification(iconId);
         final PendingIntent pendingIntent = createPendingIntent();
@@ -99,6 +121,8 @@ public class NotificationService {
     }
 
     private Notification createNotification(final int iconId) {
+        currentIconId = iconId;
+
         return new Notification(
                 iconId,
                 context.getText(R.string.notification_startup), // Text shown when starting KouChat
@@ -112,6 +136,8 @@ public class NotificationService {
 
     private void setLatestEventInfo(final Notification notification, final PendingIntent pendingIntent,
                                     final int latestInfoTextId) {
+        currentLatestInfoTextId = latestInfoTextId;
+
         notification.setLatestEventInfo(context,
                 context.getText(R.string.app_name), // First line of the notification in the drawer
                 context.getText(latestInfoTextId), // Second line of the notification in the drawer

@@ -81,6 +81,7 @@ public class NotificationServiceTest {
         final Notification notification = notificationService.createServiceNotification();
 
         assertEquals(R.drawable.kou_icon_24x24, notification.icon);
+        assertEquals(R.drawable.kou_icon_24x24, notificationService.getCurrentIconId());
         assertEquals("KouChat is up and running", notification.tickerText);
     }
 
@@ -91,6 +92,7 @@ public class NotificationServiceTest {
 
         assertEquals("KouChat", latestEventInfo.getContentTitle());
         assertEquals("Running", latestEventInfo.getContentText());
+        assertEquals(R.string.notification_running, notificationService.getCurrentLatestInfoTextId());
     }
 
     @Test
@@ -112,6 +114,7 @@ public class NotificationServiceTest {
 
         final Notification notification = argumentCaptor.getValue();
         assertEquals(R.drawable.kou_icon_activity_24x24, notification.icon);
+        assertEquals(R.drawable.kou_icon_activity_24x24, notificationService.getCurrentIconId());
     }
 
     @Test
@@ -127,6 +130,7 @@ public class NotificationServiceTest {
 
         assertEquals("KouChat", latestEventInfo.getContentTitle());
         assertEquals("New unread messages", latestEventInfo.getContentText());
+        assertEquals(R.string.notification_new_message, notificationService.getCurrentLatestInfoTextId());
     }
 
     @Test
@@ -154,6 +158,7 @@ public class NotificationServiceTest {
 
         final Notification notification = argumentCaptor.getValue();
         assertEquals(R.drawable.kou_icon_24x24, notification.icon);
+        assertEquals(R.drawable.kou_icon_24x24, notificationService.getCurrentIconId());
     }
 
     @Test
@@ -169,6 +174,7 @@ public class NotificationServiceTest {
 
         assertEquals("KouChat", latestEventInfo.getContentTitle());
         assertEquals("Running", latestEventInfo.getContentText());
+        assertEquals(R.string.notification_running, notificationService.getCurrentLatestInfoTextId());
     }
 
     @Test
