@@ -24,7 +24,6 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.testcase.PrivateChatTestCase;
-import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.PrivateMessageResponderMock;
 import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
@@ -150,7 +149,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         assertEquals(envelope, getBitmapForUser(3, 3));
 
         // Chat with first user
-        openPrivateChat(3, 2, "Test");
+        TestUtils.openPrivateChat(solo, 3, 2, "Test");
         assertTrue(solo.searchText("First message from user 1"));
         TestUtils.writeLine(solo, "Hello user 1");
         solo.sleep(500);
@@ -165,7 +164,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         assertEquals(envelope, getBitmapForUser(3, 3));
 
         // Chat with second user
-        openPrivateChat(3, 3, "Test2");
+        TestUtils.openPrivateChat(solo, 3, 3, "Test2");
         assertTrue(solo.searchText("First message from user 2"));
         TestUtils.writeLine(solo, "Hello user 2");
         solo.sleep(500);
@@ -184,7 +183,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         assertEquals(dot, getBitmapForUser(3, 3));
 
         // Check message from first user
-        openPrivateChat(3, 2, "Test");
+        TestUtils.openPrivateChat(solo, 3, 2, "Test");
         assertTrue(solo.searchText("Third message from user 1"));
 
         // Check that the message has been read
@@ -202,7 +201,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
 
         // Get message from first user, and open the chat
         client.sendPrivateChatMessage("Message from user 1", me);
-        openPrivateChat(3, 2, "Test");
+        TestUtils.openPrivateChat(solo, 3, 2, "Test");
         assertTrue(solo.searchText("Message from user 1"));
 
         // Pretend to click "home" while in the private chat
@@ -213,7 +212,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
 
         // Get message from the second user, and open the chat
         client2.sendPrivateChatMessage("Message from user 2", me);
-        openPrivateChat(3, 3, "Test2");
+        TestUtils.openPrivateChat(solo, 3, 3, "Test2");
         assertTrue(solo.searchText("Message from user 2"));
 
         // Get new message from the first user, while still in the chat with the second user
@@ -221,7 +220,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
 
         // Go back and look at the new message from the first user
         TestUtils.goBack(solo);
-        openPrivateChat(3, 2, "Test");
+        TestUtils.openPrivateChat(solo, 3, 2, "Test");
         assertTrue(solo.searchText("New message from user 1"));
 
         solo.sleep(500);
@@ -259,7 +258,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         messages.sendAwayMessage("Going away now");
         solo.sleep(500);
 
-        openPrivateChat(2, 2, "Test (away: Going away now)");
+        TestUtils.openPrivateChat(solo, 2, 2, "Test (away: Going away now)");
 
         TestUtils.writeLine(solo, "Don't leave me!");
         solo.sleep(500);

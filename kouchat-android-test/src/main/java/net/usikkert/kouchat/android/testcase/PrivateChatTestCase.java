@@ -24,7 +24,6 @@ package net.usikkert.kouchat.android.testcase;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
-import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.PrivateMessageResponderMock;
@@ -93,18 +92,7 @@ public class PrivateChatTestCase extends ActivityInstrumentationTestCase2<MainCh
     }
 
     protected void openPrivateChat() {
-        openPrivateChat(2, 2, "Test");
-    }
-
-    protected void openPrivateChat(final int numberOfUsers, final int userNumber, final String userName) {
-        solo.sleep(500);
-        assertEquals(numberOfUsers, solo.getCurrentListViews().get(0).getCount());
-        solo.clickInList(userNumber);
-        solo.sleep(500);
-
-        solo.assertCurrentActivity("Should have opened the private chat", PrivateChatController.class);
-        // To be sure we are chatting with the right user
-        assertEquals(userName + " - KouChat", solo.getCurrentActivity().getTitle());
+        TestUtils.openPrivateChat(solo, 2, 2, "Test");
     }
 
     protected Bitmap getBitmapForTestUser() {
