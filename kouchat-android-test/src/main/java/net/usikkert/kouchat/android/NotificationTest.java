@@ -23,6 +23,10 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.notification.NotificationService;
+import net.usikkert.kouchat.misc.CommandException;
+import net.usikkert.kouchat.net.Messages;
+import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -36,52 +40,96 @@ import android.test.ActivityInstrumentationTestCase2;
  */
 public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
+    private static TestClient client;
+    private static Messages messages;
+
     private Solo solo;
+    private NotificationService notificationService;
 
     public NotificationTest() {
         super(MainChatController.class);
     }
 
     public void setUp() {
-        solo = new Solo(getInstrumentation(), getActivity());
-    }
+        final MainChatController activity = getActivity();
+        solo = new Solo(getInstrumentation(), activity);
 
-    // TODO remember to verify icon reset when going to the main chat
-    // TODO implement tests
+        final AndroidUserInterface ui =
+                TestUtils.getFieldValue(activity, AndroidUserInterface.class, "androidUserInterface");
+        notificationService = TestUtils.getFieldValue(ui, NotificationService.class, "notificationService");
+
+        // Making sure the test client only logs on once during all the tests
+        if (client == null) {
+            client = new TestClient();
+            messages = client.logon();
+        }
+    }
 
     public void test01ShouldShowNotificationWhenKouChatIsHiddenAndSomeoneWritesInTheMainChat() {
+        solo.sleep(1500);
+        assertDefaultNotification();
 
+        TestUtils.closeMainChat(this);
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        sendChatMessageFromTestClient("You have a new message!");
+        solo.sleep(1500);
+        assertNewMessageNotification();
+
+        TestUtils.launchMainChat(this);
+        solo.sleep(1500);
+        assertDefaultNotification();
     }
 
-    public void test02ShouldShowNotificationWhenKouChatIsHiddenAndSomeoneWritesInThePrivateChat() {
-
-    }
-
-    public void test03ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInTheMainChat() {
-
-    }
-
-    public void test04ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInThePrivateChat() {
-
-    }
-
-    public void test05ShouldNotShowNotificationWhenPrivateChatIsVisibleAndCurrentUserWritesInThePrivateChat() {
-
-    }
-
-    public void test06ShouldShowNotificationWhenPrivateChatIsVisibleAndOtherUserWritesInAnotherPrivateChat() {
-
-    }
-
-    public void test07ShouldShowNotificationWhenPrivateChatIsVisibleAndSomeUserWritesInTheMainChat() {
-
-    }
+//    public void test02ShouldShowNotificationWhenKouChatIsHiddenAndSomeoneWritesInThePrivateChat() {
+//
+//    }
+//
+//    public void test03ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInTheMainChat() {
+//
+//    }
+//
+//    public void test04ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInThePrivateChat() {
+//
+//    }
+//
+//    public void test05ShouldNotShowNotificationWhenPrivateChatIsVisibleAndCurrentUserWritesInThePrivateChat() {
+//
+//    }
+//
+//    public void test06ShouldShowNotificationWhenPrivateChatIsVisibleAndOtherUserWritesInAnotherPrivateChat() {
+//
+//    }
+//
+//    public void test07ShouldShowNotificationWhenPrivateChatIsVisibleAndSomeUserWritesInTheMainChat() {
+//
+//    }
 
     public void test99Quit() {
+        client.logoff();
         TestUtils.quit(solo);
     }
 
     public void tearDown() {
         solo.finishOpenedActivities();
+    }
+
+    private void assertDefaultNotification() {
+        assertEquals(R.string.notification_running, notificationService.getCurrentLatestInfoTextId());
+        assertEquals(R.drawable.kou_icon_24x24, notificationService.getCurrentIconId());
+    }
+
+    private void assertNewMessageNotification() {
+        assertEquals(R.string.notification_new_message, notificationService.getCurrentLatestInfoTextId());
+        assertEquals(R.drawable.kou_icon_activity_24x24, notificationService.getCurrentIconId());
+    }
+
+    private void sendChatMessageFromTestClient(final String message) {
+        try {
+            messages.sendChatMessage(message);
+        } catch (CommandException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
