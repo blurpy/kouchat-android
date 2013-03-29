@@ -74,7 +74,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertDefaultNotification();
 
-        client.sendChatMessage("You have a new message!");
+        client.sendChatMessage("You have a new hidden message!");
         solo.sleep(1500);
         assertNewMessageNotification();
 
@@ -91,7 +91,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertDefaultNotification();
 
-        client.sendPrivateChatMessage(me, "You have a private message!");
+        client.sendPrivateChatMessage(me, "You have a new hidden private message!");
         solo.sleep(1500);
         assertNewMessageNotification();
 
@@ -99,21 +99,40 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertDefaultNotification();
 
-        TestUtils.openPrivateChat(solo, 2, 2, "Test"); // To reset envelope
+        openPrivateChat(); // To reset envelope
     }
 
-//    public void test03ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInTheMainChat() {
-//
-//    }
-//
-//    public void test04ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInThePrivateChat() {
-//
-//    }
-//
-//    public void test05ShouldNotShowNotificationWhenPrivateChatIsVisibleAndCurrentUserWritesInThePrivateChat() {
-//
-//    }
-//
+    public void test03ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInTheMainChat() {
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        client.sendChatMessage("You have a new visible message!");
+        solo.sleep(1500);
+        assertDefaultNotification();
+    }
+
+    public void test04ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInThePrivateChat() {
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        client.sendPrivateChatMessage(me, "You have another hidden private message!");
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        openPrivateChat(); // To reset envelope
+    }
+
+    public void test05ShouldNotShowNotificationWhenPrivateChatIsVisibleAndCurrentUserWritesInThePrivateChat() {
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        openPrivateChat();
+
+        client.sendPrivateChatMessage(me, "You have a new visible private message!");
+        solo.sleep(1500);
+        assertDefaultNotification();
+    }
+
 //    public void test06ShouldShowNotificationWhenPrivateChatIsVisibleAndOtherUserWritesInAnotherPrivateChat() {
 //
 //    }
@@ -139,5 +158,9 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
     private void assertNewMessageNotification() {
         assertEquals(R.string.notification_new_message, notificationService.getCurrentLatestInfoTextId());
         assertEquals(R.drawable.kou_icon_activity_24x24, notificationService.getCurrentIconId());
+    }
+
+    private void openPrivateChat() {
+        TestUtils.openPrivateChat(solo, 2, 2, "Test");
     }
 }
