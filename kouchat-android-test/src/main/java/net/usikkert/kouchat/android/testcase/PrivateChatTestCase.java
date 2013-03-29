@@ -25,7 +25,6 @@ package net.usikkert.kouchat.android.testcase;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
-import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.PrivateMessageResponderMock;

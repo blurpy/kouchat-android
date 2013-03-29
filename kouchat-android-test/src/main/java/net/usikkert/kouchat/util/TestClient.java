@@ -121,7 +121,7 @@ public class TestClient {
     public void sendChatMessage(final String message) {
         try {
             messages.sendChatMessage(message);
-        } catch (CommandException e) {
+        } catch (final CommandException e) {
             throw new RuntimeException(e);
         }
     }
@@ -135,7 +135,7 @@ public class TestClient {
     public void sendPrivateChatMessage(final String message, final User toUser) {
         try {
             messages.sendPrivateMessage(message, toUser);
-        } catch (CommandException e) {
+        } catch (final CommandException e) {
             throw new RuntimeException(e);
         }
     }
