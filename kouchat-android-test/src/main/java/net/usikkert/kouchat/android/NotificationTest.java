@@ -24,8 +24,7 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
-import net.usikkert.kouchat.misc.CommandException;
-import net.usikkert.kouchat.net.Messages;
+import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
 
@@ -41,10 +40,10 @@ import android.test.ActivityInstrumentationTestCase2;
 public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private static TestClient client;
-    private static Messages messages;
 
     private Solo solo;
     private NotificationService notificationService;
+    private User me;
 
     public NotificationTest() {
         super(MainChatController.class);
@@ -58,10 +57,12 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
                 TestUtils.getFieldValue(activity, AndroidUserInterface.class, "androidUserInterface");
         notificationService = TestUtils.getFieldValue(ui, NotificationService.class, "notificationService");
 
+        me = TestUtils.getMe(activity);
+
         // Making sure the test client only logs on once during all the tests
         if (client == null) {
             client = new TestClient();
-            messages = client.logon();
+            client.logon();
         }
     }
 
@@ -73,7 +74,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertDefaultNotification();
 
-        sendChatMessageFromTestClient("You have a new message!");
+        client.sendChatMessage("You have a new message!");
         solo.sleep(1500);
         assertNewMessageNotification();
 
@@ -82,10 +83,25 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         assertDefaultNotification();
     }
 
-//    public void test02ShouldShowNotificationWhenKouChatIsHiddenAndSomeoneWritesInThePrivateChat() {
-//
-//    }
-//
+    public void test02ShouldShowNotificationWhenKouChatIsHiddenAndSomeoneWritesInThePrivateChat() {
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        TestUtils.closeMainChat(this);
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        client.sendPrivateChatMessage(me, "You have a private message!");
+        solo.sleep(1500);
+        assertNewMessageNotification();
+
+        TestUtils.launchMainChat(this);
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        TestUtils.openPrivateChat(solo, 2, 2, "Test"); // To reset envelope
+    }
+
 //    public void test03ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInTheMainChat() {
 //
 //    }
@@ -123,13 +139,5 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
     private void assertNewMessageNotification() {
         assertEquals(R.string.notification_new_message, notificationService.getCurrentLatestInfoTextId());
         assertEquals(R.drawable.kou_icon_activity_24x24, notificationService.getCurrentIconId());
-    }
-
-    private void sendChatMessageFromTestClient(final String message) {
-        try {
-            messages.sendChatMessage(message);
-        } catch (CommandException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
