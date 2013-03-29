@@ -168,6 +168,85 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         assertDefaultNotification();
     }
 
+    public void test08ShouldNotRemoveNotificationWhenReturningToPrivateChatFromPauseAfterNewMessageInMainChat() {
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        openPrivateChat();
+        solo.sleep(500);
+
+        // Pretend to start another application while in the private chat
+        getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+        solo.sleep(500);
+
+        client.sendChatMessage("You should stay notified until you see this!");
+        solo.sleep(500);
+        assertNewMessageNotification();
+
+        // Pretend to return to the private chat using the list of running applications
+        getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
+
+        solo.sleep(1500);
+        assertNewMessageNotification();
+
+        TestUtils.goHome(solo);
+        solo.sleep(1500);
+        assertDefaultNotification();
+    }
+
+    public void test09ShouldNotRemoveNotificationWhenReturningToPrivateChatFromPauseAfterNewPrivateMessageFromOtherUser() {
+        final TestClient otherUser = new TestClient("OtherUser", 12345);
+        otherUser.logon();
+
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        TestUtils.openPrivateChat(solo, 3, 3, "Test");
+        solo.sleep(500);
+
+        // Pretend to start another application while in the private chat
+        getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+        solo.sleep(500);
+
+        otherUser.sendPrivateChatMessage("You should stay notified until you are back in the main chat!", me);
+        solo.sleep(500);
+        assertNewMessageNotification();
+
+        // Pretend to return to the private chat using the list of running applications
+        getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
+
+        solo.sleep(1500);
+        assertNewMessageNotification();
+
+        TestUtils.goHome(solo);
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        otherUser.logoff();
+    }
+
+    public void test10ShouldRemoveNotificationWhenReturningToPrivateChatFromPauseAfterNewPrivateMessageFromCurrentUser() {
+        solo.sleep(1500);
+        assertDefaultNotification();
+
+        openPrivateChat();
+        solo.sleep(500);
+
+        // Pretend to start another application while in the private chat
+        getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+        solo.sleep(500);
+
+        client.sendPrivateChatMessage("The notification should be reset soon!", me);
+        solo.sleep(500);
+        assertNewMessageNotification();
+
+        // Pretend to return to the private chat using the list of running applications
+        getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
+
+        solo.sleep(1500);
+        assertDefaultNotification();
+    }
+
     public void test99Quit() {
         client.logoff();
         TestUtils.quit(solo);
