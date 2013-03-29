@@ -23,7 +23,6 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
-import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.util.TestClient;
@@ -109,7 +108,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertEquals("Test", getUserNameAtPosition(1));
     }
 
-    public void test05MeShouldBeBold() throws CommandException {
+    public void test05MeShouldBeBold() {
         final Messages messages = client.logon();
         solo.sleep(500);
 
@@ -124,7 +123,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertFalse(userIsBold("Ape", 0));
         assertTrue(userIsBold("Kou", 1));
 
-        messages.sendPrivateMessage("Look!", me);
+        client.sendPrivateChatMessage("Look!", me);
         solo.sleep(500);
 
         // After new private message

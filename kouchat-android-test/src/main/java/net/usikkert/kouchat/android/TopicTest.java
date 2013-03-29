@@ -23,7 +23,6 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
-import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
@@ -70,7 +69,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         assertEquals(me.getNick() + " - KouChat", activity.getTitle());
     }
 
-    public void test02OtherClientChangingTopicIsShownInChatAndTitle() throws CommandException {
+    public void test02OtherClientChangingTopicIsShownInChatAndTitle() {
         client.changeTopic("New topic");
         solo.sleep(500);
 
