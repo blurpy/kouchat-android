@@ -40,6 +40,7 @@ import android.test.ActivityInstrumentationTestCase2;
 public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private static TestClient client;
+    private TestClient otherUser;
 
     private Solo solo;
     private NotificationService notificationService;
@@ -134,7 +135,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
     }
 
     public void test06ShouldShowNotificationWhenPrivateChatIsVisibleAndOtherUserWritesInAnotherPrivateChat() {
-        final TestClient otherUser = new TestClient("OtherUser", 12345);
+        otherUser = new TestClient("OtherUser", 12345);
         otherUser.logon();
 
         solo.sleep(1500);
@@ -149,8 +150,6 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         TestUtils.goHome(solo);
         solo.sleep(1500);
         assertDefaultNotification();
-
-        otherUser.logoff();
     }
 
     public void test07ShouldShowNotificationWhenPrivateChatIsVisibleAndSomeUserWritesInTheMainChat() {
@@ -195,7 +194,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
     }
 
     public void test09ShouldNotRemoveNotificationWhenReturningToPrivateChatFromPauseAfterNewPrivateMessageFromOtherUser() {
-        final TestClient otherUser = new TestClient("OtherUser", 12345);
+        otherUser = new TestClient("OtherUser", 12345);
         otherUser.logon();
 
         solo.sleep(1500);
@@ -221,8 +220,6 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         TestUtils.goHome(solo);
         solo.sleep(1500);
         assertDefaultNotification();
-
-        otherUser.logoff();
     }
 
     public void test10ShouldRemoveNotificationWhenReturningToPrivateChatFromPauseAfterNewPrivateMessageFromCurrentUser() {
@@ -253,6 +250,10 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
     }
 
     public void tearDown() {
+        if (otherUser != null) {
+            otherUser.logoff();
+        }
+
         solo.finishOpenedActivities();
     }
 
