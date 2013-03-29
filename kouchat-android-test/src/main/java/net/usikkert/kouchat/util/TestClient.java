@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.util;
 
+import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
@@ -110,6 +111,33 @@ public class TestClient {
 
         messages.sendTopicChangeMessage(new Topic(topic, me.getNick(), time));
         messageResponderMock.topicChanged(me.getCode(), topic, me.getNick(), time);
+    }
+
+    /**
+     * Sends the specified chat message to the main chat.
+     *
+     * @param message The message to send.
+     */
+    public void sendChatMessage(final String message) {
+        try {
+            messages.sendChatMessage(message);
+        } catch (CommandException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Sends the specified chat message to the private chat of the specified user.
+     *
+     * @param toUser The user to send the private message to.
+     * @param message The message to send.
+     */
+    public void sendPrivateChatMessage(final User toUser, final String message) {
+        try {
+            messages.sendPrivateMessage(message, toUser);
+        } catch (CommandException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public MessageResponderMock getMessageResponderMock() {
