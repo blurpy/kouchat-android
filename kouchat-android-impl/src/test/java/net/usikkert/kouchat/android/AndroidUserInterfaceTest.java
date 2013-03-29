@@ -37,7 +37,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+
+import android.content.Context;
 
 /**
  * Test of {@link AndroidUserInterface}.
@@ -58,13 +61,13 @@ public class AndroidUserInterfaceTest {
         final Settings settings = mock(Settings.class);
         when(settings.getMe()).thenReturn(new User("Me", 1234));
 
-        androidUserInterface = new AndroidUserInterface(new MainChatController(), settings);
+        final Context context = Robolectric.application.getApplicationContext();
+        notificationService = mock(NotificationService.class);
+
+        androidUserInterface = new AndroidUserInterface(context, settings, notificationService);
 
         controller = mock(Controller.class);
         TestUtils.setFieldValue(androidUserInterface, "controller", controller);
-
-        notificationService = mock(NotificationService.class);
-        TestUtils.setFieldValue(androidUserInterface, "notificationService", notificationService);
 
         mainChatController = mock(MainChatController.class);
         androidUserInterface.registerMainChatController(mainChatController);

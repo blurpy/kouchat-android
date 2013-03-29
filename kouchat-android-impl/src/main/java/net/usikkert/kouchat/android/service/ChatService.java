@@ -48,10 +48,9 @@ public class ChatService extends Service {
     public void onCreate() {
         System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
 
-        androidUserInterface = new AndroidUserInterface(this, new Settings());
-        androidUserInterface.setNickNameFromSettings();
-
         notificationService = new NotificationService(this);
+        androidUserInterface = new AndroidUserInterface(this, new Settings(), notificationService);
+        androidUserInterface.setNickNameFromSettings();
 
         super.onCreate();
     }

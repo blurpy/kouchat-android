@@ -67,17 +67,19 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
 
     private MainChatController mainChatController;
 
-    public AndroidUserInterface(final Context context, final Settings settings) {
+    public AndroidUserInterface(final Context context, final Settings settings,
+                                final NotificationService notificationService) {
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(settings, "Settings can not be null");
+        Validate.notNull(notificationService, "NotificationService can not be null");
 
         this.context = context;
         this.settings = settings;
+        this.notificationService = notificationService;
 
         messageStyler = new MessageStylerWithHistory(context);
         msgController = new MessageController(this, this, settings);
         controller = new Controller(this, settings);
-        notificationService = new NotificationService(context);
 
         userList = controller.getUserList();
         userList.addUserListListener(this);
