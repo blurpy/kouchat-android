@@ -24,7 +24,6 @@ package net.usikkert.kouchat.util;
 
 import static junit.framework.Assert.*;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -446,13 +445,5 @@ public final class TestUtils {
         final int diff = (screenHeight - statusBarHeight) - activityHeight;
 
         return diff > screenHeight / 3;
-    }
-
-    private static <T> Constructor<T> getDefaultConstructor(final Class<T> theClass) {
-        try {
-            return theClass.getDeclaredConstructor();
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("Failed to get the default constructor from " + theClass, e);
-        }
     }
 }
