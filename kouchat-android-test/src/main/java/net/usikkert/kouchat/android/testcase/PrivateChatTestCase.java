@@ -107,10 +107,6 @@ public class PrivateChatTestCase extends ActivityInstrumentationTestCase2<MainCh
         assertEquals(userName + " - KouChat", solo.getCurrentActivity().getTitle());
     }
 
-    protected void reopenMainChat() {
-        launchActivity(getInstrumentation().getTargetContext().getPackageName(), MainChatController.class, null);
-    }
-
     protected void sendPrivateMessage(final String privMsg) {
         sendPrivateMessage(privMsg, messages);
     }

@@ -37,6 +37,7 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.test.InstrumentationTestCase;
 import android.text.Layout;
 import android.text.TextPaint;
 import android.view.KeyEvent;
@@ -346,6 +347,19 @@ public final class TestUtils {
                 getFieldValue(mainChatController, AndroidUserInterface.class, "androidUserInterface");
 
         return getFieldValue(androidUserInterface, User.class, "me");
+    }
+
+    /**
+     * Launches the main chat.
+     *
+     * <p>Use {@link #goBack(Solo)} or {@link #goHome(Solo)} to navigate to an already opened main chat.
+     * Use this method if the main chat has been finished and closed.</p>
+     *
+     * @param testCase The test that needs to launch the main chat.
+     */
+    public static void launchMainChat(final InstrumentationTestCase testCase) {
+        final String packageName = testCase.getInstrumentation().getTargetContext().getPackageName();
+        testCase.launchActivity(packageName, MainChatController.class, null);
     }
 
     private static void setValue(final Object object, final Object value, final Field field) {

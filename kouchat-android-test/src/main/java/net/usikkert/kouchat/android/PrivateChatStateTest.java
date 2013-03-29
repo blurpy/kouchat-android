@@ -86,7 +86,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         solo.sleep(500);
 
         // Reopen the main chat
-        reopenMainChat();
+        TestUtils.launchMainChat(this);
 
         // Should have a notification about the new message
         assertEquals(envelope, getBitmapForTestUser());
