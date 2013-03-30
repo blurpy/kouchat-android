@@ -72,7 +72,7 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void constructoShouldThrowExceptionIfContextIsNull() {
+    public void constructorShouldThrowExceptionIfContextIsNull() {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Context can not be null");
 
