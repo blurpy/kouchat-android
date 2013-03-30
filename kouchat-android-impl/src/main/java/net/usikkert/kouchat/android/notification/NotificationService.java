@@ -92,10 +92,8 @@ public class NotificationService {
      * </ul>
      */
     public void notifyNewMainChatMessage() {
-        final Notification notification =
-                createNotificationWithLatestInfo(R.drawable.kou_icon_activity_24x24, R.string.notification_new_message);
+        sendNewMessageNotification();
 
-        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
         mainChatActivity = true;
     }
 
@@ -115,10 +113,8 @@ public class NotificationService {
     public void notifyNewPrivateChatMessage(final User user) {
         Validate.notNull(user, "User can not be null");
 
-        final Notification notification =
-                createNotificationWithLatestInfo(R.drawable.kou_icon_activity_24x24, R.string.notification_new_message);
+        sendNewMessageNotification();
 
-        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
         privateChatActivityUsers.add(user);
     }
 
@@ -135,10 +131,8 @@ public class NotificationService {
      * </ul>
      */
     public void resetAllNotifications() {
-        final Notification notification =
-                createNotificationWithLatestInfo(R.drawable.kou_icon_24x24, R.string.notification_running);
+        sendDefaultNotification();
 
-        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
         mainChatActivity = false;
         privateChatActivityUsers.clear();
     }
@@ -168,10 +162,7 @@ public class NotificationService {
         privateChatActivityUsers.remove(user);
 
         if (!isMainChatActivity() && !isPrivateChatActivity()) {
-            final Notification notification =
-                    createNotificationWithLatestInfo(R.drawable.kou_icon_24x24, R.string.notification_running);
-
-            notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
+            sendDefaultNotification();
         }
     }
 
@@ -209,6 +200,20 @@ public class NotificationService {
      */
     public boolean isPrivateChatActivity() {
         return !privateChatActivityUsers.isEmpty();
+    }
+
+    private void sendDefaultNotification() {
+        final Notification notification =
+                createNotificationWithLatestInfo(R.drawable.kou_icon_24x24, R.string.notification_running);
+
+        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
+    }
+
+    private void sendNewMessageNotification() {
+        final Notification notification =
+                createNotificationWithLatestInfo(R.drawable.kou_icon_activity_24x24, R.string.notification_new_message);
+
+        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
     }
 
     private Notification createNotificationWithLatestInfo(final int iconId, final int latestInfoTextId) {
