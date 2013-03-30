@@ -334,12 +334,16 @@ public class NotificationServiceTest {
         assertFalse(notificationService.isPrivateChatActivity());
 
         notificationService.resetPrivateChatNotification(new User("Test", 1234));
-
         verifyZeroInteractions(notificationManager);
+
+        TestUtils.setFieldValue(notificationService, "mainChatActivity", false);
+
+        notificationService.resetPrivateChatNotification(new User("Test", 1234));
+        verify(notificationManager).notify(anyInt(), any(Notification.class));
     }
 
     @Test
-    public void resetPrivateChatNotificationShouldNotSendNotificationIfThereAreAnyPrivateChatActivityLeft() {
+    public void resetPrivateChatNotificationShouldNotSendNotificationIfThereIsPrivateChatActivity() {
         final User user1 = new User("Test1", 1234);
         final User user2 = new User("Test2", 1235);
         final User user3 = new User("Test3", 1236);
@@ -355,12 +359,15 @@ public class NotificationServiceTest {
 
         notificationService.resetPrivateChatNotification(user1);
         verifyZeroInteractions(notificationManager);
+        assertTrue(notificationService.isPrivateChatActivity());
 
         notificationService.resetPrivateChatNotification(user2);
         verifyZeroInteractions(notificationManager);
+        assertTrue(notificationService.isPrivateChatActivity());
 
         notificationService.resetPrivateChatNotification(user3);
         verify(notificationManager).notify(anyInt(), any(Notification.class));
+        assertFalse(notificationService.isPrivateChatActivity());
     }
 
     @Test
