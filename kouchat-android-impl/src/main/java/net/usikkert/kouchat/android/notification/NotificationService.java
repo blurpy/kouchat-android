@@ -75,7 +75,7 @@ public class NotificationService {
      * Updates the foreground service notification and sets the latest info text to "New unread messages",
      * and changes to the "activity" icon.
      */
-    public void notifyNewMessage() {
+    public void notifyNewMainChatMessage() {
         final Notification notification =
                 createNotificationWithLatestInfo(R.drawable.kou_icon_activity_24x24, R.string.notification_new_message);
 

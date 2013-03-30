@@ -120,7 +120,7 @@ public class AndroidUserInterfaceTest {
 
         androidUserInterface.notifyMessageArrived(null);
 
-        verify(notificationService).notifyNewMessage();
+        verify(notificationService).notifyNewMainChatMessage();
     }
 
     @Test
@@ -144,7 +144,7 @@ public class AndroidUserInterfaceTest {
 
         androidUserInterface.notifyPrivateMessageArrived(testUser);
 
-        verify(notificationService).notifyNewMessage();
+        verify(notificationService).notifyNewMainChatMessage();
     }
 
     @Test

@@ -148,7 +148,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     @Override
     public void notifyMessageArrived(final User user) {
         if (!isVisible()) {
-            notificationService.notifyNewMessage();
+            notificationService.notifyNewMainChatMessage();
         }
     }
 
@@ -159,7 +159,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     @Override
     public void notifyPrivateMessageArrived(final User user) {
         if (!isVisible() && !user.getPrivchat().isVisible()) {
-            notificationService.notifyNewMessage();
+            notificationService.notifyNewMainChatMessage();
         }
     }
 

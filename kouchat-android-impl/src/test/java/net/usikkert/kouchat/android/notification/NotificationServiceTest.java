@@ -105,10 +105,10 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void notifyNewMessageShouldSetActivityIcon() {
+    public void notifyNewMainChatMessageShouldSetActivityIcon() {
         final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
 
-        notificationService.notifyNewMessage();
+        notificationService.notifyNewMainChatMessage();
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
@@ -118,10 +118,10 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void notifyNewMessageShouldSetNotificationTextForTheDrawer() {
+    public void notifyNewMainChatMessageShouldSetNotificationTextForTheDrawer() {
         final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
 
-        notificationService.notifyNewMessage();
+        notificationService.notifyNewMainChatMessage();
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
@@ -134,10 +134,10 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void notifyNewMessageShouldCreatePendingIntentForOpeningTheMainChat() {
+    public void notifyNewMainChatMessageShouldCreatePendingIntentForOpeningTheMainChat() {
         final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
 
-        notificationService.notifyNewMessage();
+        notificationService.notifyNewMainChatMessage();
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
