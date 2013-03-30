@@ -22,8 +22,12 @@
 
 package net.usikkert.kouchat.android.notification;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.Validate;
 
 import android.app.Notification;
@@ -45,6 +49,7 @@ public class NotificationService {
     private final NotificationManager notificationManager;
 
     private boolean mainChatActivity;
+    private final Set<User> privateChatActivityUsers;
 
     // These are necessary because it's not otherwise possible to get the current notification in integration tests
     private int currentIconId;
@@ -61,6 +66,7 @@ public class NotificationService {
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mainChatActivity = false;
+        privateChatActivityUsers = new HashSet<User>();
     }
 
     /**
@@ -102,6 +108,7 @@ public class NotificationService {
      *   <li>Sets the latest info text to "Running".</li>
      *   <li>Switches to the regular icon.</li>
      *   <li>Resets the flag for activity in the main chat.</li>
+     *   <li>Resets the flag for activity in all the private chats.</li>
      * </ul>
      */
     public void resetAllNotifications() {
@@ -110,6 +117,7 @@ public class NotificationService {
 
         notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
         mainChatActivity = false;
+        privateChatActivityUsers.clear();
     }
 
     /**
@@ -137,6 +145,15 @@ public class NotificationService {
      */
     public boolean isMainChatActivity() {
         return mainChatActivity;
+    }
+
+    /**
+     * If there is currently a notification about any private chat activity.
+     *
+     * @return If there is activity in the private chat.
+     */
+    public boolean isPrivateChatActivity() {
+        return !privateChatActivityUsers.isEmpty();
     }
 
     private Notification createNotificationWithLatestInfo(final int iconId, final int latestInfoTextId) {

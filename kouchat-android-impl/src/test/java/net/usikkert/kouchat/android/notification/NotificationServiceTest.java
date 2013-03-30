@@ -25,8 +25,11 @@ package net.usikkert.kouchat.android.notification;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.HashSet;
+
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
@@ -105,10 +108,11 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void createServiceNotificationShouldNotSetMainChatActivity() {
+    public void createServiceNotificationShouldNotSetAnyChatActivity() {
         notificationService.createServiceNotification();
 
         assertFalse(notificationService.isMainChatActivity());
+        assertFalse(notificationService.isPrivateChatActivity());
     }
 
     @Test
@@ -156,10 +160,11 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void notifyNewMainChatMessageShouldSetMainChatActivityToTrue() {
+    public void notifyNewMainChatMessageShouldOnlySetMainChatActivityToTrue() {
         notificationService.notifyNewMainChatMessage();
 
         assertTrue(notificationService.isMainChatActivity());
+        assertFalse(notificationService.isPrivateChatActivity());
     }
 
     @Test
@@ -213,6 +218,19 @@ public class NotificationServiceTest {
 
         notificationService.resetAllNotifications();
         assertFalse(notificationService.isMainChatActivity());
+    }
+
+    @Test
+    public void resetAllNotificationsShouldSetPrivateChatActivityToFalse() {
+        final User user = new User("Test", 1234);
+        final HashSet<User> users = new HashSet<User>();
+        users.add(user);
+
+        TestUtils.setFieldValue(notificationService, "privateChatActivity", users);
+        assertTrue(notificationService.isPrivateChatActivity());
+
+        notificationService.resetAllNotifications();
+        assertFalse(notificationService.isPrivateChatActivity());
     }
 
     private ShadowNotification.LatestEventInfo getLatestEventInfo(final Notification notification) {
