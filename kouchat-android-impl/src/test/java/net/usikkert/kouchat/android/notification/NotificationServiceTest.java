@@ -168,6 +168,66 @@ public class NotificationServiceTest {
     }
 
     @Test
+    public void notifyNewPrivateChatMessageShouldThrowExceptionIfUserIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("User can not be null");
+
+        notificationService.notifyNewPrivateChatMessage(null);
+    }
+
+    @Test
+    public void notifyNewPrivateChatMessageShouldSetActivityIcon() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.notifyNewPrivateChatMessage(new User("Test", 1234));
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        assertEquals(R.drawable.kou_icon_activity_24x24, notification.icon);
+        assertEquals(R.drawable.kou_icon_activity_24x24, notificationService.getCurrentIconId());
+    }
+
+    @Test
+    public void notifyNewPrivateChatMessageShouldSetNotificationTextForTheDrawer() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.notifyNewPrivateChatMessage(new User("Test", 1234));
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+
+        assertEquals("KouChat", latestEventInfo.getContentTitle());
+        assertEquals("New unread messages", latestEventInfo.getContentText());
+        assertEquals(R.string.notification_new_message, notificationService.getCurrentLatestInfoTextId());
+    }
+
+    @Test
+    public void notifyNewPrivateChatMessageShouldCreatePendingIntentForOpeningTheMainChat() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.notifyNewPrivateChatMessage(new User("Test", 1234));
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+        final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
+
+        assertEquals(MainChatController.class, pendingIntent.getIntentClass());
+    }
+
+    @Test
+    public void notifyNewPrivateChatMessageShouldOnlySetPrivateChatActivityToTrue() {
+        notificationService.notifyNewPrivateChatMessage(new User("Test", 1234));
+
+        assertFalse(notificationService.isMainChatActivity());
+        assertTrue(notificationService.isPrivateChatActivity());
+    }
+
+    @Test
     public void resetAllNotificationsShouldSetRegularIcon() {
         final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
 

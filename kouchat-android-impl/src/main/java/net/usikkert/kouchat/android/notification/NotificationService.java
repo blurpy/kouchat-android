@@ -100,6 +100,27 @@ public class NotificationService {
     }
 
     /**
+     * Notifies about a new private chat message.
+     *
+     * <p>Updates the current notification like this:</p>
+     *
+     * <ul>
+     *   <li>Sets the latest info text to "New unread messages".</li>
+     *   <li>Switches to the activity icon.</li>
+     *   <li>Sets the flag for activity in the private chat with the specified user.</li>
+     * </ul>
+     */
+    public void notifyNewPrivateChatMessage(final User user) {
+        Validate.notNull(user, "User can not be null");
+
+        final Notification notification =
+                createNotificationWithLatestInfo(R.drawable.kou_icon_activity_24x24, R.string.notification_new_message);
+
+        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
+        privateChatActivityUsers.add(user);
+    }
+
+    /**
      * Resets the notification to default.
      *
      * <p>Updates the current notification like this:</p>
