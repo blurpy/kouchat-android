@@ -226,7 +226,7 @@ public class NotificationServiceTest {
         final HashSet<User> users = new HashSet<User>();
         users.add(user);
 
-        TestUtils.setFieldValue(notificationService, "privateChatActivity", users);
+        TestUtils.setFieldValue(notificationService, "privateChatActivityUsers", users);
         assertTrue(notificationService.isPrivateChatActivity());
 
         notificationService.resetAllNotifications();
