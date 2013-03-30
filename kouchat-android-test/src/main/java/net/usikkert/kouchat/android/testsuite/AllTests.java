@@ -22,7 +22,7 @@
 
 package net.usikkert.kouchat.android.testsuite;
 
-import net.usikkert.kouchat.android.AboutDialogTest;
+import net.usikkert.kouchat.android.AboutTest;
 import net.usikkert.kouchat.android.HitchhikerTest;
 import net.usikkert.kouchat.android.MainChatTest;
 import net.usikkert.kouchat.android.NotificationTest;
@@ -45,7 +45,7 @@ public class AllTests extends TestSuite {
     public static Test suite() {
         final TestSuite testSuite = new TestSuite("All Android tests");
 
-        testSuite.addTestSuite(AboutDialogTest.class);
+        testSuite.addTestSuite(AboutTest.class);
         testSuite.addTestSuite(MainChatTest.class);
         testSuite.addTestSuite(PrivateChatTest.class);
         testSuite.addTestSuite(PrivateChatStateTest.class);
