@@ -44,6 +44,8 @@ public class NotificationService {
     private final Context context;
     private final NotificationManager notificationManager;
 
+    private boolean mainChatActivity;
+
     // These are necessary because it's not otherwise possible to get the current notification in integration tests
     private int currentIconId;
     private int currentLatestInfoTextId;
@@ -58,6 +60,7 @@ public class NotificationService {
         this.context = context;
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mainChatActivity = false;
     }
 
     /**
@@ -72,25 +75,41 @@ public class NotificationService {
     }
 
     /**
-     * Updates the foreground service notification and sets the latest info text to "New unread messages",
-     * and changes to the "activity" icon.
+     * Notifies about a new main chat message.
+     *
+     * <p>Updates the current notification like this:</p>
+     *
+     * <ul>
+     *   <li>Sets the latest info text to "New unread messages".</li>
+     *   <li>Switches to the activity icon.</li>
+     *   <li>Sets the flag for activity in the main chat.</li>
+     * </ul>
      */
     public void notifyNewMainChatMessage() {
         final Notification notification =
                 createNotificationWithLatestInfo(R.drawable.kou_icon_activity_24x24, R.string.notification_new_message);
 
         notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
+        mainChatActivity = true;
     }
 
     /**
-     * Updates the foreground service notification and sets the latest info text back to "Running",
-     * and changes back to the regular icon.
+     * Resets the notification to default.
+     *
+     * <p>Updates the current notification like this:</p>
+     *
+     * <ul>
+     *   <li>Sets the latest info text to "Running".</li>
+     *   <li>Switches to the regular icon.</li>
+     *   <li>Resets the flag for activity in the main chat.</li>
+     * </ul>
      */
     public void resetAllNotifications() {
         final Notification notification =
                 createNotificationWithLatestInfo(R.drawable.kou_icon_24x24, R.string.notification_running);
 
         notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
+        mainChatActivity = false;
     }
 
     /**
@@ -109,6 +128,15 @@ public class NotificationService {
      */
     public int getCurrentLatestInfoTextId() {
         return currentLatestInfoTextId;
+    }
+
+    /**
+     * If there is currently a notification about main chat activity.
+     *
+     * @return If there is activity in the main chat.
+     */
+    public boolean isMainChatActivity() {
+        return mainChatActivity;
     }
 
     private Notification createNotificationWithLatestInfo(final int iconId, final int latestInfoTextId) {

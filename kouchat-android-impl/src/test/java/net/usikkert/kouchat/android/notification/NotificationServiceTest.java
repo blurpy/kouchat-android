@@ -105,6 +105,13 @@ public class NotificationServiceTest {
     }
 
     @Test
+    public void createServiceNotificationShouldNotSetMainChatActivity() {
+        notificationService.createServiceNotification();
+
+        assertFalse(notificationService.isMainChatActivity());
+    }
+
+    @Test
     public void notifyNewMainChatMessageShouldSetActivityIcon() {
         final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
 
@@ -149,6 +156,13 @@ public class NotificationServiceTest {
     }
 
     @Test
+    public void notifyNewMainChatMessageShouldSetMainChatActivityToTrue() {
+        notificationService.notifyNewMainChatMessage();
+
+        assertTrue(notificationService.isMainChatActivity());
+    }
+
+    @Test
     public void resetAllNotificationsShouldSetRegularIcon() {
         final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
 
@@ -190,6 +204,15 @@ public class NotificationServiceTest {
         final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
 
         assertEquals(MainChatController.class, pendingIntent.getIntentClass());
+    }
+
+    @Test
+    public void resetAllNotificationsShouldSetMainChatActivityToFalse() {
+        TestUtils.setFieldValue(notificationService, "mainChatActivity", true);
+        assertTrue(notificationService.isMainChatActivity());
+
+        notificationService.resetAllNotifications();
+        assertFalse(notificationService.isMainChatActivity());
     }
 
     private ShadowNotification.LatestEventInfo getLatestEventInfo(final Notification notification) {
