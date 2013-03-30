@@ -159,7 +159,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     @Override
     public void notifyPrivateMessageArrived(final User user) {
         if (!isVisible() && !user.getPrivchat().isVisible()) {
-            notificationService.notifyNewMainChatMessage();
+            notificationService.notifyNewPrivateChatMessage(user);
         }
     }
 
@@ -385,15 +385,17 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     }
 
     /**
-     * Resets the new private message field of the user.
+     * Resets the new private message field of the user, in addition to the current notification for the user.
      *
-     * @param user The user to reset the field for.
+     * @param user The user who's private chat got activated.
      */
     public void activatedPrivChat(final User user) {
         if (user.isNewPrivMsg()) {
             user.setNewPrivMsg(false); // In case the user has logged off
             controller.changeNewMessage(user.getCode(), false);
         }
+
+        notificationService.resetPrivateChatNotification(user);
     }
 
     /**

@@ -144,7 +144,7 @@ public class AndroidUserInterfaceTest {
 
         androidUserInterface.notifyPrivateMessageArrived(testUser);
 
-        verify(notificationService).notifyNewMainChatMessage();
+        verify(notificationService).notifyNewPrivateChatMessage(testUser);
     }
 
     @Test
@@ -216,5 +216,35 @@ public class AndroidUserInterfaceTest {
         androidUserInterface.resetAllNotifications();
 
         verify(notificationService).resetAllNotifications();
+    }
+
+    @Test
+    public void activatedPrivChatShouldResetNotificationForTheUser() {
+        final User user = new User("Test", 12345);
+
+        androidUserInterface.activatedPrivChat(user);
+
+        verify(notificationService).resetPrivateChatNotification(user);
+    }
+
+    @Test
+    public void activatedPrivChatShouldResetNewPrivateMessageStatusIfCurrentlyTrue() {
+        final User user = new User("Test", 12345);
+        user.setNewPrivMsg(true);
+
+        androidUserInterface.activatedPrivChat(user);
+
+        assertFalse(user.isNewPrivMsg());
+        verify(controller).changeNewMessage(12345, false);
+    }
+
+    @Test
+    public void activatedPrivChatShouldNotResetNewPrivateMessageStatusIfCurrentlyFalse() {
+        final User user = new User("Test", 12345);
+
+        androidUserInterface.activatedPrivChat(user);
+
+        assertFalse(user.isNewPrivMsg());
+        verifyZeroInteractions(controller);
     }
 }
