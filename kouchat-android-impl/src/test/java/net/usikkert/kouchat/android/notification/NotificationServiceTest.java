@@ -116,8 +116,7 @@ public class NotificationServiceTest {
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        assertEquals(R.drawable.kou_icon_activity_24x24, notification.icon);
-        assertEquals(R.drawable.kou_icon_activity_24x24, notificationService.getCurrentIconId());
+        verifyThatActivityIconHasBeenSet(notification);
     }
 
     @Test
@@ -169,8 +168,7 @@ public class NotificationServiceTest {
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        assertEquals(R.drawable.kou_icon_activity_24x24, notification.icon);
-        assertEquals(R.drawable.kou_icon_activity_24x24, notificationService.getCurrentIconId());
+        verifyThatActivityIconHasBeenSet(notification);
     }
 
     @Test
@@ -413,6 +411,11 @@ public class NotificationServiceTest {
     private void verifyThatRegularIconHasBeenSet(final Notification notification) {
         assertEquals(R.drawable.kou_icon_24x24, notification.icon);
         assertEquals(R.drawable.kou_icon_24x24, notificationService.getCurrentIconId());
+    }
+
+    private void verifyThatActivityIconHasBeenSet(final Notification notification) {
+        assertEquals(R.drawable.kou_icon_activity_24x24, notification.icon);
+        assertEquals(R.drawable.kou_icon_activity_24x24, notificationService.getCurrentIconId());
     }
 
     private ShadowNotification.LatestEventInfo getLatestEventInfo(final Notification notification) {
