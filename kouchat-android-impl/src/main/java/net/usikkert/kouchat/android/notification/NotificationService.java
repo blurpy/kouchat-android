@@ -39,6 +39,16 @@ import android.content.Intent;
 /**
  * Service for handling notifications.
  *
+ * <p>The same notification will always be running, but updated with new statuses when necessary.</p>
+ *
+ * <p>Main chat activity will be notified when a new message arrives and the main chat is not visible.
+ * F.ex when another application is on top, or if you are in a private chat.</p>
+ *
+ * <p>Private chat activity will be notified when a new private message arrives and the private chat with that user
+ * is not visible. F.ex when another application is on top, or if you are in a private chat with another user.
+ * Activity will not be notified if the main chat is visible, because of the already existing new message icon
+ * in the user list.</p>
+ *
  * @author Christian Ihle
  */
 public class NotificationService {
