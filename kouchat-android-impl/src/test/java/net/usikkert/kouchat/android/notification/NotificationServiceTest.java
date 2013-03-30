@@ -97,10 +97,7 @@ public class NotificationServiceTest {
     @Test
     public void createServiceNotificationShouldCreatePendingIntentForOpeningTheMainChat() {
         final Notification notification = notificationService.createServiceNotification();
-        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
-        final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
-
-        assertEquals(MainChatController.class, pendingIntent.getIntentClass());
+        verifyThatPendingIntentOpensMainChat(notification);
     }
 
     @Test
@@ -145,10 +142,7 @@ public class NotificationServiceTest {
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
-        final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
-
-        assertEquals(MainChatController.class, pendingIntent.getIntentClass());
+        verifyThatPendingIntentOpensMainChat(notification);
     }
 
     @Test
@@ -201,10 +195,7 @@ public class NotificationServiceTest {
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
-        final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
-
-        assertEquals(MainChatController.class, pendingIntent.getIntentClass());
+        verifyThatPendingIntentOpensMainChat(notification);
     }
 
     @Test
@@ -249,10 +240,7 @@ public class NotificationServiceTest {
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
-        final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
-
-        assertEquals(MainChatController.class, pendingIntent.getIntentClass());
+        verifyThatPendingIntentOpensMainChat(notification);
     }
 
     @Test
@@ -319,10 +307,7 @@ public class NotificationServiceTest {
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
-        final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
-
-        assertEquals(MainChatController.class, pendingIntent.getIntentClass());
+        verifyThatPendingIntentOpensMainChat(notification);
     }
 
     @Test
@@ -419,6 +404,13 @@ public class NotificationServiceTest {
         assertEquals("KouChat", latestEventInfo.getContentTitle());
         assertEquals("New unread messages", latestEventInfo.getContentText());
         assertEquals(R.string.notification_new_message, notificationService.getCurrentLatestInfoTextId());
+    }
+
+    private void verifyThatPendingIntentOpensMainChat(final Notification notification) {
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+        final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
+
+        assertEquals(MainChatController.class, pendingIntent.getIntentClass());
     }
 
     private ShadowNotification.LatestEventInfo getLatestEventInfo(final Notification notification) {
