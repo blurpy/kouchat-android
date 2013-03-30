@@ -293,6 +293,138 @@ public class NotificationServiceTest {
         assertFalse(notificationService.isPrivateChatActivity());
     }
 
+    @Test
+    public void resetPrivateChatNotificationShouldThrowExceptionIfUserIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("User can not be null");
+
+        notificationService.resetPrivateChatNotification(null);
+    }
+
+    @Test
+    public void resetPrivateChatNotificationShouldSetRegularIcon() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.resetPrivateChatNotification(new User("Test", 1234));
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        assertEquals(R.drawable.kou_icon_24x24, notification.icon);
+        assertEquals(R.drawable.kou_icon_24x24, notificationService.getCurrentIconId());
+    }
+
+    @Test
+    public void resetPrivateChatNotificationShouldResetNotificationTextForTheDrawer() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.resetPrivateChatNotification(new User("Test", 1234));
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+
+        assertEquals("KouChat", latestEventInfo.getContentTitle());
+        assertEquals("Running", latestEventInfo.getContentText());
+        assertEquals(R.string.notification_running, notificationService.getCurrentLatestInfoTextId());
+    }
+
+    @Test
+    public void resetPrivateChatNotificationShouldCreatePendingIntentForOpeningTheMainChat() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.resetPrivateChatNotification(new User("Test", 1234));
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+        final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
+
+        assertEquals(MainChatController.class, pendingIntent.getIntentClass());
+    }
+
+    @Test
+    public void resetPrivateChatNotificationShouldNotTouchMainChatActivity() {
+        TestUtils.setFieldValue(notificationService, "mainChatActivity", true);
+        assertTrue(notificationService.isMainChatActivity());
+
+        notificationService.resetPrivateChatNotification(new User("Test", 1234));
+        assertTrue(notificationService.isMainChatActivity());
+    }
+
+    @Test
+    public void resetPrivateChatNotificationShouldSetPrivateChatActivityToFalse() {
+        final User user = new User("Test", 1234);
+        final HashSet<User> users = new HashSet<User>();
+        users.add(user);
+
+        TestUtils.setFieldValue(notificationService, "privateChatActivityUsers", users);
+        assertTrue(notificationService.isPrivateChatActivity());
+
+        notificationService.resetPrivateChatNotification(user);
+        assertFalse(notificationService.isPrivateChatActivity());
+    }
+
+    @Test
+    public void resetPrivateChatNotificationShouldNotSendNotificationInThereIsMainChatActivity() {
+        TestUtils.setFieldValue(notificationService, "mainChatActivity", true);
+        assertTrue(notificationService.isMainChatActivity());
+        assertFalse(notificationService.isPrivateChatActivity());
+
+        notificationService.resetPrivateChatNotification(new User("Test", 1234));
+
+        verifyZeroInteractions(notificationManager);
+    }
+
+    @Test
+    public void resetPrivateChatNotificationShouldNotSendNotificationIfThereAreAnyPrivateChatActivityLeft() {
+        final User user1 = new User("Test1", 1234);
+        final User user2 = new User("Test2", 1235);
+        final User user3 = new User("Test3", 1236);
+
+        final HashSet<User> users = new HashSet<User>();
+        users.add(user1);
+        users.add(user2);
+        users.add(user3);
+
+        TestUtils.setFieldValue(notificationService, "privateChatActivityUsers", users);
+        assertTrue(notificationService.isPrivateChatActivity());
+        assertFalse(notificationService.isMainChatActivity());
+
+        notificationService.resetPrivateChatNotification(user1);
+        verifyZeroInteractions(notificationManager);
+
+        notificationService.resetPrivateChatNotification(user2);
+        verifyZeroInteractions(notificationManager);
+
+        notificationService.resetPrivateChatNotification(user3);
+        verify(notificationManager).notify(anyInt(), any(Notification.class));
+    }
+
+    @Test
+    public void resetPrivateChatNotificationShouldNotSendNotificationIfThereIsBothPrivateChatAndMainChatActivity() {
+        final User user1 = new User("Test1", 1234);
+        final User user2 = new User("Test2", 1235);
+
+        final HashSet<User> users = new HashSet<User>();
+        users.add(user1);
+        users.add(user2);
+
+        TestUtils.setFieldValue(notificationService, "privateChatActivityUsers", users);
+        assertTrue(notificationService.isPrivateChatActivity());
+
+        TestUtils.setFieldValue(notificationService, "mainChatActivity", true);
+        assertTrue(notificationService.isMainChatActivity());
+
+        notificationService.resetPrivateChatNotification(user1);
+
+        verifyZeroInteractions(notificationManager);
+        assertTrue(notificationService.isPrivateChatActivity());
+        assertTrue(notificationService.isMainChatActivity());
+    }
+
     private ShadowNotification.LatestEventInfo getLatestEventInfo(final Notification notification) {
         final ShadowNotification shadowNotification = Robolectric.shadowOf(notification);
         return shadowNotification.getLatestEventInfo();

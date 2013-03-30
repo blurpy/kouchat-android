@@ -109,6 +109,8 @@ public class NotificationService {
      *   <li>Switches to the activity icon.</li>
      *   <li>Sets the flag for activity in the private chat with the specified user.</li>
      * </ul>
+     *
+     * @param user The user who got a private message.
      */
     public void notifyNewPrivateChatMessage(final User user) {
         Validate.notNull(user, "User can not be null");
@@ -139,6 +141,38 @@ public class NotificationService {
         notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
         mainChatActivity = false;
         privateChatActivityUsers.clear();
+    }
+
+    /**
+     * Removes the activity flag for the specified user, and resets the notification if there is no more activity
+     * in neither the main chat nor the private chats.
+     *
+     * <p>Updates the current notification like this:</p>
+     *
+     * <ul>
+     *   <li>Resets the flag for activity in the private chat for the specified user.</li>
+     * </ul>
+     *
+     * <p>If no more activity after that, then also updates the notification like this:</p>
+     *
+     * <ul>
+     *   <li>Sets the latest info text to "Running".</li>
+     *   <li>Switches to the regular icon.</li>
+     * </ul>
+     *
+     * @param user The user that should no longer have a notification.
+     */
+    public void resetPrivateChatNotification(final User user) {
+        Validate.notNull(user, "User can not be null");
+
+        privateChatActivityUsers.remove(user);
+
+        if (!isMainChatActivity() && !isPrivateChatActivity()) {
+            final Notification notification =
+                    createNotificationWithLatestInfo(R.drawable.kou_icon_24x24, R.string.notification_running);
+
+            notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
+        }
     }
 
     /**
