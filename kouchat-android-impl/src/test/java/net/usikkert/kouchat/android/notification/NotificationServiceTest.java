@@ -91,11 +91,7 @@ public class NotificationServiceTest {
     @Test
     public void createServiceNotificationShouldSetNotificationTextForTheDrawer() {
         final Notification notification = notificationService.createServiceNotification();
-        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
-
-        assertEquals("KouChat", latestEventInfo.getContentTitle());
-        assertEquals("Running", latestEventInfo.getContentText());
-        assertEquals(R.string.notification_running, notificationService.getCurrentLatestInfoTextId());
+        verifyThatNotificationTextIsRunning(notification);
     }
 
     @Test
@@ -249,11 +245,7 @@ public class NotificationServiceTest {
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
-
-        assertEquals("KouChat", latestEventInfo.getContentTitle());
-        assertEquals("Running", latestEventInfo.getContentText());
-        assertEquals(R.string.notification_running, notificationService.getCurrentLatestInfoTextId());
+        verifyThatNotificationTextIsRunning(notification);
     }
 
     @Test
@@ -323,11 +315,7 @@ public class NotificationServiceTest {
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
-
-        assertEquals("KouChat", latestEventInfo.getContentTitle());
-        assertEquals("Running", latestEventInfo.getContentText());
-        assertEquals(R.string.notification_running, notificationService.getCurrentLatestInfoTextId());
+        verifyThatNotificationTextIsRunning(notification);
     }
 
     @Test
@@ -423,6 +411,14 @@ public class NotificationServiceTest {
         verifyZeroInteractions(notificationManager);
         assertTrue(notificationService.isPrivateChatActivity());
         assertTrue(notificationService.isMainChatActivity());
+    }
+
+    private void verifyThatNotificationTextIsRunning(final Notification notification) {
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+
+        assertEquals("KouChat", latestEventInfo.getContentTitle());
+        assertEquals("Running", latestEventInfo.getContentText());
+        assertEquals(R.string.notification_running, notificationService.getCurrentLatestInfoTextId());
     }
 
     private ShadowNotification.LatestEventInfo getLatestEventInfo(final Notification notification) {
