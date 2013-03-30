@@ -83,8 +83,7 @@ public class NotificationServiceTest {
     public void createServiceNotificationShouldSetIconAndStartupMessage() {
         final Notification notification = notificationService.createServiceNotification();
 
-        assertEquals(R.drawable.kou_icon_24x24, notification.icon);
-        assertEquals(R.drawable.kou_icon_24x24, notificationService.getCurrentIconId());
+        verifyThatRegularIconHasBeenSet(notification);
         assertEquals("KouChat is up and running", notification.tickerText);
     }
 
@@ -215,8 +214,7 @@ public class NotificationServiceTest {
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        assertEquals(R.drawable.kou_icon_24x24, notification.icon);
-        assertEquals(R.drawable.kou_icon_24x24, notificationService.getCurrentIconId());
+        verifyThatRegularIconHasBeenSet(notification);
     }
 
     @Test
@@ -282,8 +280,7 @@ public class NotificationServiceTest {
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        assertEquals(R.drawable.kou_icon_24x24, notification.icon);
-        assertEquals(R.drawable.kou_icon_24x24, notificationService.getCurrentIconId());
+        verifyThatRegularIconHasBeenSet(notification);
     }
 
     @Test
@@ -411,6 +408,11 @@ public class NotificationServiceTest {
         final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
 
         assertEquals(MainChatController.class, pendingIntent.getIntentClass());
+    }
+
+    private void verifyThatRegularIconHasBeenSet(final Notification notification) {
+        assertEquals(R.drawable.kou_icon_24x24, notification.icon);
+        assertEquals(R.drawable.kou_icon_24x24, notificationService.getCurrentIconId());
     }
 
     private ShadowNotification.LatestEventInfo getLatestEventInfo(final Notification notification) {
