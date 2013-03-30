@@ -206,7 +206,7 @@ public class MainChatController extends Activity {
         visible = true;
 
         if (androidUserInterface != null) { // Is null during initial startup. Doesn't matter.
-            androidUserInterface.resetNotification();
+            androidUserInterface.resetAllNotifications();
         }
     }
 

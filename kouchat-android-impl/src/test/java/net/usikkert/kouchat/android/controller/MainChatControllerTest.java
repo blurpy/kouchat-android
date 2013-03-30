@@ -74,13 +74,13 @@ public class MainChatControllerTest {
     }
 
     @Test
-    public void onResumeShouldResetNotification() {
+    public void onResumeShouldResetAllNotifications() {
         final AndroidUserInterface ui = mock(AndroidUserInterface.class);
         TestUtils.setFieldValue(controller, "androidUserInterface", ui);
 
         controller.onResume();
 
-        verify(ui).resetNotification();
+        verify(ui).resetAllNotifications();
     }
 
     @Test

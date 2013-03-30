@@ -86,7 +86,7 @@ public class NotificationService {
      * Updates the foreground service notification and sets the latest info text back to "Running",
      * and changes back to the regular icon.
      */
-    public void resetNotification() {
+    public void resetAllNotifications() {
         final Notification notification =
                 createNotificationWithLatestInfo(R.drawable.kou_icon_24x24, R.string.notification_running);
 

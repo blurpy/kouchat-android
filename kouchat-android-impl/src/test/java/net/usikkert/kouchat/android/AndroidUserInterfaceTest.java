@@ -212,9 +212,9 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void resetNotificationShouldUseTheNotificationService() {
-        androidUserInterface.resetNotification();
+    public void resetAllNotificationsShouldUseTheNotificationService() {
+        androidUserInterface.resetAllNotifications();
 
-        verify(notificationService).resetNotification();
+        verify(notificationService).resetAllNotifications();
     }
 }

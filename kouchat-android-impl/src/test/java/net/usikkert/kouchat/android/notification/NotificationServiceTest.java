@@ -149,10 +149,10 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void resetNotificationShouldSetRegularIcon() {
+    public void resetAllNotificationsShouldSetRegularIcon() {
         final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
 
-        notificationService.resetNotification();
+        notificationService.resetAllNotifications();
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
@@ -162,10 +162,10 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void resetNotificationShouldResetNotificationTextForTheDrawer() {
+    public void resetAllNotificationsShouldResetNotificationTextForTheDrawer() {
         final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
 
-        notificationService.resetNotification();
+        notificationService.resetAllNotifications();
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
@@ -178,10 +178,10 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void resetNotificationShouldCreatePendingIntentForOpeningTheMainChat() {
+    public void resetAllNotificationsShouldCreatePendingIntentForOpeningTheMainChat() {
         final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
 
-        notificationService.resetNotification();
+        notificationService.resetAllNotifications();
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
