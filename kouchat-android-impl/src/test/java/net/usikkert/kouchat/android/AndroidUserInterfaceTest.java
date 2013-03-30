@@ -31,10 +31,15 @@ import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.misc.UserList;
+import net.usikkert.kouchat.net.FileReceiver;
+import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import com.xtremelabs.robolectric.Robolectric;
@@ -50,16 +55,23 @@ import android.content.Context;
 @RunWith(RobolectricTestRunner.class)
 public class AndroidUserInterfaceTest {
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     private AndroidUserInterface androidUserInterface;
 
     private MainChatController mainChatController;
     private Controller controller;
     private NotificationService notificationService;
+    private MessageStylerWithHistory messageStyler;
+    private UserList userList;
+    private User me;
 
     @Before
     public void setUp() {
         final Settings settings = mock(Settings.class);
-        when(settings.getMe()).thenReturn(new User("Me", 1234));
+        me = new User("Me", 1234);
+        when(settings.getMe()).thenReturn(me);
 
         final Context context = Robolectric.application.getApplicationContext();
         notificationService = mock(NotificationService.class);
@@ -68,6 +80,11 @@ public class AndroidUserInterfaceTest {
 
         controller = mock(Controller.class);
         TestUtils.setFieldValue(androidUserInterface, "controller", controller);
+
+        userList = TestUtils.getFieldValue(androidUserInterface, UserList.class, "userList");
+
+        messageStyler = mock(MessageStylerWithHistory.class);
+        TestUtils.setFieldValue(androidUserInterface, "messageStyler", messageStyler);
 
         mainChatController = mock(MainChatController.class);
         androidUserInterface.registerMainChatController(mainChatController);
@@ -178,6 +195,58 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
+    public void registerMainChatControllerShouldThrowExceptionIfControllerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("MainChatController can not be null");
+
+        androidUserInterface.registerMainChatController(null);
+    }
+
+    @Test
+    public void registerMainChatControllerShouldSetTheField() {
+        TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
+
+        androidUserInterface.registerMainChatController(mainChatController);
+
+        final MainChatController mainChatControllerFromUI =
+                TestUtils.getFieldValue(androidUserInterface, MainChatController.class, "mainChatController");
+
+        assertSame(mainChatController, mainChatControllerFromUI);
+    }
+
+    @Test
+    public void registerMainChatControllerShouldUpdateChatFromHistory() {
+        TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
+        reset(mainChatController, messageStyler);
+
+        when(messageStyler.getHistory()).thenReturn("History");
+
+        androidUserInterface.registerMainChatController(mainChatController);
+
+        verify(mainChatController).updateChat("History");
+        verify(messageStyler).getHistory();
+    }
+
+    @Test
+    public void registerMainChatControllerShouldAddAllUsersToTheUserList() {
+        TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
+        reset(mainChatController);
+
+        final User user1 = new User("User1", 123);
+        final User user2 = new User("User2", 124);
+
+        userList.add(user1);
+        userList.add(user2);
+        assertEquals(3, userList.size()); // "me" is there already
+
+        androidUserInterface.registerMainChatController(mainChatController);
+
+        verify(mainChatController).addUser(me);
+        verify(mainChatController).addUser(user1);
+        verify(mainChatController).addUser(user2);
+    }
+
+    @Test
     public void unregisterMainChatControllerShouldSetControllerToNull() {
         final String fieldName = "mainChatController";
         final Class<MainChatController> fieldClass = MainChatController.class;
@@ -246,5 +315,61 @@ public class AndroidUserInterfaceTest {
 
         assertFalse(user.isNewPrivMsg());
         verifyZeroInteractions(controller);
+    }
+
+    @Test
+    public void logOnShouldUseTheController() {
+        androidUserInterface.logOn();
+        verify(controller).logOn();
+    }
+
+    @Test
+    public void logOffShouldUseTheController() {
+        androidUserInterface.logOff();
+        verify(controller).logOff(false);
+    }
+
+    @Test
+    public void isLoggedOnShouldUseTheController() {
+        assertFalse(androidUserInterface.isLoggedOn());
+
+        when(controller.isLoggedOn()).thenReturn(true);
+
+        assertTrue(androidUserInterface.isLoggedOn());
+    }
+
+    @Test
+    public void askFileSaveShouldReturnFalse() {
+        assertFalse(androidUserInterface.askFileSave(null, null, null));
+    }
+
+    @Test
+    public void showFileSaveShouldDoNothing() {
+        androidUserInterface.showFileSave(null);
+    }
+
+    @Test
+    public void showTransferForFileReceiverShouldDoNothing() {
+        androidUserInterface.showTransfer((FileReceiver) null);
+    }
+
+    @Test
+    public void showTransferForFileSenderShouldDoNothing() {
+        androidUserInterface.showTransfer((FileSender) null);
+    }
+
+    @Test
+    public void clearChatShouldDoNothing() {
+        androidUserInterface.clearChat();
+    }
+
+    @Test
+    public void changeAwayShouldDoNothing() {
+        androidUserInterface.changeAway(true);
+    }
+
+    @Test
+    public void quitShouldDoNothing() {
+        androidUserInterface.quit();
     }
 }

@@ -224,6 +224,8 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     }
 
     public void registerMainChatController(final MainChatController theMainChatController) {
+        Validate.notNull(theMainChatController, "MainChatController can not be null");
+
         mainChatController = theMainChatController;
         mainChatController.updateChat(messageStyler.getHistory());
 
