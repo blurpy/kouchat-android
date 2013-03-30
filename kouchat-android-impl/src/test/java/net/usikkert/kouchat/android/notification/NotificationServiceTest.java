@@ -133,11 +133,7 @@ public class NotificationServiceTest {
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
-
-        assertEquals("KouChat", latestEventInfo.getContentTitle());
-        assertEquals("New unread messages", latestEventInfo.getContentText());
-        assertEquals(R.string.notification_new_message, notificationService.getCurrentLatestInfoTextId());
+        verifyThatNotificationTextIsNewUnreadMessages(notification);
     }
 
     @Test
@@ -193,11 +189,7 @@ public class NotificationServiceTest {
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
-
-        assertEquals("KouChat", latestEventInfo.getContentTitle());
-        assertEquals("New unread messages", latestEventInfo.getContentText());
-        assertEquals(R.string.notification_new_message, notificationService.getCurrentLatestInfoTextId());
+        verifyThatNotificationTextIsNewUnreadMessages(notification);
     }
 
     @Test
@@ -419,6 +411,14 @@ public class NotificationServiceTest {
         assertEquals("KouChat", latestEventInfo.getContentTitle());
         assertEquals("Running", latestEventInfo.getContentText());
         assertEquals(R.string.notification_running, notificationService.getCurrentLatestInfoTextId());
+    }
+
+    private void verifyThatNotificationTextIsNewUnreadMessages(final Notification notification) {
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+
+        assertEquals("KouChat", latestEventInfo.getContentTitle());
+        assertEquals("New unread messages", latestEventInfo.getContentText());
+        assertEquals(R.string.notification_new_message, notificationService.getCurrentLatestInfoTextId());
     }
 
     private ShadowNotification.LatestEventInfo getLatestEventInfo(final Notification notification) {
