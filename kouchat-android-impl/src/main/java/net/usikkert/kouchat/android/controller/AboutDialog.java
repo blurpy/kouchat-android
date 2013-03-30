@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.android.controller;
 
 import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.util.Validate;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -47,6 +48,8 @@ public class AboutDialog {
      * @param context The activity to create this dialog from.
      */
     public AboutDialog(final Context context) {
+        Validate.notNull(context, "Context can not be null");
+
         final PackageInfo packageInfo = getPackageInfo(context);
 
         final String appVersion = packageInfo.versionName;
@@ -54,33 +57,34 @@ public class AboutDialog {
 
         final String aboutTitle = appName + " v" + appVersion;
         final String aboutText = context.getString(R.string.about_text);
-        final TextView message = createTextView(context, aboutText);
+        final TextView messageView = createMessageView(context, aboutText);
 
-        buildDialog(context, aboutTitle, message);
+        buildDialog(context, aboutTitle, messageView);
     }
 
-    private void buildDialog(final Context context, final String aboutTitle, final TextView message) {
+    private void buildDialog(final Context context, final String aboutTitle, final TextView messageView) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder.setTitle(aboutTitle);
         builder.setCancelable(true);
         builder.setIcon(R.drawable.kou_icon_32x32);
         builder.setPositiveButton(context.getString(android.R.string.ok), null);
-        builder.setView(message);
+        builder.setView(messageView);
         builder.create();
 
         builder.show();
     }
 
-    private TextView createTextView(final Context context, final String aboutText) {
-        final TextView message = new TextView(context);
-        final SpannableString s = new SpannableString(aboutText);
+    private TextView createMessageView(final Context context, final String aboutText) {
+        final TextView messageView = new TextView(context);
+        final SpannableString message = new SpannableString(aboutText);
 
-        message.setPadding(PADDING, PADDING, PADDING, PADDING);
-        message.setText(s);
-        Linkify.addLinks(message, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+        messageView.setPadding(PADDING, PADDING, PADDING, PADDING);
+        messageView.setText(message);
 
-        return message;
+        Linkify.addLinks(messageView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+
+        return messageView;
     }
 
     private PackageInfo getPackageInfo(final Context context) {
