@@ -124,6 +124,22 @@ public class AndroidPrivateChatWindowTest {
     }
 
     @Test
+    public void appendToPrivateChatShouldThrowExceptionIfMessageIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Private message can not be empty");
+
+        chatWindow.appendToPrivateChat(null, 500);
+    }
+
+    @Test
+    public void appendToPrivateChatShouldThrowExceptionIfMessageIsEmpty() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Private message can not be empty");
+
+        chatWindow.appendToPrivateChat(" ", 500);
+    }
+
+    @Test
     public void appendToPrivateChatShouldAppendToHistoryIfControllerIsNull() {
         assertNull(getControllerFromChatWindow());
 

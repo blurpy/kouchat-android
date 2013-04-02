@@ -63,6 +63,8 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
 
     @Override
     public void appendToPrivateChat(final String privateMessage, final int color) {
+        Validate.notEmpty(privateMessage, "Private message can not be empty");
+
         final CharSequence styledPrivateMessage = messageStyler.styleAndAppend(privateMessage, color);
 
         if (privateChatController != null) {
