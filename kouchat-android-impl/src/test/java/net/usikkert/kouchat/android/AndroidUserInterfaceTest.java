@@ -27,13 +27,17 @@ import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
+import net.usikkert.kouchat.misc.ChatLogger;
+import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
+import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
+import net.usikkert.kouchat.ui.PrivateChatWindow;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
@@ -64,6 +68,7 @@ public class AndroidUserInterfaceTest {
     private Controller controller;
     private NotificationService notificationService;
     private MessageStylerWithHistory messageStyler;
+    private MessageController msgController;
     private UserList userList;
     private User me;
 
@@ -86,8 +91,38 @@ public class AndroidUserInterfaceTest {
         messageStyler = mock(MessageStylerWithHistory.class);
         TestUtils.setFieldValue(androidUserInterface, "messageStyler", messageStyler);
 
+        msgController = mock(MessageController.class);
+        TestUtils.setFieldValue(androidUserInterface, "msgController", msgController);
+
         mainChatController = mock(MainChatController.class);
         androidUserInterface.registerMainChatController(mainChatController);
+
+        // Reset mocks used in the constructor, to start clean in the tests
+        reset(mainChatController, messageStyler);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfContextIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Context can not be null");
+
+        new AndroidUserInterface(null, mock(Settings.class), mock(NotificationService.class));
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfSettingsIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Settings can not be null");
+
+        new AndroidUserInterface(mock(Context.class), null, mock(NotificationService.class));
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfNotificationServiceIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("NotificationService can not be null");
+
+        new AndroidUserInterface(mock(Context.class), mock(Settings.class), null);
     }
 
     @Test
@@ -147,6 +182,22 @@ public class AndroidUserInterfaceTest {
         androidUserInterface.notifyMessageArrived(null);
 
         verifyZeroInteractions(notificationService);
+    }
+
+    @Test
+    public void notifyPrivateMessageArrivedShouldThrowExceptionIfUserIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("User can not be null");
+
+        androidUserInterface.notifyPrivateMessageArrived(null);
+    }
+
+    @Test
+    public void notifyPrivateMessageArrivedShouldThrowExceptionIfPrivateChatIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Private chat can not be null");
+
+        androidUserInterface.notifyPrivateMessageArrived(new User("TestUser", 1234));
     }
 
     @Test
@@ -217,7 +268,6 @@ public class AndroidUserInterfaceTest {
     @Test
     public void registerMainChatControllerShouldUpdateChatFromHistory() {
         TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
-        reset(mainChatController, messageStyler);
 
         when(messageStyler.getHistory()).thenReturn("History");
 
@@ -230,7 +280,6 @@ public class AndroidUserInterfaceTest {
     @Test
     public void registerMainChatControllerShouldAddAllUsersToTheUserList() {
         TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
-        reset(mainChatController);
 
         final User user1 = new User("User1", 123);
         final User user2 = new User("User2", 124);
@@ -336,6 +385,110 @@ public class AndroidUserInterfaceTest {
         when(controller.isLoggedOn()).thenReturn(true);
 
         assertTrue(androidUserInterface.isLoggedOn());
+    }
+
+    @Test
+    public void createPrivChatShouldThrowExceptionIfUserIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("User can not be null");
+
+        androidUserInterface.createPrivChat(null);
+    }
+
+    @Test
+    public void createPrivChatShouldSetAndroidPrivateChatWindowIfNull() {
+        final User user = new User("TestUser", 1234);
+
+        androidUserInterface.createPrivChat(user);
+
+        assertNotNull(user.getPrivchat());
+        assertEquals(AndroidPrivateChatWindow.class, user.getPrivchat().getClass());
+    }
+
+    @Test
+    public void createPrivChatShouldNotSetAndroidPrivateChatWindowIfAlreadySet() {
+        final User user = new User("TestUser", 1234);
+        final PrivateChatWindow privchat = mock(PrivateChatWindow.class);
+        user.setPrivchat(privchat);
+
+        androidUserInterface.createPrivChat(user);
+
+        assertSame(privchat, user.getPrivchat());
+    }
+
+    @Test
+    public void createPrivChatShouldSetChatLoggerIfNull() {
+        final User user = new User("TestUser", 1234);
+
+        androidUserInterface.createPrivChat(user);
+
+        assertNotNull(user.getPrivateChatLogger());
+    }
+
+    @Test
+    public void createPrivChatShouldNotSetChatLoggerIfAlreadySet() {
+        final User user = new User("TestUser", 1234);
+        final ChatLogger chatLogger = mock(ChatLogger.class);
+        user.setPrivateChatLogger(chatLogger);
+
+        androidUserInterface.createPrivChat(user);
+
+        assertSame(chatLogger, user.getPrivateChatLogger());
+    }
+
+    @Test
+    public void appendToChatShouldThrowExceptionIfMessageIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Message can not be empty");
+
+        androidUserInterface.appendToChat(null, 0);
+    }
+
+    @Test
+    public void appendToChatShouldThrowExceptionIfMessageIsEmpty() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Message can not be empty");
+
+        androidUserInterface.appendToChat(" ", 0);
+    }
+
+    @Test
+    public void appendToChatShouldAppendToHistoryIfControllerIsNull() {
+        TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
+
+        androidUserInterface.appendToChat("Message", 500);
+
+        verify(messageStyler).styleAndAppend("Message", 500);
+        verifyZeroInteractions(mainChatController);
+    }
+
+    @Test
+    public void appendToChatShouldAppendToHistoryAndController() {
+        when(messageStyler.styleAndAppend(anyString(), anyInt())).thenReturn("Styled message");
+
+        androidUserInterface.appendToChat("Message", 500);
+
+        verify(messageStyler).styleAndAppend("Message", 500);
+        verify(mainChatController).appendToChat("Styled message");
+    }
+
+    @Test
+    public void sendMessageShouldUseTheControllerAndMessageController() throws CommandException {
+        androidUserInterface.sendMessage("Hello there");
+
+        verify(controller).sendChatMessage("Hello there");
+        verify(msgController).showOwnMessage("Hello there");
+    }
+
+    @Test
+    public void sendMessageShouldShowSystemMessageIfControllerThrowsException() throws CommandException {
+        doThrow(new CommandException("This failed")).when(controller).sendChatMessage(anyString());
+
+        androidUserInterface.sendMessage("Fail now");
+
+        verify(controller).sendChatMessage("Fail now");
+        verify(msgController).showSystemMessage("This failed");
+        verifyNoMoreInteractions(msgController);
     }
 
     @Test

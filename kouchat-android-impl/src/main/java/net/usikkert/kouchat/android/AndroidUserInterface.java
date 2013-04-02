@@ -158,6 +158,9 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
      */
     @Override
     public void notifyPrivateMessageArrived(final User user) {
+        Validate.notNull(user, "User can not be null");
+        Validate.notNull(user.getPrivchat(), "Private chat can not be null");
+
         if (!isVisible() && !user.getPrivchat().isVisible()) {
             notificationService.notifyNewPrivateChatMessage(user);
         }
@@ -170,6 +173,8 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
 
     @Override
     public void createPrivChat(final User user) {
+        Validate.notNull(user, "User can not be null");
+
         if (user.getPrivchat() == null) {
             user.setPrivchat(new AndroidPrivateChatWindow(context, user));
         }
@@ -196,6 +201,8 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
 
     @Override
     public void appendToChat(final String message, final int color) {
+        Validate.notEmpty(message, "Message can not be empty");
+
         final CharSequence styledMessage = messageStyler.styleAndAppend(message, color);
 
         if (mainChatController != null) {
