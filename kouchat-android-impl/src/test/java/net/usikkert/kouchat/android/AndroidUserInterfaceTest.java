@@ -473,6 +473,22 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
+    public void sendMessageShouldThrowExceptionIfMessageIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Message can not be empty");
+
+        androidUserInterface.sendMessage(null);
+    }
+
+    @Test
+    public void sendMessageShouldThrowExceptionIfMessageIsEmpty() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Message can not be empty");
+
+        androidUserInterface.sendMessage(" ");
+    }
+
+    @Test
     public void sendMessageShouldUseTheControllerAndMessageController() throws CommandException {
         androidUserInterface.sendMessage("Hello there");
 
@@ -488,6 +504,51 @@ public class AndroidUserInterfaceTest {
 
         verify(controller).sendChatMessage("Fail now");
         verify(msgController).showSystemMessage("This failed");
+        verifyNoMoreInteractions(msgController);
+    }
+
+    @Test
+    public void sendPrivateMessageShouldThrowExceptionIfMessageIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Private message can not be empty");
+
+        androidUserInterface.sendPrivateMessage(null, new User("TestUser", 1234));
+    }
+
+    @Test
+    public void sendPrivateMessageShouldThrowExceptionIfMessageIsEmpty() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Private message can not be empty");
+
+        androidUserInterface.sendPrivateMessage(" ", new User("TestUser", 1234));
+    }
+
+    @Test
+    public void sendPrivateMessageShouldThrowExceptionIfUserIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("User can not be null");
+
+        androidUserInterface.sendPrivateMessage("Hello", null);
+    }
+
+    @Test
+    public void sendPrivateMessageShouldUseTheControllerAndMessageController() throws CommandException {
+        final User user = new User("TestUser", 1234);
+        androidUserInterface.sendPrivateMessage("Hello there", user);
+
+        verify(controller).sendPrivateMessage("Hello there", user);
+        verify(msgController).showPrivateOwnMessage(user, "Hello there");
+    }
+
+    @Test
+    public void sendPrivateMessageShouldShowSystemMessageIfControllerThrowsException() throws CommandException {
+        doThrow(new CommandException("This failed")).when(controller).sendPrivateMessage(anyString(), any(User.class));
+        final User user = new User("TestUser", 1234);
+
+        androidUserInterface.sendPrivateMessage("Fail now", user);
+
+        verify(controller).sendPrivateMessage("Fail now", user);
+        verify(msgController).showPrivateSystemMessage(user, "This failed");
         verifyNoMoreInteractions(msgController);
     }
 

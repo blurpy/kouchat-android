@@ -246,6 +246,8 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     }
 
     public void sendMessage(final String message) {
+        Validate.notEmpty(message, "Message can not be empty");
+
         final AsyncTask<Void, Void, Void> sendMessageTask = new AsyncTask<Void, Void, Void>() {
             @Override
             public Void doInBackground(final Void... voids) {
@@ -266,6 +268,9 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     }
 
     public void sendPrivateMessage(final String privateMessage, final User user) {
+        Validate.notEmpty(privateMessage, "Private message can not be empty");
+        Validate.notNull(user, "User can not be null");
+
         final AsyncTask<Void, Void, Void> sendMessageTask = new AsyncTask<Void, Void, Void>() {
             @Override
             public Void doInBackground(final Void... voids) {
