@@ -71,12 +71,14 @@ public class AndroidUserInterfaceTest {
     private MessageController msgController;
     private UserList userList;
     private User me;
+    private User testUser;
 
     @Before
     public void setUp() {
         final Settings settings = mock(Settings.class);
         me = new User("Me", 1234);
         when(settings.getMe()).thenReturn(me);
+        testUser = new User("TestUser", 1235);
 
         final Context context = Robolectric.application.getApplicationContext();
         notificationService = mock(NotificationService.class);
@@ -197,7 +199,7 @@ public class AndroidUserInterfaceTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Private chat can not be null");
 
-        androidUserInterface.notifyPrivateMessageArrived(new User("TestUser", 1234));
+        androidUserInterface.notifyPrivateMessageArrived(testUser);
     }
 
     @Test
@@ -205,7 +207,6 @@ public class AndroidUserInterfaceTest {
         final AndroidPrivateChatWindow privchat = mock(AndroidPrivateChatWindow.class);
         assertFalse(privchat.isVisible());
 
-        final User testUser = new User("TestUser", 1234);
         testUser.setPrivchat(privchat);
 
         assertFalse(mainChatController.isVisible());
@@ -220,7 +221,6 @@ public class AndroidUserInterfaceTest {
         final AndroidPrivateChatWindow privchat = mock(AndroidPrivateChatWindow.class);
         assertFalse(privchat.isVisible());
 
-        final User testUser = new User("TestUser", 1234);
         testUser.setPrivchat(privchat);
 
         when(mainChatController.isVisible()).thenReturn(true);
@@ -235,7 +235,6 @@ public class AndroidUserInterfaceTest {
         final AndroidPrivateChatWindow privchat = mock(AndroidPrivateChatWindow.class);
         when(privchat.isVisible()).thenReturn(true);
 
-        final User testUser = new User("TestUser", 1234);
         testUser.setPrivchat(privchat);
 
         assertFalse(mainChatController.isVisible());
@@ -338,8 +337,6 @@ public class AndroidUserInterfaceTest {
 
     @Test
     public void activatedPrivChatShouldResetNotificationForTheUser() {
-        final User testUser = new User("Test", 12345);
-
         androidUserInterface.activatedPrivChat(testUser);
 
         verify(notificationService).resetPrivateChatNotification(testUser);
@@ -347,19 +344,16 @@ public class AndroidUserInterfaceTest {
 
     @Test
     public void activatedPrivChatShouldResetNewPrivateMessageStatusIfCurrentlyTrue() {
-        final User testUser = new User("Test", 12345);
         testUser.setNewPrivMsg(true);
 
         androidUserInterface.activatedPrivChat(testUser);
 
         assertFalse(testUser.isNewPrivMsg());
-        verify(controller).changeNewMessage(12345, false);
+        verify(controller).changeNewMessage(1235, false);
     }
 
     @Test
     public void activatedPrivChatShouldNotResetNewPrivateMessageStatusIfCurrentlyFalse() {
-        final User testUser = new User("Test", 12345);
-
         androidUserInterface.activatedPrivChat(testUser);
 
         assertFalse(testUser.isNewPrivMsg());
@@ -397,8 +391,6 @@ public class AndroidUserInterfaceTest {
 
     @Test
     public void createPrivChatShouldSetAndroidPrivateChatWindowIfNull() {
-        final User testUser = new User("TestUser", 1234);
-
         androidUserInterface.createPrivChat(testUser);
 
         assertNotNull(testUser.getPrivchat());
@@ -407,7 +399,6 @@ public class AndroidUserInterfaceTest {
 
     @Test
     public void createPrivChatShouldNotSetAndroidPrivateChatWindowIfAlreadySet() {
-        final User testUser = new User("TestUser", 1234);
         final PrivateChatWindow privchat = mock(PrivateChatWindow.class);
         testUser.setPrivchat(privchat);
 
@@ -418,8 +409,6 @@ public class AndroidUserInterfaceTest {
 
     @Test
     public void createPrivChatShouldSetChatLoggerIfNull() {
-        final User testUser = new User("TestUser", 1234);
-
         androidUserInterface.createPrivChat(testUser);
 
         assertNotNull(testUser.getPrivateChatLogger());
@@ -427,7 +416,6 @@ public class AndroidUserInterfaceTest {
 
     @Test
     public void createPrivChatShouldNotSetChatLoggerIfAlreadySet() {
-        final User testUser = new User("TestUser", 1234);
         final ChatLogger chatLogger = mock(ChatLogger.class);
         testUser.setPrivateChatLogger(chatLogger);
 
@@ -512,7 +500,7 @@ public class AndroidUserInterfaceTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Private message can not be empty");
 
-        androidUserInterface.sendPrivateMessage(null, new User("TestUser", 1234));
+        androidUserInterface.sendPrivateMessage(null, testUser);
     }
 
     @Test
@@ -520,7 +508,7 @@ public class AndroidUserInterfaceTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Private message can not be empty");
 
-        androidUserInterface.sendPrivateMessage(" ", new User("TestUser", 1234));
+        androidUserInterface.sendPrivateMessage(" ", testUser);
     }
 
     @Test
@@ -533,7 +521,6 @@ public class AndroidUserInterfaceTest {
 
     @Test
     public void sendPrivateMessageShouldUseTheControllerAndMessageController() throws CommandException {
-        final User testUser = new User("TestUser", 1234);
         androidUserInterface.sendPrivateMessage("Hello there", testUser);
 
         verify(controller).sendPrivateMessage("Hello there", testUser);
@@ -543,7 +530,6 @@ public class AndroidUserInterfaceTest {
     @Test
     public void sendPrivateMessageShouldShowSystemMessageIfControllerThrowsException() throws CommandException {
         doThrow(new CommandException("This failed")).when(controller).sendPrivateMessage(anyString(), any(User.class));
-        final User testUser = new User("TestUser", 1234);
 
         androidUserInterface.sendPrivateMessage("Fail now", testUser);
 
