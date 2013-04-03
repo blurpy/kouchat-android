@@ -338,31 +338,31 @@ public class AndroidUserInterfaceTest {
 
     @Test
     public void activatedPrivChatShouldResetNotificationForTheUser() {
-        final User user = new User("Test", 12345);
+        final User testUser = new User("Test", 12345);
 
-        androidUserInterface.activatedPrivChat(user);
+        androidUserInterface.activatedPrivChat(testUser);
 
-        verify(notificationService).resetPrivateChatNotification(user);
+        verify(notificationService).resetPrivateChatNotification(testUser);
     }
 
     @Test
     public void activatedPrivChatShouldResetNewPrivateMessageStatusIfCurrentlyTrue() {
-        final User user = new User("Test", 12345);
-        user.setNewPrivMsg(true);
+        final User testUser = new User("Test", 12345);
+        testUser.setNewPrivMsg(true);
 
-        androidUserInterface.activatedPrivChat(user);
+        androidUserInterface.activatedPrivChat(testUser);
 
-        assertFalse(user.isNewPrivMsg());
+        assertFalse(testUser.isNewPrivMsg());
         verify(controller).changeNewMessage(12345, false);
     }
 
     @Test
     public void activatedPrivChatShouldNotResetNewPrivateMessageStatusIfCurrentlyFalse() {
-        final User user = new User("Test", 12345);
+        final User testUser = new User("Test", 12345);
 
-        androidUserInterface.activatedPrivChat(user);
+        androidUserInterface.activatedPrivChat(testUser);
 
-        assertFalse(user.isNewPrivMsg());
+        assertFalse(testUser.isNewPrivMsg());
         verifyZeroInteractions(controller);
     }
 
@@ -397,43 +397,43 @@ public class AndroidUserInterfaceTest {
 
     @Test
     public void createPrivChatShouldSetAndroidPrivateChatWindowIfNull() {
-        final User user = new User("TestUser", 1234);
+        final User testUser = new User("TestUser", 1234);
 
-        androidUserInterface.createPrivChat(user);
+        androidUserInterface.createPrivChat(testUser);
 
-        assertNotNull(user.getPrivchat());
-        assertEquals(AndroidPrivateChatWindow.class, user.getPrivchat().getClass());
+        assertNotNull(testUser.getPrivchat());
+        assertEquals(AndroidPrivateChatWindow.class, testUser.getPrivchat().getClass());
     }
 
     @Test
     public void createPrivChatShouldNotSetAndroidPrivateChatWindowIfAlreadySet() {
-        final User user = new User("TestUser", 1234);
+        final User testUser = new User("TestUser", 1234);
         final PrivateChatWindow privchat = mock(PrivateChatWindow.class);
-        user.setPrivchat(privchat);
+        testUser.setPrivchat(privchat);
 
-        androidUserInterface.createPrivChat(user);
+        androidUserInterface.createPrivChat(testUser);
 
-        assertSame(privchat, user.getPrivchat());
+        assertSame(privchat, testUser.getPrivchat());
     }
 
     @Test
     public void createPrivChatShouldSetChatLoggerIfNull() {
-        final User user = new User("TestUser", 1234);
+        final User testUser = new User("TestUser", 1234);
 
-        androidUserInterface.createPrivChat(user);
+        androidUserInterface.createPrivChat(testUser);
 
-        assertNotNull(user.getPrivateChatLogger());
+        assertNotNull(testUser.getPrivateChatLogger());
     }
 
     @Test
     public void createPrivChatShouldNotSetChatLoggerIfAlreadySet() {
-        final User user = new User("TestUser", 1234);
+        final User testUser = new User("TestUser", 1234);
         final ChatLogger chatLogger = mock(ChatLogger.class);
-        user.setPrivateChatLogger(chatLogger);
+        testUser.setPrivateChatLogger(chatLogger);
 
-        androidUserInterface.createPrivChat(user);
+        androidUserInterface.createPrivChat(testUser);
 
-        assertSame(chatLogger, user.getPrivateChatLogger());
+        assertSame(chatLogger, testUser.getPrivateChatLogger());
     }
 
     @Test
@@ -533,22 +533,22 @@ public class AndroidUserInterfaceTest {
 
     @Test
     public void sendPrivateMessageShouldUseTheControllerAndMessageController() throws CommandException {
-        final User user = new User("TestUser", 1234);
-        androidUserInterface.sendPrivateMessage("Hello there", user);
+        final User testUser = new User("TestUser", 1234);
+        androidUserInterface.sendPrivateMessage("Hello there", testUser);
 
-        verify(controller).sendPrivateMessage("Hello there", user);
-        verify(msgController).showPrivateOwnMessage(user, "Hello there");
+        verify(controller).sendPrivateMessage("Hello there", testUser);
+        verify(msgController).showPrivateOwnMessage(testUser, "Hello there");
     }
 
     @Test
     public void sendPrivateMessageShouldShowSystemMessageIfControllerThrowsException() throws CommandException {
         doThrow(new CommandException("This failed")).when(controller).sendPrivateMessage(anyString(), any(User.class));
-        final User user = new User("TestUser", 1234);
+        final User testUser = new User("TestUser", 1234);
 
-        androidUserInterface.sendPrivateMessage("Fail now", user);
+        androidUserInterface.sendPrivateMessage("Fail now", testUser);
 
-        verify(controller).sendPrivateMessage("Fail now", user);
-        verify(msgController).showPrivateSystemMessage(user, "This failed");
+        verify(controller).sendPrivateMessage("Fail now", testUser);
+        verify(msgController).showPrivateSystemMessage(testUser, "This failed");
         verifyNoMoreInteractions(msgController);
     }
 
