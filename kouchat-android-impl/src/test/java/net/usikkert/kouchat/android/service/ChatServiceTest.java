@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.notification.NotificationService;
+import net.usikkert.kouchat.android.test.RobolectricTestUtils;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestUtils;
 
@@ -35,12 +36,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
-import com.xtremelabs.robolectric.shadows.ShadowPreferenceManager;
 
 import android.app.Notification;
-import android.content.SharedPreferences;
 import android.os.IBinder;
 
 /**
@@ -75,7 +73,7 @@ public class ChatServiceTest {
 
     @Test
     public void omCreateShouldSetNickNameFromAndroidSettings() {
-        setNickNameInTheAndroidSettingsTo("Kou");
+        RobolectricTestUtils.setNickNameInTheAndroidSettingsTo("Kou");
 
         chatService.onCreate();
 
@@ -139,13 +137,6 @@ public class ChatServiceTest {
         chatService.onDestroy();
 
         verify(ui).logOff();
-    }
-
-    private void setNickNameInTheAndroidSettingsTo(final String nickName) {
-        final SharedPreferences sharedPreferences =
-                ShadowPreferenceManager.getDefaultSharedPreferences(Robolectric.application.getApplicationContext());
-
-        sharedPreferences.edit().putString("nick_name", nickName).commit();
     }
 
     private User getMe() {
