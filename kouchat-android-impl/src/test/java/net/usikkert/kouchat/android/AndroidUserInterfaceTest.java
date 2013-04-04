@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
+import net.usikkert.kouchat.android.test.RobolectricTestUtils;
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
@@ -536,6 +537,137 @@ public class AndroidUserInterfaceTest {
         verify(controller).sendPrivateMessage("Fail now", testUser);
         verify(msgController).showPrivateSystemMessage(testUser, "This failed");
         verifyNoMoreInteractions(msgController);
+    }
+
+    @Test
+    public void userAddedShouldDoNothingIfControllerIsNull() {
+        TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
+
+        androidUserInterface.userAdded(50);
+
+        verifyZeroInteractions(mainChatController);
+    }
+
+    @Test
+    public void userAddedShouldCallControllerWithCorrectUserFromUserList() {
+        userList.removeUserListListener(androidUserInterface); // To avoid userAdded being called on userList.add()
+
+        userList.add(new User("SomeOne", 1236));
+        userList.add(testUser);
+
+        androidUserInterface.userAdded(0);
+
+        assertSame(me, userList.get(0));
+        verify(mainChatController).addUser(me);
+        verifyNoMoreInteractions(mainChatController);
+
+        androidUserInterface.userAdded(2);
+
+        assertSame(testUser, userList.get(2));
+        verify(mainChatController).addUser(testUser);
+        verifyNoMoreInteractions(mainChatController);
+    }
+
+    @Test
+    public void userChangedShouldDoNothingIfControllerIsNull() {
+        TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
+
+        androidUserInterface.userChanged(50);
+
+        verifyZeroInteractions(mainChatController);
+    }
+
+    @Test
+    public void userChangedShouldCallControllerWithCorrectUserFromUserList() {
+        userList.removeUserListListener(androidUserInterface); // To avoid userAdded being called on userList.add()
+
+        userList.add(new User("SomeOne", 1236));
+        userList.add(testUser);
+
+        androidUserInterface.userChanged(0);
+
+        assertSame(me, userList.get(0));
+        verify(mainChatController).updateUser(me);
+        verifyNoMoreInteractions(mainChatController);
+
+        androidUserInterface.userChanged(2);
+
+        assertSame(testUser, userList.get(2));
+        verify(mainChatController).updateUser(testUser);
+        verifyNoMoreInteractions(mainChatController);
+    }
+
+    @Test
+    public void userRemovedShouldDoNothingIfControllerIsNull() {
+        TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
+
+        androidUserInterface.userRemoved(50);
+
+        verifyZeroInteractions(mainChatController);
+    }
+
+    @Test
+    public void userRemovedShouldCallControllerWithCorrectUserPosition() {
+        userList.removeUserListListener(androidUserInterface); // To avoid userAdded being called on userList.add()
+
+        userList.add(new User("SomeOne", 1236));
+        userList.add(testUser);
+
+        androidUserInterface.userRemoved(0);
+
+        verify(mainChatController).removeUser(0);
+        verifyNoMoreInteractions(mainChatController);
+
+        androidUserInterface.userRemoved(2);
+
+        verify(mainChatController).removeUser(2);
+        verifyNoMoreInteractions(mainChatController);
+    }
+
+    @Test
+    public void shouldBeListeningToUserListEvents() {
+        userList.add(testUser);
+        verify(mainChatController).addUser(testUser);
+        verifyNoMoreInteractions(mainChatController);
+
+        userList.set(1, testUser);
+        verify(mainChatController).updateUser(testUser);
+        verifyNoMoreInteractions(mainChatController);
+
+        assertSame(testUser, userList.get(1));
+
+        userList.remove(testUser);
+        verify(mainChatController).removeUser(1);
+        verifyNoMoreInteractions(mainChatController);
+    }
+
+    @Test
+    public void setNickNameFromSettingsShouldSetValidNickInMeFromSettings() {
+        RobolectricTestUtils.setNickNameInTheAndroidSettingsTo("Robofied");
+        assertEquals("Me", me.getNick());
+
+        androidUserInterface.setNickNameFromSettings();
+
+        assertEquals("Robofied", me.getNick());
+    }
+
+    @Test
+    public void setNickNameFromSettingsShouldSetInvalidNickInMeFromCode() {
+        RobolectricTestUtils.setNickNameInTheAndroidSettingsTo("123456789012345");
+        assertEquals("Me", me.getNick());
+
+        androidUserInterface.setNickNameFromSettings();
+
+        assertEquals("1234", me.getNick());
+    }
+
+    @Test
+    public void setNickNameFromSettingsShouldSetMissingNickInMeFromCode() {
+        assertEquals("Me", me.getNick());
+
+        androidUserInterface.setNickNameFromSettings();
+
+        assertEquals("1234", me.getNick());
     }
 
     @Test
