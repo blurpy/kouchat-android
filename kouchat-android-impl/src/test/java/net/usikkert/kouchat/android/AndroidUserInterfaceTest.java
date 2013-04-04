@@ -46,9 +46,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+import com.xtremelabs.robolectric.shadows.ShadowToast;
 
 import android.content.Context;
 
@@ -668,6 +671,89 @@ public class AndroidUserInterfaceTest {
         androidUserInterface.setNickNameFromSettings();
 
         assertEquals("1234", me.getNick());
+    }
+
+    @Test
+    public void changeNickNameShouldReturnFalseIfNewNickIsSameAsOld() {
+        assertFalse(androidUserInterface.changeNickName("Me"));
+        assertFalse(androidUserInterface.changeNickName(" Me "));
+
+        verifyZeroInteractions(controller, msgController, mainChatController);
+        assertEquals(0, ShadowToast.shownToastCount());
+    }
+
+    @Test
+    public void changeNickNameShouldReturnFalseAndShowToastIfNewNickIsInvalid() {
+        assertFalse(androidUserInterface.changeNickName("123456789012345"));
+
+        verifyZeroInteractions(controller, msgController, mainChatController);
+        assertEquals("Invalid nick name", ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    public void changeNickNameShouldReturnFalseAndShowToastIfNewNickIsInUse() {
+        when(controller.isNickInUse("Kou")).thenReturn(true);
+
+        assertFalse(androidUserInterface.changeNickName("Kou"));
+
+        verifyZeroInteractions(msgController, mainChatController);
+        verify(controller).isNickInUse("Kou");
+        verifyNoMoreInteractions(controller);
+        assertEquals("The nick name is in use by someone else.", ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    public void changeNickNameShouldReturnFalseAndShowToastIfOperationFails() throws CommandException {
+        doThrow(new CommandException("Cant change nick")).when(controller).changeMyNick("Kou");
+
+        assertFalse(androidUserInterface.changeNickName("Kou"));
+
+        verify(controller).isNickInUse("Kou");
+        verify(controller).changeMyNick("Kou");
+        verifyNoMoreInteractions(controller);
+        verifyZeroInteractions(msgController, mainChatController);
+        assertEquals("Cant change nick", ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    public void changeNickNameShouldReturnTrueAndShowSystemMessageAndUpdateTopicIfEverythingOK() throws CommandException {
+        when(controller.getTopic()).thenReturn(new Topic());
+
+        // Makes sure the mocked controller changes the nick name like the real implementation would,
+        // so the topic and system message looks more realistic. Would be "Me" instead of "Kou" if not
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(final InvocationOnMock invocation) {
+                me.setNick(invocation.getArguments()[0].toString());
+                return null;
+            }
+        }).when(controller).changeMyNick(anyString());
+
+        assertTrue(androidUserInterface.changeNickName("Kou"));
+
+        verify(controller).isNickInUse("Kou");
+        verify(controller).changeMyNick("Kou");
+        verify(controller).getTopic();
+        verifyNoMoreInteractions(controller);
+
+        verify(msgController).showSystemMessage("You changed nick to Kou");
+        verify(mainChatController).updateTopic("Kou - KouChat");
+    }
+
+    @Test
+    public void getUserShouldThrowExceptionIfNoMatchingUserIsFoundInTheUserList() {
+        expectedException.expect(RuntimeException.class);
+        expectedException.expectMessage("Unknown user with code: 123456");
+
+        androidUserInterface.getUser(123456);
+    }
+
+    @Test
+    public void getUserShouldReturnCorrectUserWithCode() {
+        userList.add(testUser);
+
+        assertSame(me, androidUserInterface.getUser(1234));
+        assertSame(testUser, androidUserInterface.getUser(1235));
     }
 
     @Test

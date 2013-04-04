@@ -395,7 +395,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
             }
         }
 
-        throw new RuntimeException("Unknow user: " + code);
+        throw new RuntimeException("Unknown user with code: " + code);
     }
 
     /**
