@@ -29,8 +29,8 @@ import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.Messages;
+import net.usikkert.kouchat.util.RobotiumTestUtils;
 import net.usikkert.kouchat.util.TestClient;
-import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -82,16 +82,16 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         final MainChatController activity = getActivity();
 
         solo = new Solo(getInstrumentation(), activity);
-        me = TestUtils.getMe(activity);
+        me = RobotiumTestUtils.getMe(activity);
     }
 
     public void test01SetNickNameAndQuit() {
         originalNickName = me.getNick();
 
-        TestUtils.clickOnChangeNickNameInTheSettings(solo);
-        TestUtils.changeNickNameTo(solo, "Christian");
+        RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
+        RobotiumTestUtils.changeNickNameTo(solo, "Christian");
 
-        TestUtils.quit(solo);
+        RobotiumTestUtils.quit(solo);
     }
 
     /**
@@ -107,7 +107,7 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
      */
     public void test02DoChat() throws CommandException {
         solo.sleep(7000);
-        TestUtils.writeLine(solo, "hey :)");
+        RobotiumTestUtils.writeLine(solo, "hey :)");
 
         solo.sleep(10000);
         arthur.sendChatMessage("What are you doing?");
@@ -125,7 +125,7 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         trillian.sendAwayMessage("It won't affect me, I'm already a woman.");
 
         solo.sleep(6000);
-        TestUtils.writeLine(solo, "interesting!");
+        RobotiumTestUtils.writeLine(solo, "interesting!");
 
         solo.sleep(1000);
         arthur.sendPrivateMessage("Show me the envelope!", me);
@@ -137,16 +137,16 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
     public void test03RestoreNickNameAndQuit() {
         assertNotNull(originalNickName);
 
-        TestUtils.clickOnChangeNickNameInTheSettings(solo);
-        TestUtils.changeNickNameTo(solo, originalNickName);
+        RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
+        RobotiumTestUtils.changeNickNameTo(solo, originalNickName);
 
-        TestUtils.goHome(solo);
+        RobotiumTestUtils.goHome(solo);
 
         arthurClient.logoff();
         fordClient.logoff();
         trillianClient.logoff();
 
-        TestUtils.quit(solo);
+        RobotiumTestUtils.quit(solo);
     }
 
     public void tearDown() {

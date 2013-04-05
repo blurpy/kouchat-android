@@ -65,7 +65,7 @@ public class TestClient {
 
         me = settings.getMe();
         me.setNick(nickName);
-        TestUtils.setFieldValue(me, "code", userCode);
+        RobotiumTestUtils.setFieldValue(me, "code", userCode);
 
         networkService = new NetworkService(settings);
         messages = new Messages(networkService, settings);

@@ -27,8 +27,8 @@ import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.PrivateMessageResponderMock;
+import net.usikkert.kouchat.util.RobotiumTestUtils;
 import net.usikkert.kouchat.util.TestClient;
-import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -66,10 +66,10 @@ public class PrivateChatTestCase extends ActivityInstrumentationTestCase2<MainCh
         final MainChatController activity = getActivity();
 
         solo = new Solo(getInstrumentation(), activity);
-        me = TestUtils.getMe(activity);
+        me = RobotiumTestUtils.getMe(activity);
         envelope = getBitmap(R.drawable.envelope);
         dot = getBitmap(R.drawable.dot);
-        defaultOrientation = TestUtils.getCurrentOrientation(solo);
+        defaultOrientation = RobotiumTestUtils.getCurrentOrientation(solo);
 
         // Making sure the test client only logs on once during all the tests
         if (client == null) {
@@ -83,16 +83,16 @@ public class PrivateChatTestCase extends ActivityInstrumentationTestCase2<MainCh
 
     public void test99Quit() {
         client.logoff();
-        TestUtils.quit(solo);
+        RobotiumTestUtils.quit(solo);
     }
 
     public void tearDown() {
-        TestUtils.setOrientation(solo, defaultOrientation);
+        RobotiumTestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }
 
     protected void openPrivateChat() {
-        TestUtils.openPrivateChat(solo, 2, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
     }
 
     protected Bitmap getBitmapForTestUser() {

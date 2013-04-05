@@ -50,9 +50,9 @@ import android.widget.TextView;
  *
  * @author Christian Ihle
  */
-public final class TestUtils {
+public final class RobotiumTestUtils {
 
-    private TestUtils() {
+    private RobotiumTestUtils() {
 
     }
 
@@ -304,7 +304,7 @@ public final class TestUtils {
      * @param nickName The nick name to change to.
      */
     public static void changeNickNameTo(final Solo solo, final String nickName) {
-        TestUtils.hideSoftwareKeyboard(solo);
+        hideSoftwareKeyboard(solo);
         solo.clearEditText(0);
         solo.enterText(0, nickName);
         solo.clickOnButton("OK");

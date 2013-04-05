@@ -25,8 +25,8 @@ package net.usikkert.kouchat.android;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.RobotiumTestUtils;
 import net.usikkert.kouchat.util.TestClient;
-import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -55,10 +55,10 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo = new Solo(getInstrumentation(), activity);
 
         final AndroidUserInterface ui =
-                TestUtils.getFieldValue(activity, AndroidUserInterface.class, "androidUserInterface");
-        notificationService = TestUtils.getFieldValue(ui, NotificationService.class, "notificationService");
+                RobotiumTestUtils.getFieldValue(activity, AndroidUserInterface.class, "androidUserInterface");
+        notificationService = RobotiumTestUtils.getFieldValue(ui, NotificationService.class, "notificationService");
 
-        me = TestUtils.getMe(activity);
+        me = RobotiumTestUtils.getMe(activity);
 
         // Making sure the test client only logs on once during all the tests
         if (client == null) {
@@ -71,7 +71,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertDefaultNotification();
 
-        TestUtils.closeMainChat(this);
+        RobotiumTestUtils.closeMainChat(this);
         solo.sleep(1500);
         assertDefaultNotification();
 
@@ -79,7 +79,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertNewMessageNotification();
 
-        TestUtils.launchMainChat(this);
+        RobotiumTestUtils.launchMainChat(this);
         solo.sleep(1500);
         assertDefaultNotification();
     }
@@ -88,7 +88,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertDefaultNotification();
 
-        TestUtils.closeMainChat(this);
+        RobotiumTestUtils.closeMainChat(this);
         solo.sleep(1500);
         assertDefaultNotification();
 
@@ -96,7 +96,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertNewMessageNotification();
 
-        TestUtils.launchMainChat(this);
+        RobotiumTestUtils.launchMainChat(this);
         solo.sleep(1500);
         assertDefaultNotification();
 
@@ -141,13 +141,13 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertDefaultNotification();
 
-        TestUtils.openPrivateChat(solo, 3, 3, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, 3, 3, "Test");
 
         otherUser.sendPrivateChatMessage("You should get a notification now!", me);
         solo.sleep(1500);
         assertNewMessageNotification();
 
-        TestUtils.goHome(solo);
+        RobotiumTestUtils.goHome(solo);
         solo.sleep(1500);
         assertDefaultNotification();
     }
@@ -162,7 +162,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertNewMessageNotification();
 
-        TestUtils.goHome(solo);
+        RobotiumTestUtils.goHome(solo);
         solo.sleep(1500);
         assertDefaultNotification();
     }
@@ -188,7 +188,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertNewMessageNotification();
 
-        TestUtils.goHome(solo);
+        RobotiumTestUtils.goHome(solo);
         solo.sleep(1500);
         assertDefaultNotification();
     }
@@ -200,7 +200,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertDefaultNotification();
 
-        TestUtils.openPrivateChat(solo, 3, 3, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, 3, 3, "Test");
         solo.sleep(500);
 
         // Pretend to start another application while in the private chat
@@ -217,7 +217,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertNewMessageNotification();
 
-        TestUtils.goHome(solo);
+        RobotiumTestUtils.goHome(solo);
         solo.sleep(1500);
         assertDefaultNotification();
     }
@@ -246,7 +246,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
 
     public void test99Quit() {
         client.logoff();
-        TestUtils.quit(solo);
+        RobotiumTestUtils.quit(solo);
     }
 
     public void tearDown() {
@@ -268,6 +268,6 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
     }
 
     private void openPrivateChat() {
-        TestUtils.openPrivateChat(solo, 2, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
     }
 }

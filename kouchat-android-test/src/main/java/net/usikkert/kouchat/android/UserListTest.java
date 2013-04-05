@@ -25,8 +25,8 @@ package net.usikkert.kouchat.android;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.Messages;
+import net.usikkert.kouchat.util.RobotiumTestUtils;
 import net.usikkert.kouchat.util.TestClient;
-import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -57,7 +57,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     public void setUp() {
         final MainChatController activity = getActivity();
 
-        me = TestUtils.getMe(activity);
+        me = RobotiumTestUtils.getMe(activity);
         me.setNick("Kou");
 
         solo = new Solo(getInstrumentation(), activity);
@@ -67,7 +67,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
 
         userList = solo.getCurrentListViews().get(0);
 
-        defaultOrientation = TestUtils.getCurrentOrientation(solo);
+        defaultOrientation = RobotiumTestUtils.getCurrentOrientation(solo);
     }
 
     public void test01UserListShouldContainMeOnLogon() {
@@ -102,7 +102,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         client.logon();
         solo.sleep(500);
 
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
 
         assertEquals("Kou", getUserNameAtPosition(0));
         assertEquals("Test", getUserNameAtPosition(1));
@@ -130,7 +130,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertFalse(userIsBold("Ape", 0));
         assertTrue(userIsBold("Kou", 1));
 
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
 
         // After orientation switch
         assertFalse(userIsBold("Ape", 0));
@@ -150,12 +150,12 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertFalse(userIsWriting("Kou", 0));
         assertTrue(userIsWriting("Test", 1));
 
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
 
         assertFalse(userIsWriting("Kou", 0));
         assertTrue(userIsWriting("Test", 1));
 
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(500);
 
         messages.sendStoppedWritingMessage();
@@ -190,13 +190,13 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(userIsWriting("Kou", 0));
         assertFalse(userIsWriting("Test", 1));
 
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(500);
 
         assertTrue(userIsWriting("Kou", 0));
         assertFalse(userIsWriting("Test", 1));
 
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(500);
 
         solo.sendKey(KeyEvent.KEYCODE_ENTER); // Send the word
@@ -208,12 +208,12 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void test99Quit() {
         client.logoff();
-        TestUtils.quit(solo);
+        RobotiumTestUtils.quit(solo);
     }
 
     public void tearDown() {
         client.logoff();
-        TestUtils.setOrientation(solo, defaultOrientation);
+        RobotiumTestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }
 

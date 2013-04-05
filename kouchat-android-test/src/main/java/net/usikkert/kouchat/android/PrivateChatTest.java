@@ -23,7 +23,7 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.testcase.PrivateChatTestCase;
-import net.usikkert.kouchat.util.TestUtils;
+import net.usikkert.kouchat.util.RobotiumTestUtils;
 
 /**
  * Test of private chat.
@@ -35,16 +35,16 @@ public class PrivateChatTest extends PrivateChatTestCase {
     public void test01OwnMessageIsShownInChat() {
         openPrivateChat();
 
-        TestUtils.writeLine(solo, "This is a new message from myself");
+        RobotiumTestUtils.writeLine(solo, "This is a new message from myself");
         solo.sleep(500);
 
-        assertTrue(TestUtils.searchText(solo, "This is a new message from myself"));
+        assertTrue(RobotiumTestUtils.searchText(solo, "This is a new message from myself"));
     }
 
     public void test02OwnMessageShouldArriveAtOtherClient() {
         openPrivateChat();
 
-        TestUtils.writeLine(solo, "This is the second message");
+        RobotiumTestUtils.writeLine(solo, "This is the second message");
         solo.sleep(500);
 
         assertTrue(privateMessageResponder.gotMessageArrived("This is the second message"));
@@ -61,10 +61,10 @@ public class PrivateChatTest extends PrivateChatTestCase {
     public void test04OrientationSwitchShouldKeepText() {
         openPrivateChat();
 
-        TestUtils.writeLine(solo, "This is the third message");
+        RobotiumTestUtils.writeLine(solo, "This is the third message");
 
         solo.sleep(500);
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
 
         assertTrue(solo.searchText("This is the third message"));
     }
@@ -72,22 +72,22 @@ public class PrivateChatTest extends PrivateChatTestCase {
     public void test05OrientationSwitchShouldKeepLinks() {
         openPrivateChat();
 
-        TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
+        RobotiumTestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
 
         solo.sleep(500);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
 
         // The 2.3.3 emulator can't fit the whole url on a single line, so have to use a shorter text to locate
-        TestUtils.clickOnText(solo, "googlecode.com");
+        RobotiumTestUtils.clickOnText(solo, "googlecode.com");
         solo.sleep(1000);
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
 
         solo.sleep(3000); // Close browser manually now!
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
 
         solo.sleep(2000);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
+        RobotiumTestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
         solo.sleep(1000);
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
     }
@@ -96,10 +96,10 @@ public class PrivateChatTest extends PrivateChatTestCase {
     public void test06OrientationSwitchShouldKeepSmileys() {
         openPrivateChat();
 
-        TestUtils.writeLine(solo, ":) :( :p :D ;) :O :@ :S ;( :$ 8)");
+        RobotiumTestUtils.writeLine(solo, ":) :( :p :D ;) :O :@ :S ;( :$ 8)");
 
         solo.sleep(2000);
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(2000);
     }
 
@@ -108,7 +108,7 @@ public class PrivateChatTest extends PrivateChatTestCase {
         openPrivateChat();
 
         for (int i = 1; i <= 30; i++) {
-            TestUtils.writeLine(solo,
+            RobotiumTestUtils.writeLine(solo,
                     "This is message number " + i + "! " +
                             "This is message number " + i + "! " +
                             "This is message number " + i + "! " +
@@ -123,7 +123,7 @@ public class PrivateChatTest extends PrivateChatTestCase {
                             "This is message number " + i + "! ");
         }
 
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(3000); // See if message number 30 is visible
     }
 }

@@ -24,8 +24,8 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.net.MessageResponderMock;
+import net.usikkert.kouchat.util.RobotiumTestUtils;
 import net.usikkert.kouchat.util.TestClient;
-import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -47,14 +47,14 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void setUp() {
         solo = new Solo(getInstrumentation(), getActivity());
-        defaultOrientation = TestUtils.getCurrentOrientation(solo);
+        defaultOrientation = RobotiumTestUtils.getCurrentOrientation(solo);
     }
 
     public void test01OwnMessageIsShownInChat() {
-        TestUtils.writeLine(solo, "This is a new message from myself");
+        RobotiumTestUtils.writeLine(solo, "This is a new message from myself");
         solo.sleep(500);
 
-        assertTrue(TestUtils.searchText(solo, "This is a new message from myself"));
+        assertTrue(RobotiumTestUtils.searchText(solo, "This is a new message from myself"));
     }
 
     public void test02OwnMessageShouldArriveAtOtherClient() {
@@ -62,7 +62,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         final MessageResponderMock messageResponder = client.getMessageResponderMock();
         client.logon();
 
-        TestUtils.writeLine(solo, "This is the second message");
+        RobotiumTestUtils.writeLine(solo, "This is the second message");
         solo.sleep(500);
 
         assertTrue(messageResponder.gotMessageArrived("This is the second message"));
@@ -83,45 +83,45 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
     public void test04OrientationSwitchShouldKeepText() {
         assertTrue(solo.searchText("Welcome to KouChat"));
 
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
 
         assertTrue(solo.searchText("Welcome to KouChat"));
     }
 
     public void test05OrientationSwitchShouldKeepLinks() {
-        TestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
+        RobotiumTestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
 
         solo.sleep(500);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
 
         // The 2.3.3 emulator can't fit the whole url on a single line, so have to use a shorter text to locate
-        TestUtils.clickOnText(solo, "kouchat.googlecode.com");
+        RobotiumTestUtils.clickOnText(solo, "kouchat.googlecode.com");
         solo.sleep(1000);
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
 
         solo.sleep(3000); // Close browser manually now!
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
 
         solo.sleep(2000);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        TestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
+        RobotiumTestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
         solo.sleep(1000);
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
     }
 
     // Must be verified manually
     public void test06OrientationSwitchShouldKeepSmileys() {
-        TestUtils.writeLine(solo, ":) :( :p :D ;) :O :@ :S ;( :$ 8)");
+        RobotiumTestUtils.writeLine(solo, ":) :( :p :D ;) :O :@ :S ;( :$ 8)");
 
         solo.sleep(2000);
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(2000);
     }
 
     // Must be verified manually. I haven't found an automated way to verify scrolling yet.
     public void test07OrientationSwitchShouldScrollToBottom() {
         for (int i = 1; i <= 30; i++) {
-            TestUtils.writeLine(solo,
+            RobotiumTestUtils.writeLine(solo,
                     "This is message number " + i + "! " +
                             "This is message number " + i + "! " +
                             "This is message number " + i + "! " +
@@ -136,16 +136,16 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
                             "This is message number " + i + "! ");
         }
 
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(3000); // See if message number 30 is visible
     }
 
     public void test99Quit() {
-        TestUtils.quit(solo);
+        RobotiumTestUtils.quit(solo);
     }
 
     public void tearDown() {
-        TestUtils.setOrientation(solo, defaultOrientation);
+        RobotiumTestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }
 }

@@ -23,7 +23,7 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
-import net.usikkert.kouchat.util.TestUtils;
+import net.usikkert.kouchat.util.RobotiumTestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -58,7 +58,7 @@ public class AboutTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     public void test99Quit() {
-        TestUtils.quit(solo);
+        RobotiumTestUtils.quit(solo);
     }
 
     public void tearDown() {

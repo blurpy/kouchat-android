@@ -25,8 +25,8 @@ package net.usikkert.kouchat.android;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.testcase.PrivateChatTestCase;
 import net.usikkert.kouchat.net.PrivateMessageResponderMock;
+import net.usikkert.kouchat.util.RobotiumTestUtils;
 import net.usikkert.kouchat.util.TestClient;
-import net.usikkert.kouchat.util.TestUtils;
 
 /**
  * Test of private chat.
@@ -53,7 +53,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         client.sendPrivateChatMessage("Look at me", me);
 
         // Go back. The envelope should be gone.
-        TestUtils.goBack(solo);
+        RobotiumTestUtils.goBack(solo);
         assertEquals(dot, getBitmapForTestUser());
 
         // New message. The envelope returns.
@@ -85,7 +85,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         solo.sleep(500);
 
         // Reopen the main chat
-        TestUtils.launchMainChat(this);
+        RobotiumTestUtils.launchMainChat(this);
 
         // Should have a notification about the new message
         assertEquals(envelope, getBitmapForTestUser());
@@ -105,7 +105,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         solo.sleep(500);
 
         // Pretend to open the main chat from the list of running applications. This does not "resume" the private chat
-        TestUtils.goBack(solo);
+        RobotiumTestUtils.goBack(solo);
 
         // There should be a notification about the new private message
         assertEquals(envelope, getBitmapForTestUser());
@@ -125,7 +125,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
 
         // Go back to the main chat
-        TestUtils.goBack(solo);
+        RobotiumTestUtils.goBack(solo);
 
         // The notification about the new private message should be gone
         assertEquals(dot, getBitmapForTestUser());
@@ -149,9 +149,9 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         assertEquals(envelope, getBitmapForUser(3, 3));
 
         // Chat with first user
-        TestUtils.openPrivateChat(solo, 3, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, 3, 2, "Test");
         assertTrue(solo.searchText("First message from user 1"));
-        TestUtils.writeLine(solo, "Hello user 1");
+        RobotiumTestUtils.writeLine(solo, "Hello user 1");
         solo.sleep(500);
         assertTrue(privateMessageResponder.gotMessageArrived("Hello user 1"));
         client.sendPrivateChatMessage("Second message from user 1", me);
@@ -159,14 +159,14 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         assertTrue(solo.searchText("Second message from user 1"));
 
         // Check that the messages from the first user has been read
-        TestUtils.goBack(solo);
+        RobotiumTestUtils.goBack(solo);
         assertEquals(dot, getBitmapForUser(3, 2));
         assertEquals(envelope, getBitmapForUser(3, 3));
 
         // Chat with second user
-        TestUtils.openPrivateChat(solo, 3, 3, "Test2");
+        RobotiumTestUtils.openPrivateChat(solo, 3, 3, "Test2");
         assertTrue(solo.searchText("First message from user 2"));
-        TestUtils.writeLine(solo, "Hello user 2");
+        RobotiumTestUtils.writeLine(solo, "Hello user 2");
         solo.sleep(500);
         assertTrue(privateMessageResponder2.gotMessageArrived("Hello user 2"));
         client2.sendPrivateChatMessage("Second message from user 2", me);
@@ -178,16 +178,16 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         solo.sleep(500);
 
         // Check that the messages from the second user has been read, and that a new has arrived from the first
-        TestUtils.goBack(solo);
+        RobotiumTestUtils.goBack(solo);
         assertEquals(envelope, getBitmapForUser(3, 2));
         assertEquals(dot, getBitmapForUser(3, 3));
 
         // Check message from first user
-        TestUtils.openPrivateChat(solo, 3, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, 3, 2, "Test");
         assertTrue(solo.searchText("Third message from user 1"));
 
         // Check that the message has been read
-        TestUtils.goBack(solo);
+        RobotiumTestUtils.goBack(solo);
         assertEquals(dot, getBitmapForUser(3, 2));
 
         solo.sleep(500);
@@ -201,26 +201,26 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
 
         // Get message from first user, and open the chat
         client.sendPrivateChatMessage("Message from user 1", me);
-        TestUtils.openPrivateChat(solo, 3, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, 3, 2, "Test");
         assertTrue(solo.searchText("Message from user 1"));
 
         // Pretend to click "home" while in the private chat
         getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
 
         // Pretend to open the main chat from the list of running applications. This does not "resume" the private chat
-        TestUtils.goBack(solo);
+        RobotiumTestUtils.goBack(solo);
 
         // Get message from the second user, and open the chat
         client2.sendPrivateChatMessage("Message from user 2", me);
-        TestUtils.openPrivateChat(solo, 3, 3, "Test2");
+        RobotiumTestUtils.openPrivateChat(solo, 3, 3, "Test2");
         assertTrue(solo.searchText("Message from user 2"));
 
         // Get new message from the first user, while still in the chat with the second user
         client.sendPrivateChatMessage("New message from user 1", me);
 
         // Go back and look at the new message from the first user
-        TestUtils.goBack(solo);
-        TestUtils.openPrivateChat(solo, 3, 2, "Test");
+        RobotiumTestUtils.goBack(solo);
+        RobotiumTestUtils.openPrivateChat(solo, 3, 2, "Test");
         assertTrue(solo.searchText("New message from user 1"));
 
         solo.sleep(500);
@@ -236,7 +236,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
 
         assertEquals("Test (away: Going away now) - KouChat", solo.getCurrentActivity().getTitle());
 
-        TestUtils.writeLine(solo, "Don't leave me!");
+        RobotiumTestUtils.writeLine(solo, "Don't leave me!");
         solo.sleep(500);
 
         assertTrue(solo.searchText("You can not send a private chat message to a user that is away"));
@@ -248,7 +248,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
 
         assertEquals("Test - KouChat", solo.getCurrentActivity().getTitle());
 
-        TestUtils.writeLine(solo, "You are back!");
+        RobotiumTestUtils.writeLine(solo, "You are back!");
         solo.sleep(500);
         assertTrue(privateMessageResponder.gotMessageArrived("You are back!"));
     }
@@ -258,9 +258,9 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         messages.sendAwayMessage("Going away now");
         solo.sleep(500);
 
-        TestUtils.openPrivateChat(solo, 2, 2, "Test (away: Going away now)");
+        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test (away: Going away now)");
 
-        TestUtils.writeLine(solo, "Don't leave me!");
+        RobotiumTestUtils.writeLine(solo, "Don't leave me!");
         solo.sleep(500);
 
         assertTrue(solo.searchText("You can not send a private chat message to a user that is away"));
@@ -279,7 +279,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
 
         assertEquals("Test (offline) - KouChat", solo.getCurrentActivity().getTitle());
 
-        TestUtils.writeLine(solo, "Don't leave me!");
+        RobotiumTestUtils.writeLine(solo, "Don't leave me!");
         solo.sleep(500);
 
         assertTrue(solo.searchText("You can not send a private chat message to a user that is offline"));

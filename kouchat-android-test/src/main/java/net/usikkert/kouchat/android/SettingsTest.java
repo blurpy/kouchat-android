@@ -24,8 +24,8 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.RobotiumTestUtils;
 import net.usikkert.kouchat.util.TestClient;
-import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -51,30 +51,30 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         final MainChatController activity = getActivity();
 
         solo = new Solo(getInstrumentation(), activity);
-        me = TestUtils.getMe(activity);
+        me = RobotiumTestUtils.getMe(activity);
     }
 
     public void test01NickNameCanBeChanged() {
         originalNickName = me.getNick();
 
-        TestUtils.clickOnChangeNickNameInTheSettings(solo);
+        RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
         assertTrue(solo.searchText("Set nick name"));
 
-        TestUtils.changeNickNameTo(solo, "Kou");
+        RobotiumTestUtils.changeNickNameTo(solo, "Kou");
         assertTrue(solo.searchText("Kou"));
 
         // Go back to main chat and check result
-        TestUtils.goBack(solo);
+        RobotiumTestUtils.goBack(solo);
         assertTrue(solo.searchText("You changed nick to Kou"));
     }
 
     public void test02RestoreNickName() {
         assertNotNull(originalNickName);
 
-        TestUtils.clickOnChangeNickNameInTheSettings(solo);
+        RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
 
         // Change nick name back to the original value in the popup dialog
-        TestUtils.changeNickNameTo(solo, originalNickName);
+        RobotiumTestUtils.changeNickNameTo(solo, originalNickName);
         assertTrue(solo.searchText(originalNickName));
     }
 
@@ -82,8 +82,8 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         final TestClient client = new TestClient();
         client.logon();
 
-        TestUtils.clickOnChangeNickNameInTheSettings(solo);
-        TestUtils.changeNickNameTo(solo, "Test");
+        RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
+        RobotiumTestUtils.changeNickNameTo(solo, "Test");
 
         assertTrue(solo.searchText("The nick name is in use by someone else.")); // Toast
         assertFalse(solo.searchText("Test"));
@@ -92,7 +92,7 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void test99Quit() {
-        TestUtils.quit(solo);
+        RobotiumTestUtils.quit(solo);
     }
 
     public void tearDown() {

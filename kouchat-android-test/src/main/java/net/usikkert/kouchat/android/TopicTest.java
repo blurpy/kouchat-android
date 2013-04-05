@@ -24,8 +24,8 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.RobotiumTestUtils;
 import net.usikkert.kouchat.util.TestClient;
-import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -60,8 +60,8 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
             client.logon();
         }
 
-        me = TestUtils.getMe(activity);
-        defaultOrientation = TestUtils.getCurrentOrientation(solo);
+        me = RobotiumTestUtils.getMe(activity);
+        defaultOrientation = RobotiumTestUtils.getCurrentOrientation(solo);
     }
 
     public void test01TopicShouldBeEmptyOnStart() {
@@ -80,7 +80,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     public void test03OrientationSwitchShouldKeepTopic() {
         assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", activity.getTitle());
 
-        TestUtils.switchOrientation(solo);
+        RobotiumTestUtils.switchOrientation(solo);
 
         assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", activity.getTitle());
     }
@@ -99,7 +99,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         client.changeTopic("Original topic");
         solo.sleep(500);
 
-        TestUtils.quit(solo);
+        RobotiumTestUtils.quit(solo);
     }
 
     public void test06OtherClientSettingTopicBeforeStartIsShownInChatAndTitle() {
@@ -111,11 +111,11 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
     public void test99Quit() {
         client.logoff();
-        TestUtils.quit(solo);
+        RobotiumTestUtils.quit(solo);
     }
 
     public void tearDown() {
-        TestUtils.setOrientation(solo, defaultOrientation);
+        RobotiumTestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }
 }
