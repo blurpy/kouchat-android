@@ -23,7 +23,7 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.testcase.PrivateChatTestCase;
-import net.usikkert.kouchat.util.RobotiumTestUtils;
+import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 
 /**
  * Test of private chat.

@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.util;
 
+import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.Topic;

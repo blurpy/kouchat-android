@@ -23,7 +23,7 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
-import net.usikkert.kouchat.util.RobotiumTestUtils;
+import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 

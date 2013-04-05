@@ -20,7 +20,7 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.util;
+package net.usikkert.kouchat.android.util;
 
 import static junit.framework.Assert.*;
 
@@ -31,6 +31,7 @@ import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.Validate;
 
 import com.jayway.android.robotium.solo.Solo;
 
