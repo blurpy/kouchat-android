@@ -93,6 +93,16 @@ public class TestUtilsTest {
         TestUtils.setFieldValue(testClass, "wrongField", null);
     }
 
+    @Test
+    public void fieldValueIsNullShouldBeTrueIfNull() {
+        assertTrue(TestUtils.fieldValueIsNull(new TestClass(null, 1), "privateField"));
+    }
+
+    @Test
+    public void fieldValueIsNullShouldBeFalseIfNotNull() {
+        assertFalse(TestUtils.fieldValueIsNull(new TestClass("not null", 1), "privateField"));
+    }
+
     class TestClass {
 
         private final String privateField;

@@ -68,6 +68,17 @@ public final class TestUtils {
         setValue(object, value, field);
     }
 
+    /**
+     * Checks whether the value of the field with the given name in the given object is <code>null</code>.
+     *
+     * @param object The object to check.
+     * @param fieldName The name of the field to check.
+     * @return If the value is null.
+     */
+    public static boolean fieldValueIsNull(final Object object, final String fieldName) {
+        return getFieldValue(object, Object.class, fieldName) == null;
+    }
+
     private static void setValue(final Object object, final Object value, final Field field) {
         final boolean originalAccessible = field.isAccessible();
 
