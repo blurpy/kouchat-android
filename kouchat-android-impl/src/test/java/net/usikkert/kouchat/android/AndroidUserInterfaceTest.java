@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
-import net.usikkert.kouchat.android.test.RobolectricTestUtils;
+import net.usikkert.kouchat.android.util.RobolectricTestUtils;
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
