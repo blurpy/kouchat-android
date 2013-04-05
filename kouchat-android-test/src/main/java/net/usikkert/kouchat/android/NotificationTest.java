@@ -27,6 +27,7 @@ import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestClient;
+import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -55,8 +56,8 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo = new Solo(getInstrumentation(), activity);
 
         final AndroidUserInterface ui =
-                RobotiumTestUtils.getFieldValue(activity, AndroidUserInterface.class, "androidUserInterface");
-        notificationService = RobotiumTestUtils.getFieldValue(ui, NotificationService.class, "notificationService");
+                TestUtils.getFieldValue(activity, AndroidUserInterface.class, "androidUserInterface");
+        notificationService = TestUtils.getFieldValue(ui, NotificationService.class, "notificationService");
 
         me = RobotiumTestUtils.getMe(activity);
 
