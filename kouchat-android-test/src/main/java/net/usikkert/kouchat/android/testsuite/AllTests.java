@@ -55,6 +55,9 @@ public class AllTests extends TestSuite {
         testSuite.addTestSuite(HitchhikerTest.class);
         testSuite.addTestSuite(NotificationTest.class);
 
+        // Run these manually:
+//        testSuite.addTestSuite(LinkTest.class);
+
         return testSuite;
     }
 }
