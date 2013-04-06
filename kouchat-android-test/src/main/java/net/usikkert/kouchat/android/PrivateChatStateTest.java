@@ -23,17 +23,64 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
-import net.usikkert.kouchat.android.testcase.PrivateChatTestCase;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
+import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.PrivateMessageResponderMock;
 import net.usikkert.kouchat.util.TestClient;
+
+import com.jayway.android.robotium.solo.Solo;
+
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.test.ActivityInstrumentationTestCase2;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 /**
  * Test of private chat.
  *
  * @author Christian Ihle
  */
-public class PrivateChatStateTest extends PrivateChatTestCase {
+public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainChatController> {
+
+    private static TestClient client;
+    private static PrivateMessageResponderMock privateMessageResponder;
+    private static Messages messages;
+
+    private TestClient client2;
+
+    private Solo solo;
+
+    private Bitmap envelope;
+    private Bitmap dot;
+
+    private User me;
+
+    private int defaultOrientation;
+
+    public PrivateChatStateTest() {
+        super(MainChatController.class);
+    }
+
+    public void setUp() {
+        final MainChatController activity = getActivity();
+
+        solo = new Solo(getInstrumentation(), activity);
+        me = RobotiumTestUtils.getMe(activity);
+        envelope = getBitmap(R.drawable.envelope);
+        dot = getBitmap(R.drawable.dot);
+        defaultOrientation = RobotiumTestUtils.getCurrentOrientation(solo);
+
+        // Making sure the test client only logs on once during all the tests
+        if (client == null) {
+            client = new TestClient();
+            privateMessageResponder = client.getPrivateMessageResponderMock();
+            messages = client.logon();
+        }
+
+        privateMessageResponder.resetMessages();
+    }
 
     public void test001NoOp() {
         // The first test seems to fail on the newest 2.3.3 emulator for some reason.
@@ -282,5 +329,43 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
 
         assertTrue(solo.searchText("You can not send a private chat message to a user that is offline"));
         assertFalse(privateMessageResponder.gotAnyMessage());
+    }
+
+    public void test99Quit() {
+        client.logoff();
+        RobotiumTestUtils.quit(solo);
+    }
+
+    public void tearDown() {
+        if (client2 != null) {
+            client2.logoff();
+        }
+
+        RobotiumTestUtils.setOrientation(solo, defaultOrientation);
+        solo.finishOpenedActivities();
+    }
+
+    private void openPrivateChat() {
+        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+    }
+
+    private Bitmap getBitmapForTestUser() {
+        return getBitmapForUser(2, 2);
+    }
+
+    private Bitmap getBitmapForUser(final int numberOfUsers, final int userNumber) {
+        solo.sleep(1000);
+        assertEquals(numberOfUsers, solo.getCurrentListViews().get(0).getCount());
+        final LinearLayout row = (LinearLayout) solo.getCurrentListViews().get(0).getChildAt(userNumber - 1);
+        final ImageView imageAtRow = (ImageView) row.getChildAt(0);
+        final BitmapDrawable drawable = (BitmapDrawable) imageAtRow.getDrawable();
+
+        return drawable.getBitmap();
+    }
+
+    private Bitmap getBitmap(final int resourceId) {
+        final BitmapDrawable drawable = (BitmapDrawable) getActivity().getResources().getDrawable(resourceId);
+
+        return drawable.getBitmap();
     }
 }

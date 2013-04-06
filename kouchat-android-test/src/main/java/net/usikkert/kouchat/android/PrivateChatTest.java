@@ -22,15 +22,51 @@
 
 package net.usikkert.kouchat.android;
 
-import net.usikkert.kouchat.android.testcase.PrivateChatTestCase;
+import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
+import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.net.PrivateMessageResponderMock;
+import net.usikkert.kouchat.util.TestClient;
+
+import com.jayway.android.robotium.solo.Solo;
+
+import android.test.ActivityInstrumentationTestCase2;
 
 /**
  * Test of private chat.
  *
  * @author Christian Ihle
  */
-public class PrivateChatTest extends PrivateChatTestCase {
+public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatController> {
+
+    private static TestClient client;
+    private static PrivateMessageResponderMock privateMessageResponder;
+
+    private Solo solo;
+    private User me;
+
+    private int defaultOrientation;
+
+    public PrivateChatTest() {
+        super(MainChatController.class);
+    }
+
+    public void setUp() {
+        final MainChatController activity = getActivity();
+
+        solo = new Solo(getInstrumentation(), activity);
+        me = RobotiumTestUtils.getMe(activity);
+        defaultOrientation = RobotiumTestUtils.getCurrentOrientation(solo);
+
+        // Making sure the test client only logs on once during all the tests
+        if (client == null) {
+            client = new TestClient();
+            privateMessageResponder = client.getPrivateMessageResponderMock();
+            client.logon();
+        }
+
+        privateMessageResponder.resetMessages();
+    }
 
     public void test01OwnMessageIsShownInChat() {
         openPrivateChat();
@@ -125,5 +161,19 @@ public class PrivateChatTest extends PrivateChatTestCase {
 
         RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(3000); // See if message number 30 is visible
+    }
+
+    public void test99Quit() {
+        client.logoff();
+        RobotiumTestUtils.quit(solo);
+    }
+
+    public void tearDown() {
+        RobotiumTestUtils.setOrientation(solo, defaultOrientation);
+        solo.finishOpenedActivities();
+    }
+
+    private void openPrivateChat() {
+        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
     }
 }
