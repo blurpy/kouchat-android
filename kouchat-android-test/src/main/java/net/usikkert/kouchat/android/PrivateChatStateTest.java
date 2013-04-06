@@ -133,7 +133,7 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
 
     // A more complicated scenario
     public void test06PrivateChattingWithSeveralUsersShouldCommunicateCorrectly() {
-        final TestClient client2 = new TestClient("Test2", 12345679);
+        client2 = new TestClient("Test2", 12345679);
         client2.logon();
         final PrivateMessageResponderMock privateMessageResponder2 = client2.getPrivateMessageResponderMock();
         solo.sleep(1000);
@@ -191,11 +191,10 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         assertEquals(dot, getBitmapForUser(3, 2));
 
         solo.sleep(500);
-        client2.logoff();
     }
 
     public void test07SuspendingPrivateChatWithOneUserAndStartingANewChatWithAnotherUserShouldShownTheCorrectMessage() {
-        final TestClient client2 = new TestClient("Test2", 12345679);
+        client2 = new TestClient("Test2", 12345679);
         client2.logon();
         solo.sleep(1000);
 
@@ -224,7 +223,6 @@ public class PrivateChatStateTest extends PrivateChatTestCase {
         assertTrue(solo.searchText("New message from user 1"));
 
         solo.sleep(500);
-        client2.logoff();
     }
 
     public void test08ShouldNotBeAbleToSendPrivateMessageToUserThatGoesAway() {

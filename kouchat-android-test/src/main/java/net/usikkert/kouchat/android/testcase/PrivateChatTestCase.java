@@ -49,6 +49,8 @@ public class PrivateChatTestCase extends ActivityInstrumentationTestCase2<MainCh
     protected static PrivateMessageResponderMock privateMessageResponder;
     protected static Messages messages;
 
+    protected TestClient client2;
+
     protected Solo solo;
 
     protected Bitmap envelope;
@@ -87,6 +89,10 @@ public class PrivateChatTestCase extends ActivityInstrumentationTestCase2<MainCh
     }
 
     public void tearDown() {
+        if (client2 != null) {
+            client2.logoff();
+        }
+
         RobotiumTestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }

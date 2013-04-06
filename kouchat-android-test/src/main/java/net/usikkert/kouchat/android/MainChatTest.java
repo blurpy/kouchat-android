@@ -40,6 +40,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     private Solo solo;
     private int defaultOrientation;
+    private TestClient client;
 
     public MainChatTest() {
         super(MainChatController.class);
@@ -58,7 +59,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void test02OwnMessageShouldArriveAtOtherClient() {
-        final TestClient client = new TestClient();
+        client = new TestClient();
         final MessageResponderMock messageResponder = client.getMessageResponderMock();
         client.logon();
 
@@ -66,18 +67,14 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(500);
 
         assertTrue(messageResponder.gotMessageArrived("This is the second message"));
-
-        client.logoff();
     }
 
     public void test03OtherClientMessageIsShownInChat() {
-        final TestClient client = new TestClient();
+        client = new TestClient();
         client.logon();
 
         client.sendChatMessage("Hello, this is a message from someone else");
         assertTrue(solo.searchText("Hello, this is a message from someone else"));
-
-        client.logoff();
     }
 
     public void test04OrientationSwitchShouldKeepText() {
@@ -145,6 +142,10 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void tearDown() {
+        if (client != null) {
+            client.logoff();
+        }
+
         RobotiumTestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
     }

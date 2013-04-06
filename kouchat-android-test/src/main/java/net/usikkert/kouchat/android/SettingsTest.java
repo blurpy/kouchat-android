@@ -42,6 +42,7 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     private Solo solo;
     private User me;
+    private TestClient client;
 
     public SettingsTest() {
         super(MainChatController.class);
@@ -79,7 +80,7 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void test03ChangingToNickNameInUseShouldOnlyShowToast() {
-        final TestClient client = new TestClient();
+        client = new TestClient();
         client.logon();
 
         RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
@@ -87,8 +88,6 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
 
         assertTrue(solo.searchText("The nick name is in use by someone else.")); // Toast
         assertFalse(solo.searchText("Test"));
-
-        client.logoff();
     }
 
     public void test99Quit() {
@@ -96,6 +95,10 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void tearDown() {
+        if (client != null) {
+            client.logoff();
+        }
+
         solo.finishOpenedActivities();
     }
 }
