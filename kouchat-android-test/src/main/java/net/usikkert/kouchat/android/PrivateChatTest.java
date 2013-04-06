@@ -105,31 +105,8 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(solo.searchText("This is the third message"));
     }
 
-    public void test05OrientationSwitchShouldKeepLinks() {
-        openPrivateChat();
-
-        RobotiumTestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
-
-        solo.sleep(500);
-        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-
-        // The 2.3.3 emulator can't fit the whole url on a single line, so have to use a shorter text to locate
-        RobotiumTestUtils.clickOnText(solo, "googlecode.com");
-        solo.sleep(1000);
-        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
-
-        solo.sleep(3000); // Close browser manually now!
-        RobotiumTestUtils.switchOrientation(solo);
-
-        solo.sleep(2000);
-        assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        RobotiumTestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
-        solo.sleep(1000);
-        assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
-    }
-
     // Must be verified manually
-    public void test06OrientationSwitchShouldKeepSmileys() {
+    public void test05OrientationSwitchShouldKeepSmileys() {
         openPrivateChat();
 
         RobotiumTestUtils.writeLine(solo, ":) :( :p :D ;) :O :@ :S ;( :$ 8)");
@@ -140,7 +117,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     // Must be verified manually. I haven't found an automated way to verify scrolling yet.
-    public void test07OrientationSwitchShouldScrollToBottom() {
+    public void test06OrientationSwitchShouldScrollToBottom() {
         openPrivateChat();
 
         for (int i = 1; i <= 30; i++) {
