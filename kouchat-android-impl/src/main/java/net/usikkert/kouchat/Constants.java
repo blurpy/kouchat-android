@@ -37,7 +37,7 @@ public interface Constants {
     /**
      * The application version.
      */
-    String APP_VERSION = "0.8.0";
+    String APP_VERSION = "0.9.0";
 
     /**
      * Which license the application has.
