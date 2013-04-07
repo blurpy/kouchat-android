@@ -1,7 +1,7 @@
 
 - KouChat CHANGES
 
-* version 0.8.0 (xx.xx.2013)
+* version 0.8.0 (07.04.2013)
   - Added support for showing who is currently writing, using a "*" next to the nick name in the user list.
   - Increased the width of the user list to make space for the star.
   - Changed the chat service to a foreground service instead of a background service,
