@@ -95,6 +95,8 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
     }
 
     /**
+     * In the main chat:
+     *
      * Topic: DON'T PANIC
      *
      * <Christian>: hey :)
@@ -105,7 +107,7 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
      * *** Trillian went away: It won't affect me, I'm already a woman.
      * <Christian>: interesting!
      */
-    public void test02DoChat() throws CommandException {
+    public void test02DoMainChat() throws CommandException {
         solo.sleep(7000);
         RobotiumTestUtils.writeLine(solo, "hey :)");
 
@@ -132,20 +134,52 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
 
         // For taking screenshot manually. Robotium screenshots don't include status bars.
         solo.sleep(10000);
+
+        arthurClient.logoff();
+        trillianClient.logoff();
     }
 
-    public void test03RestoreNickNameAndQuit() {
+    /**
+     * In the private chat:
+     *
+     * <Arthur>: Ford?
+     * <Ford>: Yeah?
+     * <Arthur>: I think I'm a sofa...
+     * <Ford>: I know how you feel...
+     */
+    public void test03DoPrivateChat() {
+        RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
+        RobotiumTestUtils.changeNickNameTo(solo, "Arthur");
+        RobotiumTestUtils.goHome(solo);
+
+        solo.sleep(500);
+        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Ford");
+
+        solo.sleep(500);
+        RobotiumTestUtils.writeLine(solo, "Ford?");
+
+        solo.sleep(9000);
+        fordClient.sendPrivateChatMessage("Yeah?", me);
+
+        solo.sleep(12000);
+        RobotiumTestUtils.writeLine(solo, "I think I'm a sofa...");
+
+        solo.sleep(13000);
+        fordClient.sendPrivateChatMessage("I know how you feel...", me);
+
+        // For taking screenshot manually.
+        solo.sleep(10000);
+
+        fordClient.logoff();
+    }
+
+    public void test04RestoreNickNameAndQuit() {
         assertNotNull(originalNickName);
 
         RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
         RobotiumTestUtils.changeNickNameTo(solo, originalNickName);
 
         RobotiumTestUtils.goHome(solo);
-
-        arthurClient.logoff();
-        fordClient.logoff();
-        trillianClient.logoff();
-
         RobotiumTestUtils.quit(solo);
     }
 
