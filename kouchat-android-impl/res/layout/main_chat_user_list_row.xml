@@ -6,17 +6,15 @@
               android:paddingBottom="7sp"
               android:paddingTop="7sp">
 
-  <ImageView
-      android:id="@+id/mainChatUserListIcon"
-      android:layout_width="wrap_content"
-      android:layout_height="fill_parent"
-      android:paddingLeft="5sp"
-      android:paddingRight="4sp"
-      android:src="@drawable/dot"/>
+  <ImageView android:id="@+id/mainChatUserListIcon"
+             android:layout_width="wrap_content"
+             android:layout_height="fill_parent"
+             android:paddingLeft="5sp"
+             android:paddingRight="4sp"
+             android:src="@drawable/dot"/>
 
-  <TextView
-      android:id="@+id/mainChatUserListLabel"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+  <TextView android:id="@+id/mainChatUserListLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
 </LinearLayout>

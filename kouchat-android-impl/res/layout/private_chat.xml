@@ -5,18 +5,16 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
 
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="horizontal"
+  <LinearLayout android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:id="@+id/privateChatView"
-        android:background="#fff"
-        android:layout_weight="1"/>
+    <TextView android:id="@+id/privateChatView"
+              android:layout_width="wrap_content"
+              android:layout_height="fill_parent"
+              android:background="#fff"
+              android:layout_weight="1"/>
 
   </LinearLayout>
 
