@@ -25,12 +25,17 @@ package net.usikkert.kouchat.misc;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.io.File;
+
 import net.usikkert.kouchat.net.Messages;
+import net.usikkert.kouchat.net.NetworkService;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link Controller}.
@@ -39,9 +44,14 @@ import org.junit.Test;
  */
 public class ControllerTest {
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     private Controller controller;
 
     private Messages messages;
+    private NetworkService networkService;
+
     private User me;
 
     @Before
@@ -58,6 +68,9 @@ public class ControllerTest {
 
         messages = mock(Messages.class);
         TestUtils.setFieldValue(controller, "messages", messages);
+
+        networkService = mock(NetworkService.class);
+        TestUtils.setFieldValue(controller, "networkService", networkService);
     }
 
     @Test
@@ -88,5 +101,103 @@ public class ControllerTest {
         controller.updateMeWriting(false);
         verifyNoMoreInteractions(messages);
         assertFalse(me.isWriting());
+    }
+
+    @Test
+    public void sendFileShouldThrowExceptionIfUserIsNull() throws CommandException {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("User can not be null");
+
+        controller.sendFile(null, mock(File.class));
+    }
+
+    @Test
+    public void sendFileShouldThrowExceptionIfFileIsNull() throws CommandException {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("File can not be null");
+
+        controller.sendFile(mock(User.class), null);
+    }
+
+    @Test
+    public void sendFileShouldThrowExceptionIfUserIsMe() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a file to yourself");
+
+        final User user = mock(User.class);
+        when(user.isMe()).thenReturn(true);
+
+        controller.sendFile(user, mock(File.class));
+    }
+
+    @Test
+    public void sendFileShouldThrowExceptionIfNotConnected() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a file without being connected");
+
+        controller.sendFile(mock(User.class), mock(File.class));
+    }
+
+    @Test
+    public void sendFileShouldThrowExceptionIfMeIsAway() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a file while away");
+
+        when(networkService.isNetworkUp()).thenReturn(true);
+        controller.getChatState().setLoggedOn(true);
+
+        me.setAway(true);
+
+        controller.sendFile(mock(User.class), mock(File.class));
+    }
+
+    @Test
+    public void sendFileShouldThrowExceptionIfUserIsAway() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a file to a user that is away");
+
+        when(networkService.isNetworkUp()).thenReturn(true);
+        controller.getChatState().setLoggedOn(true);
+
+        final User user = new User("Test", 123);
+        user.setAway(true);
+
+        controller.sendFile(user, mock(File.class));
+    }
+
+    @Test
+    public void sendFileShouldThrowExceptionIfNameIsTooLong() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a file with a name with more than 450 bytes");
+
+        when(networkService.isNetworkUp()).thenReturn(true);
+        controller.getChatState().setLoggedOn(true);
+
+        final StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < 45; i++) {
+            sb.append("1234567890");
+        }
+
+        sb.append("1"); // 451 characters with 1 byte each, at least in UTF-8
+
+        final File file = mock(File.class);
+        when(file.getName()).thenReturn(sb.toString());
+
+        controller.sendFile(mock(User.class), file);
+    }
+
+    @Test
+    public void sendFileShouldSendFileIfEverythingValidatedOK() throws CommandException {
+        when(networkService.isNetworkUp()).thenReturn(true);
+        controller.getChatState().setLoggedOn(true);
+
+        final File file = mock(File.class);
+        when(file.getName()).thenReturn("file.txt");
+        final User user = mock(User.class);
+
+        controller.sendFile(user, file);
+
+        verify(messages).sendFile(user, file);
     }
 }

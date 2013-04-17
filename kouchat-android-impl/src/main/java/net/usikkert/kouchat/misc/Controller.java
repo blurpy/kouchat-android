@@ -526,13 +526,19 @@ public class Controller implements NetworkConnectionListener {
      *
      * @param user The user asked to receive a file.
      * @param file The file to send.
-     * @throws CommandException If there is no connection to the network,
+     * @throws CommandException If the specified user is the application user,
+     *                          or there is no connection to the network,
      *                          or the application user is away,
      *                          or the specified user is away,
      *                          or the file name is too long.
      */
     public void sendFile(final User user, final File file) throws CommandException {
-        if (!isConnected()) {
+        Validate.notNull(user, "User can not be null");
+        Validate.notNull(file, "File can not be null");
+
+        if (user.isMe()) {
+            throw new CommandException("You can not send a file to yourself");
+        } else if (!isConnected()) {
             throw new CommandException("You can not send a file without being connected");
         } else if (me.isAway()) {
             throw new CommandException("You can not send a file while away");
