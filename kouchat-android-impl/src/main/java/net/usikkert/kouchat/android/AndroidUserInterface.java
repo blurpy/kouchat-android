@@ -237,7 +237,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         mainChatController.updateChat(messageStyler.getHistory());
 
         for (int i = 0; i < userList.size(); i++) {
-            userAdded(i);
+            userAdded(i, userList.get(i));
         }
     }
 
@@ -291,23 +291,21 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     }
 
     @Override
-    public void userAdded(final int pos) {
+    public void userAdded(final int pos, final User user) {
         if (mainChatController != null) {
-            final User user = userList.get(pos);
             mainChatController.addUser(user);
         }
     }
 
     @Override
-    public void userChanged(final int pos) {
+    public void userChanged(final int pos, final User user) {
         if (mainChatController != null) {
-            final User user = userList.get(pos);
             mainChatController.updateUser(user);
         }
     }
 
     @Override
-    public void userRemoved(final int pos) {
+    public void userRemoved(final int pos, final User user) {
         if (mainChatController != null) {
             mainChatController.removeUser(pos);
         }

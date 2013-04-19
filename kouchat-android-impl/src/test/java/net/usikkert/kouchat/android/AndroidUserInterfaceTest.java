@@ -546,27 +546,20 @@ public class AndroidUserInterfaceTest {
     public void userAddedShouldDoNothingIfControllerIsNull() {
         TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
 
-        androidUserInterface.userAdded(50);
+        androidUserInterface.userAdded(50, null);
 
         verifyZeroInteractions(mainChatController);
     }
 
     @Test
-    public void userAddedShouldCallControllerWithCorrectUserFromUserList() {
-        userList.removeUserListListener(androidUserInterface); // To avoid userAdded being called on userList.add()
+    public void userAddedShouldCallControllerWithSpecifiedUser() {
+        androidUserInterface.userAdded(0, me);
 
-        userList.add(new User("SomeOne", 1236));
-        userList.add(testUser);
-
-        androidUserInterface.userAdded(0);
-
-        assertSame(me, userList.get(0));
         verify(mainChatController).addUser(me);
         verifyNoMoreInteractions(mainChatController);
 
-        androidUserInterface.userAdded(2);
+        androidUserInterface.userAdded(2, testUser);
 
-        assertSame(testUser, userList.get(2));
         verify(mainChatController).addUser(testUser);
         verifyNoMoreInteractions(mainChatController);
     }
@@ -575,27 +568,20 @@ public class AndroidUserInterfaceTest {
     public void userChangedShouldDoNothingIfControllerIsNull() {
         TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
 
-        androidUserInterface.userChanged(50);
+        androidUserInterface.userChanged(50, null);
 
         verifyZeroInteractions(mainChatController);
     }
 
     @Test
-    public void userChangedShouldCallControllerWithCorrectUserFromUserList() {
-        userList.removeUserListListener(androidUserInterface); // To avoid userAdded being called on userList.add()
+    public void userChangedShouldCallControllerWithSpecifiedUser() {
+        androidUserInterface.userChanged(0, me);
 
-        userList.add(new User("SomeOne", 1236));
-        userList.add(testUser);
-
-        androidUserInterface.userChanged(0);
-
-        assertSame(me, userList.get(0));
         verify(mainChatController).updateUser(me);
         verifyNoMoreInteractions(mainChatController);
 
-        androidUserInterface.userChanged(2);
+        androidUserInterface.userChanged(2, testUser);
 
-        assertSame(testUser, userList.get(2));
         verify(mainChatController).updateUser(testUser);
         verifyNoMoreInteractions(mainChatController);
     }
@@ -604,24 +590,19 @@ public class AndroidUserInterfaceTest {
     public void userRemovedShouldDoNothingIfControllerIsNull() {
         TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
 
-        androidUserInterface.userRemoved(50);
+        androidUserInterface.userRemoved(50, null);
 
         verifyZeroInteractions(mainChatController);
     }
 
     @Test
     public void userRemovedShouldCallControllerWithCorrectUserPosition() {
-        userList.removeUserListListener(androidUserInterface); // To avoid userAdded being called on userList.add()
-
-        userList.add(new User("SomeOne", 1236));
-        userList.add(testUser);
-
-        androidUserInterface.userRemoved(0);
+        androidUserInterface.userRemoved(0, null);
 
         verify(mainChatController).removeUser(0);
         verifyNoMoreInteractions(mainChatController);
 
-        androidUserInterface.userRemoved(2);
+        androidUserInterface.userRemoved(2, null);
 
         verify(mainChatController).removeUser(2);
         verifyNoMoreInteractions(mainChatController);
