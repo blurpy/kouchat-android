@@ -28,12 +28,12 @@ import net.usikkert.kouchat.event.UserListListener;
  * This is the interface used for keeping a list of the users
  * connected to the chat.
  *
- * <p>This is not a normal {@link List}, but the interface reminds of
+ * <p>This is not a normal {@link java.util.List}, but the interface reminds of
  * one, so it can be used like a normal list. The reason a normal
  * list is not used instead is because of the need to notify of changes
  * to the list.</p>
  *
- * <p>The {@link List} interface is not extended because all the methods
+ * <p>The {@link java.util.List} interface is not extended because all the methods
  * there are not needed.</p>
  *
  * @author Christian Ihle
@@ -41,7 +41,7 @@ import net.usikkert.kouchat.event.UserListListener;
 public interface UserList {
 
     /**
-     * Adds a user to the list, and notifies with {@link UserListListener#userAdded(int)}.
+     * Adds a user to the list, and notifies with {@link UserListListener#userAdded(int, User)}.
      *
      * @param user The user to add.
      * @return If the user was successfully added to the list.
@@ -65,17 +65,8 @@ public interface UserList {
     int indexOf(User user);
 
     /**
-     * Removes the user at the specified position from the list,
-     * and notifies with {@link UserListListener#userRemoved(int)}.
-     *
-     * @param pos The position of the user to remove.
-     * @return The user that was removed.
-     */
-    User remove(int pos);
-
-    /**
      * Removes the specified user from the list,
-     * and notifies with {@link UserListListener#userRemoved(int)}.
+     * and notifies with {@link UserListListener#userRemoved(int, User)}.
      *
      * @param user The user to remove.
      * @return If the user was successfully removed.
@@ -84,7 +75,7 @@ public interface UserList {
 
     /**
      * Sets the specified user at the specified position in the user list,
-     * and notifies with {@link UserListListener#userChanged(int)}.
+     * and notifies with {@link UserListListener#userChanged(int, User)}.
      *
      * @param pos The position to put the user.
      * @param user The user to put in the position.

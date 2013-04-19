@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.autocomplete;
 
 import net.usikkert.kouchat.event.UserListListener;
+import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.Tools;
 
@@ -56,7 +57,7 @@ public class UserAutoCompleteList implements AutoCompleteList, UserListListener 
      * {@inheritDoc}
      */
     @Override
-    public void userAdded(final int pos) {
+    public void userAdded(final int pos, final User user) {
         updateWords();
     }
 
@@ -66,7 +67,7 @@ public class UserAutoCompleteList implements AutoCompleteList, UserListListener 
      * {@inheritDoc}
      */
     @Override
-    public void userChanged(final int pos) {
+    public void userChanged(final int pos, final User user) {
         updateWords();
     }
 
@@ -76,7 +77,7 @@ public class UserAutoCompleteList implements AutoCompleteList, UserListListener 
      * {@inheritDoc}
      */
     @Override
-    public void userRemoved(final int pos) {
+    public void userRemoved(final int pos, final User user) {
         updateWords();
     }
 

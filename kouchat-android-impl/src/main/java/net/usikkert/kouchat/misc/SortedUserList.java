@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.usikkert.kouchat.event.UserListListener;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * This is a sorted version of the user list.
@@ -59,17 +60,21 @@ public class SortedUserList implements UserList {
      */
     @Override
     public boolean add(final User user) {
+        Validate.notNull(user, "User can not be null");
+
         final boolean success = userList.add(user);
 
         if (success) {
             Collections.sort(userList);
-            fireUserAdded(userList.indexOf(user));
+            fireUserAdded(userList.indexOf(user), user);
         }
 
         return success;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User get(final int pos) {
         if (pos < userList.size()) {
@@ -79,27 +84,29 @@ public class SortedUserList implements UserList {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int indexOf(final User user) {
+        Validate.notNull(user, "User can not be null");
+
         return userList.indexOf(user);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public User remove(final int pos) {
-        final User user = userList.remove(pos);
-        fireUserRemoved(pos);
-
-        return user;
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean remove(final User user) {
+        Validate.notNull(user, "User can not be null");
+
         final int pos = userList.indexOf(user);
         final boolean success = userList.remove(user);
-        fireUserRemoved(pos);
+
+        if (success) {
+            fireUserRemoved(pos, user);
+        }
 
         return success;
     }
@@ -111,28 +118,40 @@ public class SortedUserList implements UserList {
      */
     @Override
     public User set(final int pos, final User user) {
+        Validate.notNull(user, "User can not be null");
+
         final User oldUser = userList.set(pos, user);
         Collections.sort(userList);
-        fireUserChanged(userList.indexOf(user));
+        fireUserChanged(userList.indexOf(user), user);
 
         return oldUser;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int size() {
         return userList.size();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addUserListListener(final UserListListener listener) {
+        Validate.notNull(listener, "UserListListener can not be null");
+
         listeners.add(listener);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void removeUserListListener(final UserListListener listener) {
+        Validate.notNull(listener, "UserListListener can not be null");
+
         listeners.remove(listener);
     }
 
@@ -141,20 +160,20 @@ public class SortedUserList implements UserList {
      *
      * @param pos The position where the user was added.
      */
-    private void fireUserAdded(final int pos) {
+    private void fireUserAdded(final int pos, final User user) {
         for (final UserListListener listener : listeners) {
-            listener.userAdded(pos);
+            listener.userAdded(pos, user);
         }
     }
 
     /**
      * Notifies the listeners that a user was changed.
      *
-     * @param pos The position of the changed user.
+     * @param pos The new position of the changed user.
      */
-    private void fireUserChanged(final int pos) {
+    private void fireUserChanged(final int pos, final User user) {
         for (final UserListListener listener : listeners) {
-            listener.userChanged(pos);
+            listener.userChanged(pos, user);
         }
     }
 
@@ -163,9 +182,9 @@ public class SortedUserList implements UserList {
      *
      * @param pos The position of the removed user.
      */
-    private void fireUserRemoved(final int pos) {
+    private void fireUserRemoved(final int pos, final User user) {
         for (final UserListListener listener : listeners) {
-            listener.userRemoved(pos);
+            listener.userRemoved(pos, user);
         }
     }
 }

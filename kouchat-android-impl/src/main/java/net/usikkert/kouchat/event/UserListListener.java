@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.event;
 
+import net.usikkert.kouchat.misc.User;
+
 /**
  * This interface can be used to be notified when
  * the user list is updated.
@@ -35,21 +37,24 @@ public interface UserListListener {
      *
      * @param pos The position in the user list where
      * the user was added.
+     * @param user The user that was added.
      */
-    void userAdded(int pos);
+    void userAdded(int pos, final User user);
 
     /**
      * A user has updated some of its fields,
      * so the ui needs to refresh.
      *
-     * @param pos The position of the changed user in the user list.
+     * @param pos The new position of the changed user in the user list.
+     * @param user The (new) changed user.
      */
-    void userChanged(int pos);
+    void userChanged(int pos, final User user);
 
     /**
      * A user has been removed from the user list.
      *
      * @param pos The position where the user used to be in the user list.
+     * @param user The user that was removed.
      */
-    void userRemoved(int pos);
+    void userRemoved(int pos, final User user);
 }
