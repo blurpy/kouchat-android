@@ -38,11 +38,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * The adapter used for creating the list items in the user list.
+ * The adapter used for creating the list items in the user list. The items in the list react to chat state.
  *
  * @author Christian Ihle
  */
-public class UserListAdapter extends ArrayAdapter<User> {
+public class UserListAdapterWithChatState extends ArrayAdapter<User> {
 
     private final Drawable envelope;
     private final Drawable dot;
@@ -55,8 +55,8 @@ public class UserListAdapter extends ArrayAdapter<User> {
      * @param textViewResourceId Id for the label in the row.
      * @param objects The users backing list.
      */
-    public UserListAdapter(final Context context, final int resource,
-                           final int textViewResourceId, final List<User> objects) {
+    public UserListAdapterWithChatState(final Context context, final int resource,
+                                        final int textViewResourceId, final List<User> objects) {
         super(context, resource, textViewResourceId, objects);
 
         envelope = context.getResources().getDrawable(R.drawable.envelope);

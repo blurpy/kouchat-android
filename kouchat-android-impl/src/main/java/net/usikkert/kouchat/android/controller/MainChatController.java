@@ -189,7 +189,7 @@ public class MainChatController extends Activity {
     private void setupMainChatUserList() {
         usersBackingList = new ArrayList<User>();
 
-        users = new UserListAdapter(this,
+        users = new UserListAdapterWithChatState(this,
                 R.layout.main_chat_user_list_row, R.id.mainChatUserListLabel,
                 usersBackingList);
 

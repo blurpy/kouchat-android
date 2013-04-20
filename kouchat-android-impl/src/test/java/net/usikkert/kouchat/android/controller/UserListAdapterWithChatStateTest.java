@@ -44,14 +44,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * Test of {@link UserListAdapter}.
+ * Test of {@link UserListAdapterWithChatState}.
  *
  * @author Christian Ihle
  */
 @RunWith(RobolectricTestRunner.class)
-public class UserListAdapterTest {
+public class UserListAdapterWithChatStateTest {
 
-    private UserListAdapter userListAdapter;
+    private UserListAdapterWithChatState userListAdapter;
 
     private User user1;
     private User user2;
@@ -63,7 +63,7 @@ public class UserListAdapterTest {
     public void setUp() throws Exception {
         final Context context = new MainChatController();
 
-        userListAdapter = new UserListAdapter(
+        userListAdapter = new UserListAdapterWithChatState(
                 context, R.layout.main_chat_user_list_row, R.id.mainChatUserListLabel, new ArrayList<User>());
 
         user1 = new User("User1", 1);
