@@ -434,4 +434,22 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
     public void resetAllNotifications() {
         notificationService.resetAllNotifications();
     }
+
+    /**
+     * Gets the backend user list.
+     *
+     * @return The user list.
+     */
+    public UserList getUserList() {
+        return userList;
+    }
+
+    /**
+     * Gets the application user.
+     *
+     * @return Me.
+     */
+    public User getMe() {
+        return me;
+    }
 }

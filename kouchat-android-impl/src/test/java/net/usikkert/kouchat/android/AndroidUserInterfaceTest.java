@@ -738,6 +738,16 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
+    public void getUserListShouldReturnCorrectUserList() {
+        assertSame(userList, androidUserInterface.getUserList());
+    }
+
+    @Test
+    public void getMeShouldReturnCorrectUser() {
+        assertSame(me, androidUserInterface.getMe());
+    }
+
+    @Test
     public void askFileSaveShouldReturnFalse() {
         assertFalse(androidUserInterface.askFileSave(null, null, null));
     }
