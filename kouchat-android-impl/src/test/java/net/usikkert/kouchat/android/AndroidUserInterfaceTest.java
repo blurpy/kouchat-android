@@ -722,19 +722,12 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void getUserShouldThrowExceptionIfNoMatchingUserIsFoundInTheUserList() {
-        expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage("Unknown user with code: 123456");
+    public void getUserShouldCallController() {
+        when(controller.getUser(1235)).thenReturn(testUser);
 
-        androidUserInterface.getUser(123456);
-    }
-
-    @Test
-    public void getUserShouldReturnCorrectUserWithCode() {
-        userList.add(testUser);
-
-        assertSame(me, androidUserInterface.getUser(1234));
         assertSame(testUser, androidUserInterface.getUser(1235));
+
+        verify(controller).getUser(1235);
     }
 
     @Test

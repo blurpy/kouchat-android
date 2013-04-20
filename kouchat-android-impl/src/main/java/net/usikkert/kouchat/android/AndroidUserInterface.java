@@ -385,15 +385,14 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         }
     }
 
+    /**
+     * Gets a user with the specified user code from the controller.
+     *
+     * @param code The unique code of the user to get.
+     * @return The user who was found, or <code>null</code>.
+     */
     public User getUser(final int code) {
-        for (int i = 0; i < userList.size(); i++) {
-            final User user = userList.get(i);
-            if (user.getCode() == code) {
-                return user;
-            }
-        }
-
-        throw new RuntimeException("Unknown user with code: " + code);
+        return controller.getUser(code);
     }
 
     /**
