@@ -29,6 +29,7 @@ import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.event.UserListListener;
 import net.usikkert.kouchat.misc.User;
 
 import android.app.Activity;
@@ -76,7 +77,7 @@ import android.widget.TextView;
  *
  * @author Christian Ihle
  */
-public class MainChatController extends Activity {
+public class MainChatController extends Activity implements UserListListener {
 
     private Intent chatServiceIntent;
     private ServiceConnection serviceConnection;
@@ -314,7 +315,8 @@ public class MainChatController extends Activity {
         });
     }
 
-    public void addUser(final User user) {
+    @Override
+    public void userAdded(final int pos, final User user) {
         runOnUiThread(new Runnable() {
             public void run() {
                 users.add(user);
@@ -324,7 +326,8 @@ public class MainChatController extends Activity {
         });
     }
 
-    public void removeUser(final int pos) {
+    @Override
+    public void userRemoved(final int pos, final User user) {
         runOnUiThread(new Runnable() {
             public void run() {
                 final User user = users.getItem(pos);
@@ -333,8 +336,8 @@ public class MainChatController extends Activity {
         });
     }
 
-    @SuppressWarnings("unused") // user
-    public void updateUser(final User user) {
+    @Override
+    public void userChanged(final int pos, final User user) {
         runOnUiThread(new Runnable() {
             public void run() {
                 Collections.sort(usersBackingList);

@@ -293,9 +293,9 @@ public class AndroidUserInterfaceTest {
 
         androidUserInterface.registerMainChatController(mainChatController);
 
-        verify(mainChatController).addUser(me);
-        verify(mainChatController).addUser(user1);
-        verify(mainChatController).addUser(user2);
+        verify(mainChatController).userAdded(0, me);
+        verify(mainChatController).userAdded(1, user1);
+        verify(mainChatController).userAdded(2, user2);
     }
 
     @Test
@@ -555,12 +555,12 @@ public class AndroidUserInterfaceTest {
     public void userAddedShouldCallControllerWithSpecifiedUser() {
         androidUserInterface.userAdded(0, me);
 
-        verify(mainChatController).addUser(me);
+        verify(mainChatController).userAdded(0, me);
         verifyNoMoreInteractions(mainChatController);
 
         androidUserInterface.userAdded(2, testUser);
 
-        verify(mainChatController).addUser(testUser);
+        verify(mainChatController).userAdded(2, testUser);
         verifyNoMoreInteractions(mainChatController);
     }
 
@@ -577,12 +577,12 @@ public class AndroidUserInterfaceTest {
     public void userChangedShouldCallControllerWithSpecifiedUser() {
         androidUserInterface.userChanged(0, me);
 
-        verify(mainChatController).updateUser(me);
+        verify(mainChatController).userChanged(0, me);
         verifyNoMoreInteractions(mainChatController);
 
         androidUserInterface.userChanged(2, testUser);
 
-        verify(mainChatController).updateUser(testUser);
+        verify(mainChatController).userChanged(2, testUser);
         verifyNoMoreInteractions(mainChatController);
     }
 
@@ -599,29 +599,29 @@ public class AndroidUserInterfaceTest {
     public void userRemovedShouldCallControllerWithCorrectUserPosition() {
         androidUserInterface.userRemoved(0, null);
 
-        verify(mainChatController).removeUser(0);
+        verify(mainChatController).userRemoved(0, null);
         verifyNoMoreInteractions(mainChatController);
 
         androidUserInterface.userRemoved(2, null);
 
-        verify(mainChatController).removeUser(2);
+        verify(mainChatController).userRemoved(2, null);
         verifyNoMoreInteractions(mainChatController);
     }
 
     @Test
     public void shouldBeListeningToUserListEvents() {
         userList.add(testUser);
-        verify(mainChatController).addUser(testUser);
+        verify(mainChatController).userAdded(1, testUser);
         verifyNoMoreInteractions(mainChatController);
 
         userList.set(1, testUser);
-        verify(mainChatController).updateUser(testUser);
+        verify(mainChatController).userChanged(1, testUser);
         verifyNoMoreInteractions(mainChatController);
 
         assertSame(testUser, userList.get(1));
 
         userList.remove(testUser);
-        verify(mainChatController).removeUser(1);
+        verify(mainChatController).userRemoved(1, testUser);
         verifyNoMoreInteractions(mainChatController);
     }
 
