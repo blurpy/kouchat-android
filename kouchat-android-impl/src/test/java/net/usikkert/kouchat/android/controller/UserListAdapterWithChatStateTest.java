@@ -24,16 +24,17 @@ package net.usikkert.kouchat.android.controller;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.misc.User;
 
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
+import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 import android.content.Context;
@@ -51,6 +52,9 @@ import android.widget.TextView;
 @RunWith(RobolectricTestRunner.class)
 public class UserListAdapterWithChatStateTest {
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     private UserListAdapterWithChatState userListAdapter;
 
     private User user1;
@@ -61,10 +65,9 @@ public class UserListAdapterWithChatStateTest {
 
     @Before
     public void setUp() throws Exception {
-        final Context context = new MainChatController();
+        final Context context = Robolectric.application.getApplicationContext();
 
-        userListAdapter = new UserListAdapterWithChatState(
-                context, R.layout.main_chat_user_list_row, R.id.mainChatUserListLabel, new ArrayList<User>());
+        userListAdapter = new UserListAdapterWithChatState(context);
 
         user1 = new User("User1", 1);
         user2 = new User("User2", 2);
@@ -74,6 +77,14 @@ public class UserListAdapterWithChatStateTest {
 
         envelope = context.getResources().getDrawable(R.drawable.envelope);
         dot = context.getResources().getDrawable(R.drawable.dot);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfContextIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Context can not be null");
+
+        new UserListAdapterWithChatState(null);
     }
 
     @Test

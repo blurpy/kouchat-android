@@ -22,9 +22,6 @@
 
 package net.usikkert.kouchat.android.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.service.ChatService;
@@ -49,7 +46,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -85,8 +81,7 @@ public class MainChatController extends Activity implements UserListListener {
     private ListView mainChatUserList;
     private TextView mainChatView;
     private AndroidUserInterface androidUserInterface;
-    private ArrayAdapter<User> users;
-    private ArrayList<User> usersBackingList;
+    private UserListAdapter userListAdapter;
 
     /** If the main chat is currently visible. */
     private boolean visible;
@@ -188,13 +183,8 @@ public class MainChatController extends Activity implements UserListListener {
     }
 
     private void setupMainChatUserList() {
-        usersBackingList = new ArrayList<User>();
-
-        users = new UserListAdapterWithChatState(this,
-                R.layout.main_chat_user_list_row, R.id.mainChatUserListLabel,
-                usersBackingList);
-
-        mainChatUserList.setAdapter(users);
+        userListAdapter = new UserListAdapterWithChatState(this);
+        mainChatUserList.setAdapter(userListAdapter);
     }
 
     private void openKeyboard() {
@@ -319,9 +309,7 @@ public class MainChatController extends Activity implements UserListListener {
     public void userAdded(final int pos, final User user) {
         runOnUiThread(new Runnable() {
             public void run() {
-                users.add(user);
-                Collections.sort(usersBackingList);
-                users.notifyDataSetChanged();
+                userListAdapter.add(user);
             }
         });
     }
@@ -330,8 +318,7 @@ public class MainChatController extends Activity implements UserListListener {
     public void userRemoved(final int pos, final User user) {
         runOnUiThread(new Runnable() {
             public void run() {
-                final User user = users.getItem(pos);
-                users.remove(user);
+                userListAdapter.remove(user);
             }
         });
     }
@@ -340,8 +327,7 @@ public class MainChatController extends Activity implements UserListListener {
     public void userChanged(final int pos, final User user) {
         runOnUiThread(new Runnable() {
             public void run() {
-                Collections.sort(usersBackingList);
-                users.notifyDataSetChanged();
+                userListAdapter.sort();
             }
         });
     }

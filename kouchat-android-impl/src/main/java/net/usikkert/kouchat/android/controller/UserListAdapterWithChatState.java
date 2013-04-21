@@ -22,17 +22,15 @@
 
 package net.usikkert.kouchat.android.controller;
 
-import java.util.List;
-
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.Validate;
 
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,22 +40,20 @@ import android.widget.TextView;
  *
  * @author Christian Ihle
  */
-public class UserListAdapterWithChatState extends ArrayAdapter<User> {
+public class UserListAdapterWithChatState extends UserListAdapter {
 
     private final Drawable envelope;
     private final Drawable dot;
 
     /**
-     * See {@link ArrayAdapter#ArrayAdapter(android.content.Context, int, int, java.util.List)}.
+     * Constructor.
      *
      * @param context The controller.
-     * @param resource Id for the row.
-     * @param textViewResourceId Id for the label in the row.
-     * @param objects The users backing list.
      */
-    public UserListAdapterWithChatState(final Context context, final int resource,
-                                        final int textViewResourceId, final List<User> objects) {
-        super(context, resource, textViewResourceId, objects);
+    public UserListAdapterWithChatState(final Context context) {
+        super(context);
+
+        Validate.notNull(context, "Context can not be null");
 
         envelope = context.getResources().getDrawable(R.drawable.envelope);
         dot = context.getResources().getDrawable(R.drawable.dot);
