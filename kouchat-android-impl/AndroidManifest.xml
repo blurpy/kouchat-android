@@ -31,6 +31,7 @@
          making it difficult to see the messages at the top.
       -->
     <activity android:name=".controller.PrivateChatController"
+              android:label="@string/private_chat_title"
               android:windowSoftInputMode="adjustResize"/>
 
     <service android:name=".service.ChatService"/>

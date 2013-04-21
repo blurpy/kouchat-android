@@ -32,6 +32,7 @@ import net.usikkert.kouchat.misc.User;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -74,22 +75,26 @@ public class PrivateChatController extends Activity {
 
         final Intent chatServiceIntent = createChatServiceIntent();
         serviceConnection = createServiceConnection();
-        bindService(chatServiceIntent, serviceConnection, BIND_NOT_FOREGROUND);
+        bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
 
-        registerPrivateChatInputListener();
         ControllerUtils.makeTextViewScrollable(privateChatView);
         ControllerUtils.makeLinksClickable(privateChatView);
+        privateChatInput.requestFocus();
     }
 
     @Override
     protected void onDestroy() {
-        privateChatWindow.unregisterPrivateChatController();
+        if (privateChatWindow != null) {
+            privateChatWindow.unregisterPrivateChatController();
+        }
+
         unbindService(serviceConnection);
-        super.onDestroy();
 
         androidUserInterface = null;
         privateChatWindow = null;
         user = null;
+
+        super.onDestroy();
     }
 
     @Override
@@ -97,7 +102,7 @@ public class PrivateChatController extends Activity {
         super.onResume();
         visible = true;
 
-        if (androidUserInterface != null) {
+        if (androidUserInterface != null && user != null) {
             // Make sure that new private message notifications are hidden when the private chat is shown again
             // after being hidden. Happens when the screen is turned off and on again, or after pressing home,
             // and returning to the application, or clicking a link and returning, and so on.
@@ -126,9 +131,7 @@ public class PrivateChatController extends Activity {
             }
 
             @Override
-            public void onServiceDisconnected(final ComponentName componentName) {
-
-            }
+            public void onServiceDisconnected(final ComponentName componentName) { }
         };
     }
 
@@ -156,9 +159,13 @@ public class PrivateChatController extends Activity {
 
     private void setupPrivateChatWithUser() {
         setUser();
-        setTitle();
-        setPrivateChatWindow();
-        resetNewPrivateMessageIcon();
+
+        if (user != null) {
+            setTitle();
+            setPrivateChatWindow();
+            resetNewPrivateMessageIcon();
+            registerPrivateChatInputListener();
+        }
     }
 
     private void setTitle() {

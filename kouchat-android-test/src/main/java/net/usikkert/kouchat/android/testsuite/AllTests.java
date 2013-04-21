@@ -26,6 +26,7 @@ import net.usikkert.kouchat.android.AboutTest;
 import net.usikkert.kouchat.android.HitchhikerTest;
 import net.usikkert.kouchat.android.MainChatTest;
 import net.usikkert.kouchat.android.NotificationTest;
+import net.usikkert.kouchat.android.PrivateChatErrorHandlingTest;
 import net.usikkert.kouchat.android.PrivateChatStateTest;
 import net.usikkert.kouchat.android.PrivateChatTest;
 import net.usikkert.kouchat.android.SettingsTest;
@@ -49,6 +50,7 @@ public class AllTests extends TestSuite {
         testSuite.addTestSuite(MainChatTest.class);
         testSuite.addTestSuite(PrivateChatTest.class);
         testSuite.addTestSuite(PrivateChatStateTest.class);
+        testSuite.addTestSuite(PrivateChatErrorHandlingTest.class);
         testSuite.addTestSuite(SettingsTest.class);
         testSuite.addTestSuite(TopicTest.class);
         testSuite.addTestSuite(UserListTest.class);
