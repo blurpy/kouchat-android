@@ -27,7 +27,6 @@ import java.util.concurrent.ExecutionException;
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
-import net.usikkert.kouchat.event.UserListListener;
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
@@ -54,7 +53,7 @@ import android.widget.Toast;
  *
  * @author Christian Ihle
  */
-public class AndroidUserInterface implements UserInterface, ChatWindow, UserListListener {
+public class AndroidUserInterface implements UserInterface, ChatWindow {
 
     private final MessageController msgController;
     private final Controller controller;
@@ -82,7 +81,6 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         controller = new Controller(this, settings);
 
         userList = controller.getUserList();
-        userList.addUserListListener(this);
         me = settings.getMe();
     }
 
@@ -235,10 +233,6 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
 
         mainChatController = theMainChatController;
         mainChatController.updateChat(messageStyler.getHistory());
-
-        for (int i = 0; i < userList.size(); i++) {
-            userAdded(i, userList.get(i));
-        }
     }
 
     public void unregisterMainChatController() {
@@ -288,27 +282,6 @@ public class AndroidUserInterface implements UserInterface, ChatWindow, UserList
         };
 
         sendMessageTask.execute((Void) null);
-    }
-
-    @Override
-    public void userAdded(final int pos, final User user) {
-        if (mainChatController != null) {
-            mainChatController.userAdded(pos, user);
-        }
-    }
-
-    @Override
-    public void userChanged(final int pos, final User user) {
-        if (mainChatController != null) {
-            mainChatController.userChanged(pos, user);
-        }
-    }
-
-    @Override
-    public void userRemoved(final int pos, final User user) {
-        if (mainChatController != null) {
-            mainChatController.userRemoved(pos, user);
-        }
     }
 
     public void setNickNameFromSettings() {

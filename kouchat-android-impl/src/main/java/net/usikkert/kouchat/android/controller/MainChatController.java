@@ -28,6 +28,7 @@ import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.event.UserListListener;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.misc.UserList;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -80,8 +81,10 @@ public class MainChatController extends Activity implements UserListListener {
     private EditText mainChatInput;
     private ListView mainChatUserList;
     private TextView mainChatView;
-    private AndroidUserInterface androidUserInterface;
     private UserListAdapter userListAdapter;
+
+    private AndroidUserInterface androidUserInterface;
+    private UserList userList;
 
     /** If the main chat is currently visible. */
     private boolean visible;
@@ -94,15 +97,9 @@ public class MainChatController extends Activity implements UserListListener {
         setContentView(R.layout.main_chat);
         getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.kou_icon_16x16);
 
-        chatServiceIntent = createChatServiceIntent();
-
         mainChatInput = (EditText) findViewById(R.id.mainChatInput);
         mainChatUserList = (ListView) findViewById(R.id.mainChatUserList);
         mainChatView = (TextView) findViewById(R.id.mainChatView);
-
-        startService(chatServiceIntent);
-        serviceConnection = createServiceConnection();
-        bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
 
         registerMainChatInputListener();
         registerMainChatTextListener();
@@ -111,6 +108,11 @@ public class MainChatController extends Activity implements UserListListener {
         ControllerUtils.makeLinksClickable(mainChatView);
         setupMainChatUserList();
         openKeyboard();
+
+        chatServiceIntent = createChatServiceIntent();
+        startService(chatServiceIntent);
+        serviceConnection = createServiceConnection();
+        bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
     }
 
     private ServiceConnection createServiceConnection() {
@@ -118,9 +120,14 @@ public class MainChatController extends Activity implements UserListListener {
             @Override
             public void onServiceConnected(final ComponentName componentName, final IBinder iBinder) {
                 final ChatServiceBinder binder = (ChatServiceBinder) iBinder;
+
                 androidUserInterface = binder.getAndroidUserInterface();
                 androidUserInterface.registerMainChatController(MainChatController.this);
                 androidUserInterface.showTopic();
+
+                userList = androidUserInterface.getUserList();
+                userList.addUserListListener(MainChatController.this);
+                userListAdapter.addUsers(userList);
             }
 
             @Override
@@ -209,6 +216,7 @@ public class MainChatController extends Activity implements UserListListener {
 
     @Override
     protected void onDestroy() {
+        userList.removeUserListListener(this);
         androidUserInterface.unregisterMainChatController();
         unbindService(serviceConnection);
 

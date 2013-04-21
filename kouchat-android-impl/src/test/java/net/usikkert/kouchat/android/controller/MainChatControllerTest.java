@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
@@ -53,7 +54,9 @@ public class MainChatControllerTest {
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
 
-        when(serviceBinder.getAndroidUserInterface()).thenReturn(mock(AndroidUserInterface.class));
+        final AndroidUserInterface ui = mock(AndroidUserInterface.class);
+        when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
+        when(ui.getUserList()).thenReturn(mock(UserList.class));
     }
 
     @Test

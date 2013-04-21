@@ -33,9 +33,9 @@ import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.SortedUserList;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.ui.PrivateChatWindow;
@@ -73,7 +73,6 @@ public class AndroidUserInterfaceTest {
     private NotificationService notificationService;
     private MessageStylerWithHistory messageStyler;
     private MessageController msgController;
-    private UserList userList;
     private User me;
     private User testUser;
 
@@ -91,8 +90,6 @@ public class AndroidUserInterfaceTest {
 
         controller = mock(Controller.class);
         TestUtils.setFieldValue(androidUserInterface, "controller", controller);
-
-        userList = TestUtils.getFieldValue(androidUserInterface, UserList.class, "userList");
 
         messageStyler = mock(MessageStylerWithHistory.class);
         TestUtils.setFieldValue(androidUserInterface, "messageStyler", messageStyler);
@@ -278,24 +275,6 @@ public class AndroidUserInterfaceTest {
 
         verify(mainChatController).updateChat("History");
         verify(messageStyler).getHistory();
-    }
-
-    @Test
-    public void registerMainChatControllerShouldAddAllUsersToTheUserList() {
-        TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
-
-        final User user1 = new User("User1", 123);
-        final User user2 = new User("User2", 124);
-
-        userList.add(user1);
-        userList.add(user2);
-        assertEquals(3, userList.size()); // "me" is there already
-
-        androidUserInterface.registerMainChatController(mainChatController);
-
-        verify(mainChatController).userAdded(0, me);
-        verify(mainChatController).userAdded(1, user1);
-        verify(mainChatController).userAdded(2, user2);
     }
 
     @Test
@@ -543,89 +522,6 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void userAddedShouldDoNothingIfControllerIsNull() {
-        TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
-
-        androidUserInterface.userAdded(50, null);
-
-        verifyZeroInteractions(mainChatController);
-    }
-
-    @Test
-    public void userAddedShouldCallControllerWithSpecifiedUser() {
-        androidUserInterface.userAdded(0, me);
-
-        verify(mainChatController).userAdded(0, me);
-        verifyNoMoreInteractions(mainChatController);
-
-        androidUserInterface.userAdded(2, testUser);
-
-        verify(mainChatController).userAdded(2, testUser);
-        verifyNoMoreInteractions(mainChatController);
-    }
-
-    @Test
-    public void userChangedShouldDoNothingIfControllerIsNull() {
-        TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
-
-        androidUserInterface.userChanged(50, null);
-
-        verifyZeroInteractions(mainChatController);
-    }
-
-    @Test
-    public void userChangedShouldCallControllerWithSpecifiedUser() {
-        androidUserInterface.userChanged(0, me);
-
-        verify(mainChatController).userChanged(0, me);
-        verifyNoMoreInteractions(mainChatController);
-
-        androidUserInterface.userChanged(2, testUser);
-
-        verify(mainChatController).userChanged(2, testUser);
-        verifyNoMoreInteractions(mainChatController);
-    }
-
-    @Test
-    public void userRemovedShouldDoNothingIfControllerIsNull() {
-        TestUtils.setFieldValue(androidUserInterface, "mainChatController", null);
-
-        androidUserInterface.userRemoved(50, null);
-
-        verifyZeroInteractions(mainChatController);
-    }
-
-    @Test
-    public void userRemovedShouldCallControllerWithCorrectUserPosition() {
-        androidUserInterface.userRemoved(0, null);
-
-        verify(mainChatController).userRemoved(0, null);
-        verifyNoMoreInteractions(mainChatController);
-
-        androidUserInterface.userRemoved(2, null);
-
-        verify(mainChatController).userRemoved(2, null);
-        verifyNoMoreInteractions(mainChatController);
-    }
-
-    @Test
-    public void shouldBeListeningToUserListEvents() {
-        userList.add(testUser);
-        verify(mainChatController).userAdded(1, testUser);
-        verifyNoMoreInteractions(mainChatController);
-
-        userList.set(1, testUser);
-        verify(mainChatController).userChanged(1, testUser);
-        verifyNoMoreInteractions(mainChatController);
-
-        assertSame(testUser, userList.get(1));
-
-        userList.remove(testUser);
-        verify(mainChatController).userRemoved(1, testUser);
-        verifyNoMoreInteractions(mainChatController);
-    }
-
-    @Test
     public void setNickNameFromSettingsShouldSetValidNickInMeFromSettings() {
         RobolectricTestUtils.setNickNameInTheAndroidSettingsTo("Robofied");
         assertEquals("Me", me.getNick());
@@ -732,7 +628,7 @@ public class AndroidUserInterfaceTest {
 
     @Test
     public void getUserListShouldReturnCorrectUserList() {
-        assertSame(userList, androidUserInterface.getUserList());
+        assertEquals(SortedUserList.class, androidUserInterface.getUserList().getClass());
     }
 
     @Test
