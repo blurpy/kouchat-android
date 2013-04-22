@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.android.util.RobolectricTestUtils;
+import net.usikkert.kouchat.event.FileTransferListener;
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
@@ -46,6 +47,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -652,8 +654,24 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void showTransferForFileSenderShouldDoNothing() {
+    public void showTransferForFileSenderShouldThrowExceptionIfFileSenderIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("FileTransfer can not be null");
+
         androidUserInterface.showTransfer((FileSender) null);
+    }
+
+    @Test
+    public void showTransferForFileSenderShouldRegisterListener() {
+        final FileSender fileSender = mock(FileSender.class);
+        final ArgumentCaptor<FileTransferListener> argumentCaptor = ArgumentCaptor.forClass(FileTransferListener.class);
+
+        androidUserInterface.showTransfer(fileSender);
+
+        verify(fileSender).registerListener(argumentCaptor.capture());
+
+        final FileTransferListener listener = argumentCaptor.getValue();
+        assertEquals(AndroidFileTransferListener.class, listener.getClass());
     }
 
     @Test
