@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android;
 
+import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 import net.usikkert.kouchat.Constants;
@@ -29,6 +30,7 @@ import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
+import net.usikkert.kouchat.misc.CommandParser;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.Settings;
@@ -63,6 +65,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     private final Context context;
     private final Settings settings;
     private final NotificationService notificationService;
+    private final CommandParser commandParser;
 
     private MainChatController mainChatController;
 
@@ -79,6 +82,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         messageStyler = new MessageStylerWithHistory(context);
         msgController = new MessageController(this, this, settings);
         controller = new Controller(this, settings);
+        commandParser = new CommandParser(controller, this, settings);
 
         userList = controller.getUserList();
         me = settings.getMe();
@@ -423,5 +427,38 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
      */
     public User getMe() {
         return me;
+    }
+
+    /**
+     * Sends the file to the specified user. Shows a Toast if it fails.
+     *
+     * @param user The user to send to.
+     * @param file The file to send.
+     */
+    public void sendFile(final User user, final File file) {
+        final AsyncTask<Void, Void, Void> sendFileTask = new AsyncTask<Void, Void, Void>() {
+
+            private CommandException exception;
+
+            @Override
+            public Void doInBackground(final Void... voids) {
+                try {
+                    commandParser.sendFile(user, file);
+                } catch (final CommandException e) {
+                    exception = e;
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(final Void aVoid) {
+                if (exception != null) { // Toast needs to be on UI thread, like in onPostExecute()
+                    Toast.makeText(context, exception.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        sendFileTask.execute((Void) null);
     }
 }

@@ -34,6 +34,15 @@
               android:label="@string/private_chat_title"
               android:windowSoftInputMode="adjustResize"/>
 
+    <activity android:name=".controller.SendFileController"
+              android:theme="@android:style/Theme.Dialog">
+      <intent-filter>
+        <action android:name="android.intent.action.SEND" />
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:mimeType="*/*"/>
+      </intent-filter>
+    </activity>
+
     <service android:name=".service.ChatService"/>
 
   </application>

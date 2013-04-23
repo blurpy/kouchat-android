@@ -3,6 +3,7 @@
 
 * version 0.9.0 (xx.xx.2013)
   - Improved error handling in the private chat.
+  - Added support for sending files to other users.
 
 
 * version 0.8.0 (07.04.2013)

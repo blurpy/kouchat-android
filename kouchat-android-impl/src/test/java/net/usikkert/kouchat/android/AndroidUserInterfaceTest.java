@@ -25,12 +25,15 @@ package net.usikkert.kouchat.android;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.io.File;
+
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.android.util.RobolectricTestUtils;
 import net.usikkert.kouchat.event.FileTransferListener;
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
+import net.usikkert.kouchat.misc.CommandParser;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.Settings;
@@ -77,6 +80,7 @@ public class AndroidUserInterfaceTest {
     private MessageController msgController;
     private User me;
     private User testUser;
+    private CommandParser commandParser;
 
     @Before
     public void setUp() {
@@ -98,6 +102,9 @@ public class AndroidUserInterfaceTest {
 
         msgController = mock(MessageController.class);
         TestUtils.setFieldValue(androidUserInterface, "msgController", msgController);
+
+        commandParser = mock(CommandParser.class);
+        TestUtils.setFieldValue(androidUserInterface, "commandParser", commandParser);
 
         mainChatController = mock(MainChatController.class);
         androidUserInterface.registerMainChatController(mainChatController);
@@ -687,5 +694,28 @@ public class AndroidUserInterfaceTest {
     @Test
     public void quitShouldDoNothing() {
         androidUserInterface.quit();
+    }
+
+    @Test
+    public void sendFileShouldUseCommandParser() throws CommandException {
+        final File file = mock(File.class);
+
+        androidUserInterface.sendFile(testUser, file);
+
+        verify(commandParser).sendFile(testUser, file);
+        assertEquals(0, ShadowToast.shownToastCount());
+    }
+
+    @Test
+    public void sendFileShouldShowToastIfCommandParserThrowsException() throws CommandException {
+        doThrow(new CommandException("Cant send the file"))
+                .when(commandParser).sendFile(any(User.class), any(File.class));
+
+        final File file = mock(File.class);
+
+        androidUserInterface.sendFile(testUser, file);
+
+        verify(commandParser).sendFile(testUser, file);
+        assertEquals("Cant send the file", ShadowToast.getTextOfLatestToast());
     }
 }

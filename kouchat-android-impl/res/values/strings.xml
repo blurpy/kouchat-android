@@ -29,5 +29,10 @@
   <string name="notification_startup">KouChat is up and running</string>
   <string name="notification_running">Running</string>
   <string name="notification_new_message">New unread messages</string>
+  <string name="cancel">Cancel</string>
+  <string name="send_file_info">File name: %1$s \nFile size: %2$s</string>
+  <string name="send_file_select_user">Please select the user to send the file to.</string>
+  <string name="send_file_no_users">-- No connected users.</string>
+  <string name="send_file_no_file">Unable to locate the file to send.</string>
 
 </resources>
