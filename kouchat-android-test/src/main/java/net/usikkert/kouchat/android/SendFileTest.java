@@ -26,7 +26,7 @@ import java.io.File;
 
 import net.usikkert.kouchat.android.controller.SendFileController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
-import net.usikkert.kouchat.util.TestClient;
+import net.usikkert.kouchat.testclient.TestClient;
 
 import com.jayway.android.robotium.solo.Solo;
 
