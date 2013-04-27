@@ -24,8 +24,8 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
-import net.usikkert.kouchat.net.MessageResponderMock;
-import net.usikkert.kouchat.util.TestClient;
+import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.testclient.TestClient;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -41,14 +41,18 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
     private Solo solo;
     private int defaultOrientation;
     private TestClient client;
+    private User me;
 
     public MainChatTest() {
         super(MainChatController.class);
     }
 
     public void setUp() {
-        solo = new Solo(getInstrumentation(), getActivity());
+        final MainChatController activity = getActivity();
+
+        solo = new Solo(getInstrumentation(), activity);
         defaultOrientation = RobotiumTestUtils.getCurrentOrientation(solo);
+        me = RobotiumTestUtils.getMe(activity);
     }
 
     public void test01OwnMessageIsShownInChat() {
@@ -60,13 +64,12 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void test02OwnMessageShouldArriveAtOtherClient() {
         client = new TestClient();
-        final MessageResponderMock messageResponder = client.getMessageResponderMock();
         client.logon();
 
         RobotiumTestUtils.writeLine(solo, "This is the second message");
         solo.sleep(500);
 
-        assertTrue(messageResponder.gotMessageArrived("This is the second message"));
+        assertTrue(client.gotMessage(me.getNick(), "This is the second message"));
     }
 
     public void test03OtherClientMessageIsShownInChat() {

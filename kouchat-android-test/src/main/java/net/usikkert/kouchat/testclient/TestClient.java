@@ -37,6 +37,7 @@ import net.usikkert.kouchat.util.Tools;
 public class TestClient {
 
     private final Controller controller;
+    private final TestClientUserInterface ui;
 
     public TestClient() {
         this("Test", 12345678, 0);
@@ -57,7 +58,7 @@ public class TestClient {
         me.setNick(nickName);
         TestUtils.setFieldValue(me, "code", userCode);
 
-        final TestClientUserInterface ui = new TestClientUserInterface(settings);
+        ui = new TestClientUserInterface(settings);
         controller = new Controller(ui, settings);
     }
 
@@ -111,6 +112,17 @@ public class TestClient {
         } catch (final CommandException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Checks if the specified message has arrived from the specified user in the main chat.
+     *
+     * @param nickName The nick name of the user who sent the message.
+     * @param message The message the user sent.
+     * @return If the message has arrived.
+     */
+    public boolean gotMessage(final String nickName, final String message) {
+        return ui.gotMessage(nickName, message);
     }
 
     private void waitForConnection() {
