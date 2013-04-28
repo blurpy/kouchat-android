@@ -22,11 +22,6 @@
 
 package net.usikkert.kouchat.testclient;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
@@ -43,14 +38,11 @@ import net.usikkert.kouchat.ui.UserInterface;
 public class TestClientUserInterface implements UserInterface, ChatWindow {
 
     private final MessageController messageController;
-
-    private final List<String> receivedMessages;
-    private final Pattern messagePattern;
+    private final TestClientMessageReceiver messageReceiver;
 
     public TestClientUserInterface(final Settings settings) {
         messageController = new MessageController(this, this, settings);
-        receivedMessages = new ArrayList<String>();
-        messagePattern = Pattern.compile("\\[\\d{2}:\\d{2}:\\d{2}\\] <(\\w+)>: (.+)");
+        messageReceiver = new TestClientMessageReceiver();
     }
 
     @Override
@@ -125,34 +117,10 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
 
     @Override
     public void appendToChat(final String message, final int color) {
-        receivedMessages.add(message);
+        messageReceiver.addMessage(message);
     }
 
-    /**
-     * Checks if the specified message has arrived from the specified user in the main chat.
-     *
-     * <p>Expects messages in this format: <code>[14:29:21] &lt;Christian&gt;: hello there</code>.</p>
-     *
-     * <p>Only the actual nick name and the actual message is checked. The rest is ignored.</p>
-     *
-     * @param user The user who sent the message.
-     * @param message The message the user sent.
-     * @return If the message has arrived.
-     */
     public boolean gotMessage(final User user, final String message) {
-        for (final String receivedMessage : receivedMessages) {
-            final Matcher matcher = messagePattern.matcher(receivedMessage);
-
-            if (matcher.matches()) {
-                final String nickNameMatch = matcher.group(1);
-                final String messageMatch = matcher.group(2);
-
-                if (nickNameMatch.equals(user.getNick()) && messageMatch.equals(message)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return messageReceiver.gotMessage(user.getNick(), message);
     }
 }
