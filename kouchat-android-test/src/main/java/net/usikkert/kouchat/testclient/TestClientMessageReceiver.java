@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * TODO
+ * Stores and queries messages.
  *
  * @author Christian Ihle
  */
