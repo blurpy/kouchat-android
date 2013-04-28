@@ -25,9 +25,7 @@ package net.usikkert.kouchat.android;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.net.Messages;
-import net.usikkert.kouchat.net.PrivateMessageResponderMock;
-import net.usikkert.kouchat.util.TestClient;
+import net.usikkert.kouchat.testclient.TestClient;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -45,8 +43,6 @@ import android.widget.LinearLayout;
 public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private static TestClient client;
-    private static PrivateMessageResponderMock privateMessageResponder;
-    private static Messages messages;
 
     private TestClient client2;
 
@@ -75,11 +71,10 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         // Making sure the test client only logs on once during all the tests
         if (client == null) {
             client = new TestClient();
-            privateMessageResponder = client.getPrivateMessageResponderMock();
-            messages = client.logon();
+            client.logon();
         }
 
-        privateMessageResponder.resetMessages();
+        client.resetPrivateMessages();
     }
 
     public void test001NoOp() {
@@ -182,7 +177,6 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
     public void test06PrivateChattingWithSeveralUsersShouldCommunicateCorrectly() {
         client2 = new TestClient("Test2", 12345679);
         client2.logon();
-        final PrivateMessageResponderMock privateMessageResponder2 = client2.getPrivateMessageResponderMock();
         solo.sleep(1000);
 
         // New message from first user
@@ -200,7 +194,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         assertTrue(solo.searchText("First message from user 1"));
         RobotiumTestUtils.writeLine(solo, "Hello user 1");
         solo.sleep(500);
-        assertTrue(privateMessageResponder.gotMessageArrived("Hello user 1"));
+        assertTrue(client.gotPrivateMessage(me, "Hello user 1"));
         client.sendPrivateChatMessage("Second message from user 1", me);
         solo.sleep(500);
         assertTrue(solo.searchText("Second message from user 1"));
@@ -215,7 +209,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         assertTrue(solo.searchText("First message from user 2"));
         RobotiumTestUtils.writeLine(solo, "Hello user 2");
         solo.sleep(500);
-        assertTrue(privateMessageResponder2.gotMessageArrived("Hello user 2"));
+        assertTrue(client2.gotPrivateMessage(me, "Hello user 2"));
         client2.sendPrivateChatMessage("Second message from user 2", me);
         solo.sleep(500);
         assertTrue(solo.searchText("Second message from user 2"));
@@ -276,7 +270,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         openPrivateChat();
 
         solo.sleep(500);
-        messages.sendAwayMessage("Going away now");
+        client.goAway("Going away now");
         solo.sleep(500);
 
         assertEquals("Test (away: Going away now) - KouChat", solo.getCurrentActivity().getTitle());
@@ -285,22 +279,22 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         solo.sleep(500);
 
         assertTrue(solo.searchText("You can not send a private chat message to a user that is away"));
-        assertFalse(privateMessageResponder.gotAnyMessage());
+        assertFalse(client.gotAnyPrivateMessages());
 
         solo.sleep(500);
-        messages.sendBackMessage();
+        client.comeBack();
         solo.sleep(500);
 
         assertEquals("Test - KouChat", solo.getCurrentActivity().getTitle());
 
         RobotiumTestUtils.writeLine(solo, "You are back!");
         solo.sleep(500);
-        assertTrue(privateMessageResponder.gotMessageArrived("You are back!"));
+        assertTrue(client.gotPrivateMessage(me, "You are back!"));
     }
 
     public void test09ShouldNotBeAbleToSendPrivateMessageToUserThatIsAway() {
         solo.sleep(500);
-        messages.sendAwayMessage("Going away now");
+        client.goAway("Going away now");
         solo.sleep(500);
 
         RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test (away: Going away now)");
@@ -309,9 +303,9 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         solo.sleep(500);
 
         assertTrue(solo.searchText("You can not send a private chat message to a user that is away"));
-        assertFalse(privateMessageResponder.gotAnyMessage());
+        assertFalse(client.gotAnyPrivateMessages());
 
-        messages.sendBackMessage();
+        client.comeBack();
         solo.sleep(500);
     }
 
@@ -328,7 +322,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         solo.sleep(500);
 
         assertTrue(solo.searchText("You can not send a private chat message to a user that is offline"));
-        assertFalse(privateMessageResponder.gotAnyMessage());
+        assertFalse(client.gotAnyPrivateMessages());
     }
 
     public void test99Quit() {

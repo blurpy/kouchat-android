@@ -26,6 +26,7 @@ import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
 import net.usikkert.kouchat.util.Tools;
 
@@ -154,9 +155,45 @@ public class TestClient {
         return privchat.gotPrivateMessage(localUser, message);
     }
 
+    public boolean gotAnyPrivateMessages() {
+        final UserList userList = controller.getUserList();
+
+        for (int i = 0; i < userList.size(); i++) {
+            final User user = userList.get(i);
+            final TestClientPrivateChatWindow privchat = (TestClientPrivateChatWindow) user.getPrivchat();
+
+            if (privchat != null && privchat.gotAnyPrivateMessages()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void resetPrivateMessages() {
+        final UserList userList = controller.getUserList();
+
+        for (int i = 0; i < userList.size(); i++) {
+            final User user = userList.get(i);
+            final TestClientPrivateChatWindow privchat = (TestClientPrivateChatWindow) user.getPrivchat();
+
+            if (privchat != null) {
+                privchat.resetPrivateMessages();
+            }
+        }
+    }
+
     public void goAway(final String awayMessage) {
         try {
             controller.changeAwayStatus(me.getCode(), true, awayMessage);
+        } catch (final CommandException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void comeBack() {
+        try {
+            controller.changeAwayStatus(me.getCode(), false, "");
         } catch (final CommandException e) {
             throw new RuntimeException(e);
         }

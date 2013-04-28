@@ -73,4 +73,12 @@ public class TestClientMessageReceiver {
 
         return false;
     }
+
+    public boolean gotAnyMessages() {
+        return !receivedMessages.isEmpty();
+    }
+
+    public void resetMessages() {
+        receivedMessages.clear();
+    }
 }

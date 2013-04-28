@@ -93,4 +93,12 @@ public class TestClientPrivateChatWindow implements PrivateChatWindow {
     public boolean gotPrivateMessage(final User theUser, final String message) {
         return messageReceiver.gotMessage(theUser.getNick(), message);
     }
+
+    public boolean gotAnyPrivateMessages() {
+        return messageReceiver.gotAnyMessages();
+    }
+
+    public void resetPrivateMessages() {
+        messageReceiver.resetMessages();
+    }
 }
