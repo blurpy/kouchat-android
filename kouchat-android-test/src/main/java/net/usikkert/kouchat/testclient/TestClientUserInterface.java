@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.testclient;
 
+import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
@@ -39,9 +40,11 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
 
     private final MessageController messageController;
     private final TestClientMessageReceiver messageReceiver;
+    private final Settings settings;
 
     public TestClientUserInterface(final Settings settings) {
-        messageController = new MessageController(this, this, settings);
+        this.settings = settings;
+        messageController = new MessageController(this, this, this.settings);
         messageReceiver = new TestClientMessageReceiver();
     }
 
@@ -97,7 +100,13 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
 
     @Override
     public void createPrivChat(final User user) {
+        if (user.getPrivchat() == null) {
+            user.setPrivchat(new TestClientPrivateChatWindow(user));
+        }
 
+        if (user.getPrivateChatLogger() == null) {
+            user.setPrivateChatLogger(new ChatLogger(user.getNick(), settings));
+        }
     }
 
     @Override

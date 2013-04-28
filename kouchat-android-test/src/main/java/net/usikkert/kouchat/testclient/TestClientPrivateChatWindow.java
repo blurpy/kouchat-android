@@ -23,42 +23,74 @@
 package net.usikkert.kouchat.testclient;
 
 import net.usikkert.kouchat.misc.User;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import net.usikkert.kouchat.ui.PrivateChatWindow;
 
 /**
- * A very basic test of {@link TestClient}.
+ * Representation of a private chat window in the test client.
  *
  * @author Christian Ihle
  */
-public class TestClientTest {
+public class TestClientPrivateChatWindow implements PrivateChatWindow {
 
-    private TestClient testClient;
+    private final User user;
+    private final TestClientMessageReceiver messageReceiver;
 
-    @Before
-    public void setUp() {
-        testClient = new TestClient();
-        testClient.logon();
+    public TestClientPrivateChatWindow(final User user) {
+        this.user = user;
+        messageReceiver = new TestClientMessageReceiver();
     }
 
-    @Test
-    public void testClientShouldNotThrowExceptionsOnMainChatMessages() {
-        testClient.sendChatMessage("Hello");
+    @Override
+    public void appendToPrivateChat(final String message, final int color) {
+        messageReceiver.addMessage(message);
     }
 
-    @Test
-    public void testClientShouldNotThrowExceptionsOnPrivateMessages() {
-        final User user = new User("Cookie", 23);
-        user.setPrivateChatPort(12345);
-        user.setIpAddress("localhost");
-
-        testClient.sendPrivateChatMessage("Hey there", user);
+    @Override
+    public User getUser() {
+        return user;
     }
 
-    @After
-    public void tearDown() {
-        testClient.logoff();
+    @Override
+    public String getChatText() {
+        return null;
+    }
+
+    @Override
+    public void clearChatText() {
+
+    }
+
+    @Override
+    public void setVisible(final boolean visible) {
+
+    }
+
+    @Override
+    public boolean isVisible() {
+        return false;
+    }
+
+    @Override
+    public void setAway(final boolean away) {
+
+    }
+
+    @Override
+    public void setLoggedOff() {
+
+    }
+
+    @Override
+    public void updateUserInformation() {
+
+    }
+
+    @Override
+    public boolean isFocused() {
+        return false;
+    }
+
+    public boolean gotPrivateMessage(final User theUser, final String message) {
+        return messageReceiver.gotMessage(theUser.getNick(), message);
     }
 }

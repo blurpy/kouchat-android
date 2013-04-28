@@ -125,6 +125,20 @@ public class TestClient {
         return ui.gotMessage(user, message);
     }
 
+    /**
+     * Checks if the specified private message has arrived from the specified user in the private chat.
+     *
+     * @param user The user who sent the private message.
+     * @param message The private message the user sent.
+     * @return If the private message has arrived.
+     */
+    public boolean gotPrivateMessage(final User user, final String message) {
+        final User localUser = controller.getUser(user.getCode()); // Because user might be from another context
+        final TestClientPrivateChatWindow privchat = (TestClientPrivateChatWindow) localUser.getPrivchat();
+
+        return privchat.gotPrivateMessage(localUser, message);
+    }
+
     private void waitForConnection() {
         Tools.sleep(500);
 

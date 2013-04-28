@@ -25,8 +25,7 @@ package net.usikkert.kouchat.android;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.net.PrivateMessageResponderMock;
-import net.usikkert.kouchat.util.TestClient;
+import net.usikkert.kouchat.testclient.TestClient;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -40,7 +39,6 @@ import android.test.ActivityInstrumentationTestCase2;
 public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private static TestClient client;
-    private static PrivateMessageResponderMock privateMessageResponder;
 
     private Solo solo;
     private User me;
@@ -61,11 +59,8 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         // Making sure the test client only logs on once during all the tests
         if (client == null) {
             client = new TestClient();
-            privateMessageResponder = client.getPrivateMessageResponderMock();
             client.logon();
         }
-
-        privateMessageResponder.resetMessages();
     }
 
     public void test01OwnMessageIsShownInChat() {
@@ -83,7 +78,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         RobotiumTestUtils.writeLine(solo, "This is the second message");
         solo.sleep(500);
 
-        assertTrue(privateMessageResponder.gotMessageArrived("This is the second message"));
+        assertTrue(client.gotPrivateMessage(me, "This is the second message"));
     }
 
     public void test03OtherClientMessageIsShownInChat() {
