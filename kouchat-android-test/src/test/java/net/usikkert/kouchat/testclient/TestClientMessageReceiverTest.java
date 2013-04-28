@@ -23,37 +23,48 @@
 package net.usikkert.kouchat.testclient;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import net.usikkert.kouchat.misc.Settings;
-import net.usikkert.kouchat.misc.User;
 
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test of {@link TestClientUserInterface}.
+ * Test of {@link TestClientMessageReceiver}.
  *
  * @author Christian Ihle
  */
-public class TestClientUserInterfaceTest {
+public class TestClientMessageReceiverTest {
 
-    private TestClientUserInterface ui;
+    private TestClientMessageReceiver messageReceiver;
 
     @Before
     public void setUp() {
-        ui = new TestClientUserInterface(mock(Settings.class));
+        messageReceiver = new TestClientMessageReceiver();
     }
 
     @Test
     public void gotMessageShouldFindTheMessageWithTheExactSameNickNameAndMessage() {
-        ui.appendToChat("[14:29:21] <Christian>: hello there", 1234);
+        messageReceiver.addMessage("[14:29:21] <Christian>: hello there");
 
-        final User christian = new User("Christian", 123);
-        final User christian1 = new User("Christian1", 123);
+        assertTrue(messageReceiver.gotMessage("Christian", "hello there"));
+        assertFalse(messageReceiver.gotMessage("Christian1", "hello there"));
+        assertFalse(messageReceiver.gotMessage("Christian", "hello there1"));
+    }
 
-        assertTrue(ui.gotMessage(christian, "hello there"));
-        assertFalse(ui.gotMessage(christian1, "hello there"));
-        assertFalse(ui.gotMessage(christian, "hello there1"));
+    @Test
+    public void gotAnyMessagesShouldOnlyBeTrueWhenAMessageExist() {
+        assertFalse(messageReceiver.gotAnyMessages());
+
+        messageReceiver.addMessage("something");
+
+        assertTrue(messageReceiver.gotAnyMessages());
+    }
+
+    @Test
+    public void resetMessagesShouldRemoveAllMessages() {
+        messageReceiver.addMessage("something");
+        assertTrue(messageReceiver.gotAnyMessages());
+
+        messageReceiver.resetMessages();
+        assertFalse(messageReceiver.gotAnyMessages());
     }
 }
