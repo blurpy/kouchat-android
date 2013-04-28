@@ -135,11 +135,11 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
      *
      * <p>Only the actual nick name and the actual message is checked. The rest is ignored.</p>
      *
-     * @param nickName The nick name of the user who sent the message.
+     * @param user The user who sent the message.
      * @param message The message the user sent.
      * @return If the message has arrived.
      */
-    public boolean gotMessage(final String nickName, final String message) {
+    public boolean gotMessage(final User user, final String message) {
         for (final String receivedMessage : receivedMessages) {
             final Matcher matcher = messagePattern.matcher(receivedMessage);
 
@@ -147,7 +147,7 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
                 final String nickNameMatch = matcher.group(1);
                 final String messageMatch = matcher.group(2);
 
-                if (nickNameMatch.equals(nickName) && messageMatch.equals(message)) {
+                if (nickNameMatch.equals(user.getNick()) && messageMatch.equals(message)) {
                     return true;
                 }
             }

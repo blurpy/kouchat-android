@@ -117,12 +117,12 @@ public class TestClient {
     /**
      * Checks if the specified message has arrived from the specified user in the main chat.
      *
-     * @param nickName The nick name of the user who sent the message.
+     * @param user The user who sent the message.
      * @param message The message the user sent.
      * @return If the message has arrived.
      */
-    public boolean gotMessage(final String nickName, final String message) {
-        return ui.gotMessage(nickName, message);
+    public boolean gotMessage(final User user, final String message) {
+        return ui.gotMessage(user, message);
     }
 
     private void waitForConnection() {

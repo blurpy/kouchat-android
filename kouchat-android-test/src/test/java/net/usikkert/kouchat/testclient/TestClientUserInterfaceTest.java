@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.User;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,8 +49,11 @@ public class TestClientUserInterfaceTest {
     public void gotMessageShouldFindTheMessageWithTheExactSameNickNameAndMessage() {
         ui.appendToChat("[14:29:21] <Christian>: hello there", 1234);
 
-        assertTrue(ui.gotMessage("Christian", "hello there"));
-        assertFalse(ui.gotMessage("Christian1", "hello there"));
-        assertFalse(ui.gotMessage("Christian", "hello there1"));
+        final User christian = new User("Christian", 123);
+        final User christian1 = new User("Christian1", 123);
+
+        assertTrue(ui.gotMessage(christian, "hello there"));
+        assertFalse(ui.gotMessage(christian1, "hello there"));
+        assertFalse(ui.gotMessage(christian, "hello there1"));
     }
 }

@@ -69,7 +69,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         RobotiumTestUtils.writeLine(solo, "This is the second message");
         solo.sleep(500);
 
-        assertTrue(client.gotMessage(me.getNick(), "This is the second message"));
+        assertTrue(client.gotMessage(me, "This is the second message"));
     }
 
     public void test03OtherClientMessageIsShownInChat() {
