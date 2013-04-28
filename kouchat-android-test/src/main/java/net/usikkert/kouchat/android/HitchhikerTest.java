@@ -27,10 +27,8 @@ import java.util.Calendar;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.CommandException;
-import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.net.Messages;
-import net.usikkert.kouchat.util.TestClient;
+import net.usikkert.kouchat.testclient.TestClient;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -45,14 +43,9 @@ import android.test.ActivityInstrumentationTestCase2;
  */
 public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
-    private static TestClient arthurClient;
-    private static Messages arthur;
-
-    private static TestClient fordClient;
-    private static Messages ford;
-
-    private static TestClient trillianClient;
-    private static Messages trillian;
+    private static TestClient arthur;
+    private static TestClient ford;
+    private static TestClient trillian;
 
     private static String originalNickName;
 
@@ -66,17 +59,16 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
     @Override
     public void setUp() {
         // Making sure the test clients only logs on once during all the tests
-        if (arthurClient == null) {
-            arthurClient = new TestClient("Arthur", 12345671, -6750208);
-            arthur = arthurClient.logon();
+        if (arthur == null) {
+            arthur = new TestClient("Arthur", 12345671, -6750208);
+            arthur.logon();
 
-            fordClient = new TestClient("Ford", 12345672, -10066432);
-            ford = fordClient.logon();
+            ford = new TestClient("Ford", 12345672, -10066432);
+            ford.setInitialTopic("DON'T PANIC", getDateInPast());
+            ford.logon();
 
-            trillianClient = new TestClient("Trillian", 12345673);
-            trillian = trillianClient.logon();
-
-            arthur.sendTopicRequestedMessage(new Topic("DON'T PANIC", "Ford", getDateInPast()));
+            trillian = new TestClient("Trillian", 12345673);
+            trillian.logon();
         }
 
         final MainChatController activity = getActivity();
@@ -124,19 +116,19 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         ford.sendChatMessage("Ask a glass of water.");
 
         solo.sleep(8000);
-        trillian.sendAwayMessage("It won't affect me, I'm already a woman.");
+        trillian.goAway("It won't affect me, I'm already a woman.");
 
         solo.sleep(6000);
         RobotiumTestUtils.writeLine(solo, "interesting!");
 
         solo.sleep(1000);
-        arthur.sendPrivateMessage("Show me the envelope!", me);
+        arthur.sendPrivateChatMessage("Show me the envelope!", me);
 
         // For taking screenshot manually. Robotium screenshots don't include status bars.
         solo.sleep(10000);
 
-        arthurClient.logoff();
-        trillianClient.logoff();
+        arthur.logoff();
+        trillian.logoff();
     }
 
     /**
@@ -159,18 +151,18 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         RobotiumTestUtils.writeLine(solo, "Ford?");
 
         solo.sleep(9000);
-        fordClient.sendPrivateChatMessage("Yeah?", me);
+        ford.sendPrivateChatMessage("Yeah?", me);
 
         solo.sleep(12000);
         RobotiumTestUtils.writeLine(solo, "I think I'm a sofa...");
 
         solo.sleep(13000);
-        fordClient.sendPrivateChatMessage("I know how you feel...", me);
+        ford.sendPrivateChatMessage("I know how you feel...", me);
 
         // For taking screenshot manually.
         solo.sleep(10000);
 
-        fordClient.logoff();
+        ford.logoff();
     }
 
     public void test04RestoreNickNameAndQuit() {

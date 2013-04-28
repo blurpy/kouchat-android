@@ -38,6 +38,7 @@ public class TestClient {
 
     private final Controller controller;
     private final TestClientUserInterface ui;
+    private final User me;
 
     public TestClient() {
         this("Test", 12345678, 0);
@@ -54,7 +55,7 @@ public class TestClient {
             settings.setOwnColor(ownColor);
         }
 
-        final User me = settings.getMe();
+        me = settings.getMe();
         me.setNick(nickName);
         TestUtils.setFieldValue(me, "code", userCode);
 
@@ -85,6 +86,20 @@ public class TestClient {
         } catch (final CommandException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * This is a hack to set the initial topic of the chat.
+     *
+     * @param topic The topic to set.
+     * @param date The date the topic was set, in milliseconds.
+     */
+    public void setInitialTopic(final String topic, final long date) {
+        if (controller.isLoggedOn()) {
+            throw new RuntimeException("Can't set initial topic when already logged on");
+        }
+
+        controller.getTopic().changeTopic(topic, me.getNick(), date);
     }
 
     /**
@@ -137,6 +152,14 @@ public class TestClient {
         final TestClientPrivateChatWindow privchat = (TestClientPrivateChatWindow) localUser.getPrivchat();
 
         return privchat.gotPrivateMessage(localUser, message);
+    }
+
+    public void goAway(final String awayMessage) {
+        try {
+            controller.changeAwayStatus(me.getCode(), true, awayMessage);
+        } catch (final CommandException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void waitForConnection() {
