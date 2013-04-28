@@ -199,6 +199,22 @@ public class TestClient {
         }
     }
 
+    public void changeNickName(final String newNickName) {
+        try {
+            controller.changeMyNick(newNickName);
+        } catch (CommandException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void startWriting() {
+        controller.updateMeWriting(true);
+    }
+
+    public void stopWriting() {
+        controller.updateMeWriting(false);
+    }
+
     private void waitForConnection() {
         Tools.sleep(500);
 

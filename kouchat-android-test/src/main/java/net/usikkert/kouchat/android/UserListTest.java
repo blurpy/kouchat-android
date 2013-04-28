@@ -25,8 +25,7 @@ package net.usikkert.kouchat.android;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.net.Messages;
-import net.usikkert.kouchat.util.TestClient;
+import net.usikkert.kouchat.testclient.TestClient;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -85,13 +84,13 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void test03UserListShouldBeSorted() {
-        final Messages messages = client.logon();
+        client.logon();
         solo.sleep(500);
 
         assertEquals("Kou", getUserNameAtPosition(0));
         assertEquals("Test", getUserNameAtPosition(1));
 
-        messages.sendNickMessage("Ape");
+        client.changeNickName("Ape");
         solo.sleep(500);
 
         assertEquals("Ape", getUserNameAtPosition(0));
@@ -109,14 +108,14 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void test05MeShouldBeBold() {
-        final Messages messages = client.logon();
+        client.logon();
         solo.sleep(500);
 
         // By default
         assertTrue(userIsBold("Kou", 0));
         assertFalse(userIsBold("Test", 1));
 
-        messages.sendNickMessage("Ape");
+        client.changeNickName("Ape");
         solo.sleep(500);
 
         // After sorting of the user list
@@ -138,13 +137,13 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void test06ShouldShowStarOnOtherUserThatIsWriting() {
-        final Messages messages = client.logon();
+        client.logon();
         solo.sleep(500);
 
         assertFalse(userIsWriting("Kou", 0));
         assertFalse(userIsWriting("Test", 1));
 
-        messages.sendWritingMessage();
+        client.startWriting();
         solo.sleep(500);
 
         assertFalse(userIsWriting("Kou", 0));
@@ -158,7 +157,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(500);
 
-        messages.sendStoppedWritingMessage();
+        client.stopWriting();
         solo.sleep(500);
 
         assertFalse(userIsWriting("Kou", 0));
