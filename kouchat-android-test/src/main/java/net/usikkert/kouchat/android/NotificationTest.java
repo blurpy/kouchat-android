@@ -26,7 +26,7 @@ import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.util.TestClient;
+import net.usikkert.kouchat.testclient.TestClient;
 import net.usikkert.kouchat.util.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
