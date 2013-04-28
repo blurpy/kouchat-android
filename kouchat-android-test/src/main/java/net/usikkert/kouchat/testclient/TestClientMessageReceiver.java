@@ -47,7 +47,7 @@ public class TestClientMessageReceiver {
     }
 
     /**
-     * Checks if the specified message has arrived from the specified user in the main chat.
+     * Checks if the specified message has arrived from the specified user.
      *
      * <p>Expects messages in this format: <code>[14:29:21] &lt;Christian&gt;: hello there</code>.</p>
      *

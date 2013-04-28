@@ -44,8 +44,8 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
 
     public TestClientUserInterface(final Settings settings) {
         this.settings = settings;
-        messageController = new MessageController(this, this, this.settings);
-        messageReceiver = new TestClientMessageReceiver();
+        this.messageController = new MessageController(this, this, this.settings);
+        this.messageReceiver = new TestClientMessageReceiver();
     }
 
     @Override

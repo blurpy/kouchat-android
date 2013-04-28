@@ -37,7 +37,7 @@ public class TestClientPrivateChatWindow implements PrivateChatWindow {
 
     public TestClientPrivateChatWindow(final User user) {
         this.user = user;
-        messageReceiver = new TestClientMessageReceiver();
+        this.messageReceiver = new TestClientMessageReceiver();
     }
 
     @Override
