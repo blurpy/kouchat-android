@@ -22,13 +22,18 @@
 
 package net.usikkert.kouchat.testclient;
 
+import java.io.File;
+
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
+import net.usikkert.kouchat.net.FileReceiver;
+import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.util.TestUtils;
 import net.usikkert.kouchat.util.Tools;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * A class that can be used for simulating a KouChat client in tests.
@@ -213,6 +218,25 @@ public class TestClient {
 
     public void stopWriting() {
         controller.updateMeWriting(false);
+    }
+
+    /**
+     * Accepts a file transfer of a file with the given name from the given user.
+     *
+     * @param user The user who is trying to send a file.
+     * @param fileName The name of the file that the user is trying to send.
+     * @param newFile The full path and file name to use when saving the file.
+     */
+    public void acceptFile(final User user, final String fileName, final File newFile) {
+        final User localUser = controller.getUser(user.getCode()); // Because user might be from another context
+
+        final TransferList transferList = controller.getTransferList();
+        final FileReceiver fileReceiver = transferList.getFileReceiver(localUser, fileName);
+        Validate.notNull(fileReceiver,
+                String.format("Unable to find the file with the name '%s' from the user '%s'", fileName, user));
+
+        fileReceiver.setFile(newFile);
+        fileReceiver.accept();
     }
 
     private void waitForConnection() {

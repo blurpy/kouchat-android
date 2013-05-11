@@ -23,11 +23,16 @@
 package net.usikkert.kouchat.android;
 
 import java.io.File;
+import java.io.IOException;
 
 import net.usikkert.kouchat.android.controller.SendFileController;
+import net.usikkert.kouchat.android.util.AndroidFile;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
+import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestClient;
 
+import com.google.common.io.ByteSource;
+import com.google.common.io.Files;
 import com.jayway.android.robotium.solo.Solo;
 
 import android.app.Activity;
@@ -35,6 +40,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.test.ActivityInstrumentationTestCase2;
 
@@ -45,7 +51,7 @@ import android.test.ActivityInstrumentationTestCase2;
  */
 public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileController> {
 
-    private static Uri uri;
+    private static AndroidFile image;
 
     private Solo solo;
 
@@ -53,15 +59,15 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         super(SendFileController.class);
     }
 
-    public void test01NoFile() {
+    public void test01NoSelectedFile() {
         final SendFileController activity = getActivity();
         solo = new Solo(getInstrumentation(), activity);
         solo.sleep(2000);
 
-        uri = getUriForAnImage(activity);
+        image = getRandomImage(activity);
     }
 
-    public void test02FileNotFound() {
+    public void test02SelectedFileNotFound() {
         final Intent intent = new Intent();
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File("afile.txt")));
         setActivityIntent(intent);
@@ -70,13 +76,13 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         solo.sleep(2000);
     }
 
-    public void test03NoUsersAndSelectUser() {
+    public void test03UsersLoggingOnAndOff() {
         final TestClient albert = new TestClient("Albert", 1234);
         final TestClient tina = new TestClient("Tina", 1235);
         final TestClient xen = new TestClient("Xen", 1236);
 
         final Intent intent = new Intent();
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.putExtra(Intent.EXTRA_STREAM, image.getUri());
         setActivityIntent(intent);
 
         solo = new Solo(getInstrumentation(), getActivity());
@@ -99,11 +105,46 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
 
         albert.logoff();
         solo.sleep(1000);
+
+        // TODO assert users
     }
 
-    // TODO assert users
-    // TODO test real file transfer
-    // getInstrumentation().getTargetContext().getResources().getAssets().open(testFile);
+    public void test04FileTransferAccepted() throws IOException {
+        final TestClient albert = new TestClient("Albert", 1234);
+
+        final Intent intent = new Intent();
+        intent.putExtra(Intent.EXTRA_STREAM, image.getUri());
+        setActivityIntent(intent);
+
+        final SendFileController activity = getActivity();
+        solo = new Solo(getInstrumentation(), activity);
+        solo.sleep(1000);
+
+        albert.logon();
+        solo.sleep(1000);
+
+        solo.clickInList(1); // Click on Albert
+        solo.sleep(1000);
+
+        RobotiumTestUtils.launchMainChat(this);
+        solo.sleep(1000);
+
+        final User me = RobotiumTestUtils.getMe(activity);
+        final File newFile = createNewFile();
+        assertFalse("Should not exist: " + newFile, newFile.exists());
+
+        albert.acceptFile(me, image.getName(), newFile);
+        solo.sleep(2000);
+
+        RobotiumTestUtils.searchText(solo, image.getName() + "successfully sent to Albert");
+        assertTrue("Should exist: " + newFile, newFile.exists());
+        final ByteSource originalFile = Files.asByteSource(image.getFile());
+        final ByteSource savedFile = Files.asByteSource(newFile);
+        assertTrue(originalFile.contentEquals(savedFile));
+
+        solo.sleep(2000);
+        albert.logoff();
+    }
 
     public void test99Quit() {
         solo = new Solo(getInstrumentation(), getActivity());
@@ -117,17 +158,20 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         solo.finishOpenedActivities();
     }
 
-    private Uri getUriForAnImage(final Activity activity) {
+    private AndroidFile getRandomImage(final Activity activity) {
         final ContentResolver contentResolver = activity.getContentResolver();
-        final Cursor cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                null, null, null, "_id asc limit 1");
+        final Cursor cursor = contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, "_id asc limit 1");
 
         cursor.moveToFirst();
 
-        final String uris = MediaStore.Images.Media.EXTERNAL_CONTENT_URI +
-                "/" +
-                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
+        return new AndroidFile(cursor);
+    }
 
-        return Uri.parse(uris);
+    private File createNewFile() throws IOException {
+        final File externalStorageDirectory = Environment.getExternalStorageDirectory();
+        final String fileName = "kouchat-" + System.currentTimeMillis() + image.getExtension();
+
+        return new File(externalStorageDirectory, fileName);
     }
 }

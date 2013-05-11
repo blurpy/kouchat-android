@@ -30,6 +30,7 @@ import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.ui.ChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
+import net.usikkert.kouchat.util.Tools;
 
 /**
  * User interface for the test client.
@@ -50,17 +51,20 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
 
     @Override
     public boolean askFileSave(final String user, final String fileName, final String size) {
-        return false;
+        return true;
     }
 
     @Override
     public void showFileSave(final FileReceiver fileReceiver) {
-
+        // Waits until the client makes a decision to return. If not, the file transfer will abort automatically.
+        while (!fileReceiver.isAccepted() && !fileReceiver.isRejected() && !fileReceiver.isCanceled()) {
+            Tools.sleep(500);
+        }
     }
 
     @Override
     public void showTransfer(final FileReceiver fileRes) {
-
+        new TestClientFileTransferListener(fileRes);
     }
 
     @Override
