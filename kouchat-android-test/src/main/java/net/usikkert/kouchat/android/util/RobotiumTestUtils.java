@@ -278,14 +278,14 @@ public final class RobotiumTestUtils {
     }
 
     /**
-     * Extracts "me", using the main chat controller.
+     * Extracts "me" from the android user interface in an activity.
      *
-     * @param mainChatController The main chat controller.
+     * @param activity An activity with an android user interface object.
      * @return The application user.
      */
-    public static User getMe(final MainChatController mainChatController) {
+    public static User getMe(final Activity activity) {
         final AndroidUserInterface androidUserInterface =
-                TestUtils.getFieldValue(mainChatController, AndroidUserInterface.class, "androidUserInterface");
+                TestUtils.getFieldValue(activity, AndroidUserInterface.class, "androidUserInterface");
 
         return TestUtils.getFieldValue(androidUserInterface, User.class, "me");
     }
