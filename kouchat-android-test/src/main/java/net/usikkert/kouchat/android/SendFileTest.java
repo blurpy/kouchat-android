@@ -139,9 +139,30 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         final ByteSource originalFile = Files.asByteSource(image.getFile());
         final ByteSource savedFile = Files.asByteSource(newFile);
         assertTrue(originalFile.contentEquals(savedFile));
+    }
 
+    public void test05FileTransferRejected() {
+        setActivityIntent(image.getUri());
+
+        final SendFileController activity = getActivity();
+        solo = new Solo(getInstrumentation(), activity);
+        solo.sleep(1000);
+
+        tina.logon();
+        solo.sleep(1000);
+
+        solo.clickInList(1); // Click on Tina
+        solo.sleep(1000);
+
+        RobotiumTestUtils.launchMainChat(this);
+        solo.sleep(1000);
+
+        final User me = RobotiumTestUtils.getMe(activity);
+
+        tina.rejectFile(me, image.getName());
         solo.sleep(2000);
-        albert.logoff();
+
+        assertTrue(RobotiumTestUtils.searchText(solo, "Tina aborted reception of " + image.getName()));
     }
 
     public void test99Quit() {
@@ -176,7 +197,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         return new AndroidFile(cursor);
     }
 
-    private File createNewFile() throws IOException {
+    private File createNewFile() {
         final File externalStorageDirectory = Environment.getExternalStorageDirectory();
         final String fileName = "kouchat-" + System.currentTimeMillis() + image.getExtension();
 

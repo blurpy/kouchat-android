@@ -44,6 +44,8 @@ public class TestClient {
 
     private final Controller controller;
     private final TestClientUserInterface ui;
+    private final TransferList transferList;
+
     private final User me;
 
     public TestClient() {
@@ -67,6 +69,7 @@ public class TestClient {
 
         ui = new TestClientUserInterface(settings);
         controller = new Controller(ui, settings);
+        transferList = controller.getTransferList();
     }
 
     public void logon() {
@@ -228,15 +231,32 @@ public class TestClient {
      * @param newFile The full path and file name to use when saving the file.
      */
     public void acceptFile(final User user, final String fileName, final File newFile) {
+        final FileReceiver fileReceiver = findFileReceiver(user, fileName);
+
+        fileReceiver.setFile(newFile);
+        fileReceiver.accept();
+    }
+
+    /**
+     * Rejects  a file transfer of a file with the given name from the given user.
+     *
+     * @param user The user who is trying to send a file.
+     * @param fileName The name of the file that the user is trying to send.
+     */
+    public void rejectFile(final User user, final String fileName) {
+        final FileReceiver fileReceiver = findFileReceiver(user, fileName);
+
+        fileReceiver.reject();
+    }
+
+    private FileReceiver findFileReceiver(final User user, final String fileName) {
         final User localUser = controller.getUser(user.getCode()); // Because user might be from another context
 
-        final TransferList transferList = controller.getTransferList();
         final FileReceiver fileReceiver = transferList.getFileReceiver(localUser, fileName);
         Validate.notNull(fileReceiver,
                 String.format("Unable to find the file with the name '%s' from the user '%s'", fileName, user));
 
-        fileReceiver.setFile(newFile);
-        fileReceiver.accept();
+        return fileReceiver;
     }
 
     private void waitForConnection() {
