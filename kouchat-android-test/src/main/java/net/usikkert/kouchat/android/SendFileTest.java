@@ -75,6 +75,8 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         solo.sleep(2000);
 
         image = getRandomImage(activity);
+
+        assertTrue(RobotiumTestUtils.searchText(solo, "Unable to locate the file to send."));
     }
 
     public void test02SelectedFileNotFound() {
@@ -82,6 +84,9 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
 
         solo = new Solo(getInstrumentation(), getActivity());
         solo.sleep(2000);
+
+        assertTrue(RobotiumTestUtils.searchText(solo, "Unable to locate the file to send."));
+        assertTrue(RobotiumTestUtils.searchText(solo, "afile.txt"));
     }
 
     public void test03UsersLoggingOnAndOff() {
@@ -90,25 +95,40 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         solo = new Solo(getInstrumentation(), getActivity());
         solo.sleep(1000);
 
+        assertTrue(RobotiumTestUtils.searchText(solo, "File name: " + image.getName()));
+        assertTrue(RobotiumTestUtils.searchText(solo, "File size:"));
+
+        assertUsers();
+
         albert.logon();
         solo.sleep(1000);
+
+        assertUsers("Albert");
 
         xen.logon();
         solo.sleep(1000);
 
+        assertUsers("Albert", "Xen");
+
         tina.logon();
         solo.sleep(2000);
+
+        assertUsers("Albert", "Tina", "Xen");
 
         tina.logoff();
         solo.sleep(1000);
 
+        assertUsers("Albert", "Xen");
+
         xen.logoff();
         solo.sleep(1000);
+
+        assertUsers("Albert");
 
         albert.logoff();
         solo.sleep(1000);
 
-        // TODO assert users
+        assertUsers();
     }
 
     public void test04FileTransferAccepted() throws IOException {
@@ -202,5 +222,24 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         final String fileName = "kouchat-" + System.currentTimeMillis() + image.getExtension();
 
         return new File(externalStorageDirectory, fileName);
+    }
+
+    private void assertUsers(final String... users) {
+        assertEquals(users.length, solo.getCurrentListViews().get(0).getCount());
+
+        if (users.length == 0) {
+            assertTrue(RobotiumTestUtils.searchText(solo, "-- No connected users."));
+            assertFalse(RobotiumTestUtils.searchText(solo, "Please select the user to send the file to."));
+        }
+
+        else {
+            assertFalse(RobotiumTestUtils.searchText(solo, "-- No connected users."));
+            assertTrue(RobotiumTestUtils.searchText(solo, "Please select the user to send the file to."));
+
+            for (int i = 0; i < users.length; i++) {
+                final String user = users[i];
+                assertEquals(user, solo.getCurrentListViews().get(0).getItemAtPosition(i).toString());
+            }
+        }
     }
 }
