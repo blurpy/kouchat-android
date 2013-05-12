@@ -55,8 +55,18 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
 
     private Solo solo;
 
+    private TestClient albert;
+    private TestClient tina;
+    private TestClient xen;
+
     public SendFileTest() {
         super(SendFileController.class);
+    }
+
+    public void setUp() {
+        albert = new TestClient("Albert", 1234);
+        tina = new TestClient("Tina", 1235);
+        xen = new TestClient("Xen", 1236);
     }
 
     public void test01NoSelectedFile() {
@@ -68,22 +78,14 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
     }
 
     public void test02SelectedFileNotFound() {
-        final Intent intent = new Intent();
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File("afile.txt")));
-        setActivityIntent(intent);
+        setActivityIntent(Uri.fromFile(new File("afile.txt")));
 
         solo = new Solo(getInstrumentation(), getActivity());
         solo.sleep(2000);
     }
 
     public void test03UsersLoggingOnAndOff() {
-        final TestClient albert = new TestClient("Albert", 1234);
-        final TestClient tina = new TestClient("Tina", 1235);
-        final TestClient xen = new TestClient("Xen", 1236);
-
-        final Intent intent = new Intent();
-        intent.putExtra(Intent.EXTRA_STREAM, image.getUri());
-        setActivityIntent(intent);
+        setActivityIntent(image.getUri());
 
         solo = new Solo(getInstrumentation(), getActivity());
         solo.sleep(1000);
@@ -110,11 +112,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
     }
 
     public void test04FileTransferAccepted() throws IOException {
-        final TestClient albert = new TestClient("Albert", 1234);
-
-        final Intent intent = new Intent();
-        intent.putExtra(Intent.EXTRA_STREAM, image.getUri());
-        setActivityIntent(intent);
+        setActivityIntent(image.getUri());
 
         final SendFileController activity = getActivity();
         solo = new Solo(getInstrumentation(), activity);
@@ -136,7 +134,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         albert.acceptFile(me, image.getName(), newFile);
         solo.sleep(2000);
 
-        RobotiumTestUtils.searchText(solo, image.getName() + "successfully sent to Albert");
+        assertTrue(RobotiumTestUtils.searchText(solo, image.getName() + " successfully sent to Albert"));
         assertTrue("Should exist: " + newFile, newFile.exists());
         final ByteSource originalFile = Files.asByteSource(image.getFile());
         final ByteSource savedFile = Files.asByteSource(newFile);
@@ -155,7 +153,17 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
     }
 
     public void tearDown() {
+        albert.logoff();
+        tina.logoff();
+        xen.logoff();
+
         solo.finishOpenedActivities();
+    }
+
+    private void setActivityIntent(final Uri uri) {
+        final Intent intent = new Intent();
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        setActivityIntent(intent);
     }
 
     private AndroidFile getRandomImage(final Activity activity) {
