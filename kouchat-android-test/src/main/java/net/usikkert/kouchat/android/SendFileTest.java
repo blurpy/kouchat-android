@@ -23,7 +23,9 @@
 package net.usikkert.kouchat.android;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import net.usikkert.kouchat.android.controller.SendFileController;
 import net.usikkert.kouchat.android.util.AndroidFile;
@@ -32,13 +34,17 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestClient;
 
 import com.google.common.io.ByteSource;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Closer;
 import com.google.common.io.Files;
 import com.jayway.android.robotium.solo.Solo;
 
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -46,6 +52,7 @@ import android.test.ActivityInstrumentationTestCase2;
 
 /**
  * Tests send file functionality. Requires at least one image in the gallery.
+ * If the gallery is empty, then the image kouchat-512x512.png will be added.
  *
  * @author Christian Ihle
  */
@@ -74,6 +81,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         solo = new Solo(getInstrumentation(), activity);
         solo.sleep(2000);
 
+        copyImageFromAssetsIfSdCardIsEmpty(activity);
         image = getRandomImage(activity);
 
         assertTrue(RobotiumTestUtils.searchText(solo, "Unable to locate the file to send."));
@@ -207,14 +215,71 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         setActivityIntent(intent);
     }
 
+    private void copyImageFromAssetsIfSdCardIsEmpty(final Activity activity) {
+        final Cursor cursor = getCursor(activity);
+
+        if (cursor.getCount() == 0) {
+            final File externalStorageDirectory = Environment.getExternalStorageDirectory();
+            final File fileToStore = new File(externalStorageDirectory, "kouchat-512x512.png");
+
+            copyFileToSdCard(fileToStore);
+            addFileToDatabase(activity, fileToStore);
+        }
+    }
+
     private AndroidFile getRandomImage(final Activity activity) {
-        final ContentResolver contentResolver = activity.getContentResolver();
-        final Cursor cursor = contentResolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, "_id asc limit 1");
+        final Cursor cursor = getCursor(activity);
+
+        if (cursor.getCount() == 0) {
+            throw new RuntimeException("No files in the database");
+        }
 
         cursor.moveToFirst();
 
         return new AndroidFile(cursor);
+    }
+
+    private Cursor getCursor(final Activity activity) {
+        final ContentResolver contentResolver = activity.getContentResolver();
+        return contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, "_id asc limit 1");
+    }
+
+    private void copyFileToSdCard(final File fileToStore) {
+        final Closer closer = Closer.create();
+        final AssetManager assets = getInstrumentation().getContext().getResources().getAssets();
+
+        try {
+            final InputStream inputStream = closer.register(assets.open(fileToStore.getName()));
+            final FileOutputStream outputStream = closer.register(new FileOutputStream(fileToStore));
+
+            ByteStreams.copy(inputStream, outputStream);
+            outputStream.flush();
+            assertTrue("Should exist: " + fileToStore, fileToStore.exists());
+        }
+
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        finally {
+            try {
+                closer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void addFileToDatabase(final Activity activity, final File fileToScan) {
+        MediaScannerConnection.scanFile(
+                activity,
+                new String[] {fileToScan.toString()},
+                null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(final String path, final Uri uri) { }
+                });
+
+        solo.sleep(1000); // To give the scanner time to finish
     }
 
     private File createNewFile() {
