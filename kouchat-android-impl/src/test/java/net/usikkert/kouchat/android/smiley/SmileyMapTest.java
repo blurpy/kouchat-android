@@ -22,25 +22,24 @@
 
 package net.usikkert.kouchat.android.smiley;
 
-import static org.junit.Assert.*;
-
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import java.util.Set;
-
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowDrawable;
 
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test of {@link SmileyMap}.
@@ -141,6 +140,6 @@ public class SmileyMapTest {
     }
 
     private int smileyId(final String code) {
-        return Robolectric.shadowOf(smileyMap.getSmiley(code)).getLoadedFromResourceId();
+        return ((ShadowDrawable) Robolectric.shadowOf_(smileyMap.getSmiley(code))).getLoadedFromResourceId();
     }
 }

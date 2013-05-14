@@ -22,8 +22,8 @@
 
 package net.usikkert.kouchat.android.util;
 
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowPreferenceManager;
+import org.robolectric.Robolectric;
+import org.robolectric.shadows.ShadowPreferenceManager;
 
 import android.content.SharedPreferences;
 

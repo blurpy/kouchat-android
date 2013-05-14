@@ -22,21 +22,21 @@
 
 package net.usikkert.kouchat.android.controller;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.RobolectricTestRunner;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Test of {@link UserListAdapter}.

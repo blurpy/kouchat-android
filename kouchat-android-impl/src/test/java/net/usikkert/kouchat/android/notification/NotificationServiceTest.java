@@ -22,31 +22,34 @@
 
 package net.usikkert.kouchat.android.notification;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
+import android.app.Notification;
+import android.app.NotificationManager;
 import java.util.HashSet;
-
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestUtils;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowIntent;
+import org.robolectric.shadows.ShadowNotification;
+import org.robolectric.shadows.ShadowPendingIntent;
 
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-import com.xtremelabs.robolectric.shadows.ShadowIntent;
-import com.xtremelabs.robolectric.shadows.ShadowNotification;
-import com.xtremelabs.robolectric.shadows.ShadowPendingIntent;
-
-import android.app.Notification;
-import android.app.NotificationManager;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 /**
  * Test of {@link NotificationService}.
@@ -426,12 +429,12 @@ public class NotificationServiceTest {
     }
 
     private ShadowNotification.LatestEventInfo getLatestEventInfo(final Notification notification) {
-        final ShadowNotification shadowNotification = Robolectric.shadowOf(notification);
+        final ShadowNotification shadowNotification = Robolectric.shadowOf_(notification);
         return shadowNotification.getLatestEventInfo();
     }
 
     private ShadowIntent getPendingIntent(final ShadowNotification.LatestEventInfo latestEventInfo) {
-        final ShadowPendingIntent shadowPendingIntent = Robolectric.shadowOf(latestEventInfo.getContentIntent());
-        return Robolectric.shadowOf(shadowPendingIntent.getSavedIntent());
+        final ShadowPendingIntent shadowPendingIntent = Robolectric.shadowOf_(latestEventInfo.getContentIntent());
+        return Robolectric.shadowOf_(shadowPendingIntent.getSavedIntent());
     }
 }
