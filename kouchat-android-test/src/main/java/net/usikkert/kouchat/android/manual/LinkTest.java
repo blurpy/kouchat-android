@@ -88,8 +88,8 @@ public class LinkTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.sleep(500);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
 
-        // The 2.3.3 emulator can't fit the whole url on a single line, so have to use a shorter text to locate
-        RobotiumTestUtils.clickOnText(solo, "googlecode.com");
+        // A phone can't fit the whole url on a single line, so have to use a shorter text to locate
+        RobotiumTestUtils.clickOnText(solo, "googlecode");
         solo.sleep(1000);
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
 
