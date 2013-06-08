@@ -31,6 +31,7 @@ import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.android.util.RobolectricTestUtils;
 import net.usikkert.kouchat.event.FileTransferListener;
+import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.CommandParser;
@@ -717,5 +718,14 @@ public class AndroidUserInterfaceTest {
 
         verify(commandParser).sendFile(testUser, file);
         assertEquals("Cant send the file", ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    public void registerNetworkConnectionListenerShouldUseController() {
+        final NetworkConnectionListener listener = mock(NetworkConnectionListener.class);
+
+        androidUserInterface.registerNetworkConnectionListener(listener);
+
+        verify(controller).registerNetworkConnectionListener(listener);
     }
 }

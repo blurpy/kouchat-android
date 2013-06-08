@@ -28,6 +28,7 @@ import java.util.concurrent.ExecutionException;
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
+import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.CommandParser;
@@ -460,5 +461,9 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         };
 
         sendFileTask.execute((Void) null);
+    }
+
+    public void registerNetworkConnectionListener(final NetworkConnectionListener listener) {
+        controller.registerNetworkConnectionListener(listener);
     }
 }
