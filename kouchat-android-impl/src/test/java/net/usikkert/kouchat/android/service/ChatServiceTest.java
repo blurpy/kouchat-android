@@ -53,6 +53,7 @@ public class ChatServiceTest {
 
     private AndroidUserInterface ui;
     private NotificationService notificationService;
+    private MulticastLockHandler multicastLockHandler;
 
     @Before
     public void setUp() {
@@ -60,6 +61,7 @@ public class ChatServiceTest {
 
         ui = mock(AndroidUserInterface.class);
         notificationService = mock(NotificationService.class);
+        multicastLockHandler = mock(MulticastLockHandler.class);
 
         System.clearProperty(Constants.PROPERTY_CLIENT_UI);
     }
@@ -79,6 +81,16 @@ public class ChatServiceTest {
 
         final User me = getMe();
         assertEquals("Kou", me.getNick());
+    }
+
+    @Test
+    public void onCreateShouldCreateMulticastLockHandler() {
+        final String fieldName = "multicastLockHandler";
+        assertTrue(TestUtils.fieldValueIsNull(chatService, fieldName));
+
+        chatService.onCreate();
+
+        assertFalse(TestUtils.fieldValueIsNull(chatService, fieldName));
     }
 
     @Test
@@ -132,11 +144,22 @@ public class ChatServiceTest {
 
     @Test
     public void onDestroyShouldLogOff() {
+        TestUtils.setFieldValue(chatService, "multicastLockHandler", multicastLockHandler);
         TestUtils.setFieldValue(chatService, "androidUserInterface", ui);
 
         chatService.onDestroy();
 
         verify(ui).logOff();
+    }
+
+    @Test
+    public void onDestroyShouldReleaseMulticastLock() {
+        TestUtils.setFieldValue(chatService, "multicastLockHandler", multicastLockHandler);
+        TestUtils.setFieldValue(chatService, "androidUserInterface", ui);
+
+        chatService.onDestroy();
+
+        verify(multicastLockHandler).release();
     }
 
     private User getMe() {

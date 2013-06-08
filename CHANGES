@@ -6,6 +6,8 @@
   - Added basic support for sending files to other users with the "share/send to" feature in Android apps
     like the Gallery or different file managers.
   - Added wifi as a required feature in the manifest
+  - Added support for HTC One (and probably others), which require extra permissions
+    and a MulticastLock to use multicast.
 
 
 * version 0.8.0 (07.04.2013)

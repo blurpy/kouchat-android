@@ -28,7 +28,9 @@ import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.misc.Settings;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.IBinder;
 
 /**
@@ -43,6 +45,7 @@ public class ChatService extends Service {
 
     private AndroidUserInterface androidUserInterface;
     private NotificationService notificationService;
+    private MulticastLockHandler multicastLockHandler;
 
     @Override
     public void onCreate() {
@@ -51,6 +54,9 @@ public class ChatService extends Service {
         notificationService = new NotificationService(this);
         androidUserInterface = new AndroidUserInterface(this, new Settings(), notificationService);
         androidUserInterface.setNickNameFromSettings();
+
+        final WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        multicastLockHandler = new MulticastLockHandler(wifiManager, androidUserInterface);
 
         super.onCreate();
     }
@@ -74,6 +80,7 @@ public class ChatService extends Service {
     @Override
     public void onDestroy() {
         androidUserInterface.logOff();
+        multicastLockHandler.release();
 
         super.onDestroy();
     }
