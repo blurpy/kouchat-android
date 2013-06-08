@@ -75,7 +75,6 @@
               <value>target/cobertura/cobertura.ser</value>
             </property>
           </systemProperties>
-          <testFailureIgnore>true</testFailureIgnore>
         </configuration>
       </plugin>
       <plugin>
