@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 
+import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.NetworkService;
 import net.usikkert.kouchat.ui.UserInterface;
@@ -199,5 +200,21 @@ public class ControllerTest {
         controller.sendFile(user, file);
 
         verify(messages).sendFile(user, file);
+    }
+
+    @Test
+    public void beforeNetworkCameUpShouldDoNothing() {
+        controller.beforeNetworkCameUp();
+
+        verifyZeroInteractions(networkService, messages);
+    }
+
+    @Test
+    public void registerNetworkConnectionListenerShouldUseNetworkService() {
+        final NetworkConnectionListener listener = mock(NetworkConnectionListener.class);
+
+        controller.registerNetworkConnectionListener(listener);
+
+        verify(networkService).registerNetworkConnectionListener(listener);
     }
 }

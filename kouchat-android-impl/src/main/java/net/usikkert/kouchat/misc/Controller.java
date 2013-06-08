@@ -701,6 +701,11 @@ public class Controller implements NetworkConnectionListener {
         return autoCompleter;
     }
 
+    @Override
+    public void beforeNetworkCameUp() {
+        // Nothing to do here
+    }
+
     /**
      * Makes sure the application reacts when the network is available.
      *
@@ -766,5 +771,9 @@ public class Controller implements NetworkConnectionListener {
      */
     public JMXBeanLoader createJMXBeanLoader() {
         return new JMXBeanLoader(this, networkService.getConnectionWorker(), settings);
+    }
+
+    public void registerNetworkConnectionListener(final NetworkConnectionListener listener) {
+        networkService.registerNetworkConnectionListener(listener);
     }
 }

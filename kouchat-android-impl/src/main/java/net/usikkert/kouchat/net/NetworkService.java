@@ -210,6 +210,11 @@ public class NetworkService implements NetworkConnectionListener {
         messageReceiver.stopReceiver();
     }
 
+    @Override
+    public void beforeNetworkCameUp() {
+        // Nothing to do here
+    }
+
     /**
      * Starts all senders and receivers.
      *

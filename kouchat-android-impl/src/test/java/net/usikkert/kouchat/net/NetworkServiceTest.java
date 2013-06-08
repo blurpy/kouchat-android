@@ -75,6 +75,13 @@ public class NetworkServiceTest {
     }
 
     @Test
+    public void beforeNetworkCameUpShouldDoNothing() {
+        final NetworkService networkService = new NetworkService(settings);
+
+        networkService.beforeNetworkCameUp();
+    }
+
+    @Test
     public void networkCameUpShouldNotFailWhenPrivateChatDisabled() {
         when(settings.isNoPrivateChat()).thenReturn(true);
 

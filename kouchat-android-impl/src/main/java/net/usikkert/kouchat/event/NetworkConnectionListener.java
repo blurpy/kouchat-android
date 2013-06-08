@@ -24,7 +24,7 @@ package net.usikkert.kouchat.event;
 
 /**
  * Implement this interface and register as a listener with
- * {@link NetworkService#registerNetworkConnectionListener(NetworkConnectionListener)}
+ * {@link net.usikkert.kouchat.net.NetworkService#registerNetworkConnectionListener(NetworkConnectionListener)}
  * to get notified of changes in the network connection.
  *
  * @author Christian Ihle
@@ -37,6 +37,12 @@ public interface NetworkConnectionListener {
      * @param silent Don't give any messages to the user about the change.
      */
     void networkWentDown(boolean silent);
+
+    /**
+     * The network came up, and any preparations necessary to make it ready for use needs to happen here.
+     * All listeners get this notification before anyone gets notified with {@link #networkCameUp(boolean)}.
+     */
+    void beforeNetworkCameUp();
 
     /**
      * The connection to the network came up and is ready for use.

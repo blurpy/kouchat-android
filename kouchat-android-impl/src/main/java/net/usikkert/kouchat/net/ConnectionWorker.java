@@ -188,11 +188,22 @@ public class ConnectionWorker implements Runnable {
     }
 
     /**
+     * Notifies all the listeners that they can prepare to be notified that the network is up.
+     */
+    private synchronized void notifyBeforeNetworkUp() {
+        for (final NetworkConnectionListener listener : listeners) {
+            listener.beforeNetworkCameUp();
+        }
+    }
+
+    /**
      * Notifies all the listeners that the network is up.
      *
      * @param silent Don't give any messages to the user about the change.
      */
     private synchronized void notifyNetworkUp(final boolean silent) {
+        notifyBeforeNetworkUp();
+
         networkUp = true;
 
         for (final NetworkConnectionListener listener : listeners) {
@@ -302,7 +313,7 @@ public class ConnectionWorker implements Runnable {
      */
     public NetworkInterface getCurrentNetworkInterface() {
         final NetworkInterface updatedNetworkInterface =
-            NetworkUtils.getUpdatedNetworkInterface(networkInterface);
+                NetworkUtils.getUpdatedNetworkInterface(networkInterface);
 
         if (updatedNetworkInterface != null) {
             return updatedNetworkInterface;
