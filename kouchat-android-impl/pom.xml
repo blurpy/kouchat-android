@@ -27,7 +27,6 @@
       <plugin>
         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
         <artifactId>android-maven-plugin</artifactId>
-        <version>3.6.0</version>
         <configuration>
           <lint>
             <skip>false</skip>
@@ -85,7 +84,6 @@
         <plugins>
           <plugin>
             <artifactId>maven-jarsigner-plugin</artifactId>
-            <version>1.2</version>
             <configuration>
               <removeExistingSignatures>true</removeExistingSignatures>
               <archiveDirectory />
@@ -115,7 +113,6 @@
           <plugin>
             <groupId>com.jayway.maven.plugins.android.generation2</groupId>
             <artifactId>android-maven-plugin</artifactId>
-            <version>3.6.0</version>
             <executions>
               <execution>
                 <id>zipalign-application-apk</id>
