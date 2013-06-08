@@ -85,18 +85,16 @@ public class ChatServiceTest {
 
     @Test
     public void onCreateShouldCreateMulticastLockHandler() {
-        final String fieldName = "multicastLockHandler";
-        assertTrue(TestUtils.fieldValueIsNull(chatService, fieldName));
+        assertTrue(TestUtils.fieldValueIsNull(chatService, "multicastLockHandler"));
 
         chatService.onCreate();
 
-        assertFalse(TestUtils.fieldValueIsNull(chatService, fieldName));
+        assertFalse(TestUtils.fieldValueIsNull(chatService, "multicastLockHandler"));
     }
 
     @Test
     public void onStartShouldLogOn() {
-        TestUtils.setFieldValue(chatService, "androidUserInterface", ui);
-        TestUtils.setFieldValue(chatService, "notificationService", notificationService);
+        setMockedFields();
 
         chatService.onStart(null, 0);
 
@@ -105,8 +103,7 @@ public class ChatServiceTest {
 
     @Test
     public void onStartShouldNotLogOnInAlreadyLoggedOn() {
-        TestUtils.setFieldValue(chatService, "androidUserInterface", ui);
-        TestUtils.setFieldValue(chatService, "notificationService", notificationService);
+        setMockedFields();
 
         when(ui.isLoggedOn()).thenReturn(true);
 
@@ -117,8 +114,8 @@ public class ChatServiceTest {
 
     @Test
     public void onStartShouldStartInForegroundWithNotification() {
-        TestUtils.setFieldValue(chatService, "androidUserInterface", ui);
-        TestUtils.setFieldValue(chatService, "notificationService", notificationService);
+        setMockedFields();
+
         chatService = spy(chatService); // To be able to verify startForeground
 
         final Notification notification = new Notification();
@@ -132,7 +129,7 @@ public class ChatServiceTest {
 
     @Test
     public void onBindShouldReturnChatServiceBinderWithUserInterface() {
-        TestUtils.setFieldValue(chatService, "androidUserInterface", ui);
+        setMockedFields();
 
         final IBinder binder = chatService.onBind(null);
 
@@ -144,8 +141,7 @@ public class ChatServiceTest {
 
     @Test
     public void onDestroyShouldLogOff() {
-        TestUtils.setFieldValue(chatService, "multicastLockHandler", multicastLockHandler);
-        TestUtils.setFieldValue(chatService, "androidUserInterface", ui);
+        setMockedFields();
 
         chatService.onDestroy();
 
@@ -154,8 +150,7 @@ public class ChatServiceTest {
 
     @Test
     public void onDestroyShouldReleaseMulticastLock() {
-        TestUtils.setFieldValue(chatService, "multicastLockHandler", multicastLockHandler);
-        TestUtils.setFieldValue(chatService, "androidUserInterface", ui);
+        setMockedFields();
 
         chatService.onDestroy();
 
@@ -167,5 +162,11 @@ public class ChatServiceTest {
                 TestUtils.getFieldValue(chatService, AndroidUserInterface.class, "androidUserInterface");
 
         return TestUtils.getFieldValue(androidUserInterface, User.class, "me");
+    }
+
+    private void setMockedFields() {
+        TestUtils.setFieldValue(chatService, "androidUserInterface", ui);
+        TestUtils.setFieldValue(chatService, "notificationService", notificationService);
+        TestUtils.setFieldValue(chatService, "multicastLockHandler", multicastLockHandler);
     }
 }
