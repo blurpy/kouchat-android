@@ -32,6 +32,7 @@
             <skip>false</skip>
             <failOnError>true</failOnError>
             <enableHtml>true</enableHtml>
+            <warnAll>true</warnAll>
           </lint>
         </configuration>
         <executions>
