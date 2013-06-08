@@ -23,29 +23,29 @@
       </resource>
     </resources>
 
-    <!--<plugins>-->
-      <!--<plugin>-->
-        <!--<groupId>com.jayway.maven.plugins.android.generation2</groupId>-->
-        <!--<artifactId>android-maven-plugin</artifactId>-->
-        <!--<configuration>-->
-          <!--<lint>-->
-            <!--<skip>false</skip>-->
-            <!--<failOnError>true</failOnError>-->
-            <!--<enableHtml>true</enableHtml>-->
-            <!--<warnAll>true</warnAll>-->
-          <!--</lint>-->
-        <!--</configuration>-->
-        <!--<executions>-->
-          <!--<execution>-->
-            <!--<id>lint</id>-->
-            <!--<goals>-->
-              <!--<goal>lint</goal>-->
-            <!--</goals>-->
-            <!--<phase>package</phase>-->
-          <!--</execution>-->
-        <!--</executions>-->
-      <!--</plugin>-->
-    <!--</plugins>-->
+    <plugins>
+      <plugin>
+        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+        <artifactId>android-maven-plugin</artifactId>
+        <configuration>
+          <lint>
+            <skip>false</skip>
+            <failOnError>true</failOnError>
+            <enableHtml>true</enableHtml>
+            <warnAll>true</warnAll>
+          </lint>
+        </configuration>
+        <executions>
+          <execution>
+            <id>lint</id>
+            <goals>
+              <goal>lint</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <dependencies>
