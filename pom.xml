@@ -80,8 +80,13 @@
       <plugin>
         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
         <artifactId>android-maven-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.6.0</version>
         <extensions>true</extensions>
+        <configuration>
+          <sdk>
+            <platform>10</platform>
+          </sdk>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
