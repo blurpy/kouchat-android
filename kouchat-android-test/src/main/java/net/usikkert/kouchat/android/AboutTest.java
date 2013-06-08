@@ -59,6 +59,7 @@ public class AboutTest extends ActivityInstrumentationTestCase2<MainChatControll
 
     public void test99Quit() {
         RobotiumTestUtils.quit(solo);
+        System.gc();
     }
 
     public void tearDown() {

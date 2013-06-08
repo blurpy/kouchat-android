@@ -121,6 +121,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void test99Quit() {
         RobotiumTestUtils.quit(solo);
+        System.gc();
     }
 
     public void tearDown() {

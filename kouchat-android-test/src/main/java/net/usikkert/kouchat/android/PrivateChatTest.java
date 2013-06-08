@@ -138,6 +138,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
+        System.gc();
     }
 
     public void tearDown() {

@@ -106,6 +106,7 @@ public class LinkTest extends ActivityInstrumentationTestCase2<MainChatControlle
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
+        System.gc();
     }
 
     public void tearDown() {

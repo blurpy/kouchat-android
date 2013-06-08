@@ -248,6 +248,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
+        System.gc();
     }
 
     public void tearDown() {

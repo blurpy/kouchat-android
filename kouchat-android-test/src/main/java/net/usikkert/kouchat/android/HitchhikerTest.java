@@ -173,6 +173,8 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
 
         RobotiumTestUtils.goHome(solo);
         RobotiumTestUtils.quit(solo);
+
+        System.gc();
     }
 
     public void tearDown() {

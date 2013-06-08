@@ -208,6 +208,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
+        System.gc();
     }
 
     public void tearDown() {

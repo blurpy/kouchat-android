@@ -112,6 +112,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
+        System.gc();
     }
 
     public void tearDown() {

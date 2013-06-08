@@ -199,6 +199,8 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
 
         RobotiumTestUtils.launchMainChat(this);
         RobotiumTestUtils.quit(solo);
+
+        System.gc();
     }
 
     public void tearDown() {
