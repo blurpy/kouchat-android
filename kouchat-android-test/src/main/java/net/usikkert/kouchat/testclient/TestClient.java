@@ -31,7 +31,6 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.TransferList;
-import net.usikkert.kouchat.util.TestUtils;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 

@@ -20,9 +20,11 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.util;
+package net.usikkert.kouchat.testclient;
 
 import java.lang.reflect.Field;
+
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * Utilities for tests.
