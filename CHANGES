@@ -1,11 +1,11 @@
 
 - KouChat CHANGES
 
-* version 0.9.0 (xx.xx.2013)
+* version 0.9.0 (09.06.2013)
   - Improved error handling in the private chat.
   - Added basic support for sending files to other users with the "share/send to" feature in Android apps
     like the Gallery or different file managers.
-  - Added wifi as a required feature in the manifest
+  - Added wifi as a required feature in the manifest.
   - Added support for HTC One (and probably others), which require extra permissions
     and a MulticastLock to use multicast.
 
