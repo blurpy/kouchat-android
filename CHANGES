@@ -1,6 +1,10 @@
 
 - KouChat CHANGES
 
+* version 0.10.0 (xx.xx.2013)
+  - Nothing yet
+
+
 * version 0.9.0 (09.06.2013)
   - Improved error handling in the private chat.
   - Added basic support for sending files to other users with the "share/send to" feature in Android apps
