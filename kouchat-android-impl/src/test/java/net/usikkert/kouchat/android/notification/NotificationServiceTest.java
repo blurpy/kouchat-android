@@ -416,13 +416,13 @@ public class NotificationServiceTest {
     }
 
     private void verifyThatRegularIconHasBeenSet(final Notification notification) {
-        assertEquals(R.drawable.kou_icon_24x24, notification.icon);
-        assertEquals(R.drawable.kou_icon_24x24, notificationService.getCurrentIconId());
+        assertEquals(R.drawable.notification_icon_default, notification.icon);
+        assertEquals(R.drawable.notification_icon_default, notificationService.getCurrentIconId());
     }
 
     private void verifyThatActivityIconHasBeenSet(final Notification notification) {
-        assertEquals(R.drawable.kou_icon_activity_24x24, notification.icon);
-        assertEquals(R.drawable.kou_icon_activity_24x24, notificationService.getCurrentIconId());
+        assertEquals(R.drawable.notification_icon_activity, notification.icon);
+        assertEquals(R.drawable.notification_icon_activity, notificationService.getCurrentIconId());
     }
 
     private ShadowNotification.LatestEventInfo getLatestEventInfo(final Notification notification) {
