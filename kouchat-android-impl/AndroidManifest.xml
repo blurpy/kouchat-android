@@ -16,7 +16,7 @@
   <uses-feature android:name="android.hardware.wifi"/>
 
   <application android:label="@string/app_name"
-               android:icon="@drawable/kou_icon_96x96">
+               android:icon="@drawable/ic_launcher">
 
     <!-- Sets launchMode to singleTask to make sure quit works like expected after using the private chat.
          If not set, then using quit from the main chat will open the last private chat,
