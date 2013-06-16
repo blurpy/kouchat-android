@@ -87,7 +87,7 @@ public class NotificationService {
      * @return A complete notification.
      */
     public Notification createServiceNotification() {
-        return createNotificationWithLatestInfo(R.drawable.notification_icon_default, R.string.notification_running);
+        return createNotificationWithLatestInfo(R.drawable.ic_stat_notify_default, R.string.notification_running);
     }
 
     /**
@@ -214,14 +214,14 @@ public class NotificationService {
 
     private void sendDefaultNotification() {
         final Notification notification =
-                createNotificationWithLatestInfo(R.drawable.notification_icon_default, R.string.notification_running);
+                createNotificationWithLatestInfo(R.drawable.ic_stat_notify_default, R.string.notification_running);
 
         notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
     }
 
     private void sendNewMessageNotification() {
         final Notification notification =
-                createNotificationWithLatestInfo(R.drawable.notification_icon_activity, R.string.notification_new_message);
+                createNotificationWithLatestInfo(R.drawable.ic_stat_notify_activity, R.string.notification_new_message);
 
         notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
     }

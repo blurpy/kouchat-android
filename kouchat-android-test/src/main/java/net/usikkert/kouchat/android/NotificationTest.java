@@ -261,12 +261,12 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
 
     private void assertDefaultNotification() {
         assertEquals(R.string.notification_running, notificationService.getCurrentLatestInfoTextId());
-        assertEquals(R.drawable.notification_icon_default, notificationService.getCurrentIconId());
+        assertEquals(R.drawable.ic_stat_notify_default, notificationService.getCurrentIconId());
     }
 
     private void assertNewMessageNotification() {
         assertEquals(R.string.notification_new_message, notificationService.getCurrentLatestInfoTextId());
-        assertEquals(R.drawable.notification_icon_activity, notificationService.getCurrentIconId());
+        assertEquals(R.drawable.ic_stat_notify_activity, notificationService.getCurrentIconId());
     }
 
     private void openPrivateChat() {
