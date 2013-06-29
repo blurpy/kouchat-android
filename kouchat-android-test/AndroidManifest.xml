@@ -4,7 +4,7 @@
           package="net.usikkert.kouchat.android.test">
 
   <uses-sdk android:minSdkVersion="10"
-            android:targetSdkVersion="10"/>
+            android:targetSdkVersion="16"/>
 
   <application>
     <uses-library android:name="android.test.runner"/>
