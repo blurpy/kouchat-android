@@ -3,6 +3,7 @@
 *.ipr
 *.iws
 gen
+gen-external-apklibs
 out
 target
 classes

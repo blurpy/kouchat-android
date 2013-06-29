@@ -24,6 +24,13 @@
     </dependency>
 
     <dependency>
+      <groupId>com.actionbarsherlock</groupId>
+      <artifactId>actionbarsherlock</artifactId>
+      <type>apklib</type>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>net.usikkert.kouchat</groupId>
       <artifactId>kouchat-android-impl</artifactId>
       <version>${project.version}</version>

@@ -197,6 +197,13 @@
       </dependency>
 
       <dependency>
+        <groupId>com.actionbarsherlock</groupId>
+        <artifactId>actionbarsherlock</artifactId>
+        <version>4.3.1</version>
+        <type>apklib</type>
+      </dependency>
+
+      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.10</version>
