@@ -22,6 +22,7 @@
       <artifactId>android-test</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>net.usikkert.kouchat</groupId>
       <artifactId>kouchat-android-impl</artifactId>
@@ -34,6 +35,7 @@
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
+
     <dependency>
       <groupId>com.jayway.android.robotium</groupId>
       <artifactId>robotium-solo</artifactId>
