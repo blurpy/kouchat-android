@@ -2,6 +2,7 @@
 
 <resources>
   <string name="app_name">KouChat</string>
+  <string name="menu">Menu</string>
   <string name="quit">Quit</string>
   <string name="about">About</string>
   <string name="settings">Settings</string>

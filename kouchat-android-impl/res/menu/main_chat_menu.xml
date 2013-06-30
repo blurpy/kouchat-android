@@ -4,13 +4,26 @@
       android:layout_height="wrap_content"
       android:layout_width="wrap_content">
 
-  <item android:id="@+id/mainChatMenuSettings"
-        android:title="@string/settings"/>
+  <!-- Forcing overflow button on devices with a hardware menu button, for a consistent and discoverable menu -->
+  <item android:id="@+id/mainChatMenu"
+        android:showAsAction="always"
+        android:title="@string/menu"
+        android:icon="@drawable/abs__ic_menu_moreoverflow_holo_light">
 
-  <item android:id="@+id/mainChatMenuAbout"
-        android:title="@string/about"/>
+    <menu>
+      <item android:id="@+id/mainChatMenuSettings"
+            android:title="@string/settings"
+            android:showAsAction="never|withText"/>
 
-  <item android:id="@+id/mainChatMenuQuit"
-        android:title="@string/quit"/>
+      <item android:id="@+id/mainChatMenuAbout"
+            android:title="@string/about"
+            android:showAsAction="never|withText"/>
+
+      <item android:id="@+id/mainChatMenuQuit"
+            android:title="@string/quit"
+            android:showAsAction="never|withText"/>
+    </menu>
+
+  </item>
 
 </menu>
