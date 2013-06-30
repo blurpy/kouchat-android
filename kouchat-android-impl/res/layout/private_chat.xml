@@ -22,7 +22,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:imeOptions="actionNone"
+            android:imeOptions="actionSend"
             android:layout_weight="0"
             android:maxLines="1"/>
 
