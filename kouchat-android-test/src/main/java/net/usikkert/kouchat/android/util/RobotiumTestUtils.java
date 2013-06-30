@@ -27,6 +27,7 @@ import static junit.framework.Assert.*;
 import java.util.ArrayList;
 
 import net.usikkert.kouchat.android.AndroidUserInterface;
+import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.User;
@@ -63,7 +64,7 @@ public final class RobotiumTestUtils {
      */
     public static void quit(final Solo solo) {
         goHome(solo);
-        solo.sendKey(Solo.MENU);
+        openMenu(solo);
         solo.clickOnText("Quit");
     }
 
@@ -76,6 +77,15 @@ public final class RobotiumTestUtils {
         solo.sleep(500);
         solo.goBackToActivity(MainChatController.class.getSimpleName());
         solo.sleep(500);
+    }
+
+    /**
+     * Opens the overflow menu in the action bar.
+     *
+     * @param solo The solo tester.
+     */
+    public static void openMenu(final Solo solo) {
+        solo.clickOnView(solo.getView(R.id.mainChatMenu));
     }
 
     /**
@@ -257,7 +267,7 @@ public final class RobotiumTestUtils {
      */
     public static void clickOnChangeNickNameInTheSettings(final Solo solo) {
         // Go to the Settings menu item and choose to set nick name
-        solo.sendKey(Solo.MENU);
+        openMenu(solo);
         solo.clickOnText("Settings");
         solo.clickOnText("Set nick name");
     }

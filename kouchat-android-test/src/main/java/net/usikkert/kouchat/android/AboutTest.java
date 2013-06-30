@@ -47,8 +47,9 @@ public class AboutTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     public void test01AboutInMenuShouldOpenDialog() {
-        solo.sendKey(Solo.MENU);
+        RobotiumTestUtils.openMenu(solo);
         solo.clickOnText("About");
+
         assertTrue(solo.searchText("KouChat v"));
         assertTrue(solo.searchText("Copyright"));
         assertTrue(solo.searchText("LGPLv3"));
