@@ -137,7 +137,7 @@ public class MainChatController extends SherlockActivity implements UserListList
         mainChatInput.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
                     sendMessage(mainChatInput.getText().toString());
                     mainChatInput.setText("");
 

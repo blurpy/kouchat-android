@@ -137,7 +137,7 @@ public class PrivateChatController extends SherlockActivity {
         privateChatInput.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
                     sendPrivateMessage(privateChatInput.getText().toString());
                     privateChatInput.setText("");
 
