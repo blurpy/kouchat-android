@@ -27,6 +27,8 @@ import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -35,15 +37,13 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.view.Window;
 
 /**
  * Controller for changing the settings.
  *
  * @author Christian Ihle
  */
-public class SettingsController extends PreferenceActivity
+public class SettingsController extends SherlockPreferenceActivity
                                 implements Preference.OnPreferenceChangeListener,
                                            SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -51,9 +51,7 @@ public class SettingsController extends PreferenceActivity
     private ServiceConnection serviceConnection;
 
     public void onCreate(final Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_LEFT_ICON);
         super.onCreate(savedInstanceState);
-        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.kou_icon_16x16);
         addPreferencesFromResource(R.xml.settings);
 
         final String nickNameKey = getString(R.string.settings_key_nick_name);

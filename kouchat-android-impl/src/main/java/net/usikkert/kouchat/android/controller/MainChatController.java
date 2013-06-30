@@ -30,7 +30,11 @@ import net.usikkert.kouchat.event.UserListListener;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -41,11 +45,7 @@ import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -74,7 +74,7 @@ import android.widget.TextView;
  *
  * @author Christian Ihle
  */
-public class MainChatController extends Activity implements UserListListener {
+public class MainChatController extends SherlockActivity implements UserListListener {
 
     private Intent chatServiceIntent;
     private ServiceConnection serviceConnection;
@@ -93,9 +93,7 @@ public class MainChatController extends Activity implements UserListListener {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_LEFT_ICON);
         setContentView(R.layout.main_chat);
-        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.kou_icon_16x16);
 
         mainChatInput = (EditText) findViewById(R.id.mainChatInput);
         mainChatUserList = (ListView) findViewById(R.id.mainChatUserList);
@@ -231,7 +229,7 @@ public class MainChatController extends Activity implements UserListListener {
      */
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        final MenuInflater inflater = getMenuInflater();
+        final MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.main_chat_menu, menu);
 
         return true;

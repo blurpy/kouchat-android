@@ -30,7 +30,8 @@ import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.misc.User;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +41,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -49,7 +49,7 @@ import android.widget.TextView;
  *
  * @author Christian Ihle
  */
-public class PrivateChatController extends Activity {
+public class PrivateChatController extends SherlockActivity {
 
     private TextView privateChatView;
     private EditText privateChatInput;
@@ -66,9 +66,7 @@ public class PrivateChatController extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_LEFT_ICON);
         setContentView(R.layout.private_chat);
-        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.kou_icon_16x16);
 
         privateChatInput = (EditText) findViewById(R.id.privateChatInput);
         privateChatView = (TextView) findViewById(R.id.privateChatView);

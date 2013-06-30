@@ -3,6 +3,8 @@
 
 * version 0.10.0 (xx.xx.2013)
   - Updated to use high resolution icons (in progress)
+  - Updated to target API 16 (Android 4.1)
+  - Added ActionBarSherlock for compatibility with API 10 (Android 2.3.3)
 
 
 * version 0.9.0 (09.06.2013)
