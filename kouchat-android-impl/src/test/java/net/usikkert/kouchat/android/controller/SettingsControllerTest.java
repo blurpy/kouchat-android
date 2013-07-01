@@ -36,12 +36,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-import com.xtremelabs.robolectric.shadows.ShadowIntent;
-import com.xtremelabs.robolectric.shadows.ShadowPreferenceManager;
-import com.xtremelabs.robolectric.tester.android.content.TestSharedPreferences;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowIntent;
+import org.robolectric.shadows.ShadowPreferenceManager;
+import org.robolectric.tester.android.content.TestSharedPreferences;
 
 import android.content.ServiceConnection;
 

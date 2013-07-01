@@ -38,12 +38,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-import com.xtremelabs.robolectric.shadows.ShadowIntent;
-import com.xtremelabs.robolectric.shadows.ShadowNotification;
-import com.xtremelabs.robolectric.shadows.ShadowPendingIntent;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowIntent;
+import org.robolectric.shadows.ShadowNotification;
+import org.robolectric.shadows.ShadowPendingIntent;
 
 import android.app.Notification;
 import android.app.NotificationManager;
