@@ -28,7 +28,6 @@ import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.misc.User;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -108,7 +107,6 @@ public class UserListAdapterWithChatStateTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void meShouldBeBold() {
         user1.setMe(true);
 

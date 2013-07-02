@@ -29,7 +29,6 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -83,7 +82,6 @@ public class UserListAdapterTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.") // sort is not implemented in shadow
     public void addShouldSortUsers() {
         adapter.add(user3);
         assertOrder(user3);
@@ -119,7 +117,6 @@ public class UserListAdapterTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.") // sort is not implemented in shadow
     public void addUsersShouldSortUsers() {
         when(userList.get(0)).thenReturn(user2);
         when(userList.get(1)).thenReturn(user1);
@@ -132,7 +129,6 @@ public class UserListAdapterTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.") // sort is not implemented in shadow
     public void sortShouldSortUsers() {
         adapter.add(user1);
         adapter.add(user2);

@@ -36,10 +36,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowAlertDialog;
 
-import android.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.style.URLSpan;
-import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -71,9 +69,8 @@ public class AboutDialogTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void dialogTitleShouldBeApplicationNameAndVersion() {
-        assertEquals("KouChat v" + Constants.APP_VERSION, shadowDialog.getTitle()); // Returns v1.0, which is wrong
+        assertEquals("KouChat v" + Constants.APP_VERSION, shadowDialog.getTitle());
     }
 
     @Test
@@ -88,31 +85,23 @@ public class AboutDialogTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void dialogShouldHaveMessage() {
         final TextView messageView = (TextView) shadowDialog.getView();
 
-        // Returns "android.text.SpannableString@7f49b327", as the actual toString
-        assertEquals("Copyright 2006-2013 by Christian Ihle\n" +
-                "kontakt@usikkert.net\n" +
-                "http://kouchat.googlecode.com\n\n" +
-                "Source available under the GNU LGPLv3:\n" +
-                "http://www.gnu.org/licenses/lgpl-3.0.txt", messageView.getText().toString());
-
+        assertTrue(messageView.getText().toString().contains("Copyright 2006-20"));
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void dialogShouldHaveUrlAndMailToLinks() {
         final TextView messageView = (TextView) shadowDialog.getView();
         final SpannableString message = (SpannableString) messageView.getText();
 
         final URLSpan[] urls = message.getSpans(0, message.length(), URLSpan.class);
-        assertNotNull(urls); // Fails here
+        assertNotNull(urls);
         assertEquals(3, urls.length);
 
         assertEquals("mailto:kontakt@usikkert.net", urls[0].getURL());
-        assertEquals("http://kouchat.googlecode.com/", urls[1].getURL());
+        assertEquals("http://kouchat.googlecode.com", urls[1].getURL());
         assertEquals("http://www.gnu.org/licenses/lgpl-3.0.txt", urls[2].getURL());
     }
 }

@@ -28,7 +28,6 @@ import static org.mockito.Mockito.*;
 import net.usikkert.kouchat.misc.User;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -111,7 +110,6 @@ public class UserListAdapterWithoutMeTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.") // sort is not implemented in shadow
     public void getItemShouldIgnoreMeAfterSort() {
         final User penny = new User("Penny", 1);
         final User amy = new User("Amy", 2);
