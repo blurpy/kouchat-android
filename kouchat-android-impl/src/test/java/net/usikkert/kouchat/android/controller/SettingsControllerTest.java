@@ -22,28 +22,28 @@
 
 package net.usikkert.kouchat.android.controller;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
+import android.content.ServiceConnection;
 import java.util.List;
-
 import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.util.TestUtils;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowIntent;
+import org.robolectric.shadows.ShadowPreferenceManager;
+import org.robolectric.tester.android.content.TestSharedPreferences;
 
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-import com.xtremelabs.robolectric.shadows.ShadowIntent;
-import com.xtremelabs.robolectric.shadows.ShadowPreferenceManager;
-import com.xtremelabs.robolectric.tester.android.content.TestSharedPreferences;
-
-import android.content.ServiceConnection;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Test of {@link SettingsController}.
@@ -78,7 +78,7 @@ public class SettingsControllerTest {
         assertSame(ui, TestUtils.getFieldValue(controller, AndroidUserInterface.class, "androidUserInterface"));
 
         final ShadowIntent startedServiceIntent =
-                Robolectric.shadowOf(Robolectric.getShadowApplication().getNextStartedService());
+                Robolectric.shadowOf_(Robolectric.getShadowApplication().getNextStartedService());
         assertEquals(ChatService.class, startedServiceIntent.getIntentClass());
     }
 

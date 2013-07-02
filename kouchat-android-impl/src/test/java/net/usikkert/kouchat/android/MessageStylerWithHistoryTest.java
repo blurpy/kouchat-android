@@ -22,23 +22,21 @@
 
 package net.usikkert.kouchat.android;
 
-import static org.junit.Assert.*;
-
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
+import android.text.style.URLSpan;
 import net.usikkert.kouchat.android.controller.MainChatController;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
-import android.text.style.URLSpan;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Test of {@link MessageStylerWithHistory}.
