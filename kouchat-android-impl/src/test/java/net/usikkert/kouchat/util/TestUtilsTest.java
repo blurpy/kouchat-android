@@ -24,7 +24,9 @@ package net.usikkert.kouchat.util;
 
 import static org.junit.Assert.*;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Tests of {@link TestUtils}.
@@ -32,6 +34,9 @@ import org.junit.Test;
  * @author Christian Ihle
  */
 public class TestUtilsTest {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void getFieldValueShouldSupportPrivateAndPublicFields() {
@@ -52,15 +57,32 @@ public class TestUtilsTest {
         assertNull(privateField);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
+    public void getFieldValueShouldSupportInheritedPrivateAndPublicFields() {
+        final ExtendingClass extendingClass = new ExtendingClass("private", 555);
+
+        final String privateField = TestUtils.getFieldValue(extendingClass, String.class, "privateField");
+        assertEquals("private", privateField);
+
+        final Integer publicField = TestUtils.getFieldValue(extendingClass, Integer.class, "publicField");
+        assertEquals(Integer.valueOf(555), publicField);
+    }
+
+    @Test
     public void getFieldValueShouldThrowExceptionIfInvalidFieldName() {
+        expectedException.expect(RuntimeException.class);
+        expectedException.expectMessage("NoSuchFieldException: wrongField");
+
         final TestClass testClass = new TestClass(null, null);
 
         TestUtils.getFieldValue(testClass, String.class, "wrongField");
     }
 
-    @Test(expected = ClassCastException.class)
+    @Test
     public void getFieldValueShouldThrowExceptionIfInvalidFieldClass() {
+        expectedException.expect(ClassCastException.class);
+        expectedException.expectMessage("Cannot cast java.lang.String to java.lang.Integer");
+
         final TestClass testClass = new TestClass("test", 1);
 
         TestUtils.getFieldValue(testClass, Integer.class, "privateField");
@@ -77,6 +99,16 @@ public class TestUtilsTest {
     }
 
     @Test
+    public void setFieldValueShouldSupportInheritedPrivateAndPublicFields() {
+        final ExtendingClass extendingClass = new ExtendingClass("test", 1);
+        TestUtils.setFieldValue(extendingClass, "publicField", 50);
+        TestUtils.setFieldValue(extendingClass, "privateField", "something");
+
+        assertEquals(Integer.valueOf(50), extendingClass.publicField);
+        assertEquals("something", extendingClass.getPrivateField());
+    }
+
+    @Test
     public void setFieldValueShouldSupportSettingNull() {
         final TestClass testClass = new TestClass("test", 1);
         TestUtils.setFieldValue(testClass, "publicField", null);
@@ -86,8 +118,11 @@ public class TestUtilsTest {
         assertNull(testClass.privateField);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void setFieldValueShouldThrowExceptionIfInvalidFieldName() {
+        expectedException.expect(RuntimeException.class);
+        expectedException.expectMessage("NoSuchFieldException: wrongField");
+
         final TestClass testClass = new TestClass(null, null);
 
         TestUtils.setFieldValue(testClass, "wrongField", null);
@@ -111,6 +146,17 @@ public class TestUtilsTest {
         TestClass(final String privateField, final Integer publicField) {
             this.privateField = privateField;
             this.publicField = publicField;
+        }
+
+        String getPrivateField() {
+            return privateField;
+        }
+    }
+
+    class ExtendingClass extends TestClass {
+
+        ExtendingClass(final String privateField, final Integer publicField) {
+            super(privateField, publicField);
         }
     }
 }

@@ -36,7 +36,7 @@ public final class TestUtils {
     }
 
     /**
-     * Gets the value of the field with the specified name in the specified object.
+     * Gets the value of the field with the specified name in the specified object. Supports inheritance.
      *
      * @param object The object to get the value from.
      * @param fieldClass The class of the field.
@@ -54,7 +54,7 @@ public final class TestUtils {
     }
 
     /**
-     * Set the value in the field with the specified name in the specified object.
+     * Set the value in the field with the specified name in the specified object. Supports inheritance.
      *
      * @param object The object to set the value in.
      * @param fieldName The name of the field.
@@ -97,13 +97,25 @@ public final class TestUtils {
     }
 
     private static Field getField(final Object object, final String fieldName) {
-        try {
-            return object.getClass().getDeclaredField(fieldName);
+        return getField(object.getClass(), fieldName);
+    }
+
+    private static Field getField(final Class<?> objectClass, final String fieldName) {
+        final Field[] declaredFields = objectClass.getDeclaredFields();
+
+        for (final Field declaredField : declaredFields) {
+            if (declaredField.getName().equals(fieldName)) {
+                return declaredField;
+            }
         }
 
-        catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
+        final Class<?> objectSuperclass = objectClass.getSuperclass();
+
+        if (objectSuperclass != null) {
+            return getField(objectSuperclass, fieldName);
         }
+
+        throw new RuntimeException(new NoSuchFieldException(fieldName));
     }
 
     private static <T> T getValue(final Object object, final Class<T> fieldClass, final Field field) {
