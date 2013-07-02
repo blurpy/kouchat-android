@@ -135,11 +135,10 @@ public class SmileyMapTest {
     public void getSmileyShouldReturnDrawableWithCorrectBounds() {
         final Drawable smiley = smileyMap.getSmiley(":)");
 
-        assertEquals(new Rect(0, 0, 22, 22), smiley.getBounds());
-
+        assertEquals(new Rect(0, 0, 22, 22), smiley.getBounds()); // Returns Rect(0, 0 - 100, 100)
     }
 
     private int smileyId(final String code) {
-        return Robolectric.shadowOf(smileyMap.getSmiley(code)).getLoadedFromResourceId();
+        return Robolectric.shadowOf(smileyMap.getSmiley(code)).getCreatedFromResId();
     }
 }
