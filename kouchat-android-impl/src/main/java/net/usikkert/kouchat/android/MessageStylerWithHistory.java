@@ -97,7 +97,7 @@ public class MessageStylerWithHistory {
 
         for (final Smiley smiley : smileys) {
             final Drawable drawableSmiley = smileyMap.getSmiley(smiley.getCode());
-            final ImageSpan smileySpan = new ImageSpan(drawableSmiley, ImageSpan.ALIGN_BOTTOM);
+            final ImageSpan smileySpan = new ImageSpan(drawableSmiley, smiley.getCode(), ImageSpan.ALIGN_BOTTOM);
 
             messageBuilder.setSpan(smileySpan, smiley.getStartPosition(), smiley.getEndPosition(), 0);
         }
