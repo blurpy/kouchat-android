@@ -88,12 +88,6 @@ public class AboutDialogTest {
     }
 
     @Test
-    public void dialogShouldHaveOKButton() {
-        final Button button = shadowDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        assertEquals("OK", button.getText());
-    }
-
-    @Test
     @Ignore("This does not work with Robolectric yet.")
     public void dialogShouldHaveMessage() {
         final TextView messageView = (TextView) shadowDialog.getView();

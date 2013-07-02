@@ -80,8 +80,7 @@ public class UserListAdapterWithChatStateTest {
 
     @Test
     public void constructorShouldThrowExceptionIfContextIsNull() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Context can not be null");
+        expectedException.expect(NullPointerException.class); // Happens in Android superclass
 
         new UserListAdapterWithChatState(null);
     }
