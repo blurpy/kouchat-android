@@ -147,6 +147,8 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         solo = new Solo(getInstrumentation(), activity);
         solo.sleep(1000);
 
+        final User me = RobotiumTestUtils.getMe(activity);
+
         albert.logon();
         solo.sleep(1000);
 
@@ -156,7 +158,6 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         RobotiumTestUtils.launchMainChat(this);
         solo.sleep(1000);
 
-        final User me = RobotiumTestUtils.getMe(activity);
         final File newFile = createNewFile();
         assertFalse("Should not exist: " + newFile, newFile.exists());
 
@@ -177,6 +178,8 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         solo = new Solo(getInstrumentation(), activity);
         solo.sleep(1000);
 
+        final User me = RobotiumTestUtils.getMe(activity);
+
         tina.logon();
         solo.sleep(1000);
 
@@ -185,8 +188,6 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
 
         RobotiumTestUtils.launchMainChat(this);
         solo.sleep(1000);
-
-        final User me = RobotiumTestUtils.getMe(activity);
 
         tina.rejectFile(me, image.getName());
         solo.sleep(2000);
