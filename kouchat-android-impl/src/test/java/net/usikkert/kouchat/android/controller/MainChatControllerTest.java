@@ -37,6 +37,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
+import android.content.ServiceConnection;
+
 /**
  * Test of {@link MainChatController}.
  *
@@ -47,6 +49,10 @@ public class MainChatControllerTest {
 
     private MainChatController controller;
 
+    private AndroidUserInterface ui;
+    private UserList userList;
+    private ServiceConnection serviceConnection;
+
     @Before
     public void setUp() {
         controller = new MainChatController();
@@ -54,9 +60,13 @@ public class MainChatControllerTest {
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
 
-        final AndroidUserInterface ui = mock(AndroidUserInterface.class);
+        ui = mock(AndroidUserInterface.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
-        when(ui.getUserList()).thenReturn(mock(UserList.class));
+
+        userList = mock(UserList.class);
+        when(ui.getUserList()).thenReturn(userList);
+
+        serviceConnection = mock(ServiceConnection.class);
     }
 
     @Test
@@ -79,8 +89,7 @@ public class MainChatControllerTest {
 
     @Test
     public void onResumeShouldResetAllNotifications() {
-        final AndroidUserInterface ui = mock(AndroidUserInterface.class);
-        TestUtils.setFieldValue(controller, "androidUserInterface", ui);
+        setupMocks();
 
         controller.onResume();
 
@@ -89,8 +98,37 @@ public class MainChatControllerTest {
 
     @Test
     public void onResumeShouldHandleIfAndroidUserInterfaceIsNotInitializedYet() {
-        assertNull(TestUtils.getFieldValue(controller, AndroidUserInterface.class, "androidUserInterface"));
+        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
 
         controller.onResume();
+    }
+
+    @Test
+    public void onDestroyShouldUnregister() {
+        setupMocks();
+
+        controller.onDestroy();
+
+        verify(userList).removeUserListListener(controller);
+        verify(ui).unregisterMainChatController();
+        assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
+
+        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
+        assertTrue(TestUtils.fieldValueIsNull(controller, "userList"));
+    }
+
+    @Test
+    public void onDestroyShouldNotFailIfServiceHasNotBeenBound() {
+        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
+
+        controller.onDestroy();
+
+        assertEquals(0, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
+    }
+
+    private void setupMocks() {
+        TestUtils.setFieldValue(controller, "userList", userList);
+        TestUtils.setFieldValue(controller, "androidUserInterface", ui);
+        TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
     }
 }

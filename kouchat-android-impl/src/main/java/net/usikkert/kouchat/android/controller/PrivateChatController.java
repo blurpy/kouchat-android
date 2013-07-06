@@ -84,9 +84,8 @@ public class PrivateChatController extends SherlockActivity {
     protected void onDestroy() {
         if (privateChatWindow != null) {
             privateChatWindow.unregisterPrivateChatController();
+            unbindService(serviceConnection);
         }
-
-        unbindService(serviceConnection);
 
         androidUserInterface = null;
         privateChatWindow = null;

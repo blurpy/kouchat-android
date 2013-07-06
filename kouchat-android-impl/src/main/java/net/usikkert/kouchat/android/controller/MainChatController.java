@@ -214,9 +214,14 @@ public class MainChatController extends SherlockActivity implements UserListList
 
     @Override
     protected void onDestroy() {
-        userList.removeUserListListener(this);
-        androidUserInterface.unregisterMainChatController();
-        unbindService(serviceConnection);
+        if (androidUserInterface != null) {
+            userList.removeUserListListener(this);
+            androidUserInterface.unregisterMainChatController();
+            unbindService(serviceConnection);
+        }
+
+        androidUserInterface = null;
+        userList = null;
 
         super.onDestroy();
     }

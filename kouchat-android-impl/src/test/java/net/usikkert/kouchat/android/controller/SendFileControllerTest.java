@@ -26,86 +26,46 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.AndroidUserInterface;
-import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.shadows.ShadowIntent;
-import org.robolectric.shadows.ShadowPreferenceManager;
-import org.robolectric.tester.android.content.TestSharedPreferences;
 
 import android.content.ServiceConnection;
 
 /**
- * Test of {@link SettingsController}.
+ * Test of {@link SendFileController}.
  *
  * @author Christian Ihle
  */
 @RunWith(RobolectricTestRunner.class)
-public class SettingsControllerTest {
+public class SendFileControllerTest {
 
-    private SettingsController controller;
+    private SendFileController controller;
 
     private AndroidUserInterface ui;
+    private UserList userList;
     private ServiceConnection serviceConnection;
 
     @Before
     public void setUp() {
-        controller = new SettingsController();
-
-        ui = mock(AndroidUserInterface.class);
+        controller = new SendFileController();
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
-        when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
 
+        ui = mock(AndroidUserInterface.class);
+        when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
+
+        userList = mock(UserList.class);
+        when(ui.getUserList()).thenReturn(userList);
+
         serviceConnection = mock(ServiceConnection.class);
-    }
-
-    @Test
-    @Ignore("This does not work with Robolectric yet.")
-    public void onCreateShouldBindChatServiceToSetAndroidUserInterface() {
-        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
-
-        controller.onCreate(null); // findPreference() returns null, giving NullPointerException
-
-        assertSame(ui, TestUtils.getFieldValue(controller, AndroidUserInterface.class, "androidUserInterface"));
-
-        final ShadowIntent startedServiceIntent =
-                Robolectric.shadowOf(Robolectric.getShadowApplication().getNextStartedService());
-        assertEquals(ChatService.class, startedServiceIntent.getIntentClass());
-    }
-
-    @Test
-    @Ignore("This does not work with Robolectric yet.")
-    public void onResumeShouldSetControllerAsListener() {
-        final TestSharedPreferences sharedPreferences = getTestSharedPreferences();
-
-        assertFalse(sharedPreferences.hasListener(controller));
-
-        controller.onResume(); // getPreferenceScreen() returns null, giving NullPointerException
-
-        assertTrue(sharedPreferences.hasListener(controller));
-    }
-
-    @Test
-    @Ignore("This does not work with Robolectric yet.")
-    public void onPauseShouldRemoveControllerAsListener() {
-        final TestSharedPreferences sharedPreferences = getTestSharedPreferences();
-
-        assertFalse(sharedPreferences.hasListener(controller));
-        sharedPreferences.registerOnSharedPreferenceChangeListener(controller);
-        assertTrue(sharedPreferences.hasListener(controller));
-
-        controller.onPause(); // getPreferenceScreen() returns null, giving NullPointerException
-
-        assertFalse(sharedPreferences.hasListener(controller));
     }
 
     @Test
@@ -114,13 +74,16 @@ public class SettingsControllerTest {
 
         controller.onDestroy();
 
+        verify(userList).removeUserListListener(controller);
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
+
         assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
+        assertTrue(TestUtils.fieldValueIsNull(controller, "userList"));
     }
 
     @Test
     public void onDestroyShouldNotFailIfServiceHasNotBeenBound() {
-        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
+        assertTrue(TestUtils.fieldValueIsNull(controller, "userList"));
 
         controller.onDestroy();
 
@@ -128,12 +91,8 @@ public class SettingsControllerTest {
     }
 
     private void setupMocks() {
+        TestUtils.setFieldValue(controller, "userList", userList);
         TestUtils.setFieldValue(controller, "androidUserInterface", ui);
         TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
-    }
-
-    private TestSharedPreferences getTestSharedPreferences() {
-        return (TestSharedPreferences) ShadowPreferenceManager
-                .getDefaultSharedPreferences(Robolectric.application.getApplicationContext());
     }
 }

@@ -29,6 +29,7 @@ import net.usikkert.kouchat.android.AndroidPrivateChatWindow;
 import net.usikkert.kouchat.android.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -38,6 +39,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import android.content.Intent;
+import android.content.ServiceConnection;
 
 /**
  * Test of {@link PrivateChatController}.
@@ -49,19 +51,27 @@ public class PrivateChatControllerTest {
 
     private PrivateChatController controller;
 
+    private User user;
+    private AndroidUserInterface ui;
+    private ServiceConnection serviceConnection;
+    private AndroidPrivateChatWindow privateChatWindow;
+
     @Before
     public void setUp() {
         controller = new PrivateChatController();
 
-        final User user = new User("User", 1234);
-        user.setPrivchat(mock(AndroidPrivateChatWindow.class));
+        user = new User("User", 1234);
+        privateChatWindow = mock(AndroidPrivateChatWindow.class);
+        user.setPrivchat(privateChatWindow);
 
-        final AndroidUserInterface ui = mock(AndroidUserInterface.class);
+        ui = mock(AndroidUserInterface.class);
         when(ui.getUser(1234)).thenReturn(user);
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
+
+        serviceConnection = mock(ServiceConnection.class);
 
         final Intent intent = new Intent();
         intent.putExtra("userCode", 1234);
@@ -84,5 +94,35 @@ public class PrivateChatControllerTest {
 
         controller.onDestroy();
         assertFalse(controller.isVisible());
+    }
+
+    @Test
+    public void onDestroyShouldUnregister() {
+        setupMocks();
+
+        controller.onDestroy();
+
+        verify(privateChatWindow).unregisterPrivateChatController();
+        assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
+
+        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
+        assertTrue(TestUtils.fieldValueIsNull(controller, "privateChatWindow"));
+        assertTrue(TestUtils.fieldValueIsNull(controller, "user"));
+    }
+
+    @Test
+    public void onDestroyShouldNotFailIfServiceHasNotBeenBound() {
+        assertTrue(TestUtils.fieldValueIsNull(controller, "privateChatWindow"));
+
+        controller.onDestroy();
+
+        assertEquals(0, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
+    }
+
+    private void setupMocks() {
+        TestUtils.setFieldValue(controller, "privateChatWindow", privateChatWindow);
+        TestUtils.setFieldValue(controller, "user", user);
+        TestUtils.setFieldValue(controller, "androidUserInterface", ui);
+        TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
     }
 }

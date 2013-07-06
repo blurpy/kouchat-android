@@ -99,7 +99,12 @@ public class SettingsController extends SherlockPreferenceActivity
 
     @Override
     protected void onDestroy() {
-        unbindService(serviceConnection);
+        if (androidUserInterface != null) {
+            unbindService(serviceConnection);
+        }
+
+        androidUserInterface = null;
+
         super.onDestroy();
     }
 
