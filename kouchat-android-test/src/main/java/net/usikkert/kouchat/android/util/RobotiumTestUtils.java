@@ -44,6 +44,7 @@ import android.test.InstrumentationTestCase;
 import android.text.Layout;
 import android.text.TextPaint;
 import android.view.KeyEvent;
+import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -108,7 +109,7 @@ public final class RobotiumTestUtils {
      * @throws IllegalArgumentException If no textview was found with the given text.
      */
     public static TextView getTextViewWithText(final Solo solo, final String text) {
-        final ArrayList<TextView> currentTextViews = solo.getCurrentTextViews(null);
+        final ArrayList<TextView> currentTextViews = solo.getCurrentViews(TextView.class);
 
         for (final TextView currentTextView : currentTextViews) {
             if (currentTextView.getClass().equals(TextView.class) &&
@@ -336,7 +337,7 @@ public final class RobotiumTestUtils {
     public static void openPrivateChat(final Solo solo, final int numberOfUsers, final int userNumber,
                                        final String userName) {
         solo.sleep(500);
-        assertEquals(numberOfUsers, solo.getCurrentListViews().get(0).getCount());
+        assertEquals(numberOfUsers, solo.getCurrentViews(ListView.class).get(0).getCount());
         solo.clickInList(userNumber);
         solo.sleep(500);
 

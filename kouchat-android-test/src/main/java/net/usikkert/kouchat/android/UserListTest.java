@@ -64,7 +64,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
 
         solo.sleep(100);
 
-        userList = solo.getCurrentListViews().get(0);
+        userList = solo.getCurrentViews(ListView.class).get(0);
 
         defaultOrientation = RobotiumTestUtils.getCurrentOrientation(solo);
     }
@@ -229,7 +229,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(500);
         assertEquals(nickName, getUserNameAtPosition(userNumber));
 
-        final LinearLayout row = (LinearLayout) solo.getCurrentListViews().get(0).getChildAt(userNumber);
+        final LinearLayout row = (LinearLayout) solo.getCurrentViews(ListView.class).get(0).getChildAt(userNumber);
         final TextView textView = (TextView) row.getChildAt(1);
         final Typeface typeface = textView.getTypeface();
 
@@ -240,7 +240,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(500);
         assertEquals(nickName, getUserNameAtPosition(userNumber));
 
-        final LinearLayout row = (LinearLayout) solo.getCurrentListViews().get(0).getChildAt(userNumber);
+        final LinearLayout row = (LinearLayout) solo.getCurrentViews(ListView.class).get(0).getChildAt(userNumber);
         final TextView textView = (TextView) row.getChildAt(1);
         final CharSequence displayText = textView.getText();
 

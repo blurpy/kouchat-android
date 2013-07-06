@@ -34,6 +34,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 /**
  * Test of private chat.
@@ -350,8 +351,8 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
 
     private Bitmap getBitmapForUser(final int numberOfUsers, final int userNumber) {
         solo.sleep(1000);
-        assertEquals(numberOfUsers, solo.getCurrentListViews().get(0).getCount());
-        final LinearLayout row = (LinearLayout) solo.getCurrentListViews().get(0).getChildAt(userNumber - 1);
+        assertEquals(numberOfUsers, solo.getCurrentViews(ListView.class).get(0).getCount());
+        final LinearLayout row = (LinearLayout) solo.getCurrentViews(ListView.class).get(0).getChildAt(userNumber - 1);
         final ImageView imageAtRow = (ImageView) row.getChildAt(0);
         final BitmapDrawable drawable = (BitmapDrawable) imageAtRow.getDrawable();
 
