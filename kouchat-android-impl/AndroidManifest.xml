@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="net.usikkert.kouchat.android"
           android:versionCode="7"
           android:versionName="0.10.0">
 
   <uses-sdk android:minSdkVersion="10"
-            android:targetSdkVersion="16"/>
+            android:targetSdkVersion="16"
+            tools:ignore="OldTargetApi"/>
 
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -17,7 +19,8 @@
 
   <application android:label="@string/app_name"
                android:icon="@drawable/ic_launcher"
-               android:theme="@style/Theme.Sherlock.Light">
+               android:theme="@style/Theme.Sherlock.Light"
+               android:allowBackup="true">
 
     <!-- Sets launchMode to singleTask to make sure quit works like expected after using the private chat.
          If not set, then using quit from the main chat will open the last private chat,
