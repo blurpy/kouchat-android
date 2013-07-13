@@ -242,21 +242,6 @@ public class MainChatController extends SherlockActivity implements UserListList
     }
 
     /**
-     * Makes sure key events from anywhere in the activity are sent to the input field,
-     * and giving it focus if it doesn't currently have focus.
-     *
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean dispatchKeyEvent(final KeyEvent event) {
-        if (!mainChatInput.hasFocus()) {
-            openKeyboard();
-        }
-
-        return mainChatInput.dispatchKeyEvent(event);
-    }
-
-    /**
      * Selects the actions to run after a menu item in the main chat has been selected.
      *
      * {@inheritDoc}
@@ -273,6 +258,21 @@ public class MainChatController extends SherlockActivity implements UserListList
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Makes sure key events from anywhere in the activity are sent to the input field,
+     * and giving it focus if it doesn't currently have focus.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean dispatchKeyEvent(final KeyEvent event) {
+        if (!mainChatInput.hasFocus()) {
+            openKeyboard();
+        }
+
+        return mainChatInput.dispatchKeyEvent(event);
     }
 
     private boolean showAboutDialog() {

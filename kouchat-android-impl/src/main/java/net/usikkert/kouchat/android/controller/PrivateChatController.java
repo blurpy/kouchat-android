@@ -42,6 +42,7 @@ import android.os.IBinder;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
@@ -53,6 +54,7 @@ public class PrivateChatController extends SherlockActivity {
 
     private TextView privateChatView;
     private EditText privateChatInput;
+    private ScrollView privateChatScroll;
     private ServiceConnection serviceConnection;
 
     private AndroidUserInterface androidUserInterface;
@@ -70,13 +72,12 @@ public class PrivateChatController extends SherlockActivity {
 
         privateChatInput = (EditText) findViewById(R.id.privateChatInput);
         privateChatView = (TextView) findViewById(R.id.privateChatView);
+        privateChatScroll = (ScrollView) findViewById(R.id.privateChatScroll);
 
         final Intent chatServiceIntent = createChatServiceIntent();
         serviceConnection = createServiceConnection();
         bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
 
-        ControllerUtils.makeTextViewScrollable(privateChatView);
-        ControllerUtils.makeLinksClickable(privateChatView);
         privateChatInput.requestFocus();
     }
 
@@ -111,6 +112,21 @@ public class PrivateChatController extends SherlockActivity {
     protected void onPause() {
         visible = false;
         super.onPause();
+    }
+
+    /**
+     * Makes sure key events from anywhere in the activity are sent to the input field,
+     * and giving it focus if it doesn't currently have focus.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean dispatchKeyEvent(final KeyEvent event) {
+        if (!privateChatInput.hasFocus()) {
+            privateChatInput.requestFocus();
+        }
+
+        return privateChatInput.dispatchKeyEvent(event);
     }
 
     private Intent createChatServiceIntent() {
@@ -211,7 +227,7 @@ public class PrivateChatController extends SherlockActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                ControllerUtils.scrollTextViewToBottom(privateChatView);
+                ControllerUtils.scrollTextViewToBottom(privateChatView, privateChatScroll);
             }
         }, ControllerUtils.ONE_SECOND);
     }
@@ -220,7 +236,7 @@ public class PrivateChatController extends SherlockActivity {
         runOnUiThread(new Runnable() {
             public void run() {
                 privateChatView.append(privateMessage);
-                ControllerUtils.scrollTextViewToBottom(privateChatView);
+                ControllerUtils.scrollTextViewToBottom(privateChatView, privateChatScroll);
             }
         });
     }

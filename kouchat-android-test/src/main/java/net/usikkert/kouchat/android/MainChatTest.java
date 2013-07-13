@@ -153,6 +153,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertEquals("abc", mainChatInput.getText().toString());
     }
 
+    // Must be verified manually
     public void test08ShouldBeAbleToSelectText() {
         solo.sleep(500);
 
