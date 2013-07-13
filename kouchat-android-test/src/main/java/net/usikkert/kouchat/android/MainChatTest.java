@@ -30,6 +30,8 @@ import net.usikkert.kouchat.testclient.TestClient;
 import com.jayway.android.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.KeyEvent;
+import android.widget.EditText;
 
 /**
  * Tests sending and receiving messages in the main chat.
@@ -117,6 +119,48 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
         RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(3000); // See if message number 30 is visible
+    }
+
+    public void test07InputFieldShouldAlwaysGetKeyEventsAndFocus() {
+        // Starts with focus
+        final EditText mainChatInput = (EditText) solo.getView(R.id.mainChatInput);
+        assertTrue(mainChatInput.hasFocus());
+
+        // Keeps focus after "enter"
+        RobotiumTestUtils.writeLine(solo, "Keep me focused!");
+        solo.sleep(500);
+        assertTrue(mainChatInput.hasFocus());
+
+        // Keeps focus after clicking in the user list
+        solo.sleep(500);
+        solo.clickInList(0);
+        solo.sleep(500);
+        assertTrue(mainChatInput.hasFocus());
+
+        // Need to support losing focus when clicking in the main chat to support text selection
+        solo.clickOnView(solo.getView(R.id.mainChatScroll));
+        solo.sleep(500);
+        assertFalse(mainChatInput.hasFocus());
+
+        // Let's enter a few key strokes when the input field lacks focus
+        solo.sendKey(KeyEvent.KEYCODE_A);
+        solo.sendKey(KeyEvent.KEYCODE_B);
+        solo.sendKey(KeyEvent.KEYCODE_C);
+
+        // The focus should now be back, and the keys entered should be in the input field
+        solo.sleep(500);
+        assertTrue(mainChatInput.hasFocus());
+        assertEquals("abc", mainChatInput.getText().toString());
+    }
+
+    public void test08ShouldBeAbleToSelectText() {
+        solo.sleep(500);
+
+        RobotiumTestUtils.writeLine(solo, "Lets select something");
+        solo.sleep(500);
+
+        solo.clickLongOnView(solo.getView(R.id.mainChatScroll));
+        solo.sleep(500);
     }
 
     public void test99Quit() {

@@ -49,6 +49,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
@@ -81,6 +82,7 @@ public class MainChatController extends SherlockActivity implements UserListList
     private EditText mainChatInput;
     private ListView mainChatUserList;
     private TextView mainChatView;
+    private ScrollView mainChatScroll;
     private UserListAdapter userListAdapter;
 
     private AndroidUserInterface androidUserInterface;
@@ -98,12 +100,11 @@ public class MainChatController extends SherlockActivity implements UserListList
         mainChatInput = (EditText) findViewById(R.id.mainChatInput);
         mainChatUserList = (ListView) findViewById(R.id.mainChatUserList);
         mainChatView = (TextView) findViewById(R.id.mainChatView);
+        mainChatScroll = (ScrollView) findViewById(R.id.mainChatScroll);
 
         registerMainChatInputListener();
         registerMainChatTextListener();
         registerUserListClickListener();
-        ControllerUtils.makeTextViewScrollable(mainChatView);
-        ControllerUtils.makeLinksClickable(mainChatView);
         setupMainChatUserList();
         openKeyboard();
 
@@ -172,8 +173,8 @@ public class MainChatController extends SherlockActivity implements UserListList
     private void registerUserListClickListener() {
         mainChatUserList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(final AdapterView<?> userList, final View view, final int position, final long id) {
-                final User selectedUser = (User) userList.getItemAtPosition(position);
+            public void onItemClick(final AdapterView<?> userAdapter, final View view, final int position, final long id) {
+                final User selectedUser = (User) userAdapter.getItemAtPosition(position);
 
                 // No point in having a private chat with one self (at least not here)
                 if (selectedUser.isMe()) {
@@ -241,6 +242,21 @@ public class MainChatController extends SherlockActivity implements UserListList
     }
 
     /**
+     * Makes sure key events from anywhere in the activity are sent to the input field,
+     * and giving it focus if it doesn't currently have focus.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean dispatchKeyEvent(final KeyEvent event) {
+        if (!mainChatInput.hasFocus()) {
+            openKeyboard();
+        }
+
+        return mainChatInput.dispatchKeyEvent(event);
+    }
+
+    /**
      * Selects the actions to run after a menu item in the main chat has been selected.
      *
      * {@inheritDoc}
@@ -284,7 +300,7 @@ public class MainChatController extends SherlockActivity implements UserListList
         runOnUiThread(new Runnable() {
             public void run() {
                 mainChatView.append(message);
-                ControllerUtils.scrollTextViewToBottom(mainChatView);
+                ControllerUtils.scrollTextViewToBottom(mainChatView, mainChatScroll);
             }
         });
     }
@@ -302,7 +318,7 @@ public class MainChatController extends SherlockActivity implements UserListList
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                ControllerUtils.scrollTextViewToBottom(mainChatView);
+                ControllerUtils.scrollTextViewToBottom(mainChatView, mainChatScroll);
             }
         }, ControllerUtils.ONE_SECOND);
 

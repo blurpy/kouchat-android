@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
-
-  <LinearLayout android:orientation="horizontal"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1">
+                android:layout_height="fill_parent">
 
-    <TextView android:id="@+id/mainChatView"
+  <ScrollView android:id="@+id/mainChatScroll"
               android:layout_width="wrap_content"
               android:layout_height="fill_parent"
               android:background="#fff"
-              android:layout_weight="1"/>
+              android:layout_alignParentLeft="true"
+              android:layout_toLeftOf="@+id/mainChatUserList"
+              android:layout_above="@+id/mainChatInput">
 
-    <ListView android:id="@+id/mainChatUserList"
-              android:layout_width="120sp"
-              android:layout_height="fill_parent"
-              android:layout_weight="0"/>
+    <TextView android:id="@+id/mainChatView"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:autoLink="web"
+              android:textIsSelectable="true"/>
+  </ScrollView>
 
-  </LinearLayout>
+  <ListView android:id="@+id/mainChatUserList"
+            android:layout_width="120sp"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/mainChatInput"
+            android:layout_alignParentRight="true"/>
 
   <EditText android:id="@+id/mainChatInput"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
             android:imeOptions="actionSend"
-            android:layout_weight="0"
-            android:maxLines="1"/>
+            android:singleLine="true"
+            android:layout_alignParentBottom="true"/>
 
-</LinearLayout>
+</RelativeLayout>
