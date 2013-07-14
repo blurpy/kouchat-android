@@ -22,44 +22,46 @@
 
 package net.usikkert.kouchat.android.controller;
 
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.os.Build;
+import android.text.method.LinkMovementMethod;
+import android.text.method.MovementMethod;
 
 /**
- * Reusable functionality for controllers.
+ * Link movement method with support for text selection as well, on Android 3.0 or newer.
+ *
+ * <p>Usually you have to choose between {@link LinkMovementMethod} to get link support,
+ * or {@link android.text.method.ArrowKeyMovementMethod} to get selection support.</p>
+ *
+ * <p>Or you could set the autoLink property on the {@link android.widget.TextView}.
+ * But it seems to be a bit buggy. It's looks like it's random which url you get to when you click on a link.
+ * And it doesn't work on Android 2.3.3, at least not in the emulator.</p>
+ *
+ * <p>The selection support is disabled on Android 2.3.3, because it doesn't work. Trying to select using a regular
+ * {@link android.text.method.ArrowKeyMovementMethod} gives a popup to select, but it's not possible to
+ * actually select anything. Trying to select using this class only leads to:
+ * <code>java.lang.IndexOutOfBoundsException: setSpan (-1 ... -1) starts before 0</code></p>
  *
  * @author Christian Ihle
  */
-public final class ControllerUtils {
+public class LinkMovementMethodWithSelectSupport extends LinkMovementMethod {
 
-    private ControllerUtils() {
-        // Only static methods
+    private static LinkMovementMethodWithSelectSupport instance;
+
+    @Override
+    @SuppressWarnings("SimplifiableIfStatement")
+    public boolean canSelectArbitrarily() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            return true;
+        }
+
+        return super.canSelectArbitrarily();
     }
 
-    /** Number of milliseconds in a second. */
-    public static final int ONE_SECOND = 1000;
+    public static MovementMethod getInstance() {
+        if (instance == null) {
+            instance = new LinkMovementMethodWithSelectSupport();
+        }
 
-    /**
-     * Scrolls to the last line of text in a text view.
-     *
-     * @param textView The text view to scroll.
-     * @param scrollView The surrounding scroll view.
-     */
-    public static void scrollTextViewToBottom(final TextView textView, final ScrollView scrollView) {
-        scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.scrollTo(0, scrollView.getBottom() + textView.getHeight());
-            }
-        });
-    }
-
-    /**
-     * Makes sure the links you click on opens in the browser.
-     *
-     * @param textView The text view to activate link clicking on.
-     */
-    public static void makeLinksClickable(final TextView textView) {
-        textView.setMovementMethod(LinkMovementMethodWithSelectSupport.getInstance());
+        return instance;
     }
 }

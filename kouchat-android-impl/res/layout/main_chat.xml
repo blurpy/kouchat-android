@@ -15,7 +15,6 @@
     <TextView android:id="@+id/mainChatView"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:autoLink="web"
               android:textIsSelectable="true"/>
   </ScrollView>
 

@@ -105,6 +105,7 @@ public class MainChatController extends SherlockActivity implements UserListList
         registerMainChatInputListener();
         registerMainChatTextListener();
         registerUserListClickListener();
+        ControllerUtils.makeLinksClickable(mainChatView);
         setupMainChatUserList();
         openKeyboard();
 

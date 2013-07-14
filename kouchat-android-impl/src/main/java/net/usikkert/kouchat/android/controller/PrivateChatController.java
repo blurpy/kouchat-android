@@ -78,6 +78,7 @@ public class PrivateChatController extends SherlockActivity {
         serviceConnection = createServiceConnection();
         bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
 
+        ControllerUtils.makeLinksClickable(privateChatView);
         privateChatInput.requestFocus();
     }
 
