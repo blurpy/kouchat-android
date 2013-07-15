@@ -30,7 +30,9 @@ import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.misc.User;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -78,6 +80,9 @@ public class PrivateChatController extends SherlockActivity {
         serviceConnection = createServiceConnection();
         bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
 
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         ControllerUtils.makeLinksClickable(privateChatView);
         privateChatInput.requestFocus();
     }
@@ -113,6 +118,20 @@ public class PrivateChatController extends SherlockActivity {
     protected void onPause() {
         visible = false;
         super.onPause();
+    }
+
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: // Clicked on KouChat icon in the action bar
+                return goBackToMainChat();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private boolean goBackToMainChat() {
+        startActivity(new Intent(this, MainChatController.class));
+        return true;
     }
 
     /**

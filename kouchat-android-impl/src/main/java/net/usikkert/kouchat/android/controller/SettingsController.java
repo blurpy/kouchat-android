@@ -27,7 +27,9 @@ import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -63,6 +65,9 @@ public class SettingsController extends SherlockPreferenceActivity
         serviceConnection = createServiceConnection();
         final Intent chatServiceIntent = createChatServiceIntent();
         bindService(chatServiceIntent, serviceConnection, BIND_NOT_FOREGROUND);
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -106,6 +111,20 @@ public class SettingsController extends SherlockPreferenceActivity
         androidUserInterface = null;
 
         super.onDestroy();
+    }
+
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: // Clicked on KouChat icon in the action bar
+                return goBackToMainChat();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private boolean goBackToMainChat() {
+        startActivity(new Intent(this, MainChatController.class));
+        return true;
     }
 
     private void setValueAsSummary(final String key) {
