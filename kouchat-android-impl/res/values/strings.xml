@@ -14,8 +14,7 @@
     http://www.gnu.org/licenses/lgpl-3.0.txt
   </string>
   <string name="settings_nick_name_dialog_message">
-    A nick name can have between 1 and 10 characters.\n
-    Legal characters are "a-z", "0-9", "-" and "_".
+    A nick name can have between 1 and 10 characters. Legal characters are:\n“a-z”, “0-9”, “-” and “_”.
   </string>
   <string name="settings_nick_name_title">Set nick name</string>
   <string name="settings_key_nick_name">nick_name</string>
