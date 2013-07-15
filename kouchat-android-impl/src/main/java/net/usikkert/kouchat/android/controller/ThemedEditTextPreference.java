@@ -36,6 +36,8 @@ import android.view.ContextThemeWrapper;
  * but the theme doesn't apply correctly to dialogs on Android 2.3.3. The dialogs in that version
  * are still dark, but the text changes to a dark color. So it's difficult to read.</p>
  *
+ * <p>Inspired by http://stackoverflow.com/questions/14032977/correct-text-color-appearance-in-alertdialog</p>
+ *
  * @author Christian Ihle
  */
 public class ThemedEditTextPreference extends EditTextPreference {
