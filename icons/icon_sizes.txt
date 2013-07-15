@@ -1,0 +1,29 @@
+http://petrnohejl.github.io/Android-Cheatsheet-For-Graphic-Designers/
+http://developer.android.com/design/style/iconography.html
+http://developer.android.com/guide/practices/screens_support.html
+
+
+  ldip = 0.75
+  mdpi = 1.0
+  hdpi = 1.5
+ xhdpi = 2.0
+xxhdpi = 3.0
+
+
+ic_dialog.png:
+  mdpi: 32*32 (30*30)
+  hdpi: 48*48 (45*45)
+ xhdpi: 64*64 (60*60)
+xxhdpi: 96*96 (90*90)
+
+ic_launcher.png:
+  mdpi: 48*48 (42*42)
+  hdpi: 72*72 (64*64)
+ xhdpi: 96*96 (84*84)
+xxhdpi: 144*144 (126*126)
+
+ic_stat_notify.png:
+  mdpi: 24*24 (22*22)
+  hdpi: 36*36 (33*33)
+ xhdpi: 48*48 (44*44)
+xxhdpi: 72*72 (66*66)

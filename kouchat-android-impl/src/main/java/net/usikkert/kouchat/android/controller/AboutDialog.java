@@ -67,7 +67,7 @@ public class AboutDialog {
 
         builder.setTitle(aboutTitle);
         builder.setCancelable(true);
-        builder.setIcon(R.drawable.kou_icon_32x32);
+        builder.setIcon(R.drawable.ic_dialog);
         builder.setPositiveButton(context.getString(android.R.string.ok), null);
         builder.setView(messageView);
         builder.create();

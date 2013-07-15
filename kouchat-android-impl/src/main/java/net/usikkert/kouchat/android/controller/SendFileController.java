@@ -72,7 +72,7 @@ public class SendFileController extends Activity implements UserListListener {
 
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
         setContentView(R.layout.send_file_dialog);
-        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.kou_icon_32x32);
+        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_dialog);
 
         final Intent intent = getIntent();
         final Uri uriToFile = intent.getParcelableExtra(Intent.EXTRA_STREAM);
