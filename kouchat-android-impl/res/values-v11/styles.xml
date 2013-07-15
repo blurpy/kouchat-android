@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Styles for Android 3.0 and newer. -->
+
+<resources>
+  <style name="Theme.Default.Dialog" parent="android:Theme.Holo.Light.Dialog"/>
+</resources>

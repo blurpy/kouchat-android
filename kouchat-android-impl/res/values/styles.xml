@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Styles for Android 2.3.3. -->
+
+<resources>
+  <style name="Theme.Default.Dialog" parent="android:Theme.Dialog"/>
+</resources>

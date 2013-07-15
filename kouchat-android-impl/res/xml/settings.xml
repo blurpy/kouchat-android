@@ -3,12 +3,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:title="@string/settings_title">
 
-  <EditTextPreference android:key="@string/settings_key_nick_name"
-                      android:title="@string/settings_nick_name_title"
-                      android:summary="@string/settings_nick_name_summary"
-                      android:maxLength="10"
-                      android:dialogTitle="@string/settings_nick_name_title"
-                      android:dialogMessage="@string/settings_nick_name_dialog_message"
-                      android:dialogIcon="@drawable/ic_dialog"/>
+  <net.usikkert.kouchat.android.controller.ThemedEditTextPreference
+      android:key="@string/settings_key_nick_name"
+      android:title="@string/settings_nick_name_title"
+      android:summary="@string/settings_nick_name_summary"
+      android:maxLength="10"
+      android:dialogTitle="@string/settings_nick_name_title"
+      android:dialogMessage="@string/settings_nick_name_dialog_message"
+      android:dialogIcon="@drawable/ic_dialog"/>
 
 </PreferenceScreen>
