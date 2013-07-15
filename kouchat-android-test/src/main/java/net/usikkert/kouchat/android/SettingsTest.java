@@ -90,6 +90,19 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertFalse(solo.searchText("Test"));
     }
 
+    public void test04UpButtonShouldGoBackToMainChat() {
+        RobotiumTestUtils.openSettings(solo);
+        solo.sleep(500);
+
+        final MainChatController mainChat = getActivity();
+        assertFalse(mainChat.isVisible());
+
+        RobotiumTestUtils.goUp(solo);
+        solo.sleep(500);
+
+        assertTrue(mainChat.isVisible());
+    }
+
     public void test99Quit() {
         RobotiumTestUtils.quit(solo);
         System.gc();

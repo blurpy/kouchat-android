@@ -39,6 +39,7 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.InstrumentationTestCase;
 import android.text.Layout;
@@ -221,6 +222,23 @@ public final class RobotiumTestUtils {
     }
 
     /**
+     * Clicks on the "up" button in the action bar. The up button is the icon with the left arrow.
+     *
+     * @param solo The solo tester.
+     */
+    public static void goUp(final Solo solo) {
+        // Native ActionBar in use.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            solo.clickOnView(solo.getView(android.R.id.home));
+        }
+
+        // Compatibility ActionBar from ActionBarSherlock in use.
+        else {
+            solo.clickOnView(solo.getView(R.id.abs__home));
+        }
+    }
+
+    /**
      * Switches the orientation between landscape and portrait.
      *
      * @param solo The solo tester.
@@ -262,14 +280,22 @@ public final class RobotiumTestUtils {
     }
 
     /**
+     * Goes to the settings in the menu.
+     *
+     * @param solo The solo tester.
+     */
+    public static void openSettings(final Solo solo) {
+        openMenu(solo);
+        solo.clickOnText("Settings");
+    }
+
+    /**
      * Goes to the settings in the menu, and selects the option to change the nick name.
      *
      * @param solo The solo tester.
      */
     public static void clickOnChangeNickNameInTheSettings(final Solo solo) {
-        // Go to the Settings menu item and choose to set nick name
-        openMenu(solo);
-        solo.clickOnText("Settings");
+        openSettings(solo);
         solo.clickOnText("Set nick name");
     }
 

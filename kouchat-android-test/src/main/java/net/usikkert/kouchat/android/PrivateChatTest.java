@@ -180,13 +180,26 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         openPrivateChat();
         solo.sleep(500);
 
-        final MainChatController activity = getActivity();
-        assertFalse(activity.isVisible());
+        final MainChatController mainChat = getActivity();
+        assertFalse(mainChat.isVisible());
 
         RobotiumTestUtils.goBack(solo);
         solo.sleep(500);
 
-        assertTrue(activity.isVisible());
+        assertTrue(mainChat.isVisible());
+    }
+
+    public void test10UpButtonShouldGoBackToMainChat() {
+        openPrivateChat();
+        solo.sleep(500);
+
+        final MainChatController mainChat = getActivity();
+        assertFalse(mainChat.isVisible());
+
+        RobotiumTestUtils.goUp(solo);
+        solo.sleep(500);
+
+        assertTrue(mainChat.isVisible());
     }
 
     public void test99Quit() {
