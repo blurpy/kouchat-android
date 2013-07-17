@@ -106,7 +106,7 @@ public class SmileyMap {
         smileyMap.put(":O", getDrawable(resources, R.drawable.smiley_omg));
         smileyMap.put(":@", getDrawable(resources, R.drawable.ic_smiley_angry));
         smileyMap.put(":S", getDrawable(resources, R.drawable.smiley_confused));
-        smileyMap.put(";(", getDrawable(resources, R.drawable.smiley_cry));
+        smileyMap.put(";(", getDrawable(resources, R.drawable.ic_smiley_cry));
         smileyMap.put(":$", getDrawable(resources, R.drawable.smiley_embarrassed));
         smileyMap.put("8)", getDrawable(resources, R.drawable.ic_smiley_shade));
     }
