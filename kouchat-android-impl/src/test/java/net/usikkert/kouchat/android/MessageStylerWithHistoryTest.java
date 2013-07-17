@@ -144,7 +144,7 @@ public class MessageStylerWithHistoryTest {
         assertNotNull(spans);
         assertEquals(1, spans.length);
         assertEquals(":)", spans[0].getSource());
-        assertEquals(R.drawable.smiley_smile, smileyId(spans[0].getDrawable()));
+        assertEquals(R.drawable.ic_smiley_smile, smileyId(spans[0].getDrawable()));
     }
 
     private int smileyId(final Drawable drawable) {

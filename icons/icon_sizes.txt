@@ -39,3 +39,9 @@ ic_envelope.png:
   hdpi: 24*15
  xhdpi: 32*20
 xxhdpi: 48*30
+
+ic_smiley.png:
+  mdpi: 20*20
+  hdpi: 30*30
+ xhdpi: 40*40
+xxhdpi: 60*60

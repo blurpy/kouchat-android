@@ -14,6 +14,7 @@
     <TextView android:id="@+id/privateChatView"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
+              android:lineSpacingMultiplier="1.1"
               android:textIsSelectable="true"/>
   </ScrollView>
 
