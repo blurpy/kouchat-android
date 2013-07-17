@@ -19,7 +19,5 @@ http://kouchat.googlecode.com/
 Source and graphics available under the GNU LGPL v3.
 See COPYING for details.
 
-The icons in resources/smileys are taken from the KDE 3.5 emoticon theme
-called Default (http://websvn.kde.org/branches/KDE/3.5/kdelibs/pics/emoticons/),
-available under the GNU Lesser General Public License
-(http://www.gnu.org/licenses/lgpl.html).
+The smileys in icons/smileys are taken from a GNOME icon theme.
+See the README in that folder for details.
