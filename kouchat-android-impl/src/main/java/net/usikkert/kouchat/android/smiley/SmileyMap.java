@@ -100,7 +100,7 @@ public class SmileyMap {
     private void loadSmileys(final Resources resources) {
         smileyMap.put(":)", getDrawable(resources, R.drawable.ic_smiley_smile));
         smileyMap.put(":(", getDrawable(resources, R.drawable.smiley_sad));
-        smileyMap.put(":p", getDrawable(resources, R.drawable.smiley_tongue));
+        smileyMap.put(":p", getDrawable(resources, R.drawable.ic_smiley_tongue));
         smileyMap.put(":D", getDrawable(resources, R.drawable.ic_smiley_teeth));
         smileyMap.put(";)", getDrawable(resources, R.drawable.smiley_wink));
         smileyMap.put(":O", getDrawable(resources, R.drawable.smiley_omg));
