@@ -27,3 +27,15 @@ ic_stat_notify.png:
   hdpi: 36*36 (33*33)
  xhdpi: 48*48 (44*44)
 xxhdpi: 72*72 (66*66)
+
+ic_dot.png:
+  mdpi: 16*10 (10*10)
+  hdpi: 24*15 (15*15)
+ xhdpi: 32*20 (20*20)
+xxhdpi: 48*30 (30*30)
+
+ic_envelope.png:
+  mdpi: 16*10
+  hdpi: 24*15
+ xhdpi: 32*20
+xxhdpi: 48*30
