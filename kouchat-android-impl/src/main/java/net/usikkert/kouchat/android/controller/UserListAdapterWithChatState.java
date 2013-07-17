@@ -55,8 +55,8 @@ public class UserListAdapterWithChatState extends UserListAdapter {
 
         Validate.notNull(context, "Context can not be null");
 
-        envelope = context.getResources().getDrawable(R.drawable.envelope);
-        dot = context.getResources().getDrawable(R.drawable.dot);
+        envelope = context.getResources().getDrawable(R.drawable.ic_envelope);
+        dot = context.getResources().getDrawable(R.drawable.ic_dot);
     }
 
     /**

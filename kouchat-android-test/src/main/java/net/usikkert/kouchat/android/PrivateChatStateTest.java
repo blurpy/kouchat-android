@@ -65,8 +65,8 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
 
         solo = new Solo(getInstrumentation(), activity);
         me = RobotiumTestUtils.getMe(activity);
-        envelope = getBitmap(R.drawable.envelope);
-        dot = getBitmap(R.drawable.dot);
+        envelope = getBitmap(R.drawable.ic_envelope);
+        dot = getBitmap(R.drawable.ic_dot);
         defaultOrientation = RobotiumTestUtils.getCurrentOrientation(solo);
 
         // Making sure the test client only logs on once during all the tests

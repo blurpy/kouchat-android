@@ -73,8 +73,8 @@ public class UserListAdapterWithChatStateTest {
         userListAdapter.add(user1);
         userListAdapter.add(user2);
 
-        envelope = context.getResources().getDrawable(R.drawable.envelope);
-        dot = context.getResources().getDrawable(R.drawable.dot);
+        envelope = context.getResources().getDrawable(R.drawable.ic_envelope);
+        dot = context.getResources().getDrawable(R.drawable.ic_dot);
     }
 
     @Test
