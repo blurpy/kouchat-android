@@ -116,7 +116,7 @@ public class SmileyMapTest {
     @Test
     public void getSmileyShouldSupportAllElevenSmileys() {
         assertEquals(R.drawable.ic_smiley_smile, smileyId(":)"));
-        assertEquals(R.drawable.smiley_sad, smileyId(":("));
+        assertEquals(R.drawable.ic_smiley_sad, smileyId(":("));
         assertEquals(R.drawable.ic_smiley_tongue, smileyId(":p"));
         assertEquals(R.drawable.ic_smiley_teeth, smileyId(":D"));
 
