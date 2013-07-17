@@ -2,11 +2,11 @@
 - KouChat CHANGES
 
 * version 0.10.0 (xx.xx.2013)
-  - Updated to use high resolution icons (in progress)
-  - Updated to target API 16 (Android 4.1)
-  - Added ActionBar, using ActionBarSherlock for compatibility with API 10 (Android 2.3.3)
-  - Upgraded Robolectric to version 2.1
-  - Added check for null in onDestroy of different activities to avoid NullPointerExceptions
+  - Updated to use high resolution icons.
+  - Updated to target API 16 (Android 4.1).
+  - Added ActionBar, using ActionBarSherlock for compatibility with API 10 (Android 2.3.3).
+  - Upgraded Robolectric to version 2.1.
+  - Added check for null in onDestroy of different activities to avoid NullPointerExceptions.
   - Added support for selecting text in the chat. Android 3.0 and newer only.
 
 
