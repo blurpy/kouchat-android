@@ -120,7 +120,7 @@ public class SmileyMapTest {
         assertEquals(R.drawable.ic_smiley_tongue, smileyId(":p"));
         assertEquals(R.drawable.ic_smiley_teeth, smileyId(":D"));
 
-        assertEquals(R.drawable.smiley_wink, smileyId(";)"));
+        assertEquals(R.drawable.ic_smiley_wink, smileyId(";)"));
         assertEquals(R.drawable.ic_smiley_omg, smileyId(":O"));
         assertEquals(R.drawable.ic_smiley_angry, smileyId(":@"));
         assertEquals(R.drawable.ic_smiley_confused, smileyId(":S"));
