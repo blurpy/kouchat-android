@@ -49,7 +49,7 @@ public final class ControllerUtils {
         scrollView.post(new Runnable() {
             @Override
             public void run() {
-                scrollView.scrollTo(0, scrollView.getBottom() + textView.getHeight());
+                scrollView.smoothScrollTo(0, scrollView.getBottom() + textView.getHeight());
             }
         });
     }
