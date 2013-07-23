@@ -54,6 +54,8 @@ import android.widget.TextView;
  */
 public class PrivateChatController extends SherlockActivity {
 
+    private final ControllerUtils controllerUtils = new ControllerUtils();
+
     private TextView privateChatView;
     private EditText privateChatInput;
     private ScrollView privateChatScroll;
@@ -83,7 +85,7 @@ public class PrivateChatController extends SherlockActivity {
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        ControllerUtils.makeLinksClickable(privateChatView);
+        controllerUtils.makeLinksClickable(privateChatView);
         privateChatInput.requestFocus();
     }
 
@@ -253,7 +255,7 @@ public class PrivateChatController extends SherlockActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                ControllerUtils.scrollTextViewToBottom(privateChatView, privateChatScroll);
+                controllerUtils.scrollTextViewToBottom(privateChatView, privateChatScroll);
             }
         }, ControllerUtils.ONE_SECOND);
     }
@@ -267,7 +269,7 @@ public class PrivateChatController extends SherlockActivity {
                 // Just scroll somewhere and click on the text to remove focus from the input field.
                 // Also fixes the annoying jumping scroll that happens sometimes.
                 if (privateChatInput.hasFocus()) {
-                    ControllerUtils.scrollTextViewToBottom(privateChatView, privateChatScroll);
+                    controllerUtils.scrollTextViewToBottom(privateChatView, privateChatScroll);
                 }
             }
         });

@@ -20,42 +20,21 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android.controller;
+package net.usikkert.kouchat.android.util;
 
-import android.widget.ScrollView;
-import android.widget.TextView;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
- * Reusable functionality for controllers.
+ * A mockito {@link Answer} that runs the first runnable argument.
  *
  * @author Christian Ihle
  */
-public class ControllerUtils {
+public class RunRunnableAnswer implements Answer<Void> {
 
-    /** Number of milliseconds in a second. */
-    public static final int ONE_SECOND = 1000;
-
-    /**
-     * Scrolls to the last line of text in a text view.
-     *
-     * @param textView The text view to scroll.
-     * @param scrollView The surrounding scroll view.
-     */
-    public void scrollTextViewToBottom(final TextView textView, final ScrollView scrollView) {
-        scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.smoothScrollTo(0, scrollView.getBottom() + textView.getHeight());
-            }
-        });
-    }
-
-    /**
-     * Makes sure the links you click on opens in the browser.
-     *
-     * @param textView The text view to activate link clicking on.
-     */
-    public void makeLinksClickable(final TextView textView) {
-        textView.setMovementMethod(LinkMovementMethodWithSelectSupport.getInstance());
+    @Override
+    public Void answer(final InvocationOnMock invocation) throws Throwable {
+        ((Runnable) invocation.getArguments()[0]).run();
+        return null;
     }
 }

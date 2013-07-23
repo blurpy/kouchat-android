@@ -38,6 +38,9 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import android.content.ServiceConnection;
+import android.widget.EditText;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 /**
  * Test of {@link MainChatController}.
@@ -51,7 +54,10 @@ public class MainChatControllerTest {
 
     private AndroidUserInterface ui;
     private UserList userList;
-    private ServiceConnection serviceConnection;
+    private TextView mainChatView;
+    private EditText mainChatInput;
+    private ScrollView mainChatScroll;
+    private ControllerUtils controllerUtils;
 
     @Before
     public void setUp() {
@@ -66,7 +72,19 @@ public class MainChatControllerTest {
         userList = mock(UserList.class);
         when(ui.getUserList()).thenReturn(userList);
 
-        serviceConnection = mock(ServiceConnection.class);
+        final ServiceConnection serviceConnection = mock(ServiceConnection.class);
+        mainChatView = mock(TextView.class);
+        mainChatInput = mock(EditText.class);
+        mainChatScroll = mock(ScrollView.class);
+        controllerUtils = mock(ControllerUtils.class);
+
+        TestUtils.setFieldValue(controller, "userList", userList);
+        TestUtils.setFieldValue(controller, "androidUserInterface", ui);
+        TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
+        TestUtils.setFieldValue(controller, "mainChatView", mainChatView);
+        TestUtils.setFieldValue(controller, "mainChatInput", mainChatInput);
+        TestUtils.setFieldValue(controller, "mainChatScroll", mainChatScroll);
+        TestUtils.setFieldValue(controller, "controllerUtils", controllerUtils);
     }
 
     @Test
@@ -89,8 +107,6 @@ public class MainChatControllerTest {
 
     @Test
     public void onResumeShouldResetAllNotifications() {
-        setupMocks();
-
         controller.onResume();
 
         verify(ui).resetAllNotifications();
@@ -98,15 +114,13 @@ public class MainChatControllerTest {
 
     @Test
     public void onResumeShouldHandleIfAndroidUserInterfaceIsNotInitializedYet() {
-        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
+        TestUtils.setFieldValue(controller, "androidUserInterface", null);
 
         controller.onResume();
     }
 
     @Test
     public void onDestroyShouldUnregister() {
-        setupMocks();
-
         controller.onDestroy();
 
         verify(userList).removeUserListListener(controller);
@@ -119,16 +133,32 @@ public class MainChatControllerTest {
 
     @Test
     public void onDestroyShouldNotFailIfServiceHasNotBeenBound() {
-        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
+        TestUtils.setFieldValue(controller, "androidUserInterface", null);
+        TestUtils.setFieldValue(controller, "userList", null);
+        TestUtils.setFieldValue(controller, "serviceConnection", null);
 
         controller.onDestroy();
 
         assertEquals(0, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
 
-    private void setupMocks() {
-        TestUtils.setFieldValue(controller, "userList", userList);
-        TestUtils.setFieldValue(controller, "androidUserInterface", ui);
-        TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
+    @Test
+    public void appendToChatShouldAppendAndScrollToBottomIfInputHasFocus() {
+        when(mainChatInput.hasFocus()).thenReturn(true);
+
+        controller.appendToChat("Some text");
+
+        verify(mainChatView).append("Some text");
+        verify(controllerUtils).scrollTextViewToBottom(mainChatView, mainChatScroll);
+    }
+
+    @Test
+    public void appendToChatShouldOnlyAppendIfInputLacksFocus() {
+        when(mainChatInput.hasFocus()).thenReturn(false);
+
+        controller.appendToChat("Some other text");
+
+        verify(mainChatView).append("Some other text");
+        verifyZeroInteractions(controllerUtils);
     }
 }

@@ -40,6 +40,9 @@ import org.robolectric.RobolectricTestRunner;
 
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.widget.EditText;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 /**
  * Test of {@link PrivateChatController}.
@@ -51,31 +54,46 @@ public class PrivateChatControllerTest {
 
     private PrivateChatController controller;
 
-    private User user;
-    private AndroidUserInterface ui;
-    private ServiceConnection serviceConnection;
     private AndroidPrivateChatWindow privateChatWindow;
+    private TextView privateChatView;
+    private EditText privateChatInput;
+    private ScrollView privateChatScroll;
+    private ControllerUtils controllerUtils;
 
     @Before
     public void setUp() {
         controller = new PrivateChatController();
 
-        user = new User("User", 1234);
+        final User user = new User("User", 1234);
         privateChatWindow = mock(AndroidPrivateChatWindow.class);
         user.setPrivchat(privateChatWindow);
 
-        ui = mock(AndroidUserInterface.class);
+        final AndroidUserInterface ui = mock(AndroidUserInterface.class);
         when(ui.getUser(1234)).thenReturn(user);
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
 
-        serviceConnection = mock(ServiceConnection.class);
+        final ServiceConnection serviceConnection = mock(ServiceConnection.class);
 
         final Intent intent = new Intent();
         intent.putExtra("userCode", 1234);
         controller.setIntent(intent);
+
+        privateChatView = mock(TextView.class);
+        privateChatInput = mock(EditText.class);
+        privateChatScroll = mock(ScrollView.class);
+        controllerUtils = mock(ControllerUtils.class);
+
+        TestUtils.setFieldValue(controller, "privateChatWindow", privateChatWindow);
+        TestUtils.setFieldValue(controller, "user", user);
+        TestUtils.setFieldValue(controller, "androidUserInterface", ui);
+        TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
+        TestUtils.setFieldValue(controller, "privateChatView", privateChatView);
+        TestUtils.setFieldValue(controller, "privateChatInput", privateChatInput);
+        TestUtils.setFieldValue(controller, "privateChatScroll", privateChatScroll);
+        TestUtils.setFieldValue(controller, "controllerUtils", controllerUtils);
     }
 
     @Test
@@ -98,8 +116,6 @@ public class PrivateChatControllerTest {
 
     @Test
     public void onDestroyShouldUnregister() {
-        setupMocks();
-
         controller.onDestroy();
 
         verify(privateChatWindow).unregisterPrivateChatController();
@@ -112,17 +128,32 @@ public class PrivateChatControllerTest {
 
     @Test
     public void onDestroyShouldNotFailIfServiceHasNotBeenBound() {
-        assertTrue(TestUtils.fieldValueIsNull(controller, "privateChatWindow"));
+        TestUtils.setFieldValue(controller, "privateChatWindow", null);
+        TestUtils.setFieldValue(controller, "user", null);
+        TestUtils.setFieldValue(controller, "androidUserInterface", null);
 
         controller.onDestroy();
 
         assertEquals(0, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
 
-    private void setupMocks() {
-        TestUtils.setFieldValue(controller, "privateChatWindow", privateChatWindow);
-        TestUtils.setFieldValue(controller, "user", user);
-        TestUtils.setFieldValue(controller, "androidUserInterface", ui);
-        TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
+    @Test
+    public void appendToPrivateChatShouldAppendAndScrollToBottomIfInputHasFocus() {
+        when(privateChatInput.hasFocus()).thenReturn(true);
+
+        controller.appendToPrivateChat("Some text");
+
+        verify(privateChatView).append("Some text");
+        verify(controllerUtils).scrollTextViewToBottom(privateChatView, privateChatScroll);
+    }
+
+    @Test
+    public void appendToPrivateChatShouldOnlyAppendIfInputLacksFocus() {
+        when(privateChatInput.hasFocus()).thenReturn(false);
+
+        controller.appendToPrivateChat("Some other text");
+
+        verify(privateChatView).append("Some other text");
+        verifyZeroInteractions(controllerUtils);
     }
 }

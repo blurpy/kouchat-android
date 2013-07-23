@@ -22,40 +22,55 @@
 
 package net.usikkert.kouchat.android.controller;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+
+import net.usikkert.kouchat.android.util.RunRunnableAnswer;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
- * Reusable functionality for controllers.
+ * Test of {@link ControllerUtils}.
  *
  * @author Christian Ihle
  */
-public class ControllerUtils {
+@RunWith(RobolectricTestRunner.class)
+public class ControllerUtilsTest {
 
-    /** Number of milliseconds in a second. */
-    public static final int ONE_SECOND = 1000;
+    private ControllerUtils controllerUtils;
 
-    /**
-     * Scrolls to the last line of text in a text view.
-     *
-     * @param textView The text view to scroll.
-     * @param scrollView The surrounding scroll view.
-     */
-    public void scrollTextViewToBottom(final TextView textView, final ScrollView scrollView) {
-        scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.smoothScrollTo(0, scrollView.getBottom() + textView.getHeight());
-            }
-        });
+    private TextView textView;
+    private ScrollView scrollView;
+
+    @Before
+    public void setUp() {
+        controllerUtils = new ControllerUtils();
+
+        textView = mock(TextView.class);
+        scrollView = mock(ScrollView.class);
     }
 
-    /**
-     * Makes sure the links you click on opens in the browser.
-     *
-     * @param textView The text view to activate link clicking on.
-     */
-    public void makeLinksClickable(final TextView textView) {
-        textView.setMovementMethod(LinkMovementMethodWithSelectSupport.getInstance());
+    @Test
+    public void scrollTextViewToBottomShouldSmoothScroll() {
+        when(textView.getHeight()).thenReturn(10);
+        when(scrollView.getBottom()).thenReturn(25);
+        doAnswer(new RunRunnableAnswer()).when(scrollView).post(any(Runnable.class));
+
+        controllerUtils.scrollTextViewToBottom(textView, scrollView);
+
+        verify(scrollView).smoothScrollTo(0, 35);
+    }
+
+    @Test
+    public void makeLinksClickableShouldUseLinkMovementMethodWithSelectSupport() {
+        controllerUtils.makeLinksClickable(textView);
+
+        verify(textView).setMovementMethod(any(LinkMovementMethodWithSelectSupport.class));
     }
 }

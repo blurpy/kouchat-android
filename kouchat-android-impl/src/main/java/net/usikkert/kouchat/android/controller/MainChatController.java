@@ -77,6 +77,8 @@ import android.widget.TextView;
  */
 public class MainChatController extends SherlockActivity implements UserListListener {
 
+    private final ControllerUtils controllerUtils = new ControllerUtils();
+
     private Intent chatServiceIntent;
     private ServiceConnection serviceConnection;
     private EditText mainChatInput;
@@ -105,7 +107,7 @@ public class MainChatController extends SherlockActivity implements UserListList
         registerMainChatInputListener();
         registerMainChatTextListener();
         registerUserListClickListener();
-        ControllerUtils.makeLinksClickable(mainChatView);
+        controllerUtils.makeLinksClickable(mainChatView);
         setupMainChatUserList();
         openKeyboard();
 
@@ -312,7 +314,7 @@ public class MainChatController extends SherlockActivity implements UserListList
                 // Just scroll somewhere and click on the text to remove focus from the input field.
                 // Also fixes the annoying jumping scroll that happens sometimes.
                 if (mainChatInput.hasFocus()) {
-                    ControllerUtils.scrollTextViewToBottom(mainChatView, mainChatScroll);
+                    controllerUtils.scrollTextViewToBottom(mainChatView, mainChatScroll);
                 }
             }
         });
@@ -331,7 +333,7 @@ public class MainChatController extends SherlockActivity implements UserListList
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                ControllerUtils.scrollTextViewToBottom(mainChatView, mainChatScroll);
+                controllerUtils.scrollTextViewToBottom(mainChatView, mainChatScroll);
             }
         }, ControllerUtils.ONE_SECOND);
 
