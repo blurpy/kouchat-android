@@ -8,6 +8,7 @@
   - Upgraded Robolectric to version 2.1.
   - Added check for null in onDestroy of different activities to avoid NullPointerExceptions.
   - Added support for selecting text in the chat. Android 3.0 and newer only.
+  - The software keyboard is not full screen on some phones in landscape mode any more
 
 
 * version 0.9.0 (09.06.2013)

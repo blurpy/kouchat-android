@@ -29,7 +29,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:imeOptions="actionSend"
+            android:imeOptions="actionSend|flagNoFullscreen"
             android:singleLine="true"
             android:layout_alignParentBottom="true"/>
 
