@@ -24,7 +24,7 @@ package net.usikkert.kouchat.android.service;
 
 import static org.mockito.Mockito.*;
 
-import net.usikkert.kouchat.android.AndroidUserInterface;
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 
 import org.junit.Before;
 import org.junit.Rule;

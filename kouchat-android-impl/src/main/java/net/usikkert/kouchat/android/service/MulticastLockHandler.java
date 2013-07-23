@@ -22,7 +22,7 @@
 
 package net.usikkert.kouchat.android.service;
 
-import net.usikkert.kouchat.android.AndroidUserInterface;
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.util.Validate;
 

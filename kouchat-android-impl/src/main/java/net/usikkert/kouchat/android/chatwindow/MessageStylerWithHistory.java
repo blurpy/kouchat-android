@@ -20,7 +20,7 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android;
+package net.usikkert.kouchat.android.chatwindow;
 
 import java.util.List;
 

@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.Constants;
-import net.usikkert.kouchat.android.AndroidUserInterface;
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.android.util.RobolectricTestUtils;
 import net.usikkert.kouchat.misc.User;

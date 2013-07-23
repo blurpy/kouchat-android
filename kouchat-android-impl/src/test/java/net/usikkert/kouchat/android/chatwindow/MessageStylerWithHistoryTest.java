@@ -20,9 +20,11 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android;
+package net.usikkert.kouchat.android.chatwindow;
 
 import static org.junit.Assert.*;
+
+import net.usikkert.kouchat.android.R;
 
 import org.junit.Before;
 import org.junit.Rule;

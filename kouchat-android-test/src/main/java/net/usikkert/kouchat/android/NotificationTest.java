@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android;
 
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;

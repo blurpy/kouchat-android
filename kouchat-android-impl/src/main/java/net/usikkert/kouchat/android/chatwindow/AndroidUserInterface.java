@@ -20,12 +20,13 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android;
+package net.usikkert.kouchat.android.chatwindow;
 
 import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 import net.usikkert.kouchat.Constants;
+import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.filetransfer.AndroidFileTransferListener;
 import net.usikkert.kouchat.android.notification.NotificationService;

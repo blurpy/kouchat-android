@@ -23,8 +23,8 @@
 package net.usikkert.kouchat.android.controller;
 
 import net.usikkert.kouchat.Constants;
-import net.usikkert.kouchat.android.AndroidPrivateChatWindow;
-import net.usikkert.kouchat.android.AndroidUserInterface;
+import net.usikkert.kouchat.android.chatwindow.AndroidPrivateChatWindow;
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;

@@ -26,7 +26,7 @@ import static junit.framework.Assert.*;
 
 import java.util.ArrayList;
 
-import net.usikkert.kouchat.android.AndroidUserInterface;
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
