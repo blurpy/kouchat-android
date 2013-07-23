@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.filetransfer.AndroidFileTransferListener;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.android.util.RobolectricTestUtils;
 import net.usikkert.kouchat.event.FileTransferListener;

@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.filetransfer.AndroidFileTransferListener;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.misc.ChatLogger;
