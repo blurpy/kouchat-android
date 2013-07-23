@@ -25,6 +25,7 @@ package net.usikkert.kouchat.android.controller;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+import net.usikkert.kouchat.android.component.LinkMovementMethodWithSelectSupport;
 import net.usikkert.kouchat.android.util.RunRunnableAnswer;
 
 import org.junit.Before;

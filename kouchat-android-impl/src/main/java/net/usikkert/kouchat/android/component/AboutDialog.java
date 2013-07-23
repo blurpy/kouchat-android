@@ -20,7 +20,7 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android.controller;
+package net.usikkert.kouchat.android.component;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.util.Validate;

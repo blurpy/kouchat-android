@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.android.controller;
 
+import net.usikkert.kouchat.android.component.LinkMovementMethodWithSelectSupport;
+
 import android.widget.ScrollView;
 import android.widget.TextView;
 
