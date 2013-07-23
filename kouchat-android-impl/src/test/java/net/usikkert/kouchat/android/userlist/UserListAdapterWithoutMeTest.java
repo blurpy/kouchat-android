@@ -20,13 +20,12 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android.controller;
+package net.usikkert.kouchat.android.userlist;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.misc.UserList;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,118 +35,98 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
+import android.content.Context;
+
 /**
- * Test of {@link UserListAdapter}.
+ * Test of {@link UserListAdapterWithoutMe}.
  *
  * @author Christian Ihle
  */
 @RunWith(RobolectricTestRunner.class)
-public class UserListAdapterTest {
+public class UserListAdapterWithoutMeTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    private UserListAdapter adapter;
+    private UserListAdapterWithoutMe adapter;
 
-    private UserList userList;
-
-    private User user1;
-    private User user2;
-    private User user3;
+    private User me;
 
     @Before
     public void setUp() {
-        adapter = new UserListAdapter(Robolectric.application.getApplicationContext());
+        me = new User("Me", 123);
 
-        userList = mock(UserList.class);
-
-        user1 = new User("User1", 1);
-        user2 = new User("User2", 2);
-        user3 = new User("User3", 3);
+        adapter = new UserListAdapterWithoutMe(Robolectric.application.getApplicationContext(), me);
     }
 
     @Test
     public void constructorShouldThrowExceptionIfContextIsNull() {
         expectedException.expect(NullPointerException.class); // Happens in Android superclass
 
-        new UserListAdapter(null);
+        new UserListAdapterWithoutMe(null, me);
     }
 
     @Test
-    public void addShouldThrowExceptionIfUserIsNull() {
+    public void constructorShouldThrowExceptionIfMeIsNull() {
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("User can not be null");
+        expectedException.expectMessage("Me can not be null");
 
-        adapter.add(null);
+        new UserListAdapterWithoutMe(mock(Context.class), null);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void getItem0ShouldGiveIndexOutOfBoundsExceptionWhenOnlyMe() {
+        adapter.add(me);
+
+        assertNull(adapter.getItem(0));
     }
 
     @Test
-    public void addShouldSortUsers() {
-        adapter.add(user3);
-        assertOrder(user3);
-
-        adapter.add(user1);
-        assertOrder(user1, user3);
-
-        adapter.add(user2);
-        assertOrder(user1, user2, user3);
-    }
-
-    @Test
-    public void addUsersShouldThrowExceptionIfUserListIsNull() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("UserList can not be null");
-
-        adapter.addUsers(null);
-    }
-
-    @Test
-    public void addUsersShouldAddAllUsersInTheList() {
-        when(userList.get(0)).thenReturn(user1);
-        when(userList.get(1)).thenReturn(user2);
-        when(userList.get(2)).thenReturn(user3);
-        when(userList.size()).thenReturn(3);
+    public void getCountShouldBe0WhenOnlyMe() {
+        adapter.add(me);
 
         assertEquals(0, adapter.getCount());
-
-        adapter.addUsers(userList);
-
-        assertEquals(3, adapter.getCount());
-        assertOrder(user1, user2, user3);
     }
 
     @Test
-    public void addUsersShouldSortUsers() {
-        when(userList.get(0)).thenReturn(user2);
-        when(userList.get(1)).thenReturn(user1);
-        when(userList.get(2)).thenReturn(user3);
-        when(userList.size()).thenReturn(3);
+    public void getItemShouldIgnoreMe() {
+        final User test1 = new User("Test1", 1);
+        final User test2 = new User("Test2", 2);
+        final User test3 = new User("Test3", 3);
+        final User test4 = new User("Test4", 4);
 
-        adapter.addUsers(userList);
+        adapter.add(test1);
+        adapter.add(test2);
+        adapter.add(me);
+        adapter.add(test3);
+        adapter.add(test4);
 
-        assertOrder(user1, user2, user3);
+        assertEquals(4, adapter.getCount());
+
+        assertSame(test1, adapter.getItem(0));
+        assertSame(test2, adapter.getItem(1));
+        assertSame(test3, adapter.getItem(2));
+        assertSame(test4, adapter.getItem(3));
     }
 
     @Test
-    public void sortShouldSortUsers() {
-        adapter.add(user1);
-        adapter.add(user2);
-        adapter.add(user3);
+    public void getItemShouldIgnoreMeAfterSort() {
+        final User penny = new User("Penny", 1);
+        final User amy = new User("Amy", 2);
+        final User que = new User("Que", 3);
+        final User fido = new User("Fido", 4);
 
-        user1.setNick("Xyz");
-        user2.setNick("Abc");
+        adapter.add(me);
+        adapter.add(penny);
+        adapter.add(amy);
+        adapter.add(que);
+        adapter.add(fido);
 
-        assertOrder(user1, user2, user3);
+        assertEquals(4, adapter.getCount());
 
-        adapter.sort();
-
-        assertOrder(user2, user3, user1);
-    }
-
-    private void assertOrder(final User... users) {
-        for (int i = 0; i < users.length; i++) {
-            final User user = users[i];
-            assertSame(user, adapter.getItem(i));
-        }
+        assertSame(amy, adapter.getItem(0));
+        assertSame(fido, adapter.getItem(1));
+        assertSame(penny, adapter.getItem(2));
+        assertSame(que, adapter.getItem(3));
     }
 }

@@ -20,7 +20,7 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android.controller;
+package net.usikkert.kouchat.android.userlist;
 
 import java.util.Comparator;
 
