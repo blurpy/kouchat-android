@@ -222,6 +222,12 @@
         <groupId>org.robolectric</groupId>
         <artifactId>robolectric</artifactId>
         <version>2.1.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
