@@ -307,7 +307,13 @@ public class MainChatController extends SherlockActivity implements UserListList
         runOnUiThread(new Runnable() {
             public void run() {
                 mainChatView.append(message);
-                ControllerUtils.scrollTextViewToBottom(mainChatView, mainChatScroll);
+
+                // Allow a way to avoid automatic scrolling to the bottom.
+                // Just scroll somewhere and click on the text to remove focus from the input field.
+                // Also fixes the annoying jumping scroll that happens sometimes.
+                if (mainChatInput.hasFocus()) {
+                    ControllerUtils.scrollTextViewToBottom(mainChatView, mainChatScroll);
+                }
             }
         });
     }

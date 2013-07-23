@@ -262,7 +262,13 @@ public class PrivateChatController extends SherlockActivity {
         runOnUiThread(new Runnable() {
             public void run() {
                 privateChatView.append(privateMessage);
-                ControllerUtils.scrollTextViewToBottom(privateChatView, privateChatScroll);
+
+                // Allow a way to avoid automatic scrolling to the bottom.
+                // Just scroll somewhere and click on the text to remove focus from the input field.
+                // Also fixes the annoying jumping scroll that happens sometimes.
+                if (privateChatInput.hasFocus()) {
+                    ControllerUtils.scrollTextViewToBottom(privateChatView, privateChatScroll);
+                }
             }
         });
     }

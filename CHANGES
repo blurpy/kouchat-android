@@ -3,12 +3,14 @@
 
 * version 0.10.0 (xx.xx.2013)
   - Updated to use high resolution icons.
-  - Updated to target API 16 (Android 4.1).
+  - Updated to target API 16 (Android 4.1), to get a more modern look.
   - Added ActionBar, using ActionBarSherlock for compatibility with API 10 (Android 2.3.3).
   - Upgraded Robolectric to version 2.1.
   - Added check for null in onDestroy of different activities to avoid NullPointerExceptions.
   - Added support for selecting text in the chat. Android 3.0 and newer only.
-  - The software keyboard is not full screen on some phones in landscape mode any more
+  - Stopped the software keyboard from going full screen on some phones in landscape mode.
+  - Added support for avoiding automatic text scroll when the input field has lost focus.
+    Click on some text to remove the focus from the input field. Android 3.0 and newer only.
 
 
 * version 0.9.0 (09.06.2013)
