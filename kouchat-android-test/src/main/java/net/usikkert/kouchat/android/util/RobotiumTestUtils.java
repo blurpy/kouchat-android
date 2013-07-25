@@ -395,41 +395,6 @@ public final class RobotiumTestUtils {
         assertEquals(userName + " - KouChat", solo.getCurrentActivity().getTitle());
     }
 
-    private static Point getCoordinatesForLine(final TextView textView, final String textToFind,
-                                               final int lineNumber, final String fullLine) {
-        final Layout layout = textView.getLayout();
-        final TextPaint paint = textView.getPaint();
-
-        final int textIndex = fullLine.indexOf(textToFind.charAt(0));
-        final String preText = fullLine.substring(0, textIndex);
-
-        final int textWidth = (int) Layout.getDesiredWidth(textToFind, paint);
-        final int preTextWidth = (int) Layout.getDesiredWidth(preText, paint);
-
-        final int[] textViewXYLocation = new int[2];
-        textView.getLocationOnScreen(textViewXYLocation);
-
-        // Width: in the middle of the text
-        final int xPosition = preTextWidth + (textWidth / 2);
-        // Height: in the middle of the given line, plus the text view position from the top, minus the amount scrolled
-        final int yPosition = layout.getLineBaseline(lineNumber) + textViewXYLocation[1] - textView.getScrollY();
-
-        return new Point(xPosition, yPosition);
-    }
-
-    private static boolean softwareKeyboardIsVisible(final Activity activity) {
-        final Rect visibleDisplayFrame = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleDisplayFrame);
-
-        final int statusBarHeight = visibleDisplayFrame.top;
-        final int activityHeight = visibleDisplayFrame.height();
-        final int screenHeight = activity.getWindowManager().getDefaultDisplay().getHeight();
-
-        final int diff = (screenHeight - statusBarHeight) - activityHeight;
-
-        return diff > screenHeight / 3;
-    }
-
     /**
      * Checks if the text is currently visible in the scrollview.
      *
@@ -559,5 +524,40 @@ public final class RobotiumTestUtils {
                 locationOnScreen[1], // top position
                 locationOnScreen[0] + scrollView.getWidth(), // right position
                 locationOnScreen[1] + scrollView.getHeight()); // bottom position
+    }
+
+    private static Point getCoordinatesForLine(final TextView textView, final String textToFind,
+                                               final int lineNumber, final String fullLine) {
+        final Layout layout = textView.getLayout();
+        final TextPaint paint = textView.getPaint();
+
+        final int textIndex = fullLine.indexOf(textToFind.charAt(0));
+        final String preText = fullLine.substring(0, textIndex);
+
+        final int textWidth = (int) Layout.getDesiredWidth(textToFind, paint);
+        final int preTextWidth = (int) Layout.getDesiredWidth(preText, paint);
+
+        final int[] textViewXYLocation = new int[2];
+        textView.getLocationOnScreen(textViewXYLocation);
+
+        // Width: in the middle of the text
+        final int xPosition = preTextWidth + (textWidth / 2);
+        // Height: in the middle of the given line, plus the text view position from the top, minus the amount scrolled
+        final int yPosition = layout.getLineBaseline(lineNumber) + textViewXYLocation[1] - textView.getScrollY();
+
+        return new Point(xPosition, yPosition);
+    }
+
+    private static boolean softwareKeyboardIsVisible(final Activity activity) {
+        final Rect visibleDisplayFrame = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleDisplayFrame);
+
+        final int statusBarHeight = visibleDisplayFrame.top;
+        final int activityHeight = visibleDisplayFrame.height();
+        final int screenHeight = activity.getWindowManager().getDefaultDisplay().getHeight();
+
+        final int diff = (screenHeight - statusBarHeight) - activityHeight;
+
+        return diff > screenHeight / 3;
     }
 }
