@@ -113,7 +113,7 @@ public final class RobotiumTestUtils {
      * @throws IllegalArgumentException If no textview was found with the given text.
      */
     public static TextView getTextViewWithText(final Solo solo, final String text) {
-        final ArrayList<TextView> currentTextViews = solo.getCurrentViews(TextView.class);
+        final List<TextView> currentTextViews = solo.getCurrentViews(TextView.class);
 
         for (final TextView currentTextView : currentTextViews) {
             if (currentTextView.getClass().equals(TextView.class) &&
@@ -125,35 +125,40 @@ public final class RobotiumTestUtils {
         throw new IllegalArgumentException("Could not find TextView with text: " + text);
     }
 
-    // TODO
-    public static List<String> getAllLinesOfText(final TextView textView) {
-        final ArrayList<String> allLines = new ArrayList<String>();
+    /**
+     * Gets all the lines of text from a textview.
+     *
+     * @param fullText The full text from the textview. This is a separate parameter to avoid memory issues
+     *                 with repeated calls to {@link TextView#getText()}.
+     * @param textView The textview to get all the lines of text from.
+     * @return All the lines if text in the textview. Each list item is one line.
+     */
+    public static List<String> getAllLinesOfText(final String fullText, final TextView textView) {
+        final List<String> allLines = new ArrayList<String>();
 
         final Layout layout = textView.getLayout();
         final int lineCount = layout.getLineCount();
 
         for (int currentLineNumber = 0; currentLineNumber < lineCount; currentLineNumber++) {
-            allLines.add(getLineOfText(textView, currentLineNumber));
+            allLines.add(getLineOfText(fullText, currentLineNumber, layout));
         }
 
         return allLines;
     }
 
     /**
-     * Gets the text on the given line in the textview.
+     * Gets the text on the given line from the full text of a textview.
      *
-     * @param textView The textview to get the text from.
-     * @param line The line in the textview to get the text from.
-     * @return The text on the given line.
+     * @param fullText The full text from a textview.
+     * @param lineNumber The line number in the textview to get the text from.
+     * @param layout The layout of the textview.
+     * @return The text found on the given line.
      */
-    public static String getLineOfText(final TextView textView, final int line) {
-        final Layout layout = textView.getLayout();
-        final String text = textView.getText().toString();
+    public static String getLineOfText(final String fullText, final int lineNumber, final Layout layout) {
+        final int lineStart = layout.getLineStart(lineNumber);
+        final int lineEnd = layout.getLineEnd(lineNumber);
 
-        final int lineStart = layout.getLineStart(line);
-        final int lineEnd = layout.getLineEnd(line);
-
-        return text.substring(lineStart, lineEnd);
+        return fullText.substring(lineStart, lineEnd);
     }
 
     /**
@@ -167,9 +172,10 @@ public final class RobotiumTestUtils {
     public static Point getCoordinatesForText(final TextView textView, final String text) {
         final Layout layout = textView.getLayout();
         final int lineCount = layout.getLineCount();
+        final String fullText = textView.getText().toString();
 
         for (int currentLineNumber = 0; currentLineNumber < lineCount; currentLineNumber++) {
-            final String currentLine = getLineOfText(textView, currentLineNumber);
+            final String currentLine = getLineOfText(fullText, currentLineNumber, layout);
 
             if (currentLine.contains(text)) {
                 return getCoordinatesForLine(textView, text, currentLineNumber, currentLine);
@@ -389,15 +395,15 @@ public final class RobotiumTestUtils {
         assertEquals(userName + " - KouChat", solo.getCurrentActivity().getTitle());
     }
 
-    private static Point getCoordinatesForLine(final TextView textView, final String text,
-                                               final int lineNumber, final String line) {
+    private static Point getCoordinatesForLine(final TextView textView, final String textToFind,
+                                               final int lineNumber, final String fullLine) {
         final Layout layout = textView.getLayout();
         final TextPaint paint = textView.getPaint();
 
-        final int textIndex = line.indexOf(text.charAt(0));
-        final String preText = line.substring(0, textIndex);
+        final int textIndex = fullLine.indexOf(textToFind.charAt(0));
+        final String preText = fullLine.substring(0, textIndex);
 
-        final int textWidth = (int) Layout.getDesiredWidth(text, paint);
+        final int textWidth = (int) Layout.getDesiredWidth(textToFind, paint);
         final int preTextWidth = (int) Layout.getDesiredWidth(preText, paint);
 
         final int[] textViewXYLocation = new int[2];
@@ -424,20 +430,27 @@ public final class RobotiumTestUtils {
         return diff > screenHeight / 3;
     }
 
-    // TODO
-    public static boolean textIsVisible(final Solo solo, final int textViewId, final int scrollViewId, final String text) {
+    /**
+     * Checks if the text is currently visible in the scrollview.
+     *
+     * @param solo The solo tester.
+     * @param textViewId Id of the textview with the text to check.
+     * @param scrollViewId Id of the scrollview that contains the textview.
+     * @param textToFind The text to check if it's visible.
+     * @return If the text is currently visible.
+     */
+    public static boolean textIsVisible(final Solo solo, final int textViewId, final int scrollViewId, final String textToFind) {
         final TextView textView = (TextView) solo.getView(textViewId);
         final ScrollView scrollView = (ScrollView) solo.getView(scrollViewId);
 
-        final int[] location = new int[2];
-        scrollView.getLocationOnScreen(location);
-        final Rect visibleScrollArea = new Rect(location[0], location[1], location[0] + scrollView.getWidth(), location[1] + scrollView.getHeight());
+        final Rect visibleScrollArea = getVisibleScrollArea(scrollView);
+        final String fullText = textView.getText().toString();
+        final List<String> allLinesOfText = getAllLinesOfText(fullText, textView);
+        final List<Line> matchingLinesOfText = getMatchingLinesOfText(fullText, allLinesOfText, textToFind);
 
-        final List<String> allLinesOfText = getAllLinesOfText(textView);
-        final List<Pair<Integer, String>> matchingLinesOfText = getMatchingLinesOfText(textView.getText().toString(), allLinesOfText, text);
-
-        for (final Pair<Integer, String> matchingLine : matchingLinesOfText) {
-            final Point coordinatesForLine = getCoordinatesForLine(textView, matchingLine.second, matchingLine.first, allLinesOfText.get(matchingLine.first));
+        for (final Line matchingLine : matchingLinesOfText) {
+            final Point coordinatesForLine = getCoordinatesForLine(textView, matchingLine.getLineText(),
+                    matchingLine.getLineNumber(), allLinesOfText.get(matchingLine.getLineNumber()));
 
             if (!visibleScrollArea.contains(coordinatesForLine.x, coordinatesForLine.y)) {
                 return false;
@@ -447,19 +460,45 @@ public final class RobotiumTestUtils {
         return true;
     }
 
-    // TODO
-    public static List<Pair<Integer, String>> getMatchingLinesOfText(final String fullText, final List<String> lines, final String text) {
-        final int lastIndex = fullText.lastIndexOf(text);
+    /**
+     * Gets all the lines of text matching text to find.
+     *
+     * @param fullText The full text to search in.
+     * @param allLinesOfText The full text, split in lines.
+     * @param textToFind The text to find the lines for.
+     * @return List containing the text to find, with the exact part of the text found on each line,
+     *         and which line number that part of the text was found at.
+     * @throws IllegalArgumentException If the text to find is not located in the full text.
+     */
+    public static List<Line> getMatchingLinesOfText(final String fullText, final List<String> allLinesOfText, final String textToFind) {
+        final int textToFindIndex = fullText.lastIndexOf(textToFind);
 
-        if (lastIndex < 0) {
-            throw new IllegalArgumentException("Could not find: " + text);
+        if (textToFindIndex < 0) {
+            throw new IllegalArgumentException("Could not find: " + textToFind);
         }
 
+        final int startLine = findStartLine(allLinesOfText, textToFindIndex);
+        final List<Line> matchingLines = new ArrayList<Line>();
+        final List<String> wordsFromTextToFind = splitOnBoundaries(textToFind);
+        removeEmptyFirstWord(wordsFromTextToFind);
+
+        for (int currentLineNumber = startLine; currentLineNumber < allLinesOfText.size(); currentLineNumber++) {
+            addMatchingLine(allLinesOfText.get(currentLineNumber), currentLineNumber, wordsFromTextToFind, matchingLines);
+
+            if (wordsFromTextToFind.isEmpty()) {
+                break;
+            }
+        }
+
+        return matchingLines;
+    }
+
+    private static int findStartLine(final List<String> allLinesOfText, final int textToFindIndex) {
         int startLine = 0;
         int currentIndex = 0;
 
-        for (final String line : lines) {
-            if (currentIndex + line.length() >= lastIndex) {
+        for (final String line : allLinesOfText) {
+            if (currentIndex + line.length() >= textToFindIndex) {
                 break;
             }
 
@@ -467,53 +506,58 @@ public final class RobotiumTestUtils {
             currentIndex += line.length();
         }
 
-        final ArrayList<Pair<Integer, String>> pairs = new ArrayList<Pair<Integer, String>>();
-        final ArrayList<String> words = new ArrayList<String>(Arrays.asList(text.split("\\b")));
+        return startLine;
+    }
 
+    private static List<String> splitOnBoundaries(final String text) {
+        return new ArrayList<String>(Arrays.asList(text.split("\\b")));
+    }
+
+    private static void removeEmptyFirstWord(final List<String> words) {
         if (words.get(0).equals("")) {
             words.remove(0);
         }
-
-        for (int i = startLine; i < lines.size(); i++) {
-            addLine(lines.get(i), i, words, pairs);
-
-            if (words.isEmpty()) {
-                break;
-            }
-        }
-
-        return pairs;
     }
 
-    private static void addLine(final String line, final int i, final ArrayList<String> words, final ArrayList<Pair<Integer, String>> pairs) {
-        String word = words.get(0);
+    private static void addMatchingLine(final String currentLine, final int currentLineNumber,
+                                        final List<String> wordsFromTextToFind, final List<Line> matchingLines) {
+        String wordFromTextToFind = wordsFromTextToFind.get(0);
 
-        if (!line.contains(word)) {
+        if (!currentLine.contains(wordFromTextToFind)) {
             return;
         }
 
-        final ArrayList<String> linewords = new ArrayList<String>(Arrays.asList(line.substring(line.indexOf(word)).split("\\b")));
+        final String currentLineStartingAtWord = currentLine.substring(currentLine.indexOf(wordFromTextToFind));
+        final List<String> wordsFromCurrentLine = splitOnBoundaries(currentLineStartingAtWord);
+        removeEmptyFirstWord(wordsFromCurrentLine);
 
-        if (linewords.get(0).equals("")) {
-            linewords.remove(0);
-        }
+        String wordFromCurrentLine = wordsFromCurrentLine.remove(0);
+        wordFromTextToFind = wordsFromTextToFind.remove(0);
+        final StringBuilder matchingLine = new StringBuilder();
 
-        String lineword = linewords.remove(0);
-        word = words.remove(0);
+        while (wordFromTextToFind.equals(wordFromCurrentLine)) {
+            matchingLine.append(wordFromCurrentLine);
 
-        final StringBuilder sb = new StringBuilder();
-
-        while (word.equals(lineword)) {
-            sb.append(lineword);
-
-            if (words.isEmpty() || linewords.isEmpty()) {
+            if (wordsFromTextToFind.isEmpty() || wordsFromCurrentLine.isEmpty()) {
                 break;
             }
 
-            word = words.remove(0);
-            lineword = linewords.remove(0);
+            wordFromTextToFind = wordsFromTextToFind.remove(0);
+            wordFromCurrentLine = wordsFromCurrentLine.remove(0);
         }
 
-        pairs.add(new Pair<Integer, String>(i, sb.toString()));
+        matchingLines.add(new Line(currentLineNumber, matchingLine.toString()));
+    }
+
+    private static Rect getVisibleScrollArea(final ScrollView scrollView) {
+        final int[] locationOnScreen = new int[2];
+
+        scrollView.getLocationOnScreen(locationOnScreen);
+
+        return new Rect(
+                locationOnScreen[0], // left position
+                locationOnScreen[1], // top position
+                locationOnScreen[0] + scrollView.getWidth(), // right position
+                locationOnScreen[1] + scrollView.getHeight()); // bottom position
     }
 }

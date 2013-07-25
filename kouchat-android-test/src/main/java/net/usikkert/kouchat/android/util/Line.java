@@ -23,26 +23,33 @@
 package net.usikkert.kouchat.android.util;
 
 /**
- * TODO
+ * Class to represent a line of text.
  *
- * @param <F>
- * @param <S>
+ * @author Christian Ihle
  */
-public class Pair<F, S> {
+public class Line {
 
-    public final F first;
-    public final S second;
+    private final Integer lineNumber;
+    private final String lineText;
 
-    public Pair(F first, S second) {
-        this.first = first;
-        this.second = second;
+    public Line(final Integer lineNumber, final String lineText) {
+        this.lineNumber = lineNumber;
+        this.lineText = lineText;
+    }
+
+    public Integer getLineNumber() {
+        return lineNumber;
+    }
+
+    public String getLineText() {
+        return lineText;
     }
 
     @Override
     public String toString() {
-        return "Pair{" +
-                "first=" + first +
-                ", second=" + second +
+        return "Line{" +
+                "first=" + lineNumber +
+                ", second=" + lineText +
                 '}';
     }
 }

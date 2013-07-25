@@ -33,7 +33,7 @@ import org.junit.rules.ExpectedException;
 
 
 /**
- * TODO
+ * Test of {@link RobotiumTestUtils}.
  *
  * @author Christian Ihle
  */
@@ -43,9 +43,16 @@ public class RobotiumTestUtilsTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void name() {
-        final List<Pair<Integer, String>> lines = RobotiumTestUtils.getMatchingLinesOfText(
-                "TODO", Arrays.asList("something ", "http://", "kouchat.googlecode", ".com", " here"), "http://kouchat.googlecode.com");
+    public void getMatchingLinesOfTextShouldFindCorrectLinesWhenBetweenOtherLines() {
+        final List<Line> lines = RobotiumTestUtils.getMatchingLinesOfText(
+                "something http://kouchat.googlecode.com here",
+                Arrays.asList(
+                        "something ",
+                        "http://",
+                        "kouchat.googlecode",
+                        ".com",
+                        " here"),
+                "http://kouchat.googlecode.com");
 
         assertEquals(3, lines.size());
 
@@ -55,41 +62,81 @@ public class RobotiumTestUtilsTest {
     }
 
     @Test
-    public void name2() {
+    public void getMatchingLinesOfTextShouldThrowExceptionIfAllWordsAreThereButInWrongOrder() {
         expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Could not find: http://kouchat.googlecode.com");
 
         RobotiumTestUtils.getMatchingLinesOfText(
-                "TODO", Arrays.asList("http://", "googlecode.kouchat", ".com"), "http://kouchat.googlecode.com");
+                "http://googlecode.kouchat.com",
+                Arrays.asList(
+                        "http://",
+                        "googlecode.kouchat",
+                        ".com"),
+                "http://kouchat.googlecode.com");
     }
 
     @Test
-    public void name4() {
+    public void getMatchingLinesOfTextShouldThrowExceptionIfAllWordsAreThereButExtraWordInTheMiddle() {
         expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Could not find: http://kouchat.googlecode.com");
 
         RobotiumTestUtils.getMatchingLinesOfText(
-                "TODO", Arrays.asList("http://", "kouchat.googlecode", " something ", ".com"), "http://kouchat.googlecode.com");
+                "http://kouchat.googlecode something .com",
+                Arrays.asList(
+                        "http://",
+                        "kouchat.googlecode",
+                        " something ",
+                        ".com"),
+                "http://kouchat.googlecode.com");
     }
 
     @Test
-    public void name3() {
-        final List<Pair<Integer, String>> lines = RobotiumTestUtils.getMatchingLinesOfText(
-                "TODO", Arrays.asList(
-                        "http://", "kouchat.googlecode ",
-                        "http://", "kouchat.googlecode", ".com"),
+    public void getMatchingLinesOfTextShouldFindTheLinesInSequence() {
+        final List<Line> lines = RobotiumTestUtils.getMatchingLinesOfText(
+                "http://kouchat.googlecode http://kouchat.googlecode.com",
+                Arrays.asList(
+                        "http://",
+                        "kouchat.googlecode ",
+                        "http://",
+                        "kouchat.googlecode",
+                        ".com"),
                 "http://kouchat.googlecode.com");
 
         assertEquals(3, lines.size());
 
-        correctLineContent(lines.get(0), 2, "http://");
-        correctLineContent(lines.get(1), 3, "kouchat.googlecode");
+        correctLineContent(lines.get(0), 2, "http://"); // Not line 0
+        correctLineContent(lines.get(1), 3, "kouchat.googlecode"); // Not line 1
         correctLineContent(lines.get(2), 4, ".com");
     }
 
     @Test
-    public void name5() {
-        final List<Pair<Integer, String>> lines = RobotiumTestUtils.getMatchingLinesOfText(
-                "TODO", Arrays.asList(
-                        "[17:02:41] *** Tina aborted ", "reception of ", "kouchat-512x512.png ***"),
+    public void getMatchingLinesOfTextShouldFindTheLastOccurrence() {
+        final List<Line> lines = RobotiumTestUtils.getMatchingLinesOfText(
+                "http://kouchat.googlecode.com http://kouchat.googlecode.com",
+                Arrays.asList(
+                        "http://",
+                        "kouchat.googlecode",
+                        ".com ",
+                        "http://",
+                        "kouchat.googlecode",
+                        ".com"),
+                "http://kouchat.googlecode.com");
+
+        assertEquals(3, lines.size());
+
+        correctLineContent(lines.get(0), 3, "http://");
+        correctLineContent(lines.get(1), 4, "kouchat.googlecode");
+        correctLineContent(lines.get(2), 5, ".com");
+    }
+
+    @Test
+    public void getMatchingLinesOfTextShouldFindCorrectLinesWhenFirstAndLastLinesHaveExtraText() {
+        final List<Line> lines = RobotiumTestUtils.getMatchingLinesOfText(
+                "[17:02:41] *** Tina aborted reception of kouchat-512x512.png ***",
+                Arrays.asList(
+                        "[17:02:41] *** Tina aborted ",
+                        "reception of ",
+                        "kouchat-512x512.png ***"),
                 "Tina aborted reception of kouchat-512x512.png");
 
         assertEquals(3, lines.size());
@@ -100,10 +147,19 @@ public class RobotiumTestUtilsTest {
     }
 
     @Test
-    public void name6() {
-        final List<Pair<Integer, String>> lines = RobotiumTestUtils.getMatchingLinesOfText(
-                "TODO", Arrays.asList(
-                        "[18:47:32] *** ", "Tina ", "aborted", " reception ", "of ", "kouchat", "-512x512", ".png"),
+    public void getMatchingLinesOfTextShouldFindCorrectLinesEvenWhenSpreadOverManyLines() {
+        final List<Line> lines = RobotiumTestUtils.getMatchingLinesOfText(
+                "[18:47:32] *** Tina aborted reception of kouchat-512x512.png ***",
+                Arrays.asList(
+                        "[18:47:32] *** ",
+                        "Tina ",
+                        "aborted",
+                        " reception ",
+                        "of ",
+                        "kouchat",
+                        "-512x512",
+                        ".png",
+                        " ***"),
                 "Tina aborted reception of kouchat-512x512.png");
 
         assertEquals(7, lines.size());
@@ -118,10 +174,10 @@ public class RobotiumTestUtilsTest {
     }
 
     @Test
-    public void name7() {
-        final List<Pair<Integer, String>> lines = RobotiumTestUtils.getMatchingLinesOfText(
-                "TODO", Arrays.asList(
-                        "[17:02:41] *** Tina aborted reception of kouchat-512x512.png"),
+    public void getMatchingLinesOfTextShouldFindCorrectLineWhenAllOnOneLine() {
+        final List<Line> lines = RobotiumTestUtils.getMatchingLinesOfText(
+                "Tina aborted reception of kouchat-512x512.png",
+                Arrays.asList("Tina aborted reception of kouchat-512x512.png"),
                 "Tina aborted reception of kouchat-512x512.png");
 
         assertEquals(1, lines.size());
@@ -129,10 +185,48 @@ public class RobotiumTestUtilsTest {
         correctLineContent(lines.get(0), 0, "Tina aborted reception of kouchat-512x512.png");
     }
 
-    // TODO ikke alle ordene funnet
+    @Test
+    public void getMatchingLinesOfTextShouldFindCorrectLineWhenAllOnOneLineWithExtraTextBeforeAndAfter() {
+        final List<Line> lines = RobotiumTestUtils.getMatchingLinesOfText(
+                "[17:02:41] *** Tina aborted reception of kouchat-512x512.png ***",
+                Arrays.asList("[17:02:41] *** Tina aborted reception of kouchat-512x512.png ***"),
+                "Tina aborted reception of kouchat-512x512.png");
 
-    private void correctLineContent(final Pair<Integer, String> line, final Integer lineNumber, final String lineText) {
-        assertEquals(lineNumber, line.first);
-        assertEquals(lineText, line.second);
+        assertEquals(1, lines.size());
+
+        correctLineContent(lines.get(0), 0, "Tina aborted reception of kouchat-512x512.png");
+    }
+
+    @Test
+    public void getMatchingLinesOfTextShouldThrowExceptionIfAWordIsMissingOnTheSameLine() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Could not find: Tina aborted reception of kouchat-512x512.png");
+
+        RobotiumTestUtils.getMatchingLinesOfText(
+                "Tina aborted reception of kouchat-512x512",
+                Arrays.asList("Tina aborted reception of kouchat-512x512"),
+                "Tina aborted reception of kouchat-512x512.png");
+    }
+
+    @Test
+    public void getMatchingLinesOfTextShouldThrowExceptionIfAWordIsMissingOnANewLine() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Could not find: Tina aborted reception of kouchat-512x512.png");
+
+        RobotiumTestUtils.getMatchingLinesOfText(
+                "Tina aborted reception of kouchat-512x512",
+                Arrays.asList(
+                        "Tina ",
+                        "aborted",
+                        " reception ",
+                        "of ",
+                        "kouchat",
+                        "-512x512"),
+                "Tina aborted reception of kouchat-512x512.png");
+    }
+
+    private void correctLineContent(final Line line, final Integer lineNumber, final String lineText) {
+        assertEquals(lineNumber, line.getLineNumber());
+        assertEquals(lineText, line.getLineText());
     }
 }
