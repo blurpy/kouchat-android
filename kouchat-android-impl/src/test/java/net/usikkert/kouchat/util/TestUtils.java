@@ -79,6 +79,49 @@ public final class TestUtils {
         return getFieldValue(object, Object.class, fieldName) == null;
     }
 
+    /**
+     * Checks whether all the fields in the given object are <code>null</code>, except for primitives.
+     *
+     * @param object The object to check.
+     * @return If all fields are null.
+     */
+    public static boolean allFieldsAreNull(final Object object) {
+        final Field[] declaredFields = object.getClass().getDeclaredFields();
+
+        for (final Field declaredField : declaredFields) {
+            final Class<?> declaredFieldType = declaredField.getType();
+
+            if (declaredFieldType.isPrimitive()) {
+                // Primitive can't be null - ignoring
+                continue;
+            }
+
+            if (!fieldValueIsNull(object, declaredField.getName())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks whether all the fields in the given object have a value other than <code>null</code>.
+     *
+     * @param object The object to check.
+     * @return If all fields are have a value.
+     */
+    public static boolean allFieldsHaveValue(final Object object) {
+        final Field[] declaredFields = object.getClass().getDeclaredFields();
+
+        for (final Field declaredField : declaredFields) {
+            if (fieldValueIsNull(object, declaredField.getName())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private static void setValue(final Object object, final Object value, final Field field) {
         final boolean originalAccessible = field.isAccessible();
 

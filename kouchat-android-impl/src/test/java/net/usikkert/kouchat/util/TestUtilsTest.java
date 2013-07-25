@@ -59,12 +59,12 @@ public class TestUtilsTest {
 
     @Test
     public void getFieldValueShouldSupportInheritedPrivateAndPublicFields() {
-        final ExtendingClass extendingClass = new ExtendingClass("private", 555);
+        final ExtendingTestClass extendingTestClass = new ExtendingTestClass("private", 555);
 
-        final String privateField = TestUtils.getFieldValue(extendingClass, String.class, "privateField");
+        final String privateField = TestUtils.getFieldValue(extendingTestClass, String.class, "privateField");
         assertEquals("private", privateField);
 
-        final Integer publicField = TestUtils.getFieldValue(extendingClass, Integer.class, "publicField");
+        final Integer publicField = TestUtils.getFieldValue(extendingTestClass, Integer.class, "publicField");
         assertEquals(Integer.valueOf(555), publicField);
     }
 
@@ -96,17 +96,17 @@ public class TestUtilsTest {
         TestUtils.setFieldValue(testClass, "privateField", "something");
 
         assertEquals(Integer.valueOf(50), testClass.publicField);
-        assertEquals("something", testClass.privateField);
+        assertEquals("something", testClass.getPrivateField());
     }
 
     @Test
     public void setFieldValueShouldSupportInheritedPrivateAndPublicFields() {
-        final ExtendingClass extendingClass = new ExtendingClass("test", 1);
-        TestUtils.setFieldValue(extendingClass, "publicField", 50);
-        TestUtils.setFieldValue(extendingClass, "privateField", "something");
+        final ExtendingTestClass extendingTestClass = new ExtendingTestClass("test", 1);
+        TestUtils.setFieldValue(extendingTestClass, "publicField", 50);
+        TestUtils.setFieldValue(extendingTestClass, "privateField", "something");
 
-        assertEquals(Integer.valueOf(50), extendingClass.publicField);
-        assertEquals("something", extendingClass.getPrivateField());
+        assertEquals(Integer.valueOf(50), extendingTestClass.publicField);
+        assertEquals("something", extendingTestClass.getPrivateField());
     }
 
     @Test
@@ -116,7 +116,7 @@ public class TestUtilsTest {
         TestUtils.setFieldValue(testClass, "privateField", null);
 
         assertNull(testClass.publicField);
-        assertNull(testClass.privateField);
+        assertNull(testClass.getPrivateField());
     }
 
     @Test
@@ -139,25 +139,37 @@ public class TestUtilsTest {
         assertFalse(TestUtils.fieldValueIsNull(new TestClass("not null", 1), "privateField"));
     }
 
-    class TestClass {
-
-        private final String privateField;
-        public Integer publicField;
-
-        TestClass(final String privateField, final Integer publicField) {
-            this.privateField = privateField;
-            this.publicField = publicField;
-        }
-
-        String getPrivateField() {
-            return privateField;
-        }
+    @Test
+    public void allFieldsAreNullShouldBeFalseIfAFieldHaveAValue() {
+        assertFalse(TestUtils.allFieldsAreNull(new TestClass("not null", 1)));
+        assertFalse(TestUtils.allFieldsAreNull(new TestClass("not null", null)));
+        assertFalse(TestUtils.allFieldsAreNull(new TestClass(null, 3)));
     }
 
-    class ExtendingClass extends TestClass {
+    @Test
+    public void allFieldsAreNullShouldBeTrueIfAllFieldsHaveNullValues() {
+        assertTrue(TestUtils.allFieldsAreNull(new TestClass(null, null)));
+    }
 
-        ExtendingClass(final String privateField, final Integer publicField) {
-            super(privateField, publicField);
-        }
+    @Test
+    public void allFieldsAreNullShouldBeTrueEvenIfPrimitiveFieldExists() {
+        assertTrue(TestUtils.allFieldsAreNull(new PrimitiveTestClass(true)));
+    }
+
+    @Test
+    public void allFieldsHaveValueShouldBeFalseIfAFieldIsNull() {
+        assertFalse(TestUtils.allFieldsHaveValue(new TestClass(null, null)));
+        assertFalse(TestUtils.allFieldsHaveValue(new TestClass("not null", null)));
+        assertFalse(TestUtils.allFieldsHaveValue(new TestClass(null, 3)));
+    }
+
+    @Test
+    public void allFieldsHaveValueShouldBeTrueIfAllFieldsHaveValues() {
+        assertTrue(TestUtils.allFieldsHaveValue(new TestClass("not null", 1)));
+    }
+
+    @Test
+    public void allFieldsHaveValueShouldBeTrueEvenIfPrimitiveFieldExists() {
+        assertTrue(TestUtils.allFieldsHaveValue(new PrimitiveTestClass(true)));
     }
 }
