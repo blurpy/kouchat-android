@@ -46,7 +46,6 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     private Solo solo;
     private TestClient client;
     private User me;
-    private ListView userList;
     private int defaultOrientation;
 
     public UserListTest() {
@@ -64,17 +63,19 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
 
         solo.sleep(100);
 
-        userList = solo.getCurrentViews(ListView.class).get(0);
-
         defaultOrientation = RobotiumTestUtils.getCurrentOrientation(solo);
     }
 
     public void test01UserListShouldContainMeOnLogon() {
+        final ListView userList = getUserList();
+
         assertEquals(1, userList.getCount());
         assertSame(me, userList.getItemAtPosition(0));
     }
 
     public void test02UserListShouldAddNewUser() {
+        final ListView userList = getUserList();
+
         assertEquals(1, userList.getCount());
 
         client.logon();
@@ -218,7 +219,6 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo = null;
         client = null;
         me = null;
-        userList = null;
 
         System.gc();
     }
@@ -228,6 +228,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     private User getUserAtPosition(final int position) {
+        final ListView userList = getUserList();
         return (User) userList.getItemAtPosition(position);
     }
 
@@ -235,7 +236,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(500);
         assertEquals(nickName, getUserNameAtPosition(userNumber));
 
-        final LinearLayout row = (LinearLayout) solo.getCurrentViews(ListView.class).get(0).getChildAt(userNumber);
+        final LinearLayout row = (LinearLayout) getUserList().getChildAt(userNumber);
         final TextView textView = (TextView) row.getChildAt(1);
         final Typeface typeface = textView.getTypeface();
 
@@ -246,7 +247,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(500);
         assertEquals(nickName, getUserNameAtPosition(userNumber));
 
-        final LinearLayout row = (LinearLayout) solo.getCurrentViews(ListView.class).get(0).getChildAt(userNumber);
+        final LinearLayout row = (LinearLayout) getUserList().getChildAt(userNumber);
         final TextView textView = (TextView) row.getChildAt(1);
         final CharSequence displayText = textView.getText();
 
@@ -258,5 +259,9 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
 
         fail("Invalid display text of user in user list: " + displayText);
         return false;
+    }
+
+    private ListView getUserList() {
+        return solo.getCurrentViews(ListView.class).get(0);
     }
 }
