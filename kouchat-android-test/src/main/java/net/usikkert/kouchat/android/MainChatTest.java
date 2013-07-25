@@ -86,6 +86,11 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(solo.searchText("Welcome to KouChat"));
 
         RobotiumTestUtils.switchOrientation(solo);
+        solo.sleep(500);
+
+        // Seems to be issues with finding the text view inside the scroll view when the software keyboard is visible
+        solo.hideSoftKeyboard();
+        solo.sleep(500);
 
         assertTrue(solo.searchText("Welcome to KouChat"));
     }
