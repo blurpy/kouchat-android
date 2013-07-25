@@ -174,11 +174,19 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         RobotiumTestUtils.goHome(solo);
         RobotiumTestUtils.quit(solo);
 
-        System.gc();
+        arthur = null;
+        ford = null;
+        trillian = null;
+        originalNickName = null;
     }
 
     public void tearDown() {
         solo.finishOpenedActivities();
+
+        solo = null;
+        me = null;
+
+        System.gc();
     }
 
     private long getDateInPast() {

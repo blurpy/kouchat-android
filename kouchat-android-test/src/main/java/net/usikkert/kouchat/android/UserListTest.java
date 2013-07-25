@@ -208,13 +208,19 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
-        System.gc();
     }
 
     public void tearDown() {
         client.logoff();
         RobotiumTestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
+
+        solo = null;
+        client = null;
+        me = null;
+        userList = null;
+
+        System.gc();
     }
 
     private String getUserNameAtPosition(final int position) {

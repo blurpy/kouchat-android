@@ -329,7 +329,8 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
-        System.gc();
+
+        client = null;
     }
 
     public void tearDown() {
@@ -339,6 +340,14 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
 
         RobotiumTestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
+
+        client2 = null;
+        solo = null;
+        envelope = null;
+        dot = null;
+        me = null;
+
+        System.gc();
     }
 
     private void openPrivateChat() {

@@ -203,7 +203,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         RobotiumTestUtils.launchMainChat(this);
         RobotiumTestUtils.quit(solo);
 
-        System.gc();
+        image = null;
     }
 
     public void tearDown() {
@@ -212,6 +212,13 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         xen.logoff();
 
         solo.finishOpenedActivities();
+
+        solo = null;
+        albert = null;
+        tina = null;
+        xen = null;
+
+        System.gc();
     }
 
     private void setActivityIntent(final Uri uri) {

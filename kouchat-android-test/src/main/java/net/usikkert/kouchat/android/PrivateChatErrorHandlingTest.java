@@ -115,8 +115,6 @@ public class PrivateChatErrorHandlingTest extends ActivityInstrumentationTestCas
 
         RobotiumTestUtils.quit(solo);
         solo.sleep(500);
-
-        System.gc();
     }
 
     public void tearDown() {
@@ -125,5 +123,10 @@ public class PrivateChatErrorHandlingTest extends ActivityInstrumentationTestCas
         }
 
         solo.finishOpenedActivities();
+
+        solo = null;
+        client = null;
+
+        System.gc();
     }
 }

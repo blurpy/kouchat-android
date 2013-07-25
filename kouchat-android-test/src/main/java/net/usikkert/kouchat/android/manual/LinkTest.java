@@ -106,11 +106,16 @@ public class LinkTest extends ActivityInstrumentationTestCase2<MainChatControlle
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
-        System.gc();
+
+        client = null;
     }
 
     public void tearDown() {
         RobotiumTestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
+
+        solo = null;
+
+        System.gc();
     }
 }

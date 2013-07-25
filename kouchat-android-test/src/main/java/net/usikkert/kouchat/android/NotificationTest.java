@@ -249,7 +249,8 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
-        System.gc();
+
+        client = null;
     }
 
     public void tearDown() {
@@ -258,6 +259,13 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         }
 
         solo.finishOpenedActivities();
+
+        otherUser = null;
+        solo = null;
+        notificationService = null;
+        me = null;
+
+        System.gc();
     }
 
     private void assertDefaultNotification() {

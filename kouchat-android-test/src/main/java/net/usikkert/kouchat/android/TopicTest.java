@@ -112,11 +112,18 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
-        System.gc();
+
+        client = null;
     }
 
     public void tearDown() {
         RobotiumTestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
+
+        solo = null;
+        activity = null;
+        me = null;
+
+        System.gc();
     }
 }

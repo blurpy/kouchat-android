@@ -105,7 +105,8 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void test99Quit() {
         RobotiumTestUtils.quit(solo);
-        System.gc();
+
+        originalNickName = null;
     }
 
     public void tearDown() {
@@ -114,5 +115,11 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         }
 
         solo.finishOpenedActivities();
+
+        solo = null;
+        me = null;
+        client = null;
+
+        System.gc();
     }
 }

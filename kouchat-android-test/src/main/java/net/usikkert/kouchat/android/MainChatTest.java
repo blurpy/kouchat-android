@@ -184,7 +184,6 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void test99Quit() {
         RobotiumTestUtils.quit(solo);
-        System.gc();
     }
 
     public void tearDown() {
@@ -194,5 +193,11 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
         RobotiumTestUtils.setOrientation(solo, defaultOrientation);
         solo.finishOpenedActivities();
+
+        solo = null;
+        client = null;
+        me = null;
+
+        System.gc();
     }
 }
