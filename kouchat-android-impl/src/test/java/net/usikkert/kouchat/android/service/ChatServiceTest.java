@@ -164,6 +164,16 @@ public class ChatServiceTest {
         verify(multicastLockHandler).release();
     }
 
+    @Test
+    public void onDestroyShouldSetAllFieldsToNull() {
+        setMockedFields();
+        assertTrue(TestUtils.allFieldsHaveValue(chatService));
+
+        chatService.onDestroy();
+
+        assertTrue(TestUtils.allFieldsAreNull(chatService));
+    }
+
     private User getMe() {
         final AndroidUserInterface androidUserInterface =
                 TestUtils.getFieldValue(chatService, AndroidUserInterface.class, "androidUserInterface");

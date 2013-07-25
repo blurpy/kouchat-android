@@ -54,7 +54,7 @@ import android.widget.TextView;
  */
 public class PrivateChatController extends SherlockActivity {
 
-    private final ControllerUtils controllerUtils = new ControllerUtils();
+    private ControllerUtils controllerUtils = new ControllerUtils();
 
     private TextView privateChatView;
     private EditText privateChatInput;
@@ -99,6 +99,12 @@ public class PrivateChatController extends SherlockActivity {
         androidUserInterface = null;
         privateChatWindow = null;
         user = null;
+
+        controllerUtils = null;
+        privateChatView = null;
+        privateChatInput = null;
+        privateChatScroll = null;
+        serviceConnection = null;
 
         super.onDestroy();
     }
@@ -255,7 +261,10 @@ public class PrivateChatController extends SherlockActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                controllerUtils.scrollTextViewToBottom(privateChatView, privateChatScroll);
+                // If rotating fast, this activity could already be destroyed before this runs
+                if (controllerUtils != null) {
+                    controllerUtils.scrollTextViewToBottom(privateChatView, privateChatScroll);
+                }
             }
         }, ControllerUtils.ONE_SECOND);
     }

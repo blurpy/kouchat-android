@@ -109,6 +109,7 @@ public class SettingsController extends SherlockPreferenceActivity
         }
 
         androidUserInterface = null;
+        serviceConnection = null;
 
         super.onDestroy();
     }

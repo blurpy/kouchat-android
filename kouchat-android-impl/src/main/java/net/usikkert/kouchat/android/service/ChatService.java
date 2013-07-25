@@ -82,6 +82,10 @@ public class ChatService extends Service {
         androidUserInterface.logOff();
         multicastLockHandler.release();
 
+        androidUserInterface = null;
+        notificationService = null;
+        multicastLockHandler = null;
+
         super.onDestroy();
     }
 }

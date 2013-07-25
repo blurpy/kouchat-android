@@ -64,9 +64,10 @@ public class SendFileController extends Activity implements UserListListener {
     private UserListAdapter userListAdapter;
     private TextView line2TextView;
     private ListView userListView;
-    private AndroidUserInterface androidUserInterface;
 
     private File fileToSend;
+
+    private AndroidUserInterface androidUserInterface;
     private UserList userList;
 
     public void onCreate(final Bundle savedInstanceState) {
@@ -126,6 +127,12 @@ public class SendFileController extends Activity implements UserListListener {
 
         userList = null;
         androidUserInterface = null;
+
+        serviceConnection = null;
+        userListAdapter = null;
+        line2TextView = null;
+        userListView = null;
+        fileToSend = null;
 
         super.onDestroy();
     }

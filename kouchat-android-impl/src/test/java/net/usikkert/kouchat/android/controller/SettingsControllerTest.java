@@ -115,7 +115,16 @@ public class SettingsControllerTest {
         controller.onDestroy();
 
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
-        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
+    }
+
+    @Test
+    public void onDestroyShouldSetAllFieldsToNull() {
+        setupMocks();
+        assertTrue(TestUtils.allFieldsHaveValue(controller));
+
+        controller.onDestroy();
+
+        assertTrue(TestUtils.allFieldsAreNull(controller));
     }
 
     @Test

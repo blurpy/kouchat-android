@@ -80,7 +80,7 @@ import android.widget.TextView;
  */
 public class MainChatController extends SherlockActivity implements UserListListener {
 
-    private final ControllerUtils controllerUtils = new ControllerUtils();
+    private ControllerUtils controllerUtils = new ControllerUtils();
 
     private Intent chatServiceIntent;
     private ServiceConnection serviceConnection;
@@ -230,6 +230,15 @@ public class MainChatController extends SherlockActivity implements UserListList
         androidUserInterface = null;
         userList = null;
 
+        controllerUtils = null;
+        chatServiceIntent = null;
+        serviceConnection = null;
+        mainChatInput = null;
+        mainChatUserList = null;
+        mainChatView = null;
+        mainChatScroll = null;
+        userListAdapter = null;
+
         super.onDestroy();
     }
 
@@ -336,7 +345,10 @@ public class MainChatController extends SherlockActivity implements UserListList
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                controllerUtils.scrollTextViewToBottom(mainChatView, mainChatScroll);
+                // If rotating fast, this activity could already be destroyed before this runs
+                if (controllerUtils != null) {
+                    controllerUtils.scrollTextViewToBottom(mainChatView, mainChatScroll);
+                }
             }
         }, ControllerUtils.ONE_SECOND);
 

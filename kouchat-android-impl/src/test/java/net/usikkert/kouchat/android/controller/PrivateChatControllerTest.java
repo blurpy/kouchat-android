@@ -37,6 +37,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowHandler;
 
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -120,10 +121,15 @@ public class PrivateChatControllerTest {
 
         verify(privateChatWindow).unregisterPrivateChatController();
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
+    }
 
-        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
-        assertTrue(TestUtils.fieldValueIsNull(controller, "privateChatWindow"));
-        assertTrue(TestUtils.fieldValueIsNull(controller, "user"));
+    @Test
+    public void onDestroyShouldSetAllFieldsToNull() {
+        assertTrue(TestUtils.allFieldsHaveValue(controller));
+
+        controller.onDestroy();
+
+        assertTrue(TestUtils.allFieldsAreNull(controller));
     }
 
     @Test
@@ -154,6 +160,28 @@ public class PrivateChatControllerTest {
         controller.appendToPrivateChat("Some other text");
 
         verify(privateChatView).append("Some other text");
+        verifyZeroInteractions(controllerUtils);
+    }
+
+    @Test
+    public void updatePrivateChatShouldSetTextAndScrollToBottomIfNotDestroyed() {
+        controller.updatePrivateChat("Set this text");
+
+        ShadowHandler.runMainLooperOneTask();
+
+        verify(privateChatView).setText("Set this text");
+        verify(controllerUtils).scrollTextViewToBottom(privateChatView, privateChatScroll);
+    }
+
+    @Test
+    public void updatePrivateChatShouldSetTextAndNotScrollToBottomIfDestroyed() {
+        TestUtils.setFieldValue(controller, "controllerUtils", null);
+
+        controller.updatePrivateChat("Set this text");
+
+        ShadowHandler.runMainLooperOneTask(); // Should not give NullPointerException
+
+        verify(privateChatView).setText("Set this text");
         verifyZeroInteractions(controllerUtils);
     }
 }

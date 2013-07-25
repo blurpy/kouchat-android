@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.android.userlist.UserListAdapter;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
 
@@ -36,9 +37,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowHandler;
 
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -85,6 +89,9 @@ public class MainChatControllerTest {
         TestUtils.setFieldValue(controller, "mainChatInput", mainChatInput);
         TestUtils.setFieldValue(controller, "mainChatScroll", mainChatScroll);
         TestUtils.setFieldValue(controller, "controllerUtils", controllerUtils);
+        TestUtils.setFieldValue(controller, "chatServiceIntent", mock(Intent.class));
+        TestUtils.setFieldValue(controller, "userListAdapter", mock(UserListAdapter.class));
+        TestUtils.setFieldValue(controller, "mainChatUserList", mock(ListView.class));
     }
 
     @Test
@@ -126,9 +133,15 @@ public class MainChatControllerTest {
         verify(userList).removeUserListListener(controller);
         verify(ui).unregisterMainChatController();
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
+    }
 
-        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
-        assertTrue(TestUtils.fieldValueIsNull(controller, "userList"));
+    @Test
+    public void onDestroyShouldSetAllFieldsToNull() {
+        assertTrue(TestUtils.allFieldsHaveValue(controller));
+
+        controller.onDestroy();
+
+        assertTrue(TestUtils.allFieldsAreNull(controller));
     }
 
     @Test
@@ -159,6 +172,28 @@ public class MainChatControllerTest {
         controller.appendToChat("Some other text");
 
         verify(mainChatView).append("Some other text");
+        verifyZeroInteractions(controllerUtils);
+    }
+
+    @Test
+    public void updateChatShouldSetTextAndScrollToBottomIfNotDestroyed() {
+        controller.updateChat("Set this text");
+
+        ShadowHandler.runMainLooperOneTask();
+
+        verify(mainChatView).setText("Set this text");
+        verify(controllerUtils).scrollTextViewToBottom(mainChatView, mainChatScroll);
+    }
+
+    @Test
+    public void updateChatShouldSetTextAndNotScrollToBottomIfDestroyed() {
+        TestUtils.setFieldValue(controller, "controllerUtils", null);
+
+        controller.updateChat("Set this text");
+
+        ShadowHandler.runMainLooperOneTask(); // Should not give NullPointerException
+
+        verify(mainChatView).setText("Set this text");
         verifyZeroInteractions(controllerUtils);
     }
 }

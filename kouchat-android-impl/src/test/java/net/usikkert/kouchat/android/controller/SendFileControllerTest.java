@@ -25,8 +25,11 @@ package net.usikkert.kouchat.android.controller;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.io.File;
+
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.android.userlist.UserListAdapter;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
 
@@ -37,6 +40,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import android.content.ServiceConnection;
+import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Test of {@link SendFileController}.
@@ -76,9 +81,16 @@ public class SendFileControllerTest {
 
         verify(userList).removeUserListListener(controller);
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
+    }
 
-        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
-        assertTrue(TestUtils.fieldValueIsNull(controller, "userList"));
+    @Test
+    public void onDestroyShouldSetAllFieldsToNull() {
+        setupMocks();
+        assertTrue(TestUtils.allFieldsHaveValue(controller));
+
+        controller.onDestroy();
+
+        assertTrue(TestUtils.allFieldsAreNull(controller));
     }
 
     @Test
@@ -94,5 +106,10 @@ public class SendFileControllerTest {
         TestUtils.setFieldValue(controller, "userList", userList);
         TestUtils.setFieldValue(controller, "androidUserInterface", ui);
         TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
+
+        TestUtils.setFieldValue(controller, "fileToSend", mock(File.class));
+        TestUtils.setFieldValue(controller, "userListAdapter", mock(UserListAdapter.class));
+        TestUtils.setFieldValue(controller, "line2TextView", mock(TextView.class));
+        TestUtils.setFieldValue(controller, "userListView", mock(ListView.class));
     }
 }
