@@ -113,7 +113,6 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(2000);
     }
 
-    // Must be verified manually. I haven't found an automated way to verify scrolling yet.
     public void test06OrientationSwitchShouldScrollToBottom() {
         openPrivateChat();
 
@@ -131,10 +130,18 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
                             "This is message number " + i + "! " +
                             "This is message number " + i + "! " +
                             "This is message number " + i + "! ");
+
+            solo.sleep(500);
+            assertTrue(textIsVisible("This is message number " + i));
         }
 
+        solo.sleep(500);
+        assertFalse(textIsVisible("This is message number 10"));
+
         RobotiumTestUtils.switchOrientation(solo);
-        solo.sleep(3000); // See if message number 30 is visible
+
+        solo.sleep(2000);
+        assertTrue(textIsVisible("This is message number 30"));
     }
 
     public void test07InputFieldShouldAlwaysGetKeyEventsAndFocus() {
@@ -221,5 +228,9 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     private void openPrivateChat() {
         RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+    }
+
+    private boolean textIsVisible(final String textToFind) {
+        return RobotiumTestUtils.textIsVisible(solo, R.id.privateChatView, R.id.privateChatScroll, textToFind);
     }
 }
