@@ -192,7 +192,8 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         tina.rejectFile(me, image.getName());
         solo.sleep(2000);
 
-        assertTrue(RobotiumTestUtils.searchText(solo, "Tina aborted reception of " + image.getName()));
+        assertTrue(RobotiumTestUtils.textIsVisible(solo, R.id.mainChatView, R.id.mainChatScroll,
+                "Tina aborted reception of " + image.getName()));
     }
 
     public void test99Quit() {

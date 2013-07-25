@@ -115,10 +115,17 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
                             "This is message number " + i + "! " +
                             "This is message number " + i + "! " +
                             "This is message number " + i + "! ");
+
+            solo.sleep(500);
+            assertTrue(RobotiumTestUtils.textIsVisible(solo, R.id.mainChatView, R.id.mainChatScroll, "number " + i));
         }
+
+        assertFalse(RobotiumTestUtils.textIsVisible(solo, R.id.mainChatView, R.id.mainChatScroll, "number " + 1));
+        assertFalse(RobotiumTestUtils.textIsVisible(solo, R.id.mainChatView, R.id.mainChatScroll, "number " + 10));
 
         RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(3000); // See if message number 30 is visible
+        assertTrue(RobotiumTestUtils.textIsVisible(solo, R.id.mainChatView, R.id.mainChatScroll, "number " + 30));
     }
 
     public void test07InputFieldShouldAlwaysGetKeyEventsAndFocus() {

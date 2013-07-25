@@ -25,9 +25,11 @@ package net.usikkert.kouchat.android.util;
 import static junit.framework.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.User;
@@ -46,6 +48,7 @@ import android.text.Layout;
 import android.text.TextPaint;
 import android.view.KeyEvent;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
@@ -120,6 +123,20 @@ public final class RobotiumTestUtils {
         }
 
         throw new IllegalArgumentException("Could not find TextView with text: " + text);
+    }
+
+    // TODO
+    public static List<String> getAllLinesOfText(final TextView textView) {
+        final ArrayList<String> allLines = new ArrayList<String>();
+
+        final Layout layout = textView.getLayout();
+        final int lineCount = layout.getLineCount();
+
+        for (int currentLineNumber = 0; currentLineNumber < lineCount; currentLineNumber++) {
+            allLines.add(getLineOfText(textView, currentLineNumber));
+        }
+
+        return allLines;
     }
 
     /**
@@ -405,5 +422,98 @@ public final class RobotiumTestUtils {
         final int diff = (screenHeight - statusBarHeight) - activityHeight;
 
         return diff > screenHeight / 3;
+    }
+
+    // TODO
+    public static boolean textIsVisible(final Solo solo, final int textViewId, final int scrollViewId, final String text) {
+        final TextView textView = (TextView) solo.getView(textViewId);
+        final ScrollView scrollView = (ScrollView) solo.getView(scrollViewId);
+
+        final int[] location = new int[2];
+        scrollView.getLocationOnScreen(location);
+        final Rect visibleScrollArea = new Rect(location[0], location[1], location[0] + scrollView.getWidth(), location[1] + scrollView.getHeight());
+
+        final List<String> allLinesOfText = getAllLinesOfText(textView);
+        final List<Pair<Integer, String>> matchingLinesOfText = getMatchingLinesOfText(textView.getText().toString(), allLinesOfText, text);
+
+        for (final Pair<Integer, String> matchingLine : matchingLinesOfText) {
+            final Point coordinatesForLine = getCoordinatesForLine(textView, matchingLine.second, matchingLine.first, allLinesOfText.get(matchingLine.first));
+
+            if (!visibleScrollArea.contains(coordinatesForLine.x, coordinatesForLine.y)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // TODO
+    public static List<Pair<Integer, String>> getMatchingLinesOfText(final String fullText, final List<String> lines, final String text) {
+        final int lastIndex = fullText.lastIndexOf(text);
+
+        if (lastIndex < 0) {
+            throw new IllegalArgumentException("Could not find: " + text);
+        }
+
+        int startLine = 0;
+        int currentIndex = 0;
+
+        for (final String line : lines) {
+            if (currentIndex + line.length() >= lastIndex) {
+                break;
+            }
+
+            startLine++;
+            currentIndex += line.length();
+        }
+
+        final ArrayList<Pair<Integer, String>> pairs = new ArrayList<Pair<Integer, String>>();
+        final ArrayList<String> words = new ArrayList<String>(Arrays.asList(text.split("\\b")));
+
+        if (words.get(0).equals("")) {
+            words.remove(0);
+        }
+
+        for (int i = startLine; i < lines.size(); i++) {
+            addLine(lines.get(i), i, words, pairs);
+
+            if (words.isEmpty()) {
+                break;
+            }
+        }
+
+        return pairs;
+    }
+
+    private static void addLine(final String line, final int i, final ArrayList<String> words, final ArrayList<Pair<Integer, String>> pairs) {
+        String word = words.get(0);
+
+        if (!line.contains(word)) {
+            return;
+        }
+
+        final ArrayList<String> linewords = new ArrayList<String>(Arrays.asList(line.substring(line.indexOf(word)).split("\\b")));
+
+        if (linewords.get(0).equals("")) {
+            linewords.remove(0);
+        }
+
+        String lineword = linewords.remove(0);
+        word = words.remove(0);
+
+        final StringBuilder sb = new StringBuilder();
+
+        while (word.equals(lineword)) {
+            sb.append(lineword);
+
+            if (words.isEmpty() || linewords.isEmpty()) {
+                break;
+            }
+
+            word = words.remove(0);
+            lineword = linewords.remove(0);
+        }
+
+        pairs.add(new Pair<Integer, String>(i, sb.toString()));
     }
 }
