@@ -524,7 +524,7 @@ public final class RobotiumTestUtils {
         final Layout layout = textView.getLayout();
         final TextPaint paint = textView.getPaint();
 
-        final int textIndex = fullLine.indexOf(textToFind.charAt(0));
+        final int textIndex = fullLine.indexOf(textToFind);
         final String preText = fullLine.substring(0, textIndex);
 
         final int textWidth = (int) Layout.getDesiredWidth(textToFind, paint);
