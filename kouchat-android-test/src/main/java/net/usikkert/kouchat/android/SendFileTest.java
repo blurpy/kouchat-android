@@ -201,6 +201,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         solo.clickOnButton("Cancel");
 
         RobotiumTestUtils.launchMainChat(this);
+        solo.sleep(500);
         RobotiumTestUtils.quit(solo);
 
         image = null;
