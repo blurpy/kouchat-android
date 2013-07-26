@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.util.MiscTestUtils;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestClient;
@@ -106,31 +107,19 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     public void test06OrientationSwitchShouldScrollToBottom() {
         for (int i = 1; i <= 30; i++) {
-            RobotiumTestUtils.writeLine(solo,
-                    "This is message number " + i + "! " +
-                            "This is message number " + i + "! " +
-                            "This is message number " + i + "! " +
-                            "This is message number " + i + "! " +
-                            "This is message number " + i + "! " +
-                            "This is message number " + i + "! " +
-                            "This is message number " + i + "! " +
-                            "This is message number " + i + "! " +
-                            "This is message number " + i + "! " +
-                            "This is message number " + i + "! " +
-                            "This is message number " + i + "! " +
-                            "This is message number " + i + "! ");
+            RobotiumTestUtils.writeLine(solo, MiscTestUtils.createLongMessage(i));
 
             solo.sleep(500);
-            assertTrue(textIsVisible("This is message number " + i));
+            assertTrue(textIsVisible("This is message number " + i + ".9!"));
         }
 
         solo.sleep(500);
-        assertFalse(textIsVisible("This is message number 10"));
+        assertFalse(textIsVisible("This is message number 10.9!"));
 
         RobotiumTestUtils.switchOrientation(solo);
 
         solo.sleep(2000);
-        assertTrue(textIsVisible("This is message number 30"));
+        assertTrue(textIsVisible("This is message number 30.9!"));
     }
 
     public void test07InputFieldShouldAlwaysGetKeyEventsAndFocus() {
@@ -185,6 +174,30 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(500);
 
         assertFalse(activity.isVisible());
+    }
+
+    public void test10ShouldNotScrollAutomaticallyWhenInputFieldLacksFocus() {
+        client = new TestClient();
+        client.logon();
+
+        solo.sleep(500);
+        solo.clickOnView(solo.getView(R.id.mainChatScroll)); // Removes focus from the input field
+
+        solo.sleep(500);
+        final EditText mainChatInput = (EditText) solo.getView(R.id.mainChatInput);
+        assertFalse(mainChatInput.hasFocus());
+
+        client.sendChatMessage(MiscTestUtils.createLongMessage(50));
+
+        solo.sleep(500);
+        assertFalse(textIsVisible("This is message number 50.9!"));
+
+        solo.sleep(500);
+        RobotiumTestUtils.writeLine(solo, "Give me focus back!"); // Robotium gives focus to the input field when writing text
+
+        solo.sleep(500);
+        assertTrue(textIsVisible("This is message number 50.9!")); // Should have scrolled down now
+        assertTrue(textIsVisible("Give me focus back!"));
     }
 
     public void test99Quit() {
