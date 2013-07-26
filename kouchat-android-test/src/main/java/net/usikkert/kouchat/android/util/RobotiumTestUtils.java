@@ -192,17 +192,6 @@ public final class RobotiumTestUtils {
     }
 
     /**
-     * Hides the software keyboard, if it's visible.
-     *
-     * @param solo The solo tester.
-     */
-    public static void hideSoftwareKeyboard(final Solo solo) {
-        if (softwareKeyboardIsVisible(solo.getCurrentActivity())) {
-            solo.goBack();
-        }
-    }
-
-    /**
      * Searches for a textview with the given text.
      *
      * @param solo The solo tester.
@@ -324,7 +313,7 @@ public final class RobotiumTestUtils {
      * @param nickName The nick name to change to.
      */
     public static void changeNickNameTo(final Solo solo, final String nickName) {
-        hideSoftwareKeyboard(solo);
+        solo.hideSoftKeyboard();
         solo.clearEditText(0);
         solo.enterText(0, nickName);
         solo.clickOnButton("OK");
@@ -560,18 +549,5 @@ public final class RobotiumTestUtils {
         final int yPosition = layout.getLineBaseline(lineNumber) + textViewXYLocation[1] - textView.getScrollY();
 
         return new Point(xPosition, yPosition);
-    }
-
-    private static boolean softwareKeyboardIsVisible(final Activity activity) {
-        final Rect visibleDisplayFrame = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleDisplayFrame);
-
-        final int statusBarHeight = visibleDisplayFrame.top;
-        final int activityHeight = visibleDisplayFrame.height();
-        final int screenHeight = activity.getWindowManager().getDefaultDisplay().getHeight();
-
-        final int diff = (screenHeight - statusBarHeight) - activityHeight;
-
-        return diff > screenHeight / 3;
     }
 }
