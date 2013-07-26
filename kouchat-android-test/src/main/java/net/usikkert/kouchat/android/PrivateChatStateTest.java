@@ -369,7 +369,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
     }
 
     private Bitmap getBitmap(final int resourceId) {
-        final BitmapDrawable drawable = (BitmapDrawable) getActivity().getResources().getDrawable(resourceId);
+        final BitmapDrawable drawable = (BitmapDrawable) solo.getCurrentActivity().getResources().getDrawable(resourceId);
 
         return drawable.getBitmap();
     }
