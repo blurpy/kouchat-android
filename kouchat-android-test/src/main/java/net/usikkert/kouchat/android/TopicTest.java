@@ -80,6 +80,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", getCurrentTitle());
 
         RobotiumTestUtils.switchOrientation(solo);
+        solo.sleep(500);
 
         assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", getCurrentTitle());
     }

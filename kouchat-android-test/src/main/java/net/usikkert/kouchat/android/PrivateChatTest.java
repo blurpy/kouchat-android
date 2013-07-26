@@ -99,6 +99,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         solo.sleep(500);
         RobotiumTestUtils.switchOrientation(solo);
+        solo.sleep(500);
 
         assertTrue(RobotiumTestUtils.searchText(solo, "This is the third message"));
     }
@@ -214,7 +215,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         openPrivateChat();
 
-        solo.sleep(500);
+        solo.sleep(1000);
         solo.clickOnView(solo.getView(R.id.privateChatScroll)); // Removes focus from the input field
 
         solo.sleep(500);
