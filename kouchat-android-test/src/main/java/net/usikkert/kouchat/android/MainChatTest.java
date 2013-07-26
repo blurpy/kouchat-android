@@ -138,9 +138,14 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(500);
         assertTrue(mainChatInput.hasFocus());
 
-        // Need to support losing focus when clicking in the main chat to support text selection. Not happening on 2.3.3
+        // Need to support losing focus when clicking in the main chat to support text selection.
         solo.clickOnView(solo.getView(R.id.mainChatScroll));
         solo.sleep(500);
+
+        // Input field can't loose focus on Android 2.3.3. Skipping this assert.
+        if (!MiscTestUtils.isRunningOnAndroid233()) {
+            assertFalse(mainChatInput.hasFocus());
+        }
 
         // Let's enter a few key strokes when the input field lacks focus
         solo.sendKey(KeyEvent.KEYCODE_A);
@@ -177,6 +182,14 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     public void test10ShouldNotScrollAutomaticallyWhenInputFieldLacksFocus() {
+        if (MiscTestUtils.isRunningOnAndroid233()) {
+            solo.sleep(500);
+            RobotiumTestUtils.writeLine(solo, "Input field can't loose focus on Android 2.3.3. Skipping test.");
+            solo.sleep(1000);
+
+            return;
+        }
+
         client = new TestClient();
         client.logon();
 

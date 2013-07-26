@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.android.util;
 
+import android.os.Build;
+
 /**
  * Utility methods that don't fit anywhere else.
  *
@@ -48,5 +50,14 @@ public final class MiscTestUtils {
         }
 
         return longMessage.toString();
+    }
+
+    /**
+     * Checks if the test is running on Android 2.3.3, Gingerbread, API 10.
+     *
+     * @return If running on Android 2.3.3 or not.
+     */
+    public static boolean isRunningOnAndroid233() {
+        return Build.VERSION.SDK_INT == Build.VERSION_CODES.GINGERBREAD_MR1;
     }
 }
