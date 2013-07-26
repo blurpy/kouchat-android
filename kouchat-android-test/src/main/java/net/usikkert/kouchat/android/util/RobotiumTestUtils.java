@@ -171,23 +171,24 @@ public final class RobotiumTestUtils {
      * @throws IllegalArgumentException If the text is not visible or not found.
      */
     public static void clickOnText(final Solo solo, final int textViewId, final int scrollViewId, final String textToClick) {
-        final TextView textView = (TextView) solo.getView(textViewId);
-        final ScrollView scrollView = (ScrollView) solo.getView(scrollViewId);
-
-        final Rect visibleScrollArea = getVisibleScrollArea(scrollView);
-        final String fullText = textView.getText().toString();
-        final List<String> allLinesOfText = getAllLinesOfText(fullText, textView);
-        final List<Line> matchingLinesOfText = getMatchingLinesOfText(fullText, allLinesOfText, textToClick);
-        final Line lastMatchingLine = matchingLinesOfText.get(matchingLinesOfText.size() - 1);
-
-        final Point coordinatesForLine = getCoordinatesForLine(textView, lastMatchingLine.getLineText(),
-                lastMatchingLine.getLineNumber(), allLinesOfText.get(lastMatchingLine.getLineNumber()));
-
-        if (!visibleScrollArea.contains(coordinatesForLine.x, coordinatesForLine.y)) {
-            throw new IllegalArgumentException("Text to click is not visible: " + textToClick);
-        }
+        final Point coordinatesForLine = getCoordinatesForText(solo, textViewId, scrollViewId, textToClick);
 
         solo.clickOnScreen(coordinatesForLine.x, coordinatesForLine.y);
+    }
+
+    /**
+     * Long clicks on the given text. If the text spans multiple lines, the last line gets clicked.
+     *
+     * @param solo The solo tester.
+     * @param textViewId Id of the textview with the text to long click.
+     * @param scrollViewId Id of the scrollview that contains the textview.
+     * @param textToClick The text to long click.
+     * @throws IllegalArgumentException If the text is not visible or not found.
+     */
+    public static void clickLongOnText(final Solo solo, final int textViewId, final int scrollViewId, final String textToClick) {
+        final Point coordinatesForLine = getCoordinatesForText(solo, textViewId, scrollViewId, textToClick);
+
+        solo.clickLongOnScreen(coordinatesForLine.x, coordinatesForLine.y);
     }
 
     /**
@@ -517,6 +518,26 @@ public final class RobotiumTestUtils {
                 locationOnScreen[1], // top position
                 locationOnScreen[0] + scrollView.getWidth(), // right position
                 locationOnScreen[1] + scrollView.getHeight()); // bottom position
+    }
+
+    private static Point getCoordinatesForText(final Solo solo, final int textViewId, final int scrollViewId, final String textToFind) {
+        final TextView textView = (TextView) solo.getView(textViewId);
+        final ScrollView scrollView = (ScrollView) solo.getView(scrollViewId);
+
+        final Rect visibleScrollArea = getVisibleScrollArea(scrollView);
+        final String fullText = textView.getText().toString();
+        final List<String> allLinesOfText = getAllLinesOfText(fullText, textView);
+        final List<Line> matchingLinesOfText = getMatchingLinesOfText(fullText, allLinesOfText, textToFind);
+        final Line lastMatchingLine = matchingLinesOfText.get(matchingLinesOfText.size() - 1);
+
+        final Point coordinatesForLine = getCoordinatesForLine(textView, lastMatchingLine.getLineText(),
+                lastMatchingLine.getLineNumber(), allLinesOfText.get(lastMatchingLine.getLineNumber()));
+
+        if (!visibleScrollArea.contains(coordinatesForLine.x, coordinatesForLine.y)) {
+            throw new IllegalArgumentException("Text to find is not visible: " + textToFind);
+        }
+
+        return coordinatesForLine;
     }
 
     private static Point getCoordinatesForLine(final TextView textView, final String textToFind,

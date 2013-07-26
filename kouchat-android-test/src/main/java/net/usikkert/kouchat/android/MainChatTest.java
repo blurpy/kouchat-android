@@ -168,10 +168,10 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
     public void test08ShouldBeAbleToSelectText() {
         solo.sleep(500);
 
-        RobotiumTestUtils.writeLine(solo, "Lets select something");
+        RobotiumTestUtils.writeLine(solo, "Lets select something yeah?");
         solo.sleep(500);
 
-        solo.clickLongOnView(solo.getView(R.id.mainChatScroll));
+        RobotiumTestUtils.clickLongOnText(solo, R.id.mainChatView, R.id.mainChatScroll, "something");
         solo.sleep(500);
     }
 

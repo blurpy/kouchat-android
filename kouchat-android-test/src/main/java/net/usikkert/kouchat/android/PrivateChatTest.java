@@ -176,10 +176,10 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         openPrivateChat();
         solo.sleep(500);
 
-        RobotiumTestUtils.writeLine(solo, "Lets select something");
+        RobotiumTestUtils.writeLine(solo, "Lets select something yeah?");
         solo.sleep(500);
 
-        solo.clickLongOnView(solo.getView(R.id.privateChatScroll));
+        RobotiumTestUtils.clickLongOnText(solo, R.id.privateChatView, R.id.privateChatScroll, "something");
         solo.sleep(500);
     }
 
