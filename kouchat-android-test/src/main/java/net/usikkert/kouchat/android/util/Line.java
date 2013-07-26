@@ -48,8 +48,8 @@ public class Line {
     @Override
     public String toString() {
         return "Line{" +
-                "first=" + lineNumber +
-                ", second=" + lineText +
+                "lineNumber=" + lineNumber +
+                ", lineText=" + lineText +
                 '}';
     }
 }
