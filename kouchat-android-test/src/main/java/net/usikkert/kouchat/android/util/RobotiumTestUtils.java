@@ -164,6 +164,9 @@ public final class RobotiumTestUtils {
     /**
      * Clicks on the given text. If the text spans multiple lines, the last line gets clicked.
      *
+     * <p>Added because {@link Solo#clickOnText(String)} has issues with locating the text.
+     * It will often click the wrong place. Use this method instead.</p>
+     *
      * @param solo The solo tester.
      * @param textViewId Id of the textview with the text to click.
      * @param scrollViewId Id of the scrollview that contains the textview.
@@ -179,6 +182,9 @@ public final class RobotiumTestUtils {
     /**
      * Long clicks on the given text. If the text spans multiple lines, the last line gets clicked.
      *
+     * <p>Added because {@link Solo#clickLongOnText(String)} has issues with locating the text.
+     * It will often click the wrong place. Use this method instead.</p>
+     *
      * @param solo The solo tester.
      * @param textViewId Id of the textview with the text to long click.
      * @param scrollViewId Id of the scrollview that contains the textview.
@@ -193,6 +199,9 @@ public final class RobotiumTestUtils {
 
     /**
      * Searches for a textview with the given text.
+     *
+     * <p>Added because {@link Solo#searchText(String)} looks for text in everything that inherits from
+     * textview, and that includes edittext. If it's important to look only in textviews, use this method.</p>
      *
      * @param solo The solo tester.
      * @param text The text to search for.
