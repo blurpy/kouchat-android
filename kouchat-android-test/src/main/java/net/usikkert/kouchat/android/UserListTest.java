@@ -103,6 +103,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo.sleep(500);
 
         RobotiumTestUtils.switchOrientation(solo);
+        solo.sleep(1000);
 
         assertEquals("Kou", getUserNameAtPosition(0));
         assertEquals("Test", getUserNameAtPosition(1));
@@ -131,6 +132,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(userIsBold("Kou", 1));
 
         RobotiumTestUtils.switchOrientation(solo);
+        solo.sleep(500);
 
         // After orientation switch
         assertFalse(userIsBold("Ape", 0));
@@ -151,6 +153,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(userIsWriting("Test", 1));
 
         RobotiumTestUtils.switchOrientation(solo);
+        solo.sleep(500);
 
         assertFalse(userIsWriting("Kou", 0));
         assertTrue(userIsWriting("Test", 1));
