@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.android.manual;
 
+import net.usikkert.kouchat.Constants;
+import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.testclient.TestClient;
@@ -36,6 +38,8 @@ import android.test.ActivityInstrumentationTestCase2;
  * @author Christian Ihle
  */
 public class LinkTest extends ActivityInstrumentationTestCase2<MainChatController> {
+
+    private static final String URL = Constants.APP_WEB;
 
     private static TestClient client;
 
@@ -60,13 +64,12 @@ public class LinkTest extends ActivityInstrumentationTestCase2<MainChatControlle
     }
 
     public void test01LinksShouldWorkInTheMainChat() {
-        RobotiumTestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
+        RobotiumTestUtils.writeLine(solo, URL);
 
         solo.sleep(500);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
 
-        // The 2.3.3 emulator can't fit the whole url on a single line, so have to use a shorter text to locate
-        RobotiumTestUtils.clickOnText(solo, "kouchat.googlecode.com");
+        RobotiumTestUtils.clickOnText(solo, R.id.mainChatView, R.id.mainChatScroll, URL);
         solo.sleep(1000);
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
 
@@ -75,7 +78,7 @@ public class LinkTest extends ActivityInstrumentationTestCase2<MainChatControlle
 
         solo.sleep(2000);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        RobotiumTestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
+        RobotiumTestUtils.clickOnText(solo, R.id.mainChatView, R.id.mainChatScroll, URL);
         solo.sleep(1000);
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
     }
@@ -83,13 +86,12 @@ public class LinkTest extends ActivityInstrumentationTestCase2<MainChatControlle
     public void test02LinksShouldWorkInThePrivateChat() {
         RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
 
-        RobotiumTestUtils.writeLine(solo, "http://kouchat.googlecode.com/");
+        RobotiumTestUtils.writeLine(solo, URL);
 
         solo.sleep(500);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
 
-        // A phone can't fit the whole url on a single line, so have to use a shorter text to locate
-        RobotiumTestUtils.clickOnText(solo, "googlecode");
+        RobotiumTestUtils.clickOnText(solo, R.id.privateChatView, R.id.privateChatScroll, URL);
         solo.sleep(1000);
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
 
@@ -98,7 +100,7 @@ public class LinkTest extends ActivityInstrumentationTestCase2<MainChatControlle
 
         solo.sleep(2000);
         assertTrue(solo.getCurrentActivity().hasWindowFocus()); // KouChat is in focus
-        RobotiumTestUtils.clickOnText(solo, "http://kouchat.googlecode.com/");
+        RobotiumTestUtils.clickOnText(solo, R.id.privateChatView, R.id.privateChatScroll, URL);
         solo.sleep(1000);
         assertFalse(solo.getCurrentActivity().hasWindowFocus()); // Browser is in focus
     }

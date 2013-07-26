@@ -162,40 +162,32 @@ public final class RobotiumTestUtils {
     }
 
     /**
-     * Gets the coordinates in the textview for the given text.
-     *
-     * @param textView The textview to find the coordinates in.
-     * @param text The text to find coordnates for.
-     * @return The coordinates for the given text.
-     * @throws IllegalArgumentException If no lines in the textview has the given text.
-     */
-    public static Point getCoordinatesForText(final TextView textView, final String text) {
-        final Layout layout = textView.getLayout();
-        final int lineCount = layout.getLineCount();
-        final String fullText = textView.getText().toString();
-
-        for (int currentLineNumber = 0; currentLineNumber < lineCount; currentLineNumber++) {
-            final String currentLine = getLineOfText(fullText, currentLineNumber, layout);
-
-            if (currentLine.contains(text)) {
-                return getCoordinatesForLine(textView, text, currentLineNumber, currentLine);
-            }
-        }
-
-        throw new IllegalArgumentException("Could not get coordinates for text: " + text);
-    }
-
-    /**
-     * Clicks on the given text.
+     * Clicks on the given text. If the text spans multiple lines, the last line gets clicked.
      *
      * @param solo The solo tester.
-     * @param text The text to click on.
+     * @param textViewId Id of the textview with the text to click.
+     * @param scrollViewId Id of the scrollview that contains the textview.
+     * @param textToClick The text to click.
+     * @throws IllegalArgumentException If the text is not visible or not found.
      */
-    public static void clickOnText(final Solo solo, final String text) {
-        final TextView textView = getTextViewWithText(solo, text);
-        final Point coordinates = getCoordinatesForText(textView, text);
+    public static void clickOnText(final Solo solo, final int textViewId, final int scrollViewId, final String textToClick) {
+        final TextView textView = (TextView) solo.getView(textViewId);
+        final ScrollView scrollView = (ScrollView) solo.getView(scrollViewId);
 
-        solo.clickOnScreen(coordinates.x, coordinates.y);
+        final Rect visibleScrollArea = getVisibleScrollArea(scrollView);
+        final String fullText = textView.getText().toString();
+        final List<String> allLinesOfText = getAllLinesOfText(fullText, textView);
+        final List<Line> matchingLinesOfText = getMatchingLinesOfText(fullText, allLinesOfText, textToClick);
+        final Line lastMatchingLine = matchingLinesOfText.get(matchingLinesOfText.size() - 1);
+
+        final Point coordinatesForLine = getCoordinatesForLine(textView, lastMatchingLine.getLineText(),
+                lastMatchingLine.getLineNumber(), allLinesOfText.get(lastMatchingLine.getLineNumber()));
+
+        if (!visibleScrollArea.contains(coordinatesForLine.x, coordinatesForLine.y)) {
+            throw new IllegalArgumentException("Text to click is not visible: " + textToClick);
+        }
+
+        solo.clickOnScreen(coordinatesForLine.x, coordinatesForLine.y);
     }
 
     /**
@@ -403,6 +395,7 @@ public final class RobotiumTestUtils {
      * @param scrollViewId Id of the scrollview that contains the textview.
      * @param textToFind The text to check if it's visible.
      * @return If the text is currently visible.
+     * @throws IllegalArgumentException If the text is not not found.
      */
     public static boolean textIsVisible(final Solo solo, final int textViewId, final int scrollViewId, final String textToFind) {
         final TextView textView = (TextView) solo.getView(textViewId);
