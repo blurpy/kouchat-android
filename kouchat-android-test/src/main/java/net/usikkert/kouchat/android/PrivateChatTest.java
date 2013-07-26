@@ -99,7 +99,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
         RobotiumTestUtils.switchOrientation(solo);
 
-        assertTrue(solo.searchText("This is the third message"));
+        assertTrue(RobotiumTestUtils.searchText(solo, "This is the third message"));
     }
 
     // Must be verified manually
