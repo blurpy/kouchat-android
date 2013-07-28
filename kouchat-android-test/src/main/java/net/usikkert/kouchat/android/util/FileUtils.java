@@ -91,6 +91,19 @@ public final class FileUtils {
         return new AndroidFile(cursor);
     }
 
+    /**
+     * Creates a new unique file with the following pattern: <code>kouchat-current_time.extension</code>.
+     *
+     * @param image The image to get the extension from.
+     * @return A new unique file. Should not exist on the file system.
+     */
+    public static File createNewFile(final AndroidFile image) {
+        final File externalStorageDirectory = Environment.getExternalStorageDirectory();
+        final String fileName = "kouchat-" + System.currentTimeMillis() + image.getExtension();
+
+        return new File(externalStorageDirectory, fileName);
+    }
+
     private static Cursor getCursorForKouChatImage(final Activity activity) {
         final ContentResolver contentResolver = activity.getContentResolver();
 
@@ -139,12 +152,5 @@ public final class FileUtils {
                 });
 
         Tools.sleep(1000); // To give the scanner time to finish
-    }
-
-    public static File createNewFile(final AndroidFile image) {
-        final File externalStorageDirectory = Environment.getExternalStorageDirectory();
-        final String fileName = "kouchat-" + System.currentTimeMillis() + image.getExtension();
-
-        return new File(externalStorageDirectory, fileName);
     }
 }
