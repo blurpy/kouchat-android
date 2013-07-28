@@ -51,6 +51,8 @@ import android.provider.MediaStore;
  */
 public final class FileUtils {
 
+    private static final String KOUCHAT_FILE = "kouchat-1600x1600.png";
+
     private FileUtils() {
         // Only static methods here
     }
@@ -63,7 +65,7 @@ public final class FileUtils {
      */
     public static void copyKouChatImageFromAssetsToSdCard(final Instrumentation instrumentation, final Activity activity) {
         final File externalStorageDirectory = Environment.getExternalStorageDirectory();
-        final File fileToStore = new File(externalStorageDirectory, "kouchat-1600x1600.png");
+        final File fileToStore = new File(externalStorageDirectory, KOUCHAT_FILE);
 
         if (!fileToStore.exists()) {
             copyFileToSdCard(fileToStore, instrumentation);
@@ -71,8 +73,14 @@ public final class FileUtils {
         }
     }
 
-    public static AndroidFile getRandomImage(final Activity activity) {
-        final Cursor cursor = getCursor(activity);
+    /**
+     * Returns a representation of <code>kouchat-1600x1600.png</code> than can be used to get the actual file.
+     *
+     * @param activity The activity under test.
+     * @return <code>kouchat-1600x1600.png</code>.
+     */
+    public static AndroidFile getKouChatImage(final Activity activity) {
+        final Cursor cursor = getCursorForKouChatImage(activity);
 
         if (cursor.getCount() == 0) {
             throw new RuntimeException("No files in the database");
@@ -83,9 +91,16 @@ public final class FileUtils {
         return new AndroidFile(cursor);
     }
 
-    private static Cursor getCursor(final Activity activity) {
+    private static Cursor getCursorForKouChatImage(final Activity activity) {
         final ContentResolver contentResolver = activity.getContentResolver();
-        return contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, "_id asc limit 1");
+
+        final Uri from = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        final String where = MediaStore.Images.Media.DISPLAY_NAME + " = ?";
+        final String[] whereArguments = {KOUCHAT_FILE};
+        final String orderBy = MediaStore.Images.Media._ID + " ASC LIMIT 1";
+
+        // SELECT * FROM images WHERE (_display_name = ?) ORDER BY _id ASC LIMIT 1
+        return contentResolver.query(from, null, where, whereArguments, orderBy);
     }
 
     private static void copyFileToSdCard(final File fileToStore, final Instrumentation instrumentation) {
