@@ -25,6 +25,7 @@ package net.usikkert.kouchat.android;
 import java.util.Calendar;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.util.FileUtils;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.User;
@@ -32,6 +33,7 @@ import net.usikkert.kouchat.testclient.TestClient;
 
 import com.jayway.android.robotium.solo.Solo;
 
+import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
 
 /**
@@ -72,9 +74,12 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         }
 
         final MainChatController activity = getActivity();
+        final Instrumentation instrumentation = getInstrumentation();
 
-        solo = new Solo(getInstrumentation(), activity);
+        solo = new Solo(instrumentation, activity);
         me = RobotiumTestUtils.getMe(activity);
+
+        FileUtils.copyKouChatImageFromAssetsToSdCard(instrumentation, activity);
     }
 
     public void test01SetNickNameAndQuit() {
@@ -82,6 +87,8 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
 
         RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
         RobotiumTestUtils.changeNickNameTo(solo, "Christian");
+
+        sleep(15000); // Take screenshot of the settings
 
         RobotiumTestUtils.quit(solo);
     }
@@ -124,8 +131,8 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         sleep(1000);
         arthur.sendPrivateChatMessage("Show me the envelope!", me);
 
-        // For taking screenshot manually. Robotium screenshots don't include status bars.
-        sleep(10000);
+        // Take screenshot of the main chat, and the file transfer popup in the gallery
+        sleep(45000);
 
         arthur.logoff();
         trillian.logoff();
@@ -159,8 +166,8 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         sleep(13000);
         ford.sendPrivateChatMessage("I know how you feel...", me);
 
-        // For taking screenshot manually.
-        sleep(10000);
+        // Take screenshot of the private chat
+        sleep(15000);
 
         ford.logoff();
     }
@@ -201,6 +208,6 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
 
     private void sleep(final int ms) {
 //        solo.sleep(ms); // Screenshot mode
-        solo.sleep(1000); // Test mode
+        solo.sleep(1500); // Test mode
     }
 }
