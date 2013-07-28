@@ -1,7 +1,7 @@
 
 - KouChat CHANGES
 
-* version 0.10.0 (xx.xx.2013)
+* version 0.10.0 (28.07.2013)
   - Updated to use high resolution icons.
   - Updated to target API 16 (Android 4.1), to get a more modern look.
   - Added ActionBar, using ActionBarSherlock for compatibility with API 10 (Android 2.3.3).
