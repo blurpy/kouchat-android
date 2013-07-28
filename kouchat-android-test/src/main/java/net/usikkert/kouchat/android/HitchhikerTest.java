@@ -100,32 +100,32 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
      * <Christian>: interesting!
      */
     public void test02DoMainChat() throws CommandException {
-        solo.sleep(7000);
+        sleep(7000);
         RobotiumTestUtils.writeLine(solo, "hey :)");
 
-        solo.sleep(10000);
+        sleep(10000);
         arthur.sendChatMessage("What are you doing?");
 
-        solo.sleep(16000);
+        sleep(16000);
         ford.sendChatMessage("Preparing for hyperspace. It's rather unpleasantly like being drunk.");
 
-        solo.sleep(9000);
+        sleep(9000);
         arthur.sendChatMessage("What's so wrong about being drunk?");
 
-        solo.sleep(7000);
+        sleep(7000);
         ford.sendChatMessage("Ask a glass of water.");
 
-        solo.sleep(8000);
+        sleep(8000);
         trillian.goAway("It won't affect me, I'm already a woman.");
 
-        solo.sleep(6000);
+        sleep(6000);
         RobotiumTestUtils.writeLine(solo, "interesting!");
 
-        solo.sleep(1000);
+        sleep(1000);
         arthur.sendPrivateChatMessage("Show me the envelope!", me);
 
         // For taking screenshot manually. Robotium screenshots don't include status bars.
-        solo.sleep(10000);
+        sleep(10000);
 
         arthur.logoff();
         trillian.logoff();
@@ -144,23 +144,23 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         RobotiumTestUtils.changeNickNameTo(solo, "Arthur");
         RobotiumTestUtils.goHome(solo);
 
-        solo.sleep(500);
+        sleep(500);
         RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Ford");
 
-        solo.sleep(500);
+        sleep(500);
         RobotiumTestUtils.writeLine(solo, "Ford?");
 
-        solo.sleep(9000);
+        sleep(9000);
         ford.sendPrivateChatMessage("Yeah?", me);
 
-        solo.sleep(12000);
+        sleep(12000);
         RobotiumTestUtils.writeLine(solo, "I think I'm a sofa...");
 
-        solo.sleep(13000);
+        sleep(13000);
         ford.sendPrivateChatMessage("I know how you feel...", me);
 
         // For taking screenshot manually.
-        solo.sleep(10000);
+        sleep(10000);
 
         ford.logoff();
     }
@@ -197,5 +197,10 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         calendar.add(Calendar.DATE, -12);
 
         return calendar.getTimeInMillis();
+    }
+
+    private void sleep(final int ms) {
+//        solo.sleep(ms); // Screenshot mode
+        solo.sleep(1000); // Test mode
     }
 }
