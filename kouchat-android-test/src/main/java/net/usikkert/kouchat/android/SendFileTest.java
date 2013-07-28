@@ -44,7 +44,7 @@ import android.widget.ListView;
 
 /**
  * Tests send file functionality. Requires at least one image in the gallery.
- * If the gallery is empty, then the image kouchat-512x512.png will be added.
+ * If the gallery is empty, then the image kouchat-1600x1600.png will be added.
  *
  * @author Christian Ihle
  */

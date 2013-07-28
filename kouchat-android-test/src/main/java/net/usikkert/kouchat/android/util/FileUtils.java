@@ -60,7 +60,7 @@ public final class FileUtils {
 
         if (cursor.getCount() == 0) {
             final File externalStorageDirectory = Environment.getExternalStorageDirectory();
-            final File fileToStore = new File(externalStorageDirectory, "kouchat-512x512.png");
+            final File fileToStore = new File(externalStorageDirectory, "kouchat-1600x1600.png");
 
             copyFileToSdCard(fileToStore, instrumentation);
             addFileToDatabase(activity, fileToStore);
