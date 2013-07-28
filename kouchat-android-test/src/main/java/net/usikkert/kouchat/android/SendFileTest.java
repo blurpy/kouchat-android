@@ -43,8 +43,8 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.widget.ListView;
 
 /**
- * Tests send file functionality. Requires at least one image in the gallery.
- * If the gallery is empty, then the image kouchat-1600x1600.png will be added.
+ * Tests send file functionality.
+ * The image kouchat-1600x1600.png will be added to the gallery if it's missing.
  *
  * @author Christian Ihle
  */
@@ -75,7 +75,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         solo = new Solo(instrumentation, activity);
         solo.sleep(2000);
 
-        FileUtils.copyImageFromAssetsIfSdCardIsEmpty(instrumentation, activity);
+        FileUtils.copyKouChatImageFromAssetsToSdCard(instrumentation, activity);
         image = FileUtils.getRandomImage(activity);
 
         assertTrue(RobotiumTestUtils.searchText(solo, "Unable to locate the file to send."));
@@ -162,6 +162,8 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         final ByteSource originalFile = Files.asByteSource(image.getFile());
         final ByteSource savedFile = Files.asByteSource(newFile);
         assertTrue(originalFile.contentEquals(savedFile));
+
+        assertTrue("Should be able to delete temporary file: " + newFile, newFile.delete()); // Cleanup
     }
 
     public void test05FileTransferRejected() {

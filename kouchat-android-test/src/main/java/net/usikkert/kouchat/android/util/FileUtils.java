@@ -55,13 +55,17 @@ public final class FileUtils {
         // Only static methods here
     }
 
-    public static void copyImageFromAssetsIfSdCardIsEmpty(final Instrumentation instrumentation, final Activity activity) {
-        final Cursor cursor = getCursor(activity);
+    /**
+     * Copies the file <code>kouchat-1600x1600.png</code> from assets to the SD card, if it's not already there.
+     *
+     * @param instrumentation Test instrumentation.
+     * @param activity The activity under test.
+     */
+    public static void copyKouChatImageFromAssetsToSdCard(final Instrumentation instrumentation, final Activity activity) {
+        final File externalStorageDirectory = Environment.getExternalStorageDirectory();
+        final File fileToStore = new File(externalStorageDirectory, "kouchat-1600x1600.png");
 
-        if (cursor.getCount() == 0) {
-            final File externalStorageDirectory = Environment.getExternalStorageDirectory();
-            final File fileToStore = new File(externalStorageDirectory, "kouchat-1600x1600.png");
-
+        if (!fileToStore.exists()) {
             copyFileToSdCard(fileToStore, instrumentation);
             addFileToDatabase(activity, fileToStore);
         }
