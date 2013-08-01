@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,5 +60,16 @@ public class ChatServiceBinderTest {
         final ChatServiceBinder binder = new ChatServiceBinder(ui);
 
         assertSame(ui, binder.getAndroidUserInterface());
+    }
+
+    @Test
+    public void onDestroyShouldSetAndroidUserInterfaceToNull() {
+        final ChatServiceBinder binder = new ChatServiceBinder(mock(AndroidUserInterface.class));
+
+        assertFalse(TestUtils.allFieldsAreNull(binder));
+
+        binder.onDestroy();
+
+        assertTrue(TestUtils.allFieldsAreNull(binder));
     }
 }

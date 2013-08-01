@@ -46,6 +46,7 @@ public class ChatService extends Service {
     private AndroidUserInterface androidUserInterface;
     private NotificationService notificationService;
     private MulticastLockHandler multicastLockHandler;
+    private ChatServiceBinder chatServiceBinder;
 
     @Override
     public void onCreate() {
@@ -57,6 +58,8 @@ public class ChatService extends Service {
 
         final WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         multicastLockHandler = new MulticastLockHandler(wifiManager, androidUserInterface);
+
+        chatServiceBinder = new ChatServiceBinder(androidUserInterface);
 
         super.onCreate();
     }
@@ -74,17 +77,19 @@ public class ChatService extends Service {
 
     @Override
     public IBinder onBind(final Intent intent) {
-        return new ChatServiceBinder(androidUserInterface);
+        return chatServiceBinder;
     }
 
     @Override
     public void onDestroy() {
         androidUserInterface.logOff();
         multicastLockHandler.release();
+        chatServiceBinder.onDestroy();
 
         androidUserInterface = null;
         notificationService = null;
         multicastLockHandler = null;
+        chatServiceBinder = null;
 
         super.onDestroy();
     }

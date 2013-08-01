@@ -34,7 +34,7 @@ import android.os.Binder;
  */
 public class ChatServiceBinder extends Binder {
 
-    private final AndroidUserInterface androidUserInterface;
+    private AndroidUserInterface androidUserInterface;
 
     public ChatServiceBinder(final AndroidUserInterface androidUserInterface) {
         Validate.notNull(androidUserInterface, "AndroidUserInterface can not be null");
@@ -43,5 +43,13 @@ public class ChatServiceBinder extends Binder {
 
     public AndroidUserInterface getAndroidUserInterface() {
         return androidUserInterface;
+    }
+
+    /**
+     * Cleanup to avoid memory leaks. Binders are not garbage collected easily, so it's important that
+     * they don't reference any objects that must be garbage collected.
+     */
+    public void onDestroy() {
+        androidUserInterface = null;
     }
 }
