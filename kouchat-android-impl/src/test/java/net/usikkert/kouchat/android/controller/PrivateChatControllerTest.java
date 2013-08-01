@@ -120,6 +120,7 @@ public class PrivateChatControllerTest {
         controller.onDestroy();
 
         verify(privateChatWindow).unregisterPrivateChatController();
+        verify(privateChatInput).setOnKeyListener(null);
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
 

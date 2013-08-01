@@ -41,6 +41,7 @@ import org.robolectric.shadows.ShadowHandler;
 
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -62,6 +63,8 @@ public class MainChatControllerTest {
     private EditText mainChatInput;
     private ScrollView mainChatScroll;
     private ControllerUtils controllerUtils;
+    private ListView mainChatUserList;
+    private TextWatcher textWatcher;
 
     @Before
     public void setUp() {
@@ -81,6 +84,8 @@ public class MainChatControllerTest {
         mainChatInput = mock(EditText.class);
         mainChatScroll = mock(ScrollView.class);
         controllerUtils = mock(ControllerUtils.class);
+        mainChatUserList = mock(ListView.class);
+        textWatcher = mock(TextWatcher.class);
 
         TestUtils.setFieldValue(controller, "userList", userList);
         TestUtils.setFieldValue(controller, "androidUserInterface", ui);
@@ -91,7 +96,8 @@ public class MainChatControllerTest {
         TestUtils.setFieldValue(controller, "controllerUtils", controllerUtils);
         TestUtils.setFieldValue(controller, "chatServiceIntent", mock(Intent.class));
         TestUtils.setFieldValue(controller, "userListAdapter", mock(UserListAdapter.class));
-        TestUtils.setFieldValue(controller, "mainChatUserList", mock(ListView.class));
+        TestUtils.setFieldValue(controller, "mainChatUserList", mainChatUserList);
+        TestUtils.setFieldValue(controller, "textWatcher", textWatcher);
     }
 
     @Test
@@ -132,6 +138,10 @@ public class MainChatControllerTest {
 
         verify(userList).removeUserListListener(controller);
         verify(ui).unregisterMainChatController();
+        verify(mainChatInput).removeTextChangedListener(textWatcher);
+        verify(mainChatInput).setOnKeyListener(null);
+        verify(mainChatUserList).setOnItemClickListener(null);
+        verify(mainChatUserList).setAdapter(null);
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
 

@@ -23,9 +23,9 @@
 package net.usikkert.kouchat.android.controller;
 
 import net.usikkert.kouchat.Constants;
+import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidPrivateChatWindow;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
-import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.misc.User;
@@ -95,6 +95,8 @@ public class PrivateChatController extends SherlockActivity {
             privateChatWindow.unregisterPrivateChatController();
             unbindService(serviceConnection);
         }
+
+        privateChatInput.setOnKeyListener(null);
 
         androidUserInterface = null;
         privateChatWindow = null;

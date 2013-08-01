@@ -22,8 +22,8 @@
 
 package net.usikkert.kouchat.android.controller;
 
-import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.component.AboutDialog;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
@@ -89,6 +89,7 @@ public class MainChatController extends SherlockActivity implements UserListList
     private TextView mainChatView;
     private ScrollView mainChatScroll;
     private UserListAdapter userListAdapter;
+    private TextWatcher textWatcher;
 
     private AndroidUserInterface androidUserInterface;
     private UserList userList;
@@ -157,7 +158,7 @@ public class MainChatController extends SherlockActivity implements UserListList
     }
 
     private void registerMainChatTextListener() {
-        mainChatInput.addTextChangedListener(new TextWatcher() {
+        textWatcher = new TextWatcher() {
 
             @Override
             public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
@@ -173,7 +174,9 @@ public class MainChatController extends SherlockActivity implements UserListList
                     androidUserInterface.updateMeWriting(!mainChatInput.getText().toString().isEmpty());
                 }
             }
-        });
+        };
+
+        mainChatInput.addTextChangedListener(textWatcher);
     }
 
     private void registerUserListClickListener() {
@@ -227,6 +230,11 @@ public class MainChatController extends SherlockActivity implements UserListList
             unbindService(serviceConnection);
         }
 
+        mainChatInput.removeTextChangedListener(textWatcher);
+        mainChatInput.setOnKeyListener(null);
+        mainChatUserList.setOnItemClickListener(null);
+        mainChatUserList.setAdapter(null);
+
         androidUserInterface = null;
         userList = null;
 
@@ -238,6 +246,7 @@ public class MainChatController extends SherlockActivity implements UserListList
         mainChatView = null;
         mainChatScroll = null;
         userListAdapter = null;
+        textWatcher = null;
 
         super.onDestroy();
     }
