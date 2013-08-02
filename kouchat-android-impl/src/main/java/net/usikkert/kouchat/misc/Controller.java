@@ -78,6 +78,7 @@ public class Controller implements NetworkConnectionListener {
     private final MessageController msgController;
     private final Settings settings;
     private final DayTimer dayTimer;
+    private final Thread shutdownHook;
 
     /**
      * Constructor. Initializes the controller, but does not log on to
@@ -93,13 +94,15 @@ public class Controller implements NetworkConnectionListener {
         this.ui = ui;
         this.settings = settings;
 
-        Runtime.getRuntime().addShutdownHook(new Thread("ControllerShutdownHook") {
+        shutdownHook = new Thread("ControllerShutdownHook") {
             @Override
             public void run() {
                 logOff(false);
-                shutdown();
+                doShutdown();
             }
-        });
+        };
+
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
 
         me = settings.getMe();
         userListController = new UserListController(settings);
@@ -395,6 +398,11 @@ public class Controller implements NetworkConnectionListener {
      * Should <strong>only</strong> be called when the application shuts down.
      */
     public void shutdown() {
+        doShutdown();
+        Runtime.getRuntime().removeShutdownHook(shutdownHook); // This throws exception if called from the shutdown hook
+    }
+
+    private void doShutdown() {
         idleThread.stopThread();
         dayTimer.stopTimer();
     }
