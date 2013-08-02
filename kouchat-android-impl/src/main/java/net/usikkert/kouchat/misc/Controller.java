@@ -77,6 +77,7 @@ public class Controller implements NetworkConnectionListener {
     private final UserInterface ui;
     private final MessageController msgController;
     private final Settings settings;
+    private final DayTimer dayTimer;
 
     /**
      * Constructor. Initializes the controller, but does not log on to
@@ -106,6 +107,7 @@ public class Controller implements NetworkConnectionListener {
         tList = new TransferList();
         wList = new WaitingList();
         idleThread = new IdleThread(this, ui, settings);
+        dayTimer = new DayTimer(ui);
         networkService = new NetworkService(settings);
         final MessageResponder msgResponder = new DefaultMessageResponder(this, ui, settings);
         final PrivateMessageResponder privmsgResponder = new DefaultPrivateMessageResponder(this, ui, settings);
@@ -117,7 +119,7 @@ public class Controller implements NetworkConnectionListener {
         networkService.registerNetworkConnectionListener(this);
         msgController = ui.getMessageController();
 
-        new DayTimer(ui);
+        dayTimer.startTimer();
         idleThread.start();
 
         msgController.showSystemMessage("Welcome to " + Constants.APP_NAME + " v" + Constants.APP_VERSION + "!");
@@ -394,6 +396,7 @@ public class Controller implements NetworkConnectionListener {
      */
     public void shutdown() {
         idleThread.stopThread();
+        dayTimer.stopTimer();
     }
 
     /**

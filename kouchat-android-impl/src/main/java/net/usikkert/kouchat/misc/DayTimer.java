@@ -50,6 +50,9 @@ public class DayTimer extends TimerTask {
      */
     private static final long TIMER_INTERVAL = 1000 * 60 * 60;
 
+    /** The actual timer. */
+    private final Timer timer;
+
     /** The controller for showing messages in the ui. */
     private final MessageController msgController;
 
@@ -63,6 +66,10 @@ public class DayTimer extends TimerTask {
      */
     public DayTimer(final UserInterface ui) {
         msgController = ui.getMessageController();
+        timer = new Timer("DayTimer");
+    }
+
+    public void startTimer() {
         final Calendar cal = Calendar.getInstance();
 
         // Starts the timer at the next hour
@@ -70,8 +77,14 @@ public class DayTimer extends TimerTask {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
 
-        final Timer timer = new Timer("DayTimer");
         timer.scheduleAtFixedRate(this, new Date(cal.getTimeInMillis()), TIMER_INTERVAL);
+    }
+
+    /**
+     * Stops the timer. After this, no more day checks are made.
+     */
+    public void stopTimer() {
+        timer.cancel();
     }
 
     /**

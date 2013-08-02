@@ -53,6 +53,7 @@ public class ControllerTest {
     private Messages messages;
     private NetworkService networkService;
     private IdleThread idleThread;
+    private DayTimer dayTimer;
 
     private User me;
 
@@ -76,6 +77,9 @@ public class ControllerTest {
 
         idleThread = mock(IdleThread.class);
         TestUtils.setFieldValue(controller, "idleThread", idleThread);
+
+        dayTimer = mock(DayTimer.class);
+        TestUtils.setFieldValue(controller, "dayTimer", dayTimer);
     }
 
     @Test
@@ -223,9 +227,10 @@ public class ControllerTest {
     }
 
     @Test
-    public void shutdownShouldStopIdleThread() {
+    public void shutdownShouldStopThreads() {
         controller.shutdown();
 
         verify(idleThread).stopThread();
+        verify(dayTimer).stopTimer();
     }
 }
