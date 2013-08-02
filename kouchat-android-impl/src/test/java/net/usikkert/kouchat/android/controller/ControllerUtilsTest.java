@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android.controller;
 
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -33,6 +34,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
+import android.graphics.drawable.Drawable;
+import android.text.NoCopySpan;
+import android.text.SpanWatcher;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
+import android.text.style.URLSpan;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -73,5 +84,62 @@ public class ControllerUtilsTest {
         controllerUtils.makeLinksClickable(textView);
 
         verify(textView).setMovementMethod(any(LinkMovementMethodWithSelectSupport.class));
+    }
+
+    @Test
+    public void removeReferencesToTextViewFromTextShouldHandleSpannableString() {
+        when(textView.getText()).thenReturn(new SpannableString("SpannableString"));
+
+        controllerUtils.removeReferencesToTextViewFromText(textView);
+    }
+
+    @Test
+    public void removeReferencesToTextViewFromTextShouldHandleSpannableStringBuilder() {
+        when(textView.getText()).thenReturn(new SpannableStringBuilder("SpannableStringBuilder"));
+
+        controllerUtils.removeReferencesToTextViewFromText(textView);
+    }
+
+    @Test
+    public void removeReferencesToTextViewFromTextShouldRemoveNoCopySpansButNothingElse() {
+        final SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder("SpannableStringBuilder");
+
+        spannableStringBuilder.setSpan(mock(SpanWatcher.class), 1, 2, 0); // NoCopySpan
+        spannableStringBuilder.setSpan(new ImageSpan(mock(Drawable.class)), 3, 4, 0);
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(1), 4, 5, 0);
+        spannableStringBuilder.setSpan(new BackgroundColorSpan(1), 6, 7, 0);
+        spannableStringBuilder.setSpan(mock(TextWatcher.class), 9, 10, 0); // NoCopySpan
+        spannableStringBuilder.setSpan(new URLSpan("www.google.com"), 11, 12, 0);
+
+        assertEquals(6, spannableStringBuilder.getSpans(0, 15, Object.class).length);
+        assertEquals(2, spannableStringBuilder.getSpans(0, 15, NoCopySpan.class).length);
+
+        when(textView.getText()).thenReturn(spannableStringBuilder);
+
+        controllerUtils.removeReferencesToTextViewFromText(textView);
+
+        final Object[] spans = spannableStringBuilder.getSpans(0, 15, Object.class);
+        assertEquals(4, spans.length);
+
+        assertTrue(containsSpan(ImageSpan.class, spans));
+        assertTrue(containsSpan(ForegroundColorSpan.class, spans));
+        assertTrue(containsSpan(BackgroundColorSpan.class, spans));
+        assertTrue(containsSpan(URLSpan.class, spans));
+
+        assertFalse(containsSpan(SpanWatcher.class, spans));
+        assertFalse(containsSpan(TextWatcher.class, spans));
+        assertFalse(containsSpan(NoCopySpan.class, spans));
+
+        assertEquals("SpannableStringBuilder", spannableStringBuilder.toString()); // Text is still there
+    }
+
+    private boolean containsSpan(final Class<?> spanClass, final Object[] spans) {
+        for (final Object span : spans) {
+            if (spanClass.isInstance(span)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

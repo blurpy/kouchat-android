@@ -97,6 +97,7 @@ public class PrivateChatController extends SherlockActivity {
         }
 
         privateChatInput.setOnKeyListener(null);
+        controllerUtils.removeReferencesToTextViewFromText(privateChatView);
 
         androidUserInterface = null;
         privateChatWindow = null;

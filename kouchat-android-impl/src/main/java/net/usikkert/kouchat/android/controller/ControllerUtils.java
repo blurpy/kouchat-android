@@ -24,6 +24,8 @@ package net.usikkert.kouchat.android.controller;
 
 import net.usikkert.kouchat.android.component.LinkMovementMethodWithSelectSupport;
 
+import android.text.NoCopySpan;
+import android.text.Spannable;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -59,5 +61,36 @@ public class ControllerUtils {
      */
     public void makeLinksClickable(final TextView textView) {
         textView.setMovementMethod(LinkMovementMethodWithSelectSupport.getInstance());
+    }
+
+    /**
+     * Removes spans with references to the text view.
+     *
+     * <p>There are several spans that are added to the text here and there, like:</p>
+     *
+     * <ul>
+     *   <li>android.text.DynamicLayout$ChangeWatcher</li>
+     *   <li>android.widget.TextView$ChangeWatcher</li>
+     *   <li>android.widget.Editor$EasyEditSpanController</li>
+     * </ul>
+     *
+     * <p>These spans are of type {@link NoCopySpan}, and are not important to the text or how it's shown.
+     * Since they are inner classes, they keep a reference to their parent, like a {@link TextView}.
+     * And that references a context, which is usually an activity.</p>
+     *
+     * <p>If the text was garbage collected, then this would still not be a problem, but often it's not.
+     * The reason is that some of these lines are cached by the TextLine class, including all the spans.
+     * So to give the text view and the activity a chance to be garbage collected, then these spans must be
+     * removed.</p>
+     *
+     * @param textView The text view with the text to remove references from.
+     */
+    public void removeReferencesToTextViewFromText(final TextView textView) {
+        final Spannable text = (Spannable) textView.getText();
+        final NoCopySpan[] noCopySpans = text.getSpans(0, text.length(), NoCopySpan.class);
+
+        for (final NoCopySpan noCopySpan : noCopySpans) {
+            text.removeSpan(noCopySpan);
+        }
     }
 }
