@@ -52,6 +52,7 @@ public class ControllerTest {
 
     private Messages messages;
     private NetworkService networkService;
+    private IdleThread idleThread;
 
     private User me;
 
@@ -72,6 +73,9 @@ public class ControllerTest {
 
         networkService = mock(NetworkService.class);
         TestUtils.setFieldValue(controller, "networkService", networkService);
+
+        idleThread = mock(IdleThread.class);
+        TestUtils.setFieldValue(controller, "idleThread", idleThread);
     }
 
     @Test
@@ -216,5 +220,12 @@ public class ControllerTest {
         controller.registerNetworkConnectionListener(listener);
 
         verify(networkService).registerNetworkConnectionListener(listener);
+    }
+
+    @Test
+    public void shutdownShouldStopIdleThread() {
+        controller.shutdown();
+
+        verify(idleThread).stopThread();
     }
 }

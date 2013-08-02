@@ -392,7 +392,7 @@ public class Controller implements NetworkConnectionListener {
      * Prepares the application for shutdown.
      * Should <strong>only</strong> be called when the application shuts down.
      */
-    private void shutdown() {
+    public void shutdown() {
         idleThread.stopThread();
     }
 

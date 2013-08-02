@@ -224,6 +224,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
             @Override
             protected Void doInBackground(final Void... voids) {
                 controller.logOff(false);
+                controller.shutdown();
                 return null;
             }
         };

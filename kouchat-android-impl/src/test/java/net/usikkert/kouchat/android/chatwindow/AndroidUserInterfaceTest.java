@@ -362,7 +362,9 @@ public class AndroidUserInterfaceTest {
     @Test
     public void logOffShouldUseTheController() {
         androidUserInterface.logOff();
+
         verify(controller).logOff(false);
+        verify(controller).shutdown();
     }
 
     @Test
