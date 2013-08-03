@@ -158,4 +158,11 @@ public class MessageController {
         user.getPrivchat().appendToPrivateChat(msg, settings.getSysColor());
         user.getPrivateChatLogger().append(msg);
     }
+
+    /**
+     * Cleanup that must be done when shutting down. Closes the chat logger.
+     */
+    public void shutdown() {
+        cLog.close();
+    }
 }

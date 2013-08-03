@@ -147,15 +147,10 @@ public class DefaultMessageResponder implements MessageResponder {
         final User user = controller.getUser(userCode);
 
         if (user != null) {
-            controller.cancelFileTransfers(user);
-            user.setOnline(false);
-            controller.getUserList().remove(user);
-            msgController.showSystemMessage(user.getNick() + " logged off");
+            final String logOffMessage = user.getNick() + " logged off";
 
-            if (user.getPrivchat() != null) {
-                msgController.showPrivateSystemMessage(user, user.getNick() + " logged off");
-                user.getPrivchat().setLoggedOff();
-            }
+            controller.removeUser(user, logOffMessage);
+            msgController.showSystemMessage(logOffMessage);
         }
     }
 

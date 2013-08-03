@@ -106,7 +106,6 @@ public class IdleThread extends Thread {
                 final User temp = userList.get(i);
 
                 if (temp.getCode() != me.getCode() && temp.getLastIdle() < System.currentTimeMillis() - TIMEOUT) {
-                    userList.remove(temp);
                     userTimedOut(temp);
                     timeout = true;
                     i--;
@@ -136,14 +135,10 @@ public class IdleThread extends Thread {
      * @param user The user which timed out.
      */
     private void userTimedOut(final User user) {
-        controller.cancelFileTransfers(user);
-        user.setOnline(false);
-        msgController.showSystemMessage(user.getNick() + " timed out");
+        final String timeOutMessage = user.getNick() + " timed out";
 
-        if (user.getPrivchat() != null) {
-            msgController.showPrivateSystemMessage(user, user.getNick() + " timed out");
-            user.getPrivchat().setLoggedOff();
-        }
+        controller.removeUser(user, timeOutMessage);
+        msgController.showSystemMessage(timeOutMessage);
     }
 
     /**

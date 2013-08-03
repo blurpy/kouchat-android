@@ -53,8 +53,10 @@ public class ChatLogger implements SettingsListener {
     private final Settings settings;
     private final ErrorHandler errorHandler;
     private final String logFilePrefix;
+
     private BufferedWriter writer;
     private boolean open;
+    private String logFileName;
 
     /**
      * Default constructor. Sets the log file prefix to <code>kouchat</code>.
@@ -87,13 +89,6 @@ public class ChatLogger implements SettingsListener {
         if (settings.isLogging()) {
             open();
         }
-
-        Runtime.getRuntime().addShutdownHook(new Thread("ChatLoggerShutdownHook") {
-            @Override
-            public void run() {
-                close();
-            }
-        });
     }
 
     /**
@@ -108,14 +103,18 @@ public class ChatLogger implements SettingsListener {
             final File logdir = new File(logLocation);
 
             if (!logdir.exists()) {
+                LOG.fine("Creating missing log directory: " + logdir);
+
                 if (!logdir.mkdirs()) {
                     throw new IOException("Unable to create path for logging: " + logdir);
                 }
             }
 
-            final String fileName = logLocation + logFilePrefix + LOG_FILE_POSTFIX;
-            writer = new BufferedWriter(new FileWriter(fileName, true));
+            logFileName = logLocation + logFilePrefix + LOG_FILE_POSTFIX;
+            writer = new BufferedWriter(new FileWriter(logFileName, true));
             open = true;
+
+            LOG.fine("Started logging to " + logFileName);
         }
 
         catch (final IOException e) {
@@ -133,6 +132,8 @@ public class ChatLogger implements SettingsListener {
             try {
                 writer.flush();
                 writer.close();
+
+                LOG.fine("Stopped logging to " + logFileName);
             }
 
             catch (final IOException e) {
@@ -182,6 +183,8 @@ public class ChatLogger implements SettingsListener {
     @Override
     public void settingChanged(final String setting) {
         if (setting.equals("logging")) {
+            LOG.fine("Handling change in log setting");
+
             if (settings.isLogging()) {
                 if (!isOpen()) {
                     open();
