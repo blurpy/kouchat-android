@@ -86,6 +86,7 @@ public class TestClient {
 
         Tools.sleep(500);
         controller.logOff(true);
+        controller.shutdown();
     }
 
     public void changeTopic(final String topic) {
