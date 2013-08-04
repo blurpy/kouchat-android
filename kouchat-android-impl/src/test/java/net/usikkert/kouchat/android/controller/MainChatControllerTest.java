@@ -65,6 +65,7 @@ public class MainChatControllerTest {
     private ControllerUtils controllerUtils;
     private ListView mainChatUserList;
     private TextWatcher textWatcher;
+    private UserListAdapter userListAdapter;
 
     @Before
     public void setUp() {
@@ -86,6 +87,7 @@ public class MainChatControllerTest {
         controllerUtils = mock(ControllerUtils.class);
         mainChatUserList = mock(ListView.class);
         textWatcher = mock(TextWatcher.class);
+        userListAdapter = mock(UserListAdapter.class);
 
         TestUtils.setFieldValue(controller, "userList", userList);
         TestUtils.setFieldValue(controller, "androidUserInterface", ui);
@@ -95,7 +97,7 @@ public class MainChatControllerTest {
         TestUtils.setFieldValue(controller, "mainChatScroll", mainChatScroll);
         TestUtils.setFieldValue(controller, "controllerUtils", controllerUtils);
         TestUtils.setFieldValue(controller, "chatServiceIntent", mock(Intent.class));
-        TestUtils.setFieldValue(controller, "userListAdapter", mock(UserListAdapter.class));
+        TestUtils.setFieldValue(controller, "userListAdapter", userListAdapter);
         TestUtils.setFieldValue(controller, "mainChatUserList", mainChatUserList);
         TestUtils.setFieldValue(controller, "textWatcher", textWatcher);
     }
@@ -142,7 +144,9 @@ public class MainChatControllerTest {
         verify(mainChatInput).setOnKeyListener(null);
         verify(mainChatUserList).setOnItemClickListener(null);
         verify(mainChatUserList).setAdapter(null);
+        verify(userListAdapter).clear();
         verify(controllerUtils).removeReferencesToTextViewFromText(mainChatView);
+        verify(controllerUtils).removeReferencesToTextViewFromText(mainChatInput);
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
 

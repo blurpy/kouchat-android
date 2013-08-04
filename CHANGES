@@ -2,7 +2,7 @@
 - KouChat CHANGES
 
 * version 0.11.0 (xx.xx.2013)
-  - Nothing yet.
+  - Fixed several issues leading to memory leaks.
 
 
 * version 0.10.0 (28.07.2013)

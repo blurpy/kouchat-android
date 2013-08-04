@@ -230,11 +230,13 @@ public class MainChatController extends SherlockActivity implements UserListList
             unbindService(serviceConnection);
         }
 
+        userListAdapter.clear();
         mainChatInput.removeTextChangedListener(textWatcher);
         mainChatInput.setOnKeyListener(null);
         mainChatUserList.setOnItemClickListener(null);
         mainChatUserList.setAdapter(null);
         controllerUtils.removeReferencesToTextViewFromText(mainChatView);
+        controllerUtils.removeReferencesToTextViewFromText(mainChatInput);
 
         androidUserInterface = null;
         userList = null;
