@@ -185,7 +185,7 @@ public class ControllerTest {
         when(networkService.isNetworkUp()).thenReturn(true);
         controller.getChatState().setLoggedOn(true);
 
-        final User user = new User("Test", 123);
+        final User user = new User("Test", 124);
         user.setAway(true);
 
         controller.sendFile(user, mock(File.class));
@@ -254,7 +254,7 @@ public class ControllerTest {
 
     @Test
     public void removeUserShouldRemoveUserAndSetOffline() {
-        final User user = new User("User1", 123);
+        final User user = new User("User1", 124);
         userList.add(user);
 
         assertEquals(1, userList.indexOf(user));
@@ -268,7 +268,7 @@ public class ControllerTest {
 
     @Test
     public void removeUserShouldCancelFileTransfers() {
-        final User user = new User("User1", 123);
+        final User user = new User("User1", 124);
         userList.add(user);
 
         final FileReceiver fileReceiver1 = mock(FileReceiver.class);
@@ -294,7 +294,7 @@ public class ControllerTest {
 
     @Test
     public void removeUserShouldLogOffPrivateChat() {
-        final User user = new User("User1", 123);
+        final User user = new User("User1", 124);
         userList.add(user);
 
         final PrivateChatWindow privchat = mock(PrivateChatWindow.class);
@@ -308,7 +308,7 @@ public class ControllerTest {
 
     @Test
     public void removeUserShouldClosePrivateChatLogger() {
-        final User user = new User("User1", 123);
+        final User user = new User("User1", 124);
         userList.add(user);
 
         final ChatLogger chatLogger = mock(ChatLogger.class);
@@ -321,11 +321,11 @@ public class ControllerTest {
 
     @Test
     public void logOffShouldClosePrivateChatLoggersWhenRemoveUsersIsTrue() {
-        final User user1 = new User("User1", 123);
+        final User user1 = new User("User1", 124);
         final ChatLogger chatLogger1 = mock(ChatLogger.class);
         user1.setPrivateChatLogger(chatLogger1);
 
-        final User user2 = new User("User2", 124);
+        final User user2 = new User("User2", 125);
         final ChatLogger chatLogger2 = mock(ChatLogger.class);
         user2.setPrivateChatLogger(chatLogger2);
 
@@ -340,11 +340,11 @@ public class ControllerTest {
 
     @Test
     public void logOffShouldClosePrivateChatLoggersWhenRemoveUsersIsFalse() {
-        final User user1 = new User("User1", 123);
+        final User user1 = new User("User1", 124);
         final ChatLogger chatLogger1 = mock(ChatLogger.class);
         user1.setPrivateChatLogger(chatLogger1);
 
-        final User user2 = new User("User2", 124);
+        final User user2 = new User("User2", 125);
         final ChatLogger chatLogger2 = mock(ChatLogger.class);
         user2.setPrivateChatLogger(chatLogger2);
 
@@ -359,13 +359,13 @@ public class ControllerTest {
 
     @Test
     public void logOffShouldCancelFileTransfersWhenRemoveUsersIsTrue() {
-        final User user1 = new User("User1", 123);
+        final User user1 = new User("User1", 124);
         userList.add(user1);
 
         final FileReceiver fileReceiver1 = mock(FileReceiver.class);
         when(transferList.getFileReceivers(user1)).thenReturn(Arrays.asList(fileReceiver1));
 
-        final User user2 = new User("User2", 124);
+        final User user2 = new User("User2", 125);
         userList.add(user2);
 
         final FileSender fileSender1 = mock(FileSender.class);
@@ -382,13 +382,13 @@ public class ControllerTest {
 
     @Test
     public void logOffShouldCancelFileTransfersWhenRemoveUsersIsFalse() {
-        final User user1 = new User("User1", 123);
+        final User user1 = new User("User1", 124);
         userList.add(user1);
 
         final FileReceiver fileReceiver1 = mock(FileReceiver.class);
         when(transferList.getFileReceivers(user1)).thenReturn(Arrays.asList(fileReceiver1));
 
-        final User user2 = new User("User2", 124);
+        final User user2 = new User("User2", 125);
         userList.add(user2);
 
         final FileSender fileSender1 = mock(FileSender.class);
