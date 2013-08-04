@@ -119,6 +119,7 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo = null;
         me = null;
         client = null;
+        setActivity(null);
 
         System.gc();
     }

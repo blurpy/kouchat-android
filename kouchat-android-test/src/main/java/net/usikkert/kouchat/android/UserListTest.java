@@ -222,6 +222,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         solo = null;
         client = null;
         me = null;
+        setActivity(null);
 
         System.gc();
     }

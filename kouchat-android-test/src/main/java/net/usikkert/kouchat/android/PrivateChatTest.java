@@ -248,6 +248,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         solo = null;
         me = null;
+        setActivity(null);
 
         System.gc();
     }

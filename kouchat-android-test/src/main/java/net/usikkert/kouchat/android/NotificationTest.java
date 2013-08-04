@@ -264,6 +264,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo = null;
         notificationService = null;
         me = null;
+        setActivity(null);
 
         System.gc();
     }

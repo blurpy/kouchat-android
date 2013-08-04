@@ -346,6 +346,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         envelope = null;
         dot = null;
         me = null;
+        setActivity(null);
 
         System.gc();
     }

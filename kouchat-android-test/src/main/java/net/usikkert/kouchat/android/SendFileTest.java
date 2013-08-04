@@ -213,6 +213,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         albert = null;
         tina = null;
         xen = null;
+        setActivity(null);
 
         System.gc();
     }

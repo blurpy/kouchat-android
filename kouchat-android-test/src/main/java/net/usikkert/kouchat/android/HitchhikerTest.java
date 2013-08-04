@@ -192,6 +192,7 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
 
         solo = null;
         me = null;
+        setActivity(null);
 
         System.gc();
     }

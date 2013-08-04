@@ -117,6 +117,7 @@ public class LinkTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.finishOpenedActivities();
 
         solo = null;
+        setActivity(null);
 
         System.gc();
     }

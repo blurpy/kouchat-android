@@ -126,6 +126,7 @@ public class PrivateChatErrorHandlingTest extends ActivityInstrumentationTestCas
 
         solo = null;
         client = null;
+        setActivity(null);
 
         System.gc();
     }

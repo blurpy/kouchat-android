@@ -66,6 +66,7 @@ public class AboutTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.finishOpenedActivities();
 
         solo = null;
+        setActivity(null);
 
         System.gc();
     }

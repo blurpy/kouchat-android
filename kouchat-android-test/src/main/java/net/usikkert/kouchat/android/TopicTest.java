@@ -122,6 +122,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         solo = null;
         me = null;
+        setActivity(null);
 
         System.gc();
     }
