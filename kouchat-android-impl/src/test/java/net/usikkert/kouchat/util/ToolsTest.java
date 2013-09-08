@@ -83,7 +83,9 @@ public class ToolsTest {
         assertEquals(".txt", Tools.getFileExtension("file.txt"));
         assertEquals(".", Tools.getFileExtension("file."));
         assertEquals(".txt", Tools.getFileExtension(".txt"));
+        assertEquals(".", Tools.getFileExtension("."));
         assertEquals(".jpg", Tools.getFileExtension("image.txt.jpg"));
+        assertEquals(".extension", Tools.getFileExtension("some thing with spaces.extension"));
     }
 
     /**
@@ -96,7 +98,9 @@ public class ToolsTest {
         assertEquals("file", Tools.getFileBaseName("file.txt"));
         assertEquals("file", Tools.getFileBaseName("file."));
         assertEquals("", Tools.getFileBaseName(".txt"));
+        assertEquals("", Tools.getFileBaseName("."));
         assertEquals("image.txt", Tools.getFileBaseName("image.txt.jpg"));
+        assertEquals("some thing with spaces", Tools.getFileBaseName("some thing with spaces.extension"));
     }
 
     /**
@@ -179,33 +183,34 @@ public class ToolsTest {
     @Test
     public void getFileWithIncrementedNameShouldReturnFileWithOneAppendedIfFileWithOriginalNameExists() throws IOException {
         createTemporaryFile("monkeys.jpg");
+
         final File file = Tools.getFileWithIncrementedName(new File("monkeys.jpg"));
 
-        assertEquals("monkeys.jpg.1", file.getName());
+        assertEquals("monkeys_1.jpg", file.getName());
         assertNull(file.getParent());
     }
 
     @Test
     public void getFileWithIncrementedNameShouldReturnFileWithTwoAppendedIfFileWithOneAppendedExists() throws IOException {
         createTemporaryFile("bananas.jpg");
-        createTemporaryFile("bananas.jpg.1");
+        createTemporaryFile("bananas_1.jpg");
 
         final File file = Tools.getFileWithIncrementedName(new File("bananas.jpg"));
 
-        assertEquals("bananas.jpg.2", file.getName());
+        assertEquals("bananas_2.jpg", file.getName());
     }
 
     @Test
     public void getFileWithIncrementedNameShouldReturnFileWithFiveAppendedIfFileUpToFourAppendedExists() throws IOException {
         createTemporaryFile("apples.jpg");
-        createTemporaryFile("apples.jpg.1");
-        createTemporaryFile("apples.jpg.2");
-        createTemporaryFile("apples.jpg.3");
-        createTemporaryFile("apples.jpg.4");
+        createTemporaryFile("apples_1.jpg");
+        createTemporaryFile("apples_2.jpg");
+        createTemporaryFile("apples_3.jpg");
+        createTemporaryFile("apples_4.jpg");
 
         final File file = Tools.getFileWithIncrementedName(new File("apples.jpg"));
 
-        assertEquals("apples.jpg.5", file.getName());
+        assertEquals("apples_5.jpg", file.getName());
     }
 
     @Test
@@ -214,12 +219,42 @@ public class ToolsTest {
         final String homeWithSeparator = home + File.separatorChar;
 
         createTemporaryFile(homeWithSeparator + "donkeys.jpg");
-        createTemporaryFile(homeWithSeparator + "donkeys.jpg.1");
+        createTemporaryFile(homeWithSeparator + "donkeys_1.jpg");
 
         final File file = Tools.getFileWithIncrementedName(new File(homeWithSeparator + "donkeys.jpg"));
 
-        assertEquals("donkeys.jpg.2", file.getName());
+        assertEquals("donkeys_2.jpg", file.getName());
         assertEquals(home, file.getParent());
+    }
+
+    @Test
+    public void getFileWithIncrementedNameShouldHandleMissingExtension() throws IOException {
+        createTemporaryFile("STUFF");
+        createTemporaryFile("STUFF_1");
+
+        final File file = Tools.getFileWithIncrementedName(new File("STUFF"));
+
+        assertEquals("STUFF_2", file.getName());
+    }
+
+    @Test
+    public void getFileWithIncrementedNameShouldHandleSpaces() throws IOException {
+        createTemporaryFile("this is a movie.mov");
+        createTemporaryFile("this is a movie_1.mov");
+
+        final File file = Tools.getFileWithIncrementedName(new File("this is a movie.mov"));
+
+        assertEquals("this is a movie_2.mov", file.getName());
+    }
+
+    @Test
+    public void getFileWithIncrementedNameShouldHandleDots() throws IOException {
+        createTemporaryFile("this.is.a.song.ogg");
+        createTemporaryFile("this.is.a.song_1.ogg");
+
+        final File file = Tools.getFileWithIncrementedName(new File("this.is.a.song.ogg"));
+
+        assertEquals("this.is.a.song_2.ogg", file.getName());
     }
 
     @Test

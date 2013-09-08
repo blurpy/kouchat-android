@@ -400,8 +400,8 @@ public final class Tools {
 
     /**
      * Returns a new file with the same name and path as the existingFile, but with an incremented counter
-     * at the end of the name. The name file.txt becomes file.txt.1 if it's available. If not, then the counter
-     * increments until a free name is found.
+     * at the end of the name. The name <code>file.txt</code> becomes <code>file_1.txt</code> if it's available.
+     * If not, then the counter increments until a free name is found.
      *
      * <p>Returns the original file if it doesn't exist.</p>
      *
@@ -426,7 +426,10 @@ public final class Tools {
         }
 
         do {
-            final String newName = path + existingFile.getName() + "." + counter;
+            final String existingName = existingFile.getName();
+            final String newName = String.format("%s%s_%s%s",
+                    path, getFileBaseName(existingName), counter, getFileExtension(existingName));
+
             newFile = new File(newName);
             counter++;
         }

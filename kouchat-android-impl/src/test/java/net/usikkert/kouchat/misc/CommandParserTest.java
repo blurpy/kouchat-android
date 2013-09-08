@@ -278,11 +278,11 @@ public class CommandParserTest {
         parser.parse("/receive SomeOne 1");
 
         verify(transferList).getFileReceiver(someOne, 1);
-        verify(messageController).showSystemMessage("/receive - file 'doc.pdf' already exists - renaming to 'doc.pdf.1'");
+        verify(messageController).showSystemMessage("/receive - file 'doc.pdf' already exists - renaming to 'doc_1.pdf'");
         verify(fileReceiver).accept();
 
         verify(fileReceiver).setFile(newFileCaptor.capture());
-        assertEquals("doc.pdf.1", newFileCaptor.getValue().getName());
+        assertEquals("doc_1.pdf", newFileCaptor.getValue().getName());
     }
 
     /*
