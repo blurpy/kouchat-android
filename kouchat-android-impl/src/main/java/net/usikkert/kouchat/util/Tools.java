@@ -403,11 +403,17 @@ public final class Tools {
      * at the end of the name. The name file.txt becomes file.txt.1 if it's available. If not, then the counter
      * increments until a free name is found.
      *
-     * @param existingFile The existing file to find a new free name for.
-     * @return A new file, with a free, non existing name.
+     * <p>Returns the original file if it doesn't exist.</p>
+     *
+     * @param existingFile The (possibly) existing file to find a new free name for.
+     * @return A new file, with a free, non existing name, or the same file if it doesn't exist.
      */
     public static File getFileWithIncrementedName(final File existingFile) {
         Validate.notNull(existingFile, "The existing file to increment the name of can not be null");
+
+        if (!existingFile.exists()) {
+            return existingFile;
+        }
 
         int counter = 1;
         File newFile;

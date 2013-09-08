@@ -166,7 +166,19 @@ public class ToolsTest {
     }
 
     @Test
-    public void getFileWithIncrementedNameShouldReturnFileWithOneAppendedIfNoFileWithThatNameExists() {
+    public void getFileWithIncrementedNameShouldReturnSameFileIfNoFileWithThatNameExists() {
+        final File nonExistingFile = new File("monkeys.jpg");
+        assertFalse(nonExistingFile.exists());
+
+        final File file = Tools.getFileWithIncrementedName(nonExistingFile);
+
+        assertEquals("monkeys.jpg", file.getName());
+        assertSame(nonExistingFile, file);
+    }
+
+    @Test
+    public void getFileWithIncrementedNameShouldReturnFileWithOneAppendedIfFileWithOriginalNameExists() throws IOException {
+        createTemporaryFile("monkeys.jpg");
         final File file = Tools.getFileWithIncrementedName(new File("monkeys.jpg"));
 
         assertEquals("monkeys.jpg.1", file.getName());
@@ -175,6 +187,7 @@ public class ToolsTest {
 
     @Test
     public void getFileWithIncrementedNameShouldReturnFileWithTwoAppendedIfFileWithOneAppendedExists() throws IOException {
+        createTemporaryFile("bananas.jpg");
         createTemporaryFile("bananas.jpg.1");
 
         final File file = Tools.getFileWithIncrementedName(new File("bananas.jpg"));
@@ -184,6 +197,7 @@ public class ToolsTest {
 
     @Test
     public void getFileWithIncrementedNameShouldReturnFileWithFiveAppendedIfFileUpToFourAppendedExists() throws IOException {
+        createTemporaryFile("apples.jpg");
         createTemporaryFile("apples.jpg.1");
         createTemporaryFile("apples.jpg.2");
         createTemporaryFile("apples.jpg.3");
@@ -199,6 +213,7 @@ public class ToolsTest {
         final String home = System.getProperty("user.home");
         final String homeWithSeparator = home + File.separatorChar;
 
+        createTemporaryFile(homeWithSeparator + "donkeys.jpg");
         createTemporaryFile(homeWithSeparator + "donkeys.jpg.1");
 
         final File file = Tools.getFileWithIncrementedName(new File(homeWithSeparator + "donkeys.jpg"));
