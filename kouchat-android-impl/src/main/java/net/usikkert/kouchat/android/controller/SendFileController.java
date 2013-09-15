@@ -24,8 +24,9 @@ package net.usikkert.kouchat.android.controller;
 
 import java.io.File;
 
-import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.filetransfer.AndroidFileUtils;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.android.userlist.UserListAdapter;
@@ -40,11 +41,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -59,6 +58,8 @@ import android.widget.TextView;
  * @author Christian Ihle
  */
 public class SendFileController extends Activity implements UserListListener {
+
+    private AndroidFileUtils androidFileUtils = new AndroidFileUtils();
 
     private ServiceConnection serviceConnection;
     private UserListAdapter userListAdapter;
@@ -79,7 +80,7 @@ public class SendFileController extends Activity implements UserListListener {
 
         final Intent intent = getIntent();
         final Uri uriToFile = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        fileToSend = getFileFromUri(uriToFile);
+        fileToSend = androidFileUtils.getFileFromContentUri(uriToFile, getContentResolver());
 
         final TextView line1TextView = (TextView) findViewById(R.id.sendFileLine1TextView);
         line2TextView = (TextView) findViewById(R.id.sendFileLine2TextView);
@@ -133,6 +134,7 @@ public class SendFileController extends Activity implements UserListListener {
         line2TextView = null;
         userListView = null;
         fileToSend = null;
+        androidFileUtils = null;
 
         super.onDestroy();
     }
@@ -169,28 +171,6 @@ public class SendFileController extends Activity implements UserListListener {
             @Override
             public void onServiceDisconnected(final ComponentName componentName) { }
         };
-    }
-
-    private File getFileFromUri(final Uri uri) {
-        if (uri == null) {
-            return null;
-        }
-
-        final String scheme = uri.getScheme();
-
-        if (scheme.equals("content")) {
-            final String[] columns = new String[] {MediaStore.MediaColumns.DATA};
-            final Cursor cursor = getContentResolver().query(uri, columns, null, null, null);
-
-            if (cursor != null && cursor.getCount() != 0) {
-                cursor.moveToFirst();
-                final String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
-
-                return new File(path);
-            }
-        }
-
-        return null;
     }
 
     @Override

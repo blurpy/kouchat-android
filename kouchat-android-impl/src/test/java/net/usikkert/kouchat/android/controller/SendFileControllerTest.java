@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.filetransfer.AndroidFileUtils;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.android.userlist.UserListAdapter;
 import net.usikkert.kouchat.misc.UserList;
@@ -103,6 +104,8 @@ public class SendFileControllerTest {
     }
 
     private void setupMocks() {
+        TestUtils.setFieldValue(controller, "androidFileUtils", mock(AndroidFileUtils.class));
+
         TestUtils.setFieldValue(controller, "userList", userList);
         TestUtils.setFieldValue(controller, "androidUserInterface", ui);
         TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
