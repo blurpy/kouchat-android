@@ -44,6 +44,7 @@ import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
+import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.ui.PrivateChatWindow;
 import net.usikkert.kouchat.util.TestUtils;
 
@@ -82,6 +83,7 @@ public class AndroidUserInterfaceTest {
     private User me;
     private User testUser;
     private CommandParser commandParser;
+    private TransferList transferList;
 
     @Before
     public void setUp() {
@@ -95,17 +97,11 @@ public class AndroidUserInterfaceTest {
 
         androidUserInterface = new AndroidUserInterface(context, settings, notificationService);
 
-        controller = mock(Controller.class);
-        TestUtils.setFieldValue(androidUserInterface, "controller", controller);
-
-        messageStyler = mock(MessageStylerWithHistory.class);
-        TestUtils.setFieldValue(androidUserInterface, "messageStyler", messageStyler);
-
-        msgController = mock(MessageController.class);
-        TestUtils.setFieldValue(androidUserInterface, "msgController", msgController);
-
-        commandParser = mock(CommandParser.class);
-        TestUtils.setFieldValue(androidUserInterface, "commandParser", commandParser);
+        controller = TestUtils.setFieldValueWithMock(androidUserInterface, "controller", Controller.class);
+        messageStyler = TestUtils.setFieldValueWithMock(androidUserInterface, "messageStyler", MessageStylerWithHistory.class);
+        msgController = TestUtils.setFieldValueWithMock(androidUserInterface, "msgController", MessageController.class);
+        commandParser = TestUtils.setFieldValueWithMock(androidUserInterface, "commandParser", CommandParser.class);
+        transferList = TestUtils.setFieldValueWithMock(androidUserInterface, "transferList", TransferList.class);
 
         mainChatController = mock(MainChatController.class);
         androidUserInterface.registerMainChatController(mainChatController);
@@ -729,5 +725,19 @@ public class AndroidUserInterfaceTest {
         androidUserInterface.registerNetworkConnectionListener(listener);
 
         verify(controller).registerNetworkConnectionListener(listener);
+    }
+
+    @Test
+    public void getFileReceiverShouldFindUserAndReturnFileReceiverFromTransferList() {
+        when(controller.getUser(1235)).thenReturn(testUser);
+
+        final FileReceiver originalFileReceiver = mock(FileReceiver.class);
+        when(transferList.getFileReceiver(testUser, 100)).thenReturn(originalFileReceiver);
+
+        final FileReceiver fileReceiver = androidUserInterface.getFileReceiver(1235, 100);
+
+        assertSame(originalFileReceiver, fileReceiver);
+        verify(transferList).getFileReceiver(testUser, 100);
+        verify(controller).getUser(1235);
     }
 }

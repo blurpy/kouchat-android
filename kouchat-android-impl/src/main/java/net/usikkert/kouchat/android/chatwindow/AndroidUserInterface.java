@@ -42,6 +42,7 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
+import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.ui.ChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.Tools;
@@ -69,6 +70,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     private final Settings settings;
     private final NotificationService notificationService;
     private final CommandParser commandParser;
+    private final TransferList transferList;
 
     private MainChatController mainChatController;
 
@@ -88,6 +90,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         commandParser = new CommandParser(controller, this, settings);
 
         userList = controller.getUserList();
+        transferList = controller.getTransferList();
         me = settings.getMe();
     }
 
@@ -109,6 +112,18 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     @Override
     public void showTransfer(final FileSender fileSend) {
         new AndroidFileTransferListener(fileSend);
+    }
+
+    /**
+     * Gets a file receiver object for the given user with the given file transfer id.
+     *
+     * @param userCode The unique code of the user who requests to send a file.
+     * @param fileTransferId The id of the request to send a file.
+     * @return The file transfer object, if found, or <code>null</code> if not found.
+     */
+    public FileReceiver getFileReceiver(final int userCode, final int fileTransferId) {
+        final User user = getUser(userCode);
+        return transferList.getFileReceiver(user, fileTransferId);
     }
 
     /**
