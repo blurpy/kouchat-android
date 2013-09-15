@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android.filetransfer;
 
 import java.io.File;
 
+import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
 import android.content.ContentResolver;
@@ -31,6 +32,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 
 /**
@@ -93,5 +95,19 @@ public class AndroidFileUtils {
                     // Don't know what to do with the result of this, so ignore for now
                     public void onScanCompleted(final String path, final Uri uri) { }
                 });
+    }
+
+    /**
+     * Creates a new unique file in the public downloads directory of the device, with the given file
+     * name as a suggestion. If the name is in use, it gets appended by a counter.
+     *
+     * @param fileName The suggested file name to use on the file.
+     * @return A new unique file.
+     */
+    public File createFileInDownloadsWithAvailableName(final String fileName) {
+        Validate.notEmpty(fileName, "File name can not be empty");
+
+        final File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        return Tools.getFileWithIncrementedName(new File(directory, fileName));
     }
 }

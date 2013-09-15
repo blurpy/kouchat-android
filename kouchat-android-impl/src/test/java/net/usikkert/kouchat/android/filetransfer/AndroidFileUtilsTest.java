@@ -26,6 +26,9 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
+import java.io.IOException;
+
+import net.usikkert.kouchat.util.ToolsTest;
 
 import org.fest.util.Lists;
 import org.junit.Before;
@@ -42,6 +45,7 @@ import org.robolectric.tester.android.database.TestCursor;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 
 /**
  * Test of {@link AndroidFileUtils}.
@@ -148,5 +152,47 @@ public class AndroidFileUtilsTest {
     public void addFileToMediaDatabaseShouldNotCrash() {
         // I don't know how to test this. The shadow is not implemented, and the real implementation is static.
         androidFileUtils.addFileToMediaDatabase(mock(Context.class), mock(File.class));
+    }
+
+    @Test
+    public void createFileInDownloadsWithAvailableNameShouldThrowExceptionIfNameIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("File name can not be empty");
+
+        androidFileUtils.createFileInDownloadsWithAvailableName(null);
+    }
+
+    @Test
+    public void createFileInDownloadsWithAvailableNameShouldThrowExceptionIfNameIsEmpty() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("File name can not be empty");
+
+        androidFileUtils.createFileInDownloadsWithAvailableName(" ");
+    }
+
+    @Test
+    public void createFileInDownloadsWithAvailableNameShouldKeepFileNameAndUseDownloadDirectory() {
+        final File file = androidFileUtils.createFileInDownloadsWithAvailableName("file.txt");
+
+        assertNotNull(file);
+        assertFalse(file.exists());
+        assertEquals("file.txt", file.getName());
+        assertEquals(getDownloadsDirectory().getAbsolutePath(), file.getParent());
+    }
+
+    @Test
+    public void createFileInDownloadsWithAvailableNameShouldIncrementFileNameIfFileAlreadyExists() throws IOException {
+        final File existingFile = new File(getDownloadsDirectory(), "file.txt");
+        ToolsTest.createTemporaryFile(existingFile);
+
+        final File file = androidFileUtils.createFileInDownloadsWithAvailableName("file.txt");
+
+        assertNotNull(file);
+        assertFalse(file.exists());
+        assertEquals("file_1.txt", file.getName());
+    }
+
+    private File getDownloadsDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     }
 }
