@@ -23,10 +23,12 @@
 package net.usikkert.kouchat.util;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.MockingDetails;
 
 /**
  * Tests of {@link TestUtils}.
@@ -127,6 +129,19 @@ public class TestUtilsTest {
         final TestClass testClass = new TestClass(null, null);
 
         TestUtils.setFieldValue(testClass, "wrongField", null);
+    }
+
+    @Test
+    public void setFieldValueWithMockShouldCreateAMockAndSetTheMockInTheCorrectFieldAndReturnTheMock() {
+        final CustomTestClass customTestClass = new CustomTestClass();
+        assertNull(customTestClass.getTestClass());
+
+        final TestClass testClassMock = TestUtils.setFieldValueWithMock(customTestClass, "testClass", TestClass.class);
+
+        assertSame(testClassMock, customTestClass.getTestClass());
+
+        final MockingDetails mockingDetails = mockingDetails(testClassMock);
+        assertTrue(mockingDetails.isMock());
     }
 
     @Test

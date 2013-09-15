@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.util;
 
+import static org.mockito.Mockito.*;
+
 import java.lang.reflect.Field;
 
 /**
@@ -66,6 +68,23 @@ public final class TestUtils {
 
         final Field field = getField(object, fieldName);
         setValue(object, value, field);
+    }
+
+    /**
+     * Creates a mock from the specified class and sets it as the value in the field with the specified name
+     * in the specified object. Supports inheritance.
+     *
+     * @param object The object to set the value in.
+     * @param fieldName The name of the field.
+     * @param classToMock The class to create a mock from, as the value to set in the field.
+     */
+    public static <T> T setFieldValueWithMock(final Object object, final String fieldName, final Class<T> classToMock) {
+        Validate.notNull(classToMock, "The class to mock can not be null");
+
+        final T mock = mock(classToMock);
+        setFieldValue(object, fieldName, mock);
+
+        return mock;
     }
 
     /**
