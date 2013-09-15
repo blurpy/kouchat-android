@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.android.filetransfer;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 
@@ -39,6 +40,7 @@ import org.robolectric.tester.android.database.SimpleTestCursor;
 import org.robolectric.tester.android.database.TestCursor;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.net.Uri;
 
 /**
@@ -124,5 +126,27 @@ public class AndroidFileUtilsTest {
 
         assertNotNull(fileFromUri);
         assertEquals("dsc0001.jpg", fileFromUri.getName());
+    }
+
+    @Test
+    public void addFileToMediaDatabaseShouldThrowExceptionIfContextIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Context can not be null");
+
+        androidFileUtils.addFileToMediaDatabase(null, mock(File.class));
+    }
+
+    @Test
+    public void addFileToMediaDatabaseShouldThrowExceptionIfFileIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("File to add can not be null");
+
+        androidFileUtils.addFileToMediaDatabase(mock(Context.class), null);
+    }
+
+    @Test
+    public void addFileToMediaDatabaseShouldNotCrash() {
+        // I don't know how to test this. The shadow is not implemented, and the real implementation is static.
+        androidFileUtils.addFileToMediaDatabase(mock(Context.class), mock(File.class));
     }
 }

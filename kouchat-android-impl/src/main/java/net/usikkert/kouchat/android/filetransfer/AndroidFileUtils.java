@@ -27,7 +27,9 @@ import java.io.File;
 import net.usikkert.kouchat.util.Validate;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -68,5 +70,28 @@ public class AndroidFileUtils {
         final String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
 
         return new File(path);
+    }
+
+    /**
+     * Adds the file to the media database in Android.
+     *
+     * <p>It's an important step after adding a file to the file system. Without doing this, the
+     * added file will not be visible in apps (like the gallery) without a reboot.</p>
+     *
+     * @param context A context.
+     * @param fileToAdd The file to add to the database.
+     */
+    public void addFileToMediaDatabase(final Context context, final File fileToAdd) {
+        Validate.notNull(context, "Context can not be null");
+        Validate.notNull(fileToAdd, "File to add can not be null");
+
+        MediaScannerConnection.scanFile(
+                context,
+                new String[] {fileToAdd.toString()},
+                null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    // Don't know what to do with the result of this, so ignore for now
+                    public void onScanCompleted(final String path, final Uri uri) { }
+                });
     }
 }

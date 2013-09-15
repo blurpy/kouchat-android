@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import net.usikkert.kouchat.android.filetransfer.AndroidFileUtils;
 import net.usikkert.kouchat.util.Tools;
 
 import com.google.common.io.ByteStreams;
@@ -39,7 +40,6 @@ import android.app.Instrumentation;
 import android.content.ContentResolver;
 import android.content.res.AssetManager;
 import android.database.Cursor;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -143,14 +143,7 @@ public final class FileUtils {
     }
 
     private static void addFileToDatabase(final Activity activity, final File fileToScan) {
-        MediaScannerConnection.scanFile(
-                activity,
-                new String[] {fileToScan.toString()},
-                null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    public void onScanCompleted(final String path, final Uri uri) { }
-                });
-
+        new AndroidFileUtils().addFileToMediaDatabase(activity, fileToScan);
         Tools.sleep(1000); // To give the scanner time to finish
     }
 }
