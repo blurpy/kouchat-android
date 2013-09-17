@@ -41,7 +41,7 @@ import android.content.Intent;
 /**
  * Service for handling notifications.
  *
- * <p>The same notification will always be running, but updated with new statuses when necessary.</p>
+ * <p>The main notification will always be running, but updated with new statuses when necessary.</p>
  *
  * <p>Main chat activity will be notified when a new message arrives and the main chat is not visible.
  * F.ex when another application is on top, or if you are in a private chat.</p>
@@ -51,11 +51,14 @@ import android.content.Intent;
  * Activity will not be notified if the main chat is visible, because of the already existing new message icon
  * in the user list.</p>
  *
+ * <p>New separate notifications will be created on file transfer requests.</p>
+ *
  * @author Christian Ihle
  */
 public class NotificationService {
 
     public static final int SERVICE_NOTIFICATION_ID = 1001;
+    public static final int FILE_TRANSFER_NOTIFICATION_ID = 10000;
 
     private final Context context;
     private final NotificationManager notificationManager;
@@ -216,35 +219,20 @@ public class NotificationService {
 
     /**
      * Notifies the user that a file transfer request has arrived. Clicking on the notification
-     * should open the ativity to accept or reject the file transfer.
-     *
-     * TODO messages into xml
+     * should open the activity to accept or reject the file transfer.
      *
      * @param fileReceiver The file receiver to create the notification for.
      */
     public void notifyNewFileTransfer(final FileReceiver fileReceiver) {
         Validate.notNull(fileReceiver, "FileReceiver can not be null");
 
-        final Notification notification = new Notification(
-                R.drawable.ic_stat_notify_activity, // Icon
-                "New file transfer request", // Text shown when the notification arrives
-                System.currentTimeMillis());
+        final int notificationId = fileReceiver.getId() + FILE_TRANSFER_NOTIFICATION_ID;
+        final Notification notification = createNewFileTransferNotification();
+        final Intent intent = createReceiveFileControllerIntent(fileReceiver);
+        final PendingIntent pendingIntent = createReceiveFileControllerPendingIntent(notificationId, intent);
+        setNewFileTransferLatestEventInfo(fileReceiver, notification, pendingIntent);
 
-        notification.flags |= Notification.FLAG_ONGOING_EVENT; // To stop the notification from being removed by swiping
-
-        final Intent intent = new Intent(context, ReceiveFileController.class);
-        intent.putExtra("userCode", fileReceiver.getUser().getCode());
-        intent.putExtra("fileTransferId", fileReceiver.getId());
-
-        final PendingIntent pendingIntent =
-                PendingIntent.getActivity(context, fileReceiver.getId() + 10000, intent, 0);
-
-        notification.setLatestEventInfo(context,
-                "File transfer from " + fileReceiver.getUser().getNick(), // First line of the notification in the drawer
-                fileReceiver.getFileName(), // Second line of the notification in the drawer
-                pendingIntent);
-
-        notificationManager.notify(fileReceiver.getId() + 10000, notification);
+        notificationManager.notify(notificationId, notification);
     }
 
     /**
@@ -255,7 +243,7 @@ public class NotificationService {
     public void cancelFileTransferNotification(final FileReceiver fileReceiver) {
         Validate.notNull(fileReceiver, "FileReceiver can not be null");
 
-        notificationManager.cancel(fileReceiver.getId() + 10000);
+        notificationManager.cancel(fileReceiver.getId() + FILE_TRANSFER_NOTIFICATION_ID);
     }
 
     private void sendDefaultNotification() {
@@ -302,6 +290,40 @@ public class NotificationService {
         notification.setLatestEventInfo(context,
                 context.getText(R.string.app_name), // First line of the notification in the drawer
                 context.getText(latestInfoTextId), // Second line of the notification in the drawer
+                pendingIntent);
+    }
+
+    private Notification createNewFileTransferNotification() {
+        final Notification notification = new Notification(
+                R.drawable.ic_stat_notify_activity, // Icon
+                context.getString(R.string.notification_new_file_transfer), // Text shown when the notification arrives
+                System.currentTimeMillis());
+
+        notification.flags |= Notification.FLAG_ONGOING_EVENT; // To stop the notification from being removed by swiping
+
+        return notification;
+    }
+
+    private Intent createReceiveFileControllerIntent(final FileReceiver fileReceiver) {
+        final Intent intent = new Intent(context, ReceiveFileController.class);
+
+        intent.putExtra("userCode", fileReceiver.getUser().getCode());
+        intent.putExtra("fileTransferId", fileReceiver.getId());
+
+        return intent;
+    }
+
+    private PendingIntent createReceiveFileControllerPendingIntent(final int notificationId, final Intent intent) {
+        return PendingIntent.getActivity(context, notificationId, intent, 0);
+    }
+
+    private void setNewFileTransferLatestEventInfo(final FileReceiver fileReceiver, final Notification notification,
+                                                   final PendingIntent pendingIntent) {
+        final String nick = fileReceiver.getUser().getNick();
+
+        notification.setLatestEventInfo(context,
+                context.getString(R.string.notification_file_transfer_from, nick), // First line of the notification in the drawer
+                fileReceiver.getFileName(), // Second line of the notification in the drawer
                 pendingIntent);
     }
 }
