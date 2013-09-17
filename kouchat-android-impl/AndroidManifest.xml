@@ -52,6 +52,8 @@
       </intent-filter>
     </activity>
 
+    <activity android:name=".controller.ReceiveFileController"/>
+
     <service android:name=".service.ChatService"/>
 
   </application>

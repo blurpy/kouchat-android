@@ -25,11 +25,14 @@ package net.usikkert.kouchat.android.notification;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.io.File;
 import java.util.HashSet;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.controller.ReceiveFileController;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
@@ -389,6 +392,109 @@ public class NotificationServiceTest {
         verifyZeroInteractions(notificationManager);
         assertTrue(notificationService.isPrivateChatActivity());
         assertTrue(notificationService.isMainChatActivity());
+    }
+
+    @Test
+    public void notifyNewFileTransferShouldThrowExceptionIfFileReceiverIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("FileReceiver can not be null");
+
+        notificationService.notifyNewFileTransfer(null);
+    }
+
+    @Test
+    public void notifyNewFileTransferShouldSetActivityIconAndStartupMessage() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+        final FileReceiver fileReceiver = new FileReceiver(new User("Niles", 1234), new File("picture.png"), 0, 12);
+
+        notificationService.notifyNewFileTransfer(fileReceiver);
+
+        verify(notificationManager).notify(eq(10012), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        assertEquals(R.drawable.ic_stat_notify_activity, notification.icon);
+        assertEquals("New file transfer request", notification.tickerText);
+    }
+
+    @Test
+    public void notifyNewFileTransferShouldSetNotificationTextForTheDrawer() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+        final FileReceiver fileReceiver = new FileReceiver(new User("Niles", 1234), new File("picture.png"), 0, 12);
+
+        notificationService.notifyNewFileTransfer(fileReceiver);
+
+        verify(notificationManager).notify(eq(10012), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+
+        assertEquals("File transfer from Niles", latestEventInfo.getContentTitle());
+        assertEquals("picture.png", latestEventInfo.getContentText());
+    }
+
+    @Test
+    public void notifyNewFileTransferShouldCreatePendingIntentForOpeningTheReceiveFileController() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+        final FileReceiver fileReceiver = new FileReceiver(new User("Niles", 1234), new File("picture.png"), 0, 12);
+
+        notificationService.notifyNewFileTransfer(fileReceiver);
+
+        verify(notificationManager).notify(eq(10012), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+        final ShadowIntent pendingIntent = getPendingIntent(latestEventInfo);
+
+        assertEquals(ReceiveFileController.class, pendingIntent.getIntentClass());
+        assertEquals(1234, pendingIntent.getIntExtra("userCode", -1));
+        assertEquals(12, pendingIntent.getIntExtra("fileTransferId", -1));
+    }
+
+    @Test
+    public void notifyNewFileTransferShouldSetNotificationAsOngoingEventToAvoidSwipeToCancel() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+        final FileReceiver fileReceiver = new FileReceiver(new User("Niles", 1234), new File("picture.png"), 0, 12);
+
+        notificationService.notifyNewFileTransfer(fileReceiver);
+
+        verify(notificationManager).notify(eq(10012), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        assertEquals(Notification.FLAG_ONGOING_EVENT, notification.flags);
+    }
+
+    @Test
+    public void notifyNewFileTransferShouldCreatePendingIntentWithUniqueRequestCodeToAvoidIntentExtrasFromBeingCached() {
+        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+        final FileReceiver fileReceiver = new FileReceiver(new User("Niles", 1234), new File("picture.png"), 0, 12);
+
+        notificationService.notifyNewFileTransfer(fileReceiver);
+
+        verify(notificationManager).notify(eq(10012), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        final ShadowNotification.LatestEventInfo latestEventInfo = getLatestEventInfo(notification);
+        final ShadowPendingIntent shadowPendingIntent = Robolectric.shadowOf(latestEventInfo.getContentIntent());
+
+        assertEquals(10012, shadowPendingIntent.getRequestCode());
+    }
+
+    @Test
+    public void cancelFileTransferNotificationShouldThrowExceptionInFileReceiverIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("FileReceiver can not be null");
+
+        notificationService.cancelFileTransferNotification(null);
+    }
+
+    @Test
+    public void cancelFileTransferNotificationShouldCancelUsingFileReceiverId() {
+        final FileReceiver fileReceiver = mock(FileReceiver.class);
+        when(fileReceiver.getId()).thenReturn(10);
+
+        notificationService.cancelFileTransferNotification(fileReceiver);
+
+        verify(notificationManager).cancel(10010);
     }
 
     private void verifyThatNotificationTextIsRunning(final Notification notification) {

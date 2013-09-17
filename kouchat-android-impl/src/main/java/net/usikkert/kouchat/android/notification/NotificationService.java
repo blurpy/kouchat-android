@@ -27,7 +27,9 @@ import java.util.Set;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.controller.ReceiveFileController;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.util.Validate;
 
 import android.app.Notification;
@@ -210,6 +212,50 @@ public class NotificationService {
      */
     public boolean isPrivateChatActivity() {
         return !privateChatActivityUsers.isEmpty();
+    }
+
+    /**
+     * Notifies the user that a file transfer request has arrived. Clicking on the notification
+     * should open the ativity to accept or reject the file transfer.
+     *
+     * TODO messages into xml
+     *
+     * @param fileReceiver The file receiver to create the notification for.
+     */
+    public void notifyNewFileTransfer(final FileReceiver fileReceiver) {
+        Validate.notNull(fileReceiver, "FileReceiver can not be null");
+
+        final Notification notification = new Notification(
+                R.drawable.ic_stat_notify_activity, // Icon
+                "New file transfer request", // Text shown when the notification arrives
+                System.currentTimeMillis());
+
+        notification.flags |= Notification.FLAG_ONGOING_EVENT; // To stop the notification from being removed by swiping
+
+        final Intent intent = new Intent(context, ReceiveFileController.class);
+        intent.putExtra("userCode", fileReceiver.getUser().getCode());
+        intent.putExtra("fileTransferId", fileReceiver.getId());
+
+        final PendingIntent pendingIntent =
+                PendingIntent.getActivity(context, fileReceiver.getId() + 10000, intent, 0);
+
+        notification.setLatestEventInfo(context,
+                "File transfer from " + fileReceiver.getUser().getNick(), // First line of the notification in the drawer
+                fileReceiver.getFileName(), // Second line of the notification in the drawer
+                pendingIntent);
+
+        notificationManager.notify(fileReceiver.getId() + 10000, notification);
+    }
+
+    /**
+     * Cancels an ongoing notification for a file transfer request.
+     *
+     * @param fileReceiver The file receiver to cancel the notification for.
+     */
+    public void cancelFileTransferNotification(final FileReceiver fileReceiver) {
+        Validate.notNull(fileReceiver, "FileReceiver can not be null");
+
+        notificationManager.cancel(fileReceiver.getId() + 10000);
     }
 
     private void sendDefaultNotification() {
