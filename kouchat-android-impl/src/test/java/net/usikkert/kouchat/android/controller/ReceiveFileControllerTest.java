@@ -24,12 +24,15 @@ package net.usikkert.kouchat.android.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Test of {@link ReceiveFileController}.
  *
  * @author Christian Ihle
  */
+@RunWith(RobolectricTestRunner.class)
 public class ReceiveFileControllerTest {
 
     private ReceiveFileController controller;
