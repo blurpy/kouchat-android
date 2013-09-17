@@ -64,13 +64,18 @@ public class NotificationServiceTest {
     private NotificationService notificationService;
 
     private NotificationManager notificationManager;
+    private ArgumentCaptor<Notification> argumentCaptor;
+    private FileReceiver fileReceiver;
 
     @Before
     public void setUp() {
         notificationService = new NotificationService(Robolectric.application.getApplicationContext());
 
-        notificationManager = mock(NotificationManager.class);
-        TestUtils.setFieldValue(notificationService, "notificationManager", notificationManager);
+        notificationManager =
+                TestUtils.setFieldValueWithMock(notificationService, "notificationManager", NotificationManager.class);
+
+        argumentCaptor = ArgumentCaptor.forClass(Notification.class);
+        fileReceiver = new FileReceiver(new User("Niles", 1234), new File("picture.png"), 0, 12);
     }
 
     @Test
@@ -111,8 +116,6 @@ public class NotificationServiceTest {
 
     @Test
     public void notifyNewMainChatMessageShouldSetActivityIcon() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-
         notificationService.notifyNewMainChatMessage();
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
@@ -123,8 +126,6 @@ public class NotificationServiceTest {
 
     @Test
     public void notifyNewMainChatMessageShouldSetNotificationTextForTheDrawer() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-
         notificationService.notifyNewMainChatMessage();
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
@@ -135,8 +136,6 @@ public class NotificationServiceTest {
 
     @Test
     public void notifyNewMainChatMessageShouldCreatePendingIntentForOpeningTheMainChat() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-
         notificationService.notifyNewMainChatMessage();
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
@@ -163,8 +162,6 @@ public class NotificationServiceTest {
 
     @Test
     public void notifyNewPrivateChatMessageShouldSetActivityIcon() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-
         notificationService.notifyNewPrivateChatMessage(new User("Test", 1234));
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
@@ -175,8 +172,6 @@ public class NotificationServiceTest {
 
     @Test
     public void notifyNewPrivateChatMessageShouldSetNotificationTextForTheDrawer() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-
         notificationService.notifyNewPrivateChatMessage(new User("Test", 1234));
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
@@ -187,8 +182,6 @@ public class NotificationServiceTest {
 
     @Test
     public void notifyNewPrivateChatMessageShouldCreatePendingIntentForOpeningTheMainChat() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-
         notificationService.notifyNewPrivateChatMessage(new User("Test", 1234));
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
@@ -207,8 +200,6 @@ public class NotificationServiceTest {
 
     @Test
     public void resetAllNotificationsShouldSetRegularIcon() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-
         notificationService.resetAllNotifications();
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
@@ -219,8 +210,6 @@ public class NotificationServiceTest {
 
     @Test
     public void resetAllNotificationsShouldResetNotificationTextForTheDrawer() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-
         notificationService.resetAllNotifications();
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
@@ -231,8 +220,6 @@ public class NotificationServiceTest {
 
     @Test
     public void resetAllNotificationsShouldCreatePendingIntentForOpeningTheMainChat() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-
         notificationService.resetAllNotifications();
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
@@ -273,8 +260,6 @@ public class NotificationServiceTest {
 
     @Test
     public void resetPrivateChatNotificationShouldSetRegularIcon() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-
         notificationService.resetPrivateChatNotification(new User("Test", 1234));
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
@@ -285,8 +270,6 @@ public class NotificationServiceTest {
 
     @Test
     public void resetPrivateChatNotificationShouldResetNotificationTextForTheDrawer() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-
         notificationService.resetPrivateChatNotification(new User("Test", 1234));
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
@@ -297,8 +280,6 @@ public class NotificationServiceTest {
 
     @Test
     public void resetPrivateChatNotificationShouldCreatePendingIntentForOpeningTheMainChat() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-
         notificationService.resetPrivateChatNotification(new User("Test", 1234));
 
         verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
@@ -404,9 +385,6 @@ public class NotificationServiceTest {
 
     @Test
     public void notifyNewFileTransferShouldSetActivityIconAndStartupMessage() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-        final FileReceiver fileReceiver = new FileReceiver(new User("Niles", 1234), new File("picture.png"), 0, 12);
-
         notificationService.notifyNewFileTransfer(fileReceiver);
 
         verify(notificationManager).notify(eq(10012), argumentCaptor.capture());
@@ -418,9 +396,6 @@ public class NotificationServiceTest {
 
     @Test
     public void notifyNewFileTransferShouldSetNotificationTextForTheDrawer() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-        final FileReceiver fileReceiver = new FileReceiver(new User("Niles", 1234), new File("picture.png"), 0, 12);
-
         notificationService.notifyNewFileTransfer(fileReceiver);
 
         verify(notificationManager).notify(eq(10012), argumentCaptor.capture());
@@ -434,9 +409,6 @@ public class NotificationServiceTest {
 
     @Test
     public void notifyNewFileTransferShouldCreatePendingIntentForOpeningTheReceiveFileController() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-        final FileReceiver fileReceiver = new FileReceiver(new User("Niles", 1234), new File("picture.png"), 0, 12);
-
         notificationService.notifyNewFileTransfer(fileReceiver);
 
         verify(notificationManager).notify(eq(10012), argumentCaptor.capture());
@@ -452,9 +424,6 @@ public class NotificationServiceTest {
 
     @Test
     public void notifyNewFileTransferShouldSetNotificationAsOngoingEventToAvoidSwipeToCancel() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-        final FileReceiver fileReceiver = new FileReceiver(new User("Niles", 1234), new File("picture.png"), 0, 12);
-
         notificationService.notifyNewFileTransfer(fileReceiver);
 
         verify(notificationManager).notify(eq(10012), argumentCaptor.capture());
@@ -465,9 +434,6 @@ public class NotificationServiceTest {
 
     @Test
     public void notifyNewFileTransferShouldCreatePendingIntentWithUniqueRequestCodeToAvoidIntentExtrasFromBeingCached() {
-        final ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-        final FileReceiver fileReceiver = new FileReceiver(new User("Niles", 1234), new File("picture.png"), 0, 12);
-
         notificationService.notifyNewFileTransfer(fileReceiver);
 
         verify(notificationManager).notify(eq(10012), argumentCaptor.capture());
@@ -489,12 +455,9 @@ public class NotificationServiceTest {
 
     @Test
     public void cancelFileTransferNotificationShouldCancelUsingFileReceiverId() {
-        final FileReceiver fileReceiver = mock(FileReceiver.class);
-        when(fileReceiver.getId()).thenReturn(10);
-
         notificationService.cancelFileTransferNotification(fileReceiver);
 
-        verify(notificationManager).cancel(10010);
+        verify(notificationManager).cancel(10012);
     }
 
     private void verifyThatNotificationTextIsRunning(final Notification notification) {
