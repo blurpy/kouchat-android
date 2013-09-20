@@ -22,7 +22,11 @@
 
 package net.usikkert.kouchat.android.controller;
 
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.component.ReceiveFileDialog;
 import net.usikkert.kouchat.android.service.ChatService;
+import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.net.FileReceiver;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -66,11 +70,22 @@ public class ReceiveFileController extends Activity {
         return new ServiceConnection() {
             @Override
             public void onServiceConnected(final ComponentName componentName, final IBinder iBinder) {
-
+                final ChatServiceBinder binder = (ChatServiceBinder) iBinder;
+                showDialog(binder.getAndroidUserInterface());
             }
 
             @Override
             public void onServiceDisconnected(final ComponentName componentName) { }
         };
+    }
+
+    private void showDialog(final AndroidUserInterface androidUserInterface) {
+        final Intent intent = getIntent();
+        final int userCode = intent.getIntExtra("userCode", -1);
+        final int fileTransferId = intent.getIntExtra("fileTransferId", -1);
+
+        final FileReceiver fileReceiver = androidUserInterface.getFileReceiver(userCode, fileTransferId);
+
+        new ReceiveFileDialog(this, fileReceiver);
     }
 }

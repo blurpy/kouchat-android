@@ -23,10 +23,13 @@
 package net.usikkert.kouchat.android.controller;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatService;
+import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
@@ -34,8 +37,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowIntent;
 
+import android.content.Intent;
 import android.content.ServiceConnection;
 
 /**
@@ -48,9 +53,22 @@ public class ReceiveFileControllerTest {
 
     private ReceiveFileController controller;
 
+    private AndroidUserInterface ui;
+
     @Before
     public void setUp() {
         controller = new ReceiveFileController();
+
+        final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
+        Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
+
+        ui = mock(AndroidUserInterface.class);
+        when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
+
+        final Intent intent = new Intent();
+        intent.putExtra("userCode", 1234);
+        intent.putExtra("fileTransferId", 5678);
+        controller.setIntent(intent);
     }
 
     @Test
@@ -79,5 +97,14 @@ public class ReceiveFileControllerTest {
         assertEquals(1, unboundServiceConnections.size());
         assertSame(serviceConnection, unboundServiceConnections.get(0));
         assertTrue(TestUtils.fieldValueIsNull(controller, "serviceConnection"));
+    }
+
+    @Test
+    public void boundServiceShouldGetFileReceiverUsingIntentAndShowDialog() {
+        controller.onCreate(null);
+
+        // Can't verify that the file receiver was sent to the dialog, but this is good enough
+        assertNotNull(ShadowAlertDialog.getLatestAlertDialog());
+        verify(ui).getFileReceiver(1234, 5678);
     }
 }
