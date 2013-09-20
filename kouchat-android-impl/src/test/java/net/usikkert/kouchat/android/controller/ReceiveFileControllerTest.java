@@ -22,10 +22,21 @@
 
 package net.usikkert.kouchat.android.controller;
 
+import static org.junit.Assert.*;
+
+import java.util.List;
+
+import net.usikkert.kouchat.android.service.ChatService;
+import net.usikkert.kouchat.util.TestUtils;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowIntent;
+
+import android.content.ServiceConnection;
 
 /**
  * Test of {@link ReceiveFileController}.
@@ -43,7 +54,30 @@ public class ReceiveFileControllerTest {
     }
 
     @Test
-    public void noop() {
-        // Nothing yet
+    public void onCreateShouldCreateServiceConnectionAndBindChatService() {
+        assertTrue(TestUtils.fieldValueIsNull(controller, "serviceConnection"));
+
+        controller.onCreate(null);
+
+        final ShadowIntent startedServiceIntent =
+                Robolectric.shadowOf(Robolectric.getShadowApplication().getNextStartedService());
+
+        assertEquals(ChatService.class, startedServiceIntent.getIntentClass());
+        assertFalse(TestUtils.fieldValueIsNull(controller, "serviceConnection"));
+    }
+
+    @Test
+    public void onDestroyShouldResetAndUnbindServiceConnection() {
+        final ServiceConnection serviceConnection =
+                TestUtils.setFieldValueWithMock(controller, "serviceConnection", ServiceConnection.class);
+
+        controller.onDestroy();
+
+        final List<ServiceConnection> unboundServiceConnections =
+                Robolectric.getShadowApplication().getUnboundServiceConnections();
+
+        assertEquals(1, unboundServiceConnections.size());
+        assertSame(serviceConnection, unboundServiceConnections.get(0));
+        assertTrue(TestUtils.fieldValueIsNull(controller, "serviceConnection"));
     }
 }

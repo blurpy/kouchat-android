@@ -22,8 +22,15 @@
 
 package net.usikkert.kouchat.android.controller;
 
+import net.usikkert.kouchat.android.service.ChatService;
+
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 
 /**
  * Controller for showing a accept/reject file transfer dialog, after clicking on a notification.
@@ -32,8 +39,38 @@ import android.os.Bundle;
  */
 public class ReceiveFileController extends Activity {
 
+    private ServiceConnection serviceConnection;
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final Intent chatServiceIntent = createChatServiceIntent();
+        serviceConnection = createServiceConnection();
+        bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
+    }
+
+    @Override
+    protected void onDestroy() {
+        unbindService(serviceConnection);
+        serviceConnection = null;
+
+        super.onDestroy();
+    }
+
+    private Intent createChatServiceIntent() {
+        return new Intent(this, ChatService.class);
+    }
+
+    private ServiceConnection createServiceConnection() {
+        return new ServiceConnection() {
+            @Override
+            public void onServiceConnected(final ComponentName componentName, final IBinder iBinder) {
+
+            }
+
+            @Override
+            public void onServiceDisconnected(final ComponentName componentName) { }
+        };
     }
 }
