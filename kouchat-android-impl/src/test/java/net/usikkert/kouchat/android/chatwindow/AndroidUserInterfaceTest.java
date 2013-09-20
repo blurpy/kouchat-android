@@ -645,13 +645,17 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void askFileSaveShouldReturnFalse() {
-        assertFalse(androidUserInterface.askFileSave(null, null, null));
+    public void askFileSaveShouldReturnTrue() {
+        assertTrue(androidUserInterface.askFileSave(null, null, null));
     }
 
     @Test
-    public void showFileSaveShouldDoNothing() {
-        androidUserInterface.showFileSave(null);
+    public void showFileSaveShouldNotifyTheNewFileTransferRequest() {
+        final FileReceiver fileReceiver = mock(FileReceiver.class);
+
+        androidUserInterface.showFileSave(fileReceiver);
+
+        verify(notificationService).notifyNewFileTransfer(fileReceiver);
     }
 
     @Test

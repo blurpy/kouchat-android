@@ -94,14 +94,23 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         me = settings.getMe();
     }
 
+    /**
+     * Just accepts the file transfer for now. A file receiver will be added, and
+     * {@link #showFileSave(FileReceiver)} will be called afterwards.
+     */
     @Override
     public boolean askFileSave(final String user, final String fileName, final String size) {
-        return false;
+        return true;
     }
 
+    /**
+     * Uses a notification to ask the user to accept or reject this file transfer request.
+     *
+     * @param fileReceiver Information about the file to save.
+     */
     @Override
     public void showFileSave(final FileReceiver fileReceiver) {
-
+        notificationService.notifyNewFileTransfer(fileReceiver);
     }
 
     @Override
