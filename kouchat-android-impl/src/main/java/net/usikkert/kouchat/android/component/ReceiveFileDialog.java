@@ -24,10 +24,12 @@ package net.usikkert.kouchat.android.component;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.net.FileReceiver;
+import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 /**
  * Dialog for accepting or rejecting a file transfer request.
@@ -42,6 +44,34 @@ public class ReceiveFileDialog {
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         builder.setTitle(activity.getString(R.string.dialog_title_file_transfer_request));
+        builder.setIcon(R.drawable.ic_dialog);
+
+        builder.setMessage(activity.getString(R.string.dialog_receive_file_accept_question,
+                fileReceiver.getUser().getNick(),
+                fileReceiver.getFileName(),
+                Tools.byteToString(fileReceiver.getFileSize())));
+
+        builder.setPositiveButton(activity.getString(R.string.accept), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                fileReceiver.accept();
+                activity.finish();
+            }
+        });
+
+        builder.setNegativeButton(activity.getString(R.string.reject), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                fileReceiver.reject();
+                activity.finish();
+            }
+        });
+
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(final DialogInterface dialog) {
+                activity.finish();
+            }
+        });
+
         builder.show();
     }
 }
