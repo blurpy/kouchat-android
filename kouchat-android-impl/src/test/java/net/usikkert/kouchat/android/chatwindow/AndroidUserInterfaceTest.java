@@ -47,6 +47,7 @@ import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.ui.PrivateChatWindow;
 import net.usikkert.kouchat.util.TestUtils;
+import net.usikkert.kouchat.util.Tools;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -650,12 +651,78 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void showFileSaveShouldNotifyTheNewFileTransferRequest() {
+    public void showFileSaveShouldShowFileTransferNotificationThenWaitForCancelFromUserThenCancelNotification()
+            throws InterruptedException {
         final FileReceiver fileReceiver = mock(FileReceiver.class);
 
-        androidUserInterface.showFileSave(fileReceiver);
+        // The method expects to be called from another thread, and sleeps while waiting for user input
+        final Thread showFileSaveThread = createShowFileSaveThread(fileReceiver);
+        showFileSaveThread.start();
 
+        waitForShowFileSaveThreadToSleep(showFileSaveThread);
+
+        // Since the thread sleeps, it should have notified about the new file transfer request, and nothing else
         verify(notificationService).notifyNewFileTransfer(fileReceiver);
+        verifyNoMoreInteractions(notificationService);
+
+        // Cancel the file transfer to let the thread continue
+        when(fileReceiver.isCanceled()).thenReturn(true);
+
+        // Wait for the thread to finish its sleep. Should not take more than 500ms, but wait a little longer just in case
+        showFileSaveThread.join(2000);
+
+        // It should have canceled the file transfer notification now
+        verify(notificationService).cancelFileTransferNotification(fileReceiver);
+    }
+
+    @Test
+    public void showFileSaveShouldShowFileTransferNotificationThenWaitForAcceptFromUserThenCancelNotification()
+            throws InterruptedException {
+        final FileReceiver fileReceiver = mock(FileReceiver.class);
+
+        // The method expects to be called from another thread, and sleeps while waiting for user input
+        final Thread showFileSaveThread = createShowFileSaveThread(fileReceiver);
+        showFileSaveThread.start();
+
+        waitForShowFileSaveThreadToSleep(showFileSaveThread);
+
+        // Since the thread sleeps, it should have notified about the new file transfer request, and nothing else
+        verify(notificationService).notifyNewFileTransfer(fileReceiver);
+        verifyNoMoreInteractions(notificationService);
+
+        // Accept the file transfer to let the thread continue
+        when(fileReceiver.isAccepted()).thenReturn(true);
+
+        // Wait for the thread to finish its sleep. Should not take more than 500ms, but wait a little longer just in case
+        showFileSaveThread.join(2000);
+
+        // It should have canceled the file transfer notification now
+        verify(notificationService).cancelFileTransferNotification(fileReceiver);
+    }
+
+    @Test
+    public void showFileSaveShouldShowFileTransferNotificationThenWaitForRejectFromUserThenCancelNotification()
+            throws InterruptedException {
+        final FileReceiver fileReceiver = mock(FileReceiver.class);
+
+        // The method expects to be called from another thread, and sleeps while waiting for user input
+        final Thread showFileSaveThread = createShowFileSaveThread(fileReceiver);
+        showFileSaveThread.start();
+
+        waitForShowFileSaveThreadToSleep(showFileSaveThread);
+
+        // Since the thread sleeps, it should have notified about the new file transfer request, and nothing else
+        verify(notificationService).notifyNewFileTransfer(fileReceiver);
+        verifyNoMoreInteractions(notificationService);
+
+        // Reject the file transfer to let the thread continue
+        when(fileReceiver.isRejected()).thenReturn(true);
+
+        // Wait for the thread to finish its sleep. Should not take more than 500ms, but wait a little longer just in case
+        showFileSaveThread.join(2000);
+
+        // It should have canceled the file transfer notification now
+        verify(notificationService).cancelFileTransferNotification(fileReceiver);
     }
 
     @Test
@@ -743,5 +810,20 @@ public class AndroidUserInterfaceTest {
         assertSame(originalFileReceiver, fileReceiver);
         verify(transferList).getFileReceiver(testUser, 100);
         verify(controller).getUser(1235);
+    }
+
+    private Thread createShowFileSaveThread(final FileReceiver fileReceiver) {
+        return new Thread() {
+            @Override
+            public void run() {
+                androidUserInterface.showFileSave(fileReceiver);
+            }
+        };
+    }
+
+    private void waitForShowFileSaveThreadToSleep(final Thread showFileSaveThread) {
+        while (showFileSaveThread.getState() != Thread.State.TIMED_WAITING) {
+            Tools.sleep(10);
+        }
     }
 }

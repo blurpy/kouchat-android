@@ -105,12 +105,22 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
     /**
      * Uses a notification to ask the user to accept or reject this file transfer request.
+     * The notification is canceled afterwards.
+     *
+     * <p>Expects this to be called from a different thread, as it waits for an answer
+     * before it continues execution.</p>
      *
      * @param fileReceiver Information about the file to save.
      */
     @Override
     public void showFileSave(final FileReceiver fileReceiver) {
         notificationService.notifyNewFileTransfer(fileReceiver);
+
+        while (!fileReceiver.isAccepted() && !fileReceiver.isRejected() && !fileReceiver.isCanceled()) {
+            Tools.sleep(500);
+        }
+
+        notificationService.cancelFileTransferNotification(fileReceiver);
     }
 
     @Override
