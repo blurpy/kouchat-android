@@ -30,6 +30,8 @@ import java.util.List;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
@@ -54,6 +56,7 @@ public class ReceiveFileControllerTest {
     private ReceiveFileController controller;
 
     private AndroidUserInterface ui;
+    private FileReceiver fileReceiver;
 
     @Before
     public void setUp() {
@@ -64,6 +67,11 @@ public class ReceiveFileControllerTest {
 
         ui = mock(AndroidUserInterface.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
+
+        fileReceiver = mock(FileReceiver.class);
+        when(fileReceiver.getUser()).thenReturn(new User("Sandra", 23456));
+
+        when(ui.getFileReceiver(1234, 5678)).thenReturn(fileReceiver);
 
         final Intent intent = new Intent();
         intent.putExtra("userCode", 1234);
@@ -106,5 +114,6 @@ public class ReceiveFileControllerTest {
         // Can't verify that the file receiver was sent to the dialog, but this is good enough
         assertNotNull(ShadowAlertDialog.getLatestAlertDialog());
         verify(ui).getFileReceiver(1234, 5678);
+        verify(fileReceiver).getUser(); // Should happen in the dialog
     }
 }
