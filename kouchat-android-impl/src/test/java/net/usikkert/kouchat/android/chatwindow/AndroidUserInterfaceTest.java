@@ -726,8 +726,24 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void showTransferForFileReceiverShouldDoNothing() {
+    public void showTransferForFileReceiverShouldThrowExceptionIfFileSenderIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("FileTransfer can not be null");
+
         androidUserInterface.showTransfer((FileReceiver) null);
+    }
+
+    @Test
+    public void showTransferForFileReceiverShouldRegisterListener() {
+        final FileReceiver fileReceiver = mock(FileReceiver.class);
+        final ArgumentCaptor<FileTransferListener> argumentCaptor = ArgumentCaptor.forClass(FileTransferListener.class);
+
+        androidUserInterface.showTransfer(fileReceiver);
+
+        verify(fileReceiver).registerListener(argumentCaptor.capture());
+
+        final FileTransferListener listener = argumentCaptor.getValue();
+        assertEquals(AndroidFileTransferListener.class, listener.getClass());
     }
 
     @Test

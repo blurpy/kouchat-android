@@ -125,7 +125,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
     @Override
     public void showTransfer(final FileReceiver fileRes) {
-
+        new AndroidFileTransferListener(fileRes);
     }
 
     @Override
