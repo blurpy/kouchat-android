@@ -23,7 +23,8 @@
 package net.usikkert.kouchat.android.filetransfer;
 
 import net.usikkert.kouchat.event.FileTransferListener;
-import net.usikkert.kouchat.net.FileTransfer;
+import net.usikkert.kouchat.net.FileReceiver;
+import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.util.Validate;
 
 /**
@@ -33,10 +34,16 @@ import net.usikkert.kouchat.util.Validate;
  */
 public class AndroidFileTransferListener implements FileTransferListener {
 
-    public AndroidFileTransferListener(final FileTransfer fileTransfer) {
-        Validate.notNull(fileTransfer, "FileTransfer can not be null");
+    public AndroidFileTransferListener(final FileReceiver fileReceiver) {
+        Validate.notNull(fileReceiver, "FileReceiver can not be null");
 
-        fileTransfer.registerListener(this);
+        fileReceiver.registerListener(this);
+    }
+
+    public AndroidFileTransferListener(final FileSender fileSender) {
+        Validate.notNull(fileSender, "FileSender can not be null");
+
+        fileSender.registerListener(this);
     }
 
     @Override

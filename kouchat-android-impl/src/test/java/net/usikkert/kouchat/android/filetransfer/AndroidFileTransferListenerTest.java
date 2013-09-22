@@ -24,7 +24,8 @@ package net.usikkert.kouchat.android.filetransfer;
 
 import static org.mockito.Mockito.*;
 
-import net.usikkert.kouchat.net.FileTransfer;
+import net.usikkert.kouchat.net.FileReceiver;
+import net.usikkert.kouchat.net.FileSender;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -45,15 +46,23 @@ public class AndroidFileTransferListenerTest {
 
     @Before
     public void setUp() {
-        listener = new AndroidFileTransferListener(mock(FileTransfer.class));
+        listener = new AndroidFileTransferListener(mock(FileSender.class));
     }
 
     @Test
-    public void constructorShouldThrowExceptionIfFileTransferIsNull() {
+    public void constructorShouldThrowExceptionIfFileReceiverIsNull() {
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("FileTransfer can not be null");
+        expectedException.expectMessage("FileReceiver can not be null");
 
-        new AndroidFileTransferListener(null);
+        new AndroidFileTransferListener((FileReceiver) null);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfFileSenderIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("FileSender can not be null");
+
+        new AndroidFileTransferListener((FileSender) null);
     }
 
     @Test
