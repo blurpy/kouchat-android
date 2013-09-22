@@ -29,7 +29,9 @@ import net.usikkert.kouchat.util.Validate;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.view.ContextThemeWrapper;
 
 /**
  * Dialog for accepting or rejecting a file transfer request.
@@ -41,7 +43,8 @@ public class ReceiveFileDialog {
     public ReceiveFileDialog(final Activity activity, final FileReceiver fileReceiver) {
         Validate.notNull(activity, "Activity can not be null");
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        final Context wrappedContext = new ContextThemeWrapper(activity, R.style.Theme_Default_Dialog);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(wrappedContext);
 
         builder.setTitle(activity.getString(R.string.dialog_title_file_transfer_request));
         builder.setIcon(R.drawable.ic_dialog);

@@ -98,6 +98,12 @@ public class ReceiveFileDialogTest {
     }
 
     @Test
+    @Ignore("This does not work with Robolectric yet.")
+    public void dialogThemeShouldBeSet() {
+//        assertEquals(R.style.Theme_Default_Dialog, shadowDialog.getTheme()); // Does not compile
+    }
+
+    @Test
     public void dialogMessageShouldBeSet() {
         assertEquals("Ferdinand is trying to send you the file ‘superkou.png’ (161.13KB)." +
                 " Do you want to accept the file transfer?", shadowDialog.getMessage());

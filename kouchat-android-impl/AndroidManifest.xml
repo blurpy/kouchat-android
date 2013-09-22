@@ -52,7 +52,8 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".controller.ReceiveFileController"/>
+    <activity android:name=".controller.ReceiveFileController"
+              android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
     <service android:name=".service.ChatService"/>
 
