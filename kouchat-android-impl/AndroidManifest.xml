@@ -52,8 +52,10 @@
       </intent-filter>
     </activity>
 
+    <!-- Sets taskAffinity to keep the previous KouChat activity from showing behind the dialog. -->
     <activity android:name=".controller.ReceiveFileController"
-              android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+              android:theme="@android:style/Theme.Translucent.NoTitleBar"
+              android:taskAffinity=""/>
 
     <service android:name=".service.ChatService"/>
 
