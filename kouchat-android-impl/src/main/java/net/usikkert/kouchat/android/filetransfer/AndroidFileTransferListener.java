@@ -27,15 +27,28 @@ import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.util.Validate;
 
+import android.content.Context;
+
 /**
- * A very basic file transfer listener. Does nothing except register itself.
+ * A very basic file transfer listener.
  *
  * @author Christian Ihle
  */
 public class AndroidFileTransferListener implements FileTransferListener {
 
-    public AndroidFileTransferListener(final FileReceiver fileReceiver) {
+    private FileReceiver fileReceiver;
+    private Context context;
+    private AndroidFileUtils androidFileUtils;
+
+    public AndroidFileTransferListener(final FileReceiver fileReceiver, final Context context,
+                                       final AndroidFileUtils androidFileUtils) {
         Validate.notNull(fileReceiver, "FileReceiver can not be null");
+        Validate.notNull(context, "Context can not be null");
+        Validate.notNull(androidFileUtils, "AndroidFileUtils can not be null");
+
+        this.fileReceiver = fileReceiver;
+        this.context = context;
+        this.androidFileUtils = androidFileUtils;
 
         fileReceiver.registerListener(this);
     }
@@ -61,9 +74,14 @@ public class AndroidFileTransferListener implements FileTransferListener {
 
     }
 
+    /**
+     * Makes sure the received file is scanned and inserted into the media database when the file transfer is completed.
+     */
     @Override
     public void statusCompleted() {
-
+        if (fileReceiver != null) {
+            androidFileUtils.addFileToMediaDatabase(context, fileReceiver.getFile());
+        }
     }
 
     @Override

@@ -139,7 +139,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         final File fileInDownloads = androidFileUtils.createFileInDownloadsWithAvailableName(fileRes.getFileName());
         fileRes.setFile(fileInDownloads);
 
-        new AndroidFileTransferListener(fileRes);
+        new AndroidFileTransferListener(fileRes, context, androidFileUtils);
     }
 
     /**

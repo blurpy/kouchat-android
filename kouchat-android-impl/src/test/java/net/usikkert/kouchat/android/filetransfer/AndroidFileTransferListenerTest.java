@@ -24,6 +24,8 @@ package net.usikkert.kouchat.android.filetransfer;
 
 import static org.mockito.Mockito.*;
 
+import java.io.File;
+
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 
@@ -31,6 +33,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import android.content.Context;
 
 /**
  * Test of {@link AndroidFileTransferListener}.
@@ -42,56 +46,104 @@ public class AndroidFileTransferListenerTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    private AndroidFileTransferListener listener;
+    private FileSender fileSender;
+    private FileReceiver fileReceiver;
+    private Context context;
+    private AndroidFileUtils androidFileUtils;
+
+    private AndroidFileTransferListener fileSenderListener;
+    private AndroidFileTransferListener fileReceiverListener;
 
     @Before
     public void setUp() {
-        listener = new AndroidFileTransferListener(mock(FileSender.class));
+        fileSender = mock(FileSender.class);
+        context = mock(Context.class);
+        androidFileUtils = mock(AndroidFileUtils.class);
+        fileReceiver = mock(FileReceiver.class);
+
+        fileSenderListener = new AndroidFileTransferListener(fileSender);
+        fileReceiverListener = new AndroidFileTransferListener(fileReceiver, context, androidFileUtils);
     }
 
     @Test
-    public void constructorShouldThrowExceptionIfFileReceiverIsNull() {
+    public void constructorWithFileReceiverShouldThrowExceptionIfFileReceiverIsNull() {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("FileReceiver can not be null");
 
-        new AndroidFileTransferListener((FileReceiver) null);
+        new AndroidFileTransferListener(null, context, androidFileUtils);
     }
 
     @Test
-    public void constructorShouldThrowExceptionIfFileSenderIsNull() {
+    public void constructorWithFileReceiverShouldThrowExceptionIfContextIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Context can not be null");
+
+        new AndroidFileTransferListener(fileReceiver, null, androidFileUtils);
+    }
+
+    @Test
+    public void constructorWithFileReceiverShouldThrowExceptionIfAndroidFileUtilsIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("AndroidFileUtils can not be null");
+
+        new AndroidFileTransferListener(fileReceiver, context, null);
+    }
+
+    @Test
+    public void constructorWithFileReceiverShouldRegisterListener() {
+        verify(fileReceiver).registerListener(fileReceiverListener);
+    }
+
+    @Test
+    public void constructorWithFileSenderShouldThrowExceptionIfFileSenderIsNull() {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("FileSender can not be null");
 
-        new AndroidFileTransferListener((FileSender) null);
+        new AndroidFileTransferListener(null);
+    }
+
+    @Test
+    public void constructorWithFileSenderShouldRegisterListener() {
+        verify(fileSender).registerListener(fileSenderListener);
     }
 
     @Test
     public void statusWaitingShouldDoNothing() {
-        listener.statusWaiting();
+        fileSenderListener.statusWaiting();
     }
 
     @Test
     public void statusConnectingShouldDoNothing() {
-        listener.statusConnecting();
+        fileSenderListener.statusConnecting();
     }
 
     @Test
     public void statusTransferringShouldDoNothing() {
-        listener.statusTransferring();
+        fileSenderListener.statusTransferring();
     }
 
     @Test
-    public void statusCompletedShouldDoNothing() {
-        listener.statusCompleted();
+    public void statusCompletedForFileSenderShouldDoNothing() {
+        fileSenderListener.statusCompleted();
+    }
+
+    @Test
+    public void statusCompletedForFileReceiverShouldAddMediaToDatabase() {
+        final File file = mock(File.class);
+        when(fileReceiver.getFile()).thenReturn(file);
+
+        fileReceiverListener.statusCompleted();
+
+        verify(androidFileUtils).addFileToMediaDatabase(context, file);
     }
 
     @Test
     public void statusFailedShouldDoNothing() {
-        listener.statusFailed();
+        fileSenderListener.statusFailed();
     }
 
     @Test
     public void transferUpdateShouldDoNothing() {
-        listener.transferUpdate();
+        fileSenderListener.transferUpdate();
     }
 }
