@@ -3,7 +3,7 @@
 
 * version 0.11.0 (xx.xx.2013)
   - Fixed several issues leading to memory leaks.
-  - Added support for receiving file transfers (in progress)
+  - Added basic support for receiving files
 
 
 * version 0.10.0 (28.07.2013)
