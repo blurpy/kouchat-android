@@ -29,6 +29,7 @@ import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.filetransfer.AndroidFileTransferListener;
+import net.usikkert.kouchat.android.filetransfer.AndroidFileUtils;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.misc.ChatLogger;
@@ -71,6 +72,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     private final NotificationService notificationService;
     private final CommandParser commandParser;
     private final TransferList transferList;
+    private final AndroidFileUtils androidFileUtils;
 
     private MainChatController mainChatController;
 
@@ -88,6 +90,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         msgController = new MessageController(this, this, settings);
         controller = new Controller(this, settings);
         commandParser = new CommandParser(controller, this, settings);
+        androidFileUtils = new AndroidFileUtils();
 
         userList = controller.getUserList();
         transferList = controller.getTransferList();
@@ -123,13 +126,31 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         notificationService.cancelFileTransferNotification(fileReceiver);
     }
 
+    /**
+     * Registers a listener for receiving files, and makes sure the file is stored in the downloads directory
+     * with a unique name.
+     *
+     * @param fileRes The file reception object.
+     */
     @Override
     public void showTransfer(final FileReceiver fileRes) {
+        Validate.notNull(fileRes, "FileReceiver can not be null");
+
+        final File fileInDownloads = androidFileUtils.createFileInDownloadsWithAvailableName(fileRes.getFileName());
+        fileRes.setFile(fileInDownloads);
+
         new AndroidFileTransferListener(fileRes);
     }
 
+    /**
+     * Registers a listener for sending files.
+     *
+     * @param fileSend The file sending object.
+     */
     @Override
     public void showTransfer(final FileSender fileSend) {
+        Validate.notNull(fileSend, "FileSender can not be null");
+
         new AndroidFileTransferListener(fileSend);
     }
 

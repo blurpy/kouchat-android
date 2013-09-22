@@ -29,6 +29,7 @@ import java.io.File;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.filetransfer.AndroidFileTransferListener;
+import net.usikkert.kouchat.android.filetransfer.AndroidFileUtils;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.android.util.RobolectricTestUtils;
 import net.usikkert.kouchat.event.FileTransferListener;
@@ -85,6 +86,7 @@ public class AndroidUserInterfaceTest {
     private User testUser;
     private CommandParser commandParser;
     private TransferList transferList;
+    private AndroidFileUtils androidFileUtils;
 
     @Before
     public void setUp() {
@@ -103,6 +105,7 @@ public class AndroidUserInterfaceTest {
         msgController = TestUtils.setFieldValueWithMock(androidUserInterface, "msgController", MessageController.class);
         commandParser = TestUtils.setFieldValueWithMock(androidUserInterface, "commandParser", CommandParser.class);
         transferList = TestUtils.setFieldValueWithMock(androidUserInterface, "transferList", TransferList.class);
+        androidFileUtils = TestUtils.setFieldValueWithMock(androidUserInterface, "androidFileUtils", AndroidFileUtils.class);
 
         mainChatController = mock(MainChatController.class);
         androidUserInterface.registerMainChatController(mainChatController);
@@ -728,7 +731,7 @@ public class AndroidUserInterfaceTest {
     @Test
     public void showTransferForFileReceiverShouldThrowExceptionIfFileSenderIsNull() {
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("FileTransfer can not be null");
+        expectedException.expectMessage("FileReceiver can not be null");
 
         androidUserInterface.showTransfer((FileReceiver) null);
     }
@@ -747,9 +750,22 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
+    public void showTransferForFileReceiverShouldFixFileNameAndPath() {
+        final FileReceiver fileReceiver = mock(FileReceiver.class);
+        when(fileReceiver.getFileName()).thenReturn("opensuse.iso");
+
+        final File fixedFile = mock(File.class);
+        when(androidFileUtils.createFileInDownloadsWithAvailableName("opensuse.iso")).thenReturn(fixedFile);
+
+        androidUserInterface.showTransfer(fileReceiver);
+
+        verify(fileReceiver).setFile(fixedFile);
+    }
+
+    @Test
     public void showTransferForFileSenderShouldThrowExceptionIfFileSenderIsNull() {
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("FileTransfer can not be null");
+        expectedException.expectMessage("FileSender can not be null");
 
         androidUserInterface.showTransfer((FileSender) null);
     }
