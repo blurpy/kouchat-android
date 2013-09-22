@@ -24,8 +24,7 @@
 
     <!-- Sets launchMode to singleTask to make sure quit works like expected after using the private chat.
          If not set, then using quit from the main chat will open the last private chat,
-         and pressing the back button will again open the main chat, and so on.
-     -->
+         and pressing the back button will again open the main chat, and so on. -->
     <activity android:name=".controller.MainChatController"
               android:launchMode="singleTask">
       <intent-filter>
@@ -37,8 +36,7 @@
     <activity android:name=".controller.SettingsController"/>
 
     <!-- Sets windowSoftInputMode to adjustResize to keep the software keyboard from pushing the text view up,
-         making it difficult to see the messages at the top.
-      -->
+         making it difficult to see the messages at the top. -->
     <activity android:name=".controller.PrivateChatController"
               android:label="@string/private_chat_title"
               android:windowSoftInputMode="adjustResize"/>
@@ -52,10 +50,12 @@
       </intent-filter>
     </activity>
 
-    <!-- Sets taskAffinity to keep the previous KouChat activity from showing behind the dialog. -->
+    <!-- Sets taskAffinity to keep the previous KouChat activity from showing behind the dialog,
+         and excludeFromRecents to keep the dialog from showing in the list of running apps. -->
     <activity android:name=".controller.ReceiveFileController"
               android:theme="@android:style/Theme.Translucent.NoTitleBar"
-              android:taskAffinity=""/>
+              android:taskAffinity=""
+              android:excludeFromRecents="true"/>
 
     <service android:name=".service.ChatService"/>
 
