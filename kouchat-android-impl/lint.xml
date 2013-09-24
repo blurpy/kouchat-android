@@ -36,6 +36,7 @@
     <ignore path="target/classes/com/actionbarsherlock/internal/widget/IcsLinearLayout.class"/>
     <ignore path="target/classes/com/actionbarsherlock/internal/widget/IcsListPopupWindow.class"/>
     <ignore path="target/classes/com/actionbarsherlock/internal/widget/ScrollingTabContainerView.class"/>
+    <ignore path="target/classes/com/actionbarsherlock/internal/widget/PopupWindowCompat.class"/>
     <ignore path="target/classes/com/actionbarsherlock/widget/ActivityChooserView$SetActivated.class"/>
     <ignore path="target/classes/com/actionbarsherlock/widget/SearchView.class"/>
     <ignore path="target/classes/com/actionbarsherlock/widget/SearchView$5.class"/>
