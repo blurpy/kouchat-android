@@ -47,7 +47,7 @@ public interface Constants {
     /**
      * The home page of this application.
      */
-    String APP_WEB = "http://kouchat.googlecode.com/";
+    String APP_WEB = "http://www.kouchat.net/";
 
     /**
      * Copyright from year, to year.
@@ -62,7 +62,7 @@ public interface Constants {
     /**
      * The email address of the author.
      */
-    String AUTHOR_MAIL = "kontakt@usikkert.net";
+    String AUTHOR_MAIL = "contact@kouchat.net";
 
     /**
      * The multicast udp port used for sending and receiving

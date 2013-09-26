@@ -5,6 +5,7 @@
   - Fixed several issues leading to memory leaks.
   - Added basic support for receiving files
   - Upgraded ActionBarSherlock to version 4.4.0
+  - Changed contact information to use the new kouchat.net domain
 
 
 * version 0.10.0 (28.07.2013)

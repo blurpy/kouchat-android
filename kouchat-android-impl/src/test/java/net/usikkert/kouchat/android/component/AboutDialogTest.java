@@ -100,8 +100,8 @@ public class AboutDialogTest {
         assertNotNull(urls);
         assertEquals(3, urls.length);
 
-        assertEquals("mailto:kontakt@usikkert.net", urls[0].getURL());
-        assertEquals("http://kouchat.googlecode.com", urls[1].getURL());
+        assertEquals("mailto:contact@kouchat.net", urls[0].getURL());
+        assertEquals("http://www.kouchat.net", urls[1].getURL());
         assertEquals("http://www.gnu.org/licenses/lgpl-3.0.txt", urls[2].getURL());
     }
 }

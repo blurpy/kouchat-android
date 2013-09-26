@@ -6,7 +6,7 @@
   <packaging>pom</packaging>
   <version>0.11.0-SNAPSHOT</version>
   <name>KouChat for Android</name>
-  <url>http://kouchat.googlecode.com/</url>
+  <url>http://www.kouchat.net/</url>
   <description>
     KouChat is a simple serverless chat client for local area networks.
     It's written in Java, and is free software.
@@ -33,8 +33,8 @@
     <developer>
       <id>blurpy</id>
       <name>Christian Ihle</name>
-      <email>kontakt@usikkert.net</email>
-      <url>http://www.usikkert.net/</url>
+      <email>contact@kouchat.net</email>
+      <url>http://www.kouchat.net/</url>
       <roles>
         <role>developer</role>
       </roles>
