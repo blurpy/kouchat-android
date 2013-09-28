@@ -57,8 +57,6 @@ public class ReceiveFileDialogTest {
 
     private ReceiveFileDialog receiveFileDialog;
 
-    private ShadowAlertDialog shadowDialog;
-    private AlertDialog dialog;
     private FileReceiver fileReceiver;
     private Activity activity;
 
@@ -70,16 +68,7 @@ public class ReceiveFileDialogTest {
         when(fileReceiver.getFileSize()).thenReturn(165000L);
 
         activity = new Activity();
-
         receiveFileDialog = new ReceiveFileDialog();
-        receiveFileDialog.showReceiveFileDialog(activity, fileReceiver); // Dialog should be shown after this
-
-        dialog = ShadowAlertDialog.getLatestAlertDialog();
-        assertNotNull(dialog);
-
-        shadowDialog = Robolectric.shadowOf(dialog);
-
-        reset(fileReceiver); // Don't care to verify the usage in the constructor of the dialog
     }
 
     @Test
@@ -99,30 +88,50 @@ public class ReceiveFileDialogTest {
     }
 
     @Test
-    public void dialogTitleShouldBeSet() {
+    public void showReceiveFileDialogShouldShowTheDialog() {
+        assertNull(getDialog());
+
+        receiveFileDialog.showReceiveFileDialog(activity, fileReceiver);
+
+        assertNotNull(getDialog());
+    }
+
+    @Test
+    public void showReceiveFileDialogShouldSetTitle() {
+        receiveFileDialog.showReceiveFileDialog(activity, fileReceiver);
+
+        final ShadowAlertDialog shadowDialog = getShadowDialog();
         assertEquals("File transfer request", shadowDialog.getTitle());
     }
 
     @Test
     @Ignore("This does not work with Robolectric yet.")
-    public void dialogIconShouldBeSet() {
+    public void showReceiveFileDialogShouldSetIcon() {
 //        assertEquals(R.drawable.ic_dialog, shadowDialog.getIcon()); // Does not compile
     }
 
     @Test
     @Ignore("This does not work with Robolectric yet.")
-    public void dialogThemeShouldBeSet() {
+    public void showReceiveFileDialogShouldSetTheme() {
 //        assertEquals(R.style.Theme_Default_Dialog, shadowDialog.getTheme()); // Does not compile
     }
 
     @Test
-    public void dialogMessageShouldBeSet() {
+    public void showReceiveFileDialogShouldSetMessage() {
+        receiveFileDialog.showReceiveFileDialog(activity, fileReceiver);
+
+        final ShadowAlertDialog shadowDialog = getShadowDialog();
         assertEquals("Ferdinand is trying to send you the file ‘superkou.png’ (161.13KB)." +
                 " Do you want to accept the file transfer?", shadowDialog.getMessage());
     }
 
     @Test
-    public void positiveButtonShouldAcceptFileTransferAndCloseEverything() {
+    public void showReceiveFileDialogShouldConfigurePositiveButtonToAcceptFileTransferAndCloseEverything() {
+        receiveFileDialog.showReceiveFileDialog(activity, fileReceiver);
+
+        reset(fileReceiver); // Don't care about verifying the message setup
+
+        final AlertDialog dialog = getDialog();
         final Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
 
         assertNotNull(positiveButton);
@@ -141,7 +150,12 @@ public class ReceiveFileDialogTest {
     }
 
     @Test
-    public void negativeButtonShouldRejectFileTransferAndCloseEverything() {
+    public void showReceiveFileDialogShouldConfigureNegativeButtonToRejectFileTransferAndCloseEverything() {
+        receiveFileDialog.showReceiveFileDialog(activity, fileReceiver);
+
+        reset(fileReceiver); // Don't care about verifying the message setup
+
+        final AlertDialog dialog = getDialog();
         final Button negativeButton = dialog.getButton(Dialog.BUTTON_NEGATIVE);
 
         assertNotNull(negativeButton);
@@ -160,7 +174,10 @@ public class ReceiveFileDialogTest {
     }
 
     @Test
-    public void neutralButtonShouldNotBeVisible() {
+    public void showReceiveFileDialogShouldNotShowNeutralButton() {
+        receiveFileDialog.showReceiveFileDialog(activity, fileReceiver);
+
+        final AlertDialog dialog = getDialog();
         final Button neutralButton = dialog.getButton(Dialog.BUTTON_NEUTRAL);
 
         assertNotNull(neutralButton);
@@ -169,7 +186,13 @@ public class ReceiveFileDialogTest {
     }
 
     @Test
-    public void cancelShouldJustCloseEverything() {
+    public void showReceiveFileDialogShouldConfigureCancelToJustCloseEverything() {
+        receiveFileDialog.showReceiveFileDialog(activity, fileReceiver);
+
+        reset(fileReceiver); // Don't care about verifying the message setup
+
+        final AlertDialog dialog = getDialog();
+
         assertFalse(activity.isFinishing());
         assertTrue(dialog.isShowing());
 
@@ -178,5 +201,14 @@ public class ReceiveFileDialogTest {
         verifyZeroInteractions(fileReceiver);
         assertTrue(activity.isFinishing());
         assertFalse(dialog.isShowing());
+    }
+
+    private AlertDialog getDialog() {
+        return ShadowAlertDialog.getLatestAlertDialog();
+    }
+
+    private ShadowAlertDialog getShadowDialog() {
+        final AlertDialog dialog = getDialog();
+        return Robolectric.shadowOf(dialog);
     }
 }
