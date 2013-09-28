@@ -29,6 +29,7 @@ import net.usikkert.kouchat.android.NotificationTest;
 import net.usikkert.kouchat.android.PrivateChatErrorHandlingTest;
 import net.usikkert.kouchat.android.PrivateChatStateTest;
 import net.usikkert.kouchat.android.PrivateChatTest;
+import net.usikkert.kouchat.android.ReceiveFileTest;
 import net.usikkert.kouchat.android.SendFileTest;
 import net.usikkert.kouchat.android.SettingsTest;
 import net.usikkert.kouchat.android.TopicTest;
@@ -58,6 +59,7 @@ public class AllTests extends TestSuite {
         testSuite.addTestSuite(HitchhikerTest.class);
         testSuite.addTestSuite(NotificationTest.class);
         testSuite.addTestSuite(SendFileTest.class);
+        testSuite.addTestSuite(ReceiveFileTest.class);
 
         // Run these manually:
 //        testSuite.addTestSuite(LinkTest.class);
