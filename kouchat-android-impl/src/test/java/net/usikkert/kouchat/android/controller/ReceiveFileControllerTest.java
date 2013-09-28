@@ -112,10 +112,20 @@ public class ReceiveFileControllerTest {
     }
 
     @Test
-    public void boundServiceShouldGetFileReceiverUsingIntentAndShowDialog() {
+    public void boundServiceShouldGetFileReceiverUsingIntentAndShowReceiveFileDialog() {
         controller.onCreate(null);
 
         verify(ui).getFileReceiver(1234, 5678);
         verify(receiveFileDialog).showReceiveFileDialog(controller, fileReceiver);
+    }
+
+    @Test
+    public void boundServiceShouldHandleMissingIntentAndShowMissingFileDialog() {
+        controller.setIntent(new Intent());
+
+        controller.onCreate(null);
+
+        verify(ui).getFileReceiver(-1, -1);
+        verify(receiveFileDialog).showMissingFileDialog(controller);
     }
 }

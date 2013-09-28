@@ -90,6 +90,10 @@ public class ReceiveFileController extends Activity {
 
         final FileReceiver fileReceiver = androidUserInterface.getFileReceiver(userCode, fileTransferId);
 
-        receiveFileDialog.showReceiveFileDialog(this, fileReceiver);
+        if (fileReceiver == null) {
+            receiveFileDialog.showMissingFileDialog(this);
+        } else {
+            receiveFileDialog.showReceiveFileDialog(this, fileReceiver);
+        }
     }
 }
