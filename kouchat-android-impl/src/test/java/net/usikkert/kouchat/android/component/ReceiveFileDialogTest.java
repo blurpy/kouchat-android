@@ -41,6 +41,7 @@ import org.robolectric.shadows.ShadowAlertDialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.view.View;
 import android.widget.Button;
 
 /**
@@ -115,6 +116,7 @@ public class ReceiveFileDialogTest {
 
         assertNotNull(positiveButton);
         assertEquals("Accept", positiveButton.getText());
+        assertEquals(View.VISIBLE, positiveButton.getVisibility());
 
         verifyZeroInteractions(fileReceiver);
         assertFalse(activity.isFinishing());
@@ -133,6 +135,7 @@ public class ReceiveFileDialogTest {
 
         assertNotNull(negativeButton);
         assertEquals("Reject", negativeButton.getText());
+        assertEquals(View.VISIBLE, negativeButton.getVisibility());
 
         verifyZeroInteractions(fileReceiver);
         assertFalse(activity.isFinishing());
@@ -143,6 +146,15 @@ public class ReceiveFileDialogTest {
         verify(fileReceiver).reject();
         assertTrue(activity.isFinishing());
         assertFalse(dialog.isShowing());
+    }
+
+    @Test
+    public void neutralButtonShouldNotBeVisible() {
+        final Button neutralButton = dialog.getButton(Dialog.BUTTON_NEUTRAL);
+
+        assertNotNull(neutralButton);
+        assertEquals("", neutralButton.getText());
+        assertEquals(View.GONE, neutralButton.getVisibility());
     }
 
     @Test
