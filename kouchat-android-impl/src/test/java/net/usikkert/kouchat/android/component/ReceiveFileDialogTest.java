@@ -55,6 +55,8 @@ public class ReceiveFileDialogTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
+    private ReceiveFileDialog receiveFileDialog;
+
     private ShadowAlertDialog shadowDialog;
     private AlertDialog dialog;
     private FileReceiver fileReceiver;
@@ -69,7 +71,8 @@ public class ReceiveFileDialogTest {
 
         activity = new Activity();
 
-        new ReceiveFileDialog(activity, fileReceiver); // Dialog should be shown after this
+        receiveFileDialog = new ReceiveFileDialog();
+        receiveFileDialog.showReceiveFileDialog(activity, fileReceiver); // Dialog should be shown after this
 
         dialog = ShadowAlertDialog.getLatestAlertDialog();
         assertNotNull(dialog);
@@ -80,11 +83,19 @@ public class ReceiveFileDialogTest {
     }
 
     @Test
-    public void constructorShouldThrowExceptionIfActivityIsNull() {
+    public void showReceiveFileDialogShouldThrowExceptionIfActivityIsNull() {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Activity can not be null");
 
-        new ReceiveFileDialog(null, mock(FileReceiver.class));
+        receiveFileDialog.showReceiveFileDialog(null, mock(FileReceiver.class));
+    }
+
+    @Test
+    public void showReceiveFileDialogShouldThrowExceptionIfFileReceiverIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("FileReceiver can not be null");
+
+        receiveFileDialog.showReceiveFileDialog(mock(Activity.class), null);
     }
 
     @Test

@@ -43,6 +43,8 @@ import android.os.IBinder;
  */
 public class ReceiveFileController extends Activity {
 
+    private ReceiveFileDialog receiveFileDialog = new ReceiveFileDialog();
+
     private ServiceConnection serviceConnection;
 
     @Override
@@ -57,7 +59,9 @@ public class ReceiveFileController extends Activity {
     @Override
     protected void onDestroy() {
         unbindService(serviceConnection);
+
         serviceConnection = null;
+        receiveFileDialog = null;
 
         super.onDestroy();
     }
@@ -86,6 +90,6 @@ public class ReceiveFileController extends Activity {
 
         final FileReceiver fileReceiver = androidUserInterface.getFileReceiver(userCode, fileTransferId);
 
-        new ReceiveFileDialog(this, fileReceiver);
+        receiveFileDialog.showReceiveFileDialog(this, fileReceiver);
     }
 }

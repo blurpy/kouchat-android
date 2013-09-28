@@ -40,8 +40,9 @@ import android.view.ContextThemeWrapper;
  */
 public class ReceiveFileDialog {
 
-    public ReceiveFileDialog(final Activity activity, final FileReceiver fileReceiver) {
+    public void showReceiveFileDialog(final Activity activity, final FileReceiver fileReceiver) {
         Validate.notNull(activity, "Activity can not be null");
+        Validate.notNull(fileReceiver, "FileReceiver can not be null");
 
         final Context wrappedContext = new ContextThemeWrapper(activity, R.style.Theme_Default_Dialog);
         final AlertDialog.Builder builder = new AlertDialog.Builder(wrappedContext);

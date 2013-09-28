@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 import java.util.List;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.component.ReceiveFileDialog;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.misc.User;
@@ -39,7 +40,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowIntent;
 
 import android.content.Intent;
@@ -57,10 +57,13 @@ public class ReceiveFileControllerTest {
 
     private AndroidUserInterface ui;
     private FileReceiver fileReceiver;
+    private ReceiveFileDialog receiveFileDialog;
 
     @Before
     public void setUp() {
         controller = new ReceiveFileController();
+
+        receiveFileDialog = TestUtils.setFieldValueWithMock(controller, "receiveFileDialog", ReceiveFileDialog.class);
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
@@ -93,9 +96,10 @@ public class ReceiveFileControllerTest {
     }
 
     @Test
-    public void onDestroyShouldResetAndUnbindServiceConnection() {
+    public void onDestroyShouldUnbindServiceConnectionAndResetAllFields() {
         final ServiceConnection serviceConnection =
                 TestUtils.setFieldValueWithMock(controller, "serviceConnection", ServiceConnection.class);
+        assertTrue(TestUtils.allFieldsHaveValue(controller));
 
         controller.onDestroy();
 
@@ -104,16 +108,14 @@ public class ReceiveFileControllerTest {
 
         assertEquals(1, unboundServiceConnections.size());
         assertSame(serviceConnection, unboundServiceConnections.get(0));
-        assertTrue(TestUtils.fieldValueIsNull(controller, "serviceConnection"));
+        assertTrue(TestUtils.allFieldsAreNull(controller));
     }
 
     @Test
     public void boundServiceShouldGetFileReceiverUsingIntentAndShowDialog() {
         controller.onCreate(null);
 
-        // Can't verify that the file receiver was sent to the dialog, but this is good enough
-        assertNotNull(ShadowAlertDialog.getLatestAlertDialog());
         verify(ui).getFileReceiver(1234, 5678);
-        verify(fileReceiver).getUser(); // Should happen in the dialog
+        verify(receiveFileDialog).showReceiveFileDialog(controller, fileReceiver);
     }
 }
