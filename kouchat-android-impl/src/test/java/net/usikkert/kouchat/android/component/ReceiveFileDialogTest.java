@@ -203,6 +203,98 @@ public class ReceiveFileDialogTest {
         assertFalse(dialog.isShowing());
     }
 
+    @Test
+    public void showMissingFileDialogShouldThrowExceptionIfActivityIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Activity can not be null");
+
+        receiveFileDialog.showMissingFileDialog(null);
+    }
+
+    @Test
+    public void showMissingFileDialogShouldShowTheDialog() {
+        assertNull(getDialog());
+
+        receiveFileDialog.showMissingFileDialog(activity);
+
+        assertNotNull(getDialog());
+    }
+
+    @Test
+    public void showMissingFileDialogShouldSetTitle() {
+        receiveFileDialog.showMissingFileDialog(activity);
+
+        final ShadowAlertDialog shadowDialog = getShadowDialog();
+        assertEquals("File transfer request", shadowDialog.getTitle());
+    }
+
+    @Test
+    public void showMissingFileDialogShouldSetMessage() {
+        receiveFileDialog.showMissingFileDialog(activity);
+
+        final ShadowAlertDialog shadowDialog = getShadowDialog();
+        assertEquals("Unable to find the specified file transfer request.", shadowDialog.getMessage());
+    }
+
+    @Test
+    public void showMissingFileDialogShouldConfigurePositiveButtonToCloseEverything() {
+        receiveFileDialog.showMissingFileDialog(activity);
+
+        final AlertDialog dialog = getDialog();
+        final Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
+
+        assertNotNull(positiveButton);
+        assertEquals("OK", positiveButton.getText());
+        assertEquals(View.VISIBLE, positiveButton.getVisibility());
+
+        assertFalse(activity.isFinishing());
+        assertTrue(dialog.isShowing());
+
+        positiveButton.performClick();
+
+        assertTrue(activity.isFinishing());
+        assertFalse(dialog.isShowing());
+    }
+
+    @Test
+    public void showMissingFileDialogShouldNotShowNegativeButton() {
+        receiveFileDialog.showMissingFileDialog(activity);
+
+        final AlertDialog dialog = getDialog();
+        final Button negativeButton = dialog.getButton(Dialog.BUTTON_NEGATIVE);
+
+        assertNotNull(negativeButton);
+        assertEquals("", negativeButton.getText());
+        assertEquals(View.GONE, negativeButton.getVisibility());
+    }
+
+    @Test
+    public void showMissingFileDialogShouldNotShowNeutralButton() {
+        receiveFileDialog.showMissingFileDialog(activity);
+
+        final AlertDialog dialog = getDialog();
+        final Button neutralButton = dialog.getButton(Dialog.BUTTON_NEUTRAL);
+
+        assertNotNull(neutralButton);
+        assertEquals("", neutralButton.getText());
+        assertEquals(View.GONE, neutralButton.getVisibility());
+    }
+
+    @Test
+    public void showMissingFileDialogShouldConfigureCancelToCloseEverything() {
+        receiveFileDialog.showMissingFileDialog(activity);
+
+        final AlertDialog dialog = getDialog();
+
+        assertFalse(activity.isFinishing());
+        assertTrue(dialog.isShowing());
+
+        dialog.cancel();
+
+        assertTrue(activity.isFinishing());
+        assertFalse(dialog.isShowing());
+    }
+
     private AlertDialog getDialog() {
         return ShadowAlertDialog.getLatestAlertDialog();
     }

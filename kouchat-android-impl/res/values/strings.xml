@@ -38,6 +38,7 @@
   <string name="send_file_no_file">Unable to locate the file to send.</string>
   <string name="dialog_title_file_transfer_request">File transfer request</string>
   <string name="dialog_receive_file_accept_question">%1$s is trying to send you the file ‘%2$s’ (%3$s). Do you want to accept the file transfer?</string>
+  <string name="dialog_receive_file_not_found">Unable to find the specified file transfer request.</string>
   <string name="accept">Accept</string>
   <string name="reject">Reject</string>
 

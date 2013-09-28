@@ -76,6 +76,29 @@ public class ReceiveFileDialog {
         builder.show();
     }
 
+    /**
+     * Shows a dialog notifying that the file transfer request could not be found.
+     *
+     * <p>When the dialog closes, it will also close the owning activity.</p>
+     *
+     * @param activity The owning activity.
+     */
+    public void showMissingFileDialog(final Activity activity) {
+        Validate.notNull(activity, "Activity can not be null");
+
+        final AlertDialog.Builder builder = setupSharedDialogDetails(activity);
+
+        builder.setMessage(activity.getString(R.string.dialog_receive_file_not_found));
+
+        builder.setPositiveButton(activity.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                activity.finish();
+            }
+        });
+
+        builder.show();
+    }
+
     private AlertDialog.Builder setupSharedDialogDetails(final Activity activity) {
         final Context wrappedContext = new ContextThemeWrapper(activity, R.style.Theme_Default_Dialog);
         final AlertDialog.Builder builder = new AlertDialog.Builder(wrappedContext);
