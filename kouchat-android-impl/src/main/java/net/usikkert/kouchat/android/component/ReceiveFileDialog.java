@@ -40,15 +40,19 @@ import android.view.ContextThemeWrapper;
  */
 public class ReceiveFileDialog {
 
+    /**
+     * Shows a dialog for accepting or rejecting a file transfer request.
+     *
+     * <p>When the dialog closes, it will also close the owning activity.</p>
+     *
+     * @param activity The owning activity.
+     * @param fileReceiver The file receiver object with details about the file transfer request.
+     */
     public void showReceiveFileDialog(final Activity activity, final FileReceiver fileReceiver) {
         Validate.notNull(activity, "Activity can not be null");
         Validate.notNull(fileReceiver, "FileReceiver can not be null");
 
-        final Context wrappedContext = new ContextThemeWrapper(activity, R.style.Theme_Default_Dialog);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(wrappedContext);
-
-        builder.setTitle(activity.getString(R.string.dialog_title_file_transfer_request));
-        builder.setIcon(R.drawable.ic_dialog);
+        final AlertDialog.Builder builder = setupSharedDialogDetails(activity);
 
         builder.setMessage(activity.getString(R.string.dialog_receive_file_accept_question,
                 fileReceiver.getUser().getNick(),
@@ -69,6 +73,16 @@ public class ReceiveFileDialog {
             }
         });
 
+        builder.show();
+    }
+
+    private AlertDialog.Builder setupSharedDialogDetails(final Activity activity) {
+        final Context wrappedContext = new ContextThemeWrapper(activity, R.style.Theme_Default_Dialog);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(wrappedContext);
+
+        builder.setTitle(activity.getString(R.string.dialog_title_file_transfer_request));
+        builder.setIcon(R.drawable.ic_dialog);
+
         builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(final DialogInterface dialog) {
@@ -76,6 +90,6 @@ public class ReceiveFileDialog {
             }
         });
 
-        builder.show();
+        return builder;
     }
 }
