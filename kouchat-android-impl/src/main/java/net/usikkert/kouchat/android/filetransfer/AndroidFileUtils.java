@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.android.filetransfer;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
@@ -41,6 +42,8 @@ import android.provider.MediaStore;
  * @author Christian Ihle
  */
 public class AndroidFileUtils {
+
+    private static final Logger LOG = Logger.getLogger(AndroidFileUtils.class.getName());
 
     /**
      * Gets a {@link File} reference to the file represented by the {@link Uri}.
@@ -101,6 +104,8 @@ public class AndroidFileUtils {
      * Creates a new unique file in the public downloads directory of the device, with the given file
      * name as a suggestion. If the name is in use, it gets appended by a counter.
      *
+     * <p>If the downloads directory is missing, it will be created.</p>
+     *
      * @param fileName The suggested file name to use on the file.
      * @return A new unique file.
      */
@@ -108,6 +113,16 @@ public class AndroidFileUtils {
         Validate.notEmpty(fileName, "File name can not be empty");
 
         final File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+        // Not sure if this is supposed to be missing, but it happens on the Android 2.3.3 emulator.
+        if (!directory.exists()) {
+            if (!directory.mkdirs()) {
+                LOG.warning(String.format(
+                        "Unable to create the public download directory. Saving here will probably fail. path=%s",
+                        directory));
+            }
+        }
+
         return Tools.getFileWithIncrementedName(new File(directory, fileName));
     }
 }

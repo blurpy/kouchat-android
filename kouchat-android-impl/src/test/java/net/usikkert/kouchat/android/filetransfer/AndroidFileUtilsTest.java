@@ -181,6 +181,27 @@ public class AndroidFileUtilsTest {
     }
 
     @Test
+    public void createFileInDownloadsWithAvailableNameShouldCreateMissingDirectoryStructure() {
+        // Note: this test doesn't actually verify anything, because Robolectric creates the directory structure
+        // before my code (unlike real Android). I don't know how to avoid that. Keeping the test anyway.
+
+        final File downloadsDirectory = getDownloadsDirectory();
+
+        // Just trying to make sure this is an actual temporary directory before it's deleted.
+        // Example: /tmp/android-external-files744975316838robolectric/e12c13f2-1135-4519/Download
+        assertTrue(downloadsDirectory.getAbsolutePath().matches(".+android-external-files.+robolectric.+Download"));
+
+        assertTrue(downloadsDirectory.delete());
+        assertFalse(downloadsDirectory.exists());
+
+        final File file = androidFileUtils.createFileInDownloadsWithAvailableName("file.txt");
+
+        assertNotNull(file);
+        assertFalse(file.exists());
+        assertTrue(downloadsDirectory.exists());
+    }
+
+    @Test
     public void createFileInDownloadsWithAvailableNameShouldIncrementFileNameIfFileAlreadyExists() throws IOException {
         final File existingFile = new File(getDownloadsDirectory(), "file.txt");
         ToolsTest.createTemporaryFile(existingFile);
