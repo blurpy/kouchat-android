@@ -25,6 +25,7 @@ package net.usikkert.kouchat.testclient;
 import java.io.File;
 
 import net.usikkert.kouchat.misc.CommandException;
+import net.usikkert.kouchat.misc.CommandParser;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
@@ -44,6 +45,7 @@ public class TestClient {
     private final Controller controller;
     private final TestClientUserInterface ui;
     private final TransferList transferList;
+    private final CommandParser commandParser;
 
     private final User me;
 
@@ -69,6 +71,7 @@ public class TestClient {
         ui = new TestClientUserInterface(settings);
         controller = new Controller(ui, settings);
         transferList = controller.getTransferList();
+        commandParser = new CommandParser(controller, ui, settings);
     }
 
     public void logon() {
@@ -247,6 +250,22 @@ public class TestClient {
         final FileReceiver fileReceiver = findFileReceiver(user, fileName);
 
         fileReceiver.reject();
+    }
+
+    /**
+     * Sends the given file from this client to the given user.
+     *
+     * @param user The user to send the file to.
+     * @param file The file to send to the user.
+     */
+    public void sendFile(final User user, final File file) {
+        final User localUser = controller.getUser(user.getCode()); // Because user might be from another context
+
+        try {
+            commandParser.sendFile(localUser, file);
+        } catch (CommandException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private FileReceiver findFileReceiver(final User user, final String fileName) {

@@ -69,7 +69,7 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
 
     @Override
     public void showTransfer(final FileSender fileSend) {
-
+        new TestClientFileTransferListener(fileSend);
     }
 
     @Override
