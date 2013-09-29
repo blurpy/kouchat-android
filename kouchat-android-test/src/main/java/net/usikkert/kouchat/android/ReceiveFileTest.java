@@ -24,11 +24,15 @@ package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.ReceiveFileController;
+import net.usikkert.kouchat.android.util.AndroidFile;
+import net.usikkert.kouchat.android.util.FileUtils;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
+import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestClient;
 
 import com.jayway.android.robotium.solo.Solo;
 
+import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 
 /**
@@ -41,6 +45,8 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     private static TestClient albert;
     private static TestClient tina;
     private static TestClient xen;
+
+    private static AndroidFile image;
 
     private Solo solo;
 
@@ -64,6 +70,12 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void test01ShouldShowMissingFileDialogIfNoFileTransferRequestAvailable() {
         solo.sleep(1000);
+
+        // Make sure we have an image to send from a test client to the real client
+        final MainChatController mainChatController = getActivity();
+        FileUtils.copyKouChatImageFromAssetsToSdCard(getInstrumentation(), mainChatController);
+        image = FileUtils.getKouChatImage(mainChatController);
+
         openReceiveFileController();
 
         solo.sleep(1000);
@@ -76,6 +88,34 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
     }
 
+    public void test02RejectFileTransferRequest() {
+        solo.sleep(1000);
+        final User me = RobotiumTestUtils.getMe(getActivity());
+
+        tina.sendFile(me, image.getFile());
+        solo.sleep(1000);
+
+        // Message in the main chat
+        solo.searchText("*** Tina is trying to send the file kouchat-1600x1600.png");
+        solo.sleep(1000);
+
+        openReceiveFileController(1235, 1);
+        solo.sleep(1000);
+
+        // Message in the popup dialog
+        assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
+        solo.searchText("Tina is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). Do you want to accept the file transfer?");
+        solo.sleep(1000);
+
+        // Button in the popup dialog
+        solo.clickOnText("Reject");
+        solo.sleep(1000);
+
+        // Message in the main chat
+        assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
+        solo.searchText("*** You declined to receive kouchat-1600x1600.png from Tina");
+    }
+
     public void test99Quit() {
         albert.logoff();
         tina.logoff();
@@ -84,6 +124,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         albert = null;
         tina = null;
         xen = null;
+        image = null;
 
         RobotiumTestUtils.quit(solo);
     }
@@ -95,6 +136,15 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         setActivity(null);
 
         System.gc();
+    }
+
+    private void openReceiveFileController(final int userCode, final int fileTransferId) {
+        final Intent intent = new Intent();
+        intent.putExtra("userCode", userCode);
+        intent.putExtra("fileTransferId", fileTransferId);
+
+        final String packageName = getInstrumentation().getTargetContext().getPackageName();
+        launchActivityWithIntent(packageName, ReceiveFileController.class, intent);
     }
 
     private void openReceiveFileController() {
