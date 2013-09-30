@@ -168,6 +168,29 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue("Should be able to delete temporary file: " + requestedFile, requestedFile.delete());
     }
 
+    public void test04CancelFileTransferRequestBeforeOpeningActivity() {
+        solo.sleep(1000);
+        final User me = RobotiumTestUtils.getMe(getActivity());
+
+        final File requestedFile = getLocationToRequestedFile();
+        assertFalse(requestedFile.exists());
+
+        xen.sendFile(me, image.getFile());
+        solo.sleep(1000);
+
+        // Message in the main chat
+        solo.searchText("*** Xen is trying to send the file kouchat-1600x1600.png");
+        solo.sleep(1000);
+
+        xen.cancelFileSending(me, image.getFile());
+
+        solo.sleep(1000);
+        solo.searchText("*** Xen aborted sending of kouchat-1600x1600.png");
+
+        // Verify that the file was not transferred
+        assertFalse(requestedFile.exists());
+    }
+
     public void test99Quit() {
         albert.logoff();
         tina.logoff();

@@ -31,6 +31,7 @@ import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.net.FileReceiver;
+import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
@@ -268,6 +269,18 @@ public class TestClient {
         }
     }
 
+    /**
+     * Cancels sending the given file to the given user.
+     *
+     * @param user The user the file was sent to.
+     * @param file The file that was sent to the user.
+     */
+    public void cancelFileSending(final User user, final File file) {
+        final FileSender fileSender = findFileSender(user, file);
+
+        commandParser.cancelFileTransfer(fileSender);
+    }
+
     private FileReceiver findFileReceiver(final User user, final String fileName) {
         final User localUser = controller.getUser(user.getCode()); // Because user might be from another context
 
@@ -276,6 +289,16 @@ public class TestClient {
                 String.format("Unable to find the file with the name '%s' from the user '%s'", fileName, user));
 
         return fileReceiver;
+    }
+
+    private FileSender findFileSender(final User user, final File file) {
+        final User localUser = controller.getUser(user.getCode()); // Because user might be from another context
+
+        final FileSender fileSender = transferList.getFileSender(localUser, file.getName());
+        Validate.notNull(fileSender,
+                String.format("Unable to find the file with the name '%s' for the user '%s'", file.getName(), user));
+
+        return fileSender;
     }
 
     private void waitForConnection() {
