@@ -37,6 +37,7 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.jayway.android.robotium.solo.Solo;
 
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
@@ -53,6 +54,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     private static TestClient xen;
 
     private static AndroidFile image;
+    private static File requestedFile;
 
     private Solo solo;
 
@@ -61,7 +63,10 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void setUp() {
-        solo = new Solo(getInstrumentation(), getActivity());
+        final MainChatController mainChatController = getActivity();
+        final Instrumentation instrumentation = getInstrumentation();
+
+        solo = new Solo(instrumentation, mainChatController);
 
         if (albert == null) {
             albert = new TestClient("Albert", 1234);
@@ -71,16 +76,16 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
             albert.logon();
             tina.logon();
             xen.logon();
+
+            // Make sure we have an image to send from a test client to the real client
+            FileUtils.copyKouChatImageFromAssetsToSdCard(instrumentation, mainChatController);
+            image = FileUtils.getKouChatImage(mainChatController);
+            requestedFile = getLocationToRequestedFile();
         }
     }
 
     public void test01ShouldShowMissingFileDialogIfNoFileTransferRequestAvailable() {
         solo.sleep(500);
-
-        // Make sure we have an image to send from a test client to the real client
-        final MainChatController mainChatController = getActivity();
-        FileUtils.copyKouChatImageFromAssetsToSdCard(getInstrumentation(), mainChatController);
-        image = FileUtils.getKouChatImage(mainChatController);
 
         openReceiveFileController();
 
@@ -98,7 +103,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
         final User me = RobotiumTestUtils.getMe(getActivity());
 
-        final File requestedFile = getLocationToRequestedFile();
         assertFalse(requestedFile.exists());
 
         tina.sendFile(me, image.getFile());
@@ -132,7 +136,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
         final User me = RobotiumTestUtils.getMe(getActivity());
 
-        final File requestedFile = getLocationToRequestedFile();
         assertFalse(requestedFile.exists());
 
         albert.sendFile(me, image.getFile());
@@ -163,16 +166,12 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         final ByteSource originalFile = Files.asByteSource(image.getFile());
         final ByteSource savedFile = Files.asByteSource(requestedFile);
         assertTrue(originalFile.contentEquals(savedFile));
-
-        // Cleanup
-        assertTrue("Should be able to delete temporary file: " + requestedFile, requestedFile.delete());
     }
 
     public void test04CancelFileTransferRequestBeforeOpeningActivity() {
         solo.sleep(500);
         final User me = RobotiumTestUtils.getMe(getActivity());
 
-        final File requestedFile = getLocationToRequestedFile();
         assertFalse(requestedFile.exists());
 
         xen.sendFile(me, image.getFile());
@@ -200,11 +199,16 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         tina = null;
         xen = null;
         image = null;
+        requestedFile = null;
 
         RobotiumTestUtils.quit(solo);
     }
 
     public void tearDown() {
+        if (requestedFile != null && requestedFile.exists()) {
+            requestedFile.delete();
+        }
+
         solo.finishOpenedActivities();
 
         solo = null;
