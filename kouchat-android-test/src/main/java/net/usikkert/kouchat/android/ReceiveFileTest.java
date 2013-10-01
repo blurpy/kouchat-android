@@ -75,7 +75,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test01ShouldShowMissingFileDialogIfNoFileTransferRequestAvailable() {
-        solo.sleep(1000);
+        solo.sleep(500);
 
         // Make sure we have an image to send from a test client to the real client
         final MainChatController mainChatController = getActivity();
@@ -84,41 +84,41 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         openReceiveFileController();
 
-        solo.sleep(1000);
+        solo.sleep(500);
         solo.searchText("Unable to find the specified file transfer request");
         assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
 
         solo.clickOnText("OK"); // Close dialog
 
-        solo.sleep(1000);
+        solo.sleep(500);
         assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
     }
 
     public void test02RejectFileTransferRequest() {
-        solo.sleep(1000);
+        solo.sleep(500);
         final User me = RobotiumTestUtils.getMe(getActivity());
 
         final File requestedFile = getLocationToRequestedFile();
         assertFalse(requestedFile.exists());
 
         tina.sendFile(me, image.getFile());
-        solo.sleep(1000);
+        solo.sleep(500);
 
         // Message in the main chat
         solo.searchText("*** Tina is trying to send the file kouchat-1600x1600.png");
-        solo.sleep(1000);
+        solo.sleep(500);
 
         openReceiveFileController(1235, 1);
-        solo.sleep(1000);
+        solo.sleep(500);
 
         // Message in the popup dialog
         assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
         solo.searchText("Tina is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). Do you want to accept the file transfer?");
-        solo.sleep(1000);
+        solo.sleep(500);
 
         // Button in the popup dialog
         solo.clickOnText("Reject");
-        solo.sleep(1000);
+        solo.sleep(500);
 
         // Message in the main chat
         assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
@@ -129,30 +129,30 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test03AcceptFileTransferRequest() throws IOException {
-        solo.sleep(1000);
+        solo.sleep(500);
         final User me = RobotiumTestUtils.getMe(getActivity());
 
         final File requestedFile = getLocationToRequestedFile();
         assertFalse(requestedFile.exists());
 
         albert.sendFile(me, image.getFile());
-        solo.sleep(1000);
+        solo.sleep(500);
 
         // Message in the main chat
         solo.searchText("*** Albert is trying to send the file kouchat-1600x1600.png");
-        solo.sleep(1000);
+        solo.sleep(500);
 
         openReceiveFileController(1234, 2);
-        solo.sleep(1000);
+        solo.sleep(500);
 
         // Message in the popup dialog
         assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
         solo.searchText("Albert is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). Do you want to accept the file transfer?");
-        solo.sleep(1000);
+        solo.sleep(500);
 
         // Button in the popup dialog
         solo.clickOnText("Accept");
-        solo.sleep(1000);
+        solo.sleep(500);
 
         // Message in the main chat
         assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
@@ -169,22 +169,22 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test04CancelFileTransferRequestBeforeOpeningActivity() {
-        solo.sleep(1000);
+        solo.sleep(500);
         final User me = RobotiumTestUtils.getMe(getActivity());
 
         final File requestedFile = getLocationToRequestedFile();
         assertFalse(requestedFile.exists());
 
         xen.sendFile(me, image.getFile());
-        solo.sleep(1000);
+        solo.sleep(500);
 
         // Message in the main chat
         solo.searchText("*** Xen is trying to send the file kouchat-1600x1600.png");
-        solo.sleep(1000);
+        solo.sleep(500);
 
         xen.cancelFileSending(me, image.getFile());
 
-        solo.sleep(1000);
+        solo.sleep(500);
         solo.searchText("*** Xen aborted sending of kouchat-1600x1600.png");
 
         // Verify that the file was not transferred
