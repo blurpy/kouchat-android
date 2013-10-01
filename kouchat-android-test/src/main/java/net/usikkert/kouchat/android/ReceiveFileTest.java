@@ -90,7 +90,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         openReceiveFileController();
 
         solo.sleep(500);
-        solo.searchText("Unable to find the specified file transfer request");
+        checkDialogMessage("Unable to find the specified file transfer request");
         assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
 
         solo.clickOnText("OK"); // Close dialog
@@ -109,7 +109,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         // Message in the main chat
-        solo.searchText("*** Tina is trying to send the file kouchat-1600x1600.png");
+        checkMainChatMessage("*** Tina is trying to send the file kouchat-1600x1600.png");
         solo.sleep(500);
 
         openReceiveFileController(1235, 1);
@@ -117,7 +117,8 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         // Message in the popup dialog
         assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
-        solo.searchText("Tina is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). Do you want to accept the file transfer?");
+        checkDialogMessage("Tina is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
+                "Do you want to accept the file transfer?");
         solo.sleep(500);
 
         // Button in the popup dialog
@@ -126,7 +127,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         // Message in the main chat
         assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
-        solo.searchText("*** You declined to receive kouchat-1600x1600.png from Tina");
+        checkMainChatMessage("*** You declined to receive kouchat-1600x1600.png from Tina");
 
         // Verify that the file was not transferred
         assertFalse(requestedFile.exists());
@@ -142,7 +143,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         // Message in the main chat
-        solo.searchText("*** Albert is trying to send the file kouchat-1600x1600.png");
+        checkMainChatMessage("*** Albert is trying to send the file kouchat-1600x1600.png");
         solo.sleep(500);
 
         openReceiveFileController(1234, 2);
@@ -150,7 +151,8 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         // Message in the popup dialog
         assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
-        solo.searchText("Albert is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). Do you want to accept the file transfer?");
+        checkDialogMessage("Albert is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
+                "Do you want to accept the file transfer?");
         solo.sleep(500);
 
         // Button in the popup dialog
@@ -159,7 +161,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         // Message in the main chat
         assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
-        solo.searchText("*** Successfully received kouchat-1600x1600.png from Albert, and saved as kouchat-1600x1600.png");
+        checkMainChatMessage("*** Successfully received kouchat-1600x1600.png from Albert, and saved as kouchat-1600x1600.png");
 
         // Verify that the file was correctly received
         assertTrue("Should exist: " + requestedFile, requestedFile.exists());
@@ -178,13 +180,13 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         // Message in the main chat
-        solo.searchText("*** Xen is trying to send the file kouchat-1600x1600.png");
+        checkMainChatMessage("*** Xen is trying to send the file kouchat-1600x1600.png");
         solo.sleep(500);
 
         xen.cancelFileSending(me, image.getFile());
 
-        solo.sleep(500);
-        solo.searchText("*** Xen aborted sending of kouchat-1600x1600.png");
+        solo.sleep(1000);
+        checkMainChatMessage("*** Xen aborted sending of kouchat-1600x1600.png");
 
         // Verify that the file was not transferred
         assertFalse(requestedFile.exists());
@@ -233,5 +235,13 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     private File getLocationToRequestedFile() {
         return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), image.getName());
+    }
+
+    private void checkMainChatMessage(final String textToFind) {
+        assertTrue(RobotiumTestUtils.textIsVisible(solo, R.id.mainChatView, R.id.mainChatScroll, textToFind));
+    }
+
+    private void checkDialogMessage(final String textToFind) {
+        assertTrue(RobotiumTestUtils.searchText(solo, textToFind));
     }
 }
