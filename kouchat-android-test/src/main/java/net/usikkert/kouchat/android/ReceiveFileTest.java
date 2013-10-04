@@ -157,7 +157,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         // Button in the popup dialog
         solo.clickOnText("Accept");
-        solo.sleep(500);
+        solo.sleep(1000);
 
         // Message in the main chat
         assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
@@ -185,7 +185,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         xen.cancelFileSending(me, image.getFile());
 
-        solo.sleep(1000);
+        solo.sleep(500);
         checkMainChatMessage("*** Xen aborted sending of kouchat-1600x1600.png");
 
         // Verify that the file was not transferred
