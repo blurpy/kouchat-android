@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android.notification;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -66,9 +67,10 @@ public class NotificationService {
     private boolean mainChatActivity;
     private final Set<User> privateChatActivityUsers;
 
-    // These are necessary because it's not otherwise possible to get the current notification in integration tests
+    // These are necessary because it's not otherwise possible to get the current notifications in integration tests
     private int currentIconId;
     private int currentLatestInfoTextId;
+    private final Set<Integer> currentFileTransferIds;
 
     /**
      * Constructor.
@@ -82,6 +84,7 @@ public class NotificationService {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mainChatActivity = false;
         privateChatActivityUsers = new HashSet<User>();
+        currentFileTransferIds = new HashSet<Integer>();
     }
 
     /**
@@ -233,6 +236,7 @@ public class NotificationService {
         setNewFileTransferLatestEventInfo(fileReceiver, notification, pendingIntent);
 
         notificationManager.notify(notificationId, notification);
+        currentFileTransferIds.add(fileReceiver.getId());
     }
 
     /**
@@ -244,6 +248,16 @@ public class NotificationService {
         Validate.notNull(fileReceiver, "FileReceiver can not be null");
 
         notificationManager.cancel(fileReceiver.getId() + FILE_TRANSFER_NOTIFICATION_ID);
+        currentFileTransferIds.remove(fileReceiver.getId());
+    }
+
+    /**
+     * Gets the ids of the currently active file transfer notifications.
+     *
+     * @return The ids of the currently active file transfer notifications.
+     */
+    public Set<Integer> getCurrentFileTransferIds() {
+        return Collections.unmodifiableSet(currentFileTransferIds);
     }
 
     private void sendDefaultNotification() {

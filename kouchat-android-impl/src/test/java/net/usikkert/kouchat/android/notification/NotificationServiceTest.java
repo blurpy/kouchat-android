@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.Set;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
@@ -446,6 +447,24 @@ public class NotificationServiceTest {
     }
 
     @Test
+    public void notifyNewFileTransferShouldAddFileTransferIdToCurrentFileTransfers() {
+        final FileReceiver fileReceiver1 = createFileReceiver(101);
+        final FileReceiver fileReceiver2 = createFileReceiver(102);
+        final FileReceiver fileReceiver3 = createFileReceiver(103);
+
+        assertTrue(notificationService.getCurrentFileTransferIds().isEmpty());
+
+        notificationService.notifyNewFileTransfer(fileReceiver1);
+        verifyCurrentFileTransferIds(101);
+
+        notificationService.notifyNewFileTransfer(fileReceiver2);
+        verifyCurrentFileTransferIds(101, 102);
+
+        notificationService.notifyNewFileTransfer(fileReceiver3);
+        verifyCurrentFileTransferIds(101, 102, 103);
+    }
+
+    @Test
     public void cancelFileTransferNotificationShouldThrowExceptionInFileReceiverIsNull() {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("FileReceiver can not be null");
@@ -458,6 +477,39 @@ public class NotificationServiceTest {
         notificationService.cancelFileTransferNotification(fileReceiver);
 
         verify(notificationManager).cancel(10012);
+    }
+
+    @Test
+    public void cancelFileTransferNotificationShouldRemoveFileTransferIdFromCurrentFileTransfers() {
+        final FileReceiver fileReceiver1 = createFileReceiver(101);
+        final FileReceiver fileReceiver2 = createFileReceiver(102);
+        final FileReceiver fileReceiver3 = createFileReceiver(103);
+
+        assertTrue(notificationService.getCurrentFileTransferIds().isEmpty());
+
+        notificationService.notifyNewFileTransfer(fileReceiver1);
+        notificationService.notifyNewFileTransfer(fileReceiver2);
+        notificationService.notifyNewFileTransfer(fileReceiver3);
+
+        verifyCurrentFileTransferIds(101, 102, 103);
+
+        notificationService.cancelFileTransferNotification(fileReceiver2);
+        verifyCurrentFileTransferIds(101, 103);
+
+        notificationService.cancelFileTransferNotification(fileReceiver1);
+        verifyCurrentFileTransferIds(103);
+
+        notificationService.cancelFileTransferNotification(fileReceiver3);
+        assertTrue(notificationService.getCurrentFileTransferIds().isEmpty());
+    }
+
+    @Test
+    public void getCurrentFileTransferIdsShouldNotReturnAModifiableSet() {
+        expectedException.expect(UnsupportedOperationException.class);
+
+        final Set<Integer> set = notificationService.getCurrentFileTransferIds();
+
+        set.add(10);
     }
 
     private void verifyThatNotificationTextIsRunning(final Notification notification) {
@@ -501,5 +553,17 @@ public class NotificationServiceTest {
     private ShadowIntent getPendingIntent(final ShadowNotification.LatestEventInfo latestEventInfo) {
         final ShadowPendingIntent shadowPendingIntent = Robolectric.shadowOf(latestEventInfo.getContentIntent());
         return Robolectric.shadowOf(shadowPendingIntent.getSavedIntent());
+    }
+
+    private FileReceiver createFileReceiver(final int fileTransferId) {
+        return new FileReceiver(new User("Holly", 567), new File("nothing.png"), 0, fileTransferId);
+    }
+
+    private void verifyCurrentFileTransferIds(final int... fileTransferIds) {
+        assertEquals(fileTransferIds.length, notificationService.getCurrentFileTransferIds().size());
+
+        for (final int fileTransferId : fileTransferIds) {
+            assertTrue(notificationService.getCurrentFileTransferIds().contains(fileTransferId));
+        }
     }
 }
