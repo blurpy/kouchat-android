@@ -192,6 +192,82 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertFalse(requestedFile.exists());
     }
 
+    public void test05CancelFileTransferRequestBeforeRejecting() {
+        xen.changeNickName("XenMaster");
+        solo.sleep(500);
+
+        final User me = RobotiumTestUtils.getMe(getActivity());
+
+        assertFalse(requestedFile.exists());
+
+        xen.sendFile(me, image.getFile());
+        solo.sleep(500);
+
+        // Message in the main chat
+        checkMainChatMessage("*** XenMaster is trying to send the file kouchat-1600x1600.png");
+        solo.sleep(500);
+
+        openReceiveFileController(1236, 4);
+        solo.sleep(500);
+
+        // Message in the popup dialog
+        assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
+        checkDialogMessage("XenMaster is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
+                "Do you want to accept the file transfer?");
+        solo.sleep(500);
+
+        xen.cancelFileSending(me, image.getFile());
+        solo.sleep(500);
+
+        // Button in the popup dialog
+        solo.clickOnText("Reject");
+        solo.sleep(500);
+
+        assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
+        checkMainChatMessage("*** XenMaster aborted sending of kouchat-1600x1600.png");
+
+        // Verify that the file was not transferred
+        assertFalse(requestedFile.exists());
+    }
+
+    public void test06CancelFileTransferRequestBeforeAccepting() {
+        tina.changeNickName("SuperTina");
+        solo.sleep(500);
+
+        final User me = RobotiumTestUtils.getMe(getActivity());
+
+        assertFalse(requestedFile.exists());
+
+        tina.sendFile(me, image.getFile());
+        solo.sleep(500);
+
+        // Message in the main chat
+        checkMainChatMessage("*** SuperTina is trying to send the file kouchat-1600x1600.png");
+        solo.sleep(500);
+
+        openReceiveFileController(1235, 5);
+        solo.sleep(500);
+
+        // Message in the popup dialog
+        assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
+        checkDialogMessage("SuperTina is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
+                "Do you want to accept the file transfer?");
+        solo.sleep(500);
+
+        tina.cancelFileSending(me, image.getFile());
+        solo.sleep(500);
+
+        // Button in the popup dialog
+        solo.clickOnText("Accept");
+        solo.sleep(500);
+
+        assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
+        checkMainChatMessage("*** SuperTina aborted sending of kouchat-1600x1600.png");
+
+        // Verify that the file was not transferred
+        assertFalse(requestedFile.exists());
+    }
+
     public void test99Quit() {
         albert.logoff();
         tina.logoff();
