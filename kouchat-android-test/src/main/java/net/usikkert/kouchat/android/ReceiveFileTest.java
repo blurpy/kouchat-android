@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.controller.MainChatController;
@@ -352,6 +353,9 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     private void checkActiveFileTransferNotification(final int fileTransferId) {
-        assertTrue(notificationService.getCurrentFileTransferIds().contains(fileTransferId));
+        final Set<Integer> currentFileTransferIds = notificationService.getCurrentFileTransferIds();
+
+        assertTrue(currentFileTransferIds.contains(fileTransferId));
+        assertEquals(1, currentFileTransferIds.size());
     }
 }
