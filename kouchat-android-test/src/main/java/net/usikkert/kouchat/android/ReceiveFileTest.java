@@ -354,6 +354,26 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkThatTheFileWasReceivedSuccessfully(requestedFile2);
     }
 
+    public void test09UserLoggingOffShouldCancelFileTransferRequest() {
+        checkThatTheFilesHaveNotBeenNotTransferred();
+
+        tina.changeNickName("TinaTurner");
+        solo.sleep(500);
+
+        tina.sendFile(me, image.getFile());
+        solo.sleep(500);
+
+        checkMainChatMessage("*** TinaTurner is trying to send the file kouchat-1600x1600.png");
+        checkActiveFileTransferNotifications(10);
+        solo.sleep(500);
+
+        tina.logoff();
+        solo.sleep(500);
+
+        checkMainChatMessage("*** TinaTurner logged off");
+        checkThatNoFileTransferNotificationsAreActive();
+    }
+
     public void test99Quit() {
         albert.logoff();
         tina.logoff();
