@@ -164,12 +164,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkThatTheMainChatIsInFront();
         checkMainChatMessage("*** Successfully received kouchat-1600x1600.png from Albert, and saved as kouchat-1600x1600.png");
         checkThatNoFileTransferNotificationsAreActive();
-
-        // Verify that the file was correctly received
-        assertTrue("Should exist: " + requestedFile, requestedFile.exists());
-        final ByteSource originalFile = Files.asByteSource(image.getFile());
-        final ByteSource savedFile = Files.asByteSource(requestedFile);
-        assertTrue(originalFile.contentEquals(savedFile));
+        checkThatTheFileWasReceivedSuccessfully(requestedFile);
     }
 
     public void test04CancelFileTransferRequestBeforeOpeningActivity() {
@@ -377,5 +372,14 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     private void checkThatTheFileHasNotBeenNotTransferred() {
         assertFalse(requestedFile.exists());
+    }
+
+    private void checkThatTheFileWasReceivedSuccessfully(final File file) throws IOException {
+        assertTrue("Should exist: " + file, file.exists());
+
+        final ByteSource originalFile = Files.asByteSource(image.getFile());
+        final ByteSource savedFile = Files.asByteSource(file);
+
+        assertTrue(originalFile.contentEquals(savedFile));
     }
 }
