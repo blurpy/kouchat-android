@@ -119,7 +119,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         tina.sendFile(me, image.getFile());
         solo.sleep(500);
 
-        // Message in the main chat
         checkMainChatMessage("*** Tina is trying to send the file kouchat-1600x1600.png");
         checkActiveFileTransferNotification(1);
         solo.sleep(500);
@@ -127,7 +126,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         openReceiveFileController(tina, 1);
         solo.sleep(500);
 
-        // Message in the popup dialog
         checkThatTheDialogIsInFront();
         checkDialogMessage("Tina is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
                 "Do you want to accept the file transfer?");
@@ -136,12 +134,9 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         rejectFileTransfer();
         solo.sleep(500);
 
-        // Message in the main chat
         checkThatTheMainChatIsInFront();
         checkMainChatMessage("*** You declined to receive kouchat-1600x1600.png from Tina");
         checkThatNoFileTransferNotificationsAreActive();
-
-        // Verify that the file was not transferred
         checkThatTheFileHasNotBeenNotTransferred();
     }
 
@@ -149,7 +144,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         albert.sendFile(me, image.getFile());
         solo.sleep(500);
 
-        // Message in the main chat
         checkMainChatMessage("*** Albert is trying to send the file kouchat-1600x1600.png");
         checkActiveFileTransferNotification(2);
         solo.sleep(500);
@@ -157,7 +151,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         openReceiveFileController(albert, 2);
         solo.sleep(500);
 
-        // Message in the popup dialog
         checkThatTheDialogIsInFront();
         checkDialogMessage("Albert is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
                 "Do you want to accept the file transfer?");
@@ -166,7 +159,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         acceptFileTransfer();
         solo.sleep(1000);
 
-        // Message in the main chat
         checkThatTheMainChatIsInFront();
         checkMainChatMessage("*** Successfully received kouchat-1600x1600.png from Albert, and saved as kouchat-1600x1600.png");
         checkThatNoFileTransferNotificationsAreActive();
@@ -182,7 +174,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         xen.sendFile(me, image.getFile());
         solo.sleep(500);
 
-        // Message in the main chat
         checkMainChatMessage("*** Xen is trying to send the file kouchat-1600x1600.png");
         checkActiveFileTransferNotification(3);
         solo.sleep(500);
@@ -192,8 +183,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
         checkMainChatMessage("*** Xen aborted sending of kouchat-1600x1600.png");
         checkThatNoFileTransferNotificationsAreActive();
-
-        // Verify that the file was not transferred
         checkThatTheFileHasNotBeenNotTransferred();
     }
 
@@ -204,7 +193,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         xen.sendFile(me, image.getFile());
         solo.sleep(500);
 
-        // Message in the main chat
         checkMainChatMessage("*** XenMaster is trying to send the file kouchat-1600x1600.png");
         checkActiveFileTransferNotification(4);
         solo.sleep(500);
@@ -212,7 +200,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         openReceiveFileController(xen, 4);
         solo.sleep(500);
 
-        // Message in the popup dialog
         checkThatTheDialogIsInFront();
         checkDialogMessage("XenMaster is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
                 "Do you want to accept the file transfer?");
@@ -227,8 +214,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkThatTheMainChatIsInFront();
         checkMainChatMessage("*** XenMaster aborted sending of kouchat-1600x1600.png");
         checkThatNoFileTransferNotificationsAreActive();
-
-        // Verify that the file was not transferred
         checkThatTheFileHasNotBeenNotTransferred();
     }
 
@@ -239,7 +224,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         tina.sendFile(me, image.getFile());
         solo.sleep(500);
 
-        // Message in the main chat
         checkMainChatMessage("*** SuperTina is trying to send the file kouchat-1600x1600.png");
         checkActiveFileTransferNotification(5);
         solo.sleep(500);
@@ -247,7 +231,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         openReceiveFileController(tina, 5);
         solo.sleep(500);
 
-        // Message in the popup dialog
         checkThatTheDialogIsInFront();
         checkDialogMessage("SuperTina is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
                 "Do you want to accept the file transfer?");
@@ -262,8 +245,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkThatTheMainChatIsInFront();
         checkMainChatMessage("*** SuperTina aborted sending of kouchat-1600x1600.png");
         checkThatNoFileTransferNotificationsAreActive();
-
-        // Verify that the file was not transferred
         checkThatTheFileHasNotBeenNotTransferred();
     }
 
