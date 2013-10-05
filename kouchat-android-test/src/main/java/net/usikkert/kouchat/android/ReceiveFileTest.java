@@ -123,7 +123,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         checkMainChatMessage("*** Tina is trying to send the file kouchat-1600x1600.png");
-        checkActiveFileTransferNotification(1);
+        checkActiveFileTransferNotifications(1);
         solo.sleep(500);
 
         openReceiveFileController(tina, 1);
@@ -150,7 +150,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         checkMainChatMessage("*** Albert is trying to send the file kouchat-1600x1600.png");
-        checkActiveFileTransferNotification(2);
+        checkActiveFileTransferNotifications(2);
         solo.sleep(500);
 
         openReceiveFileController(albert, 2);
@@ -177,7 +177,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         checkMainChatMessage("*** Xen is trying to send the file kouchat-1600x1600.png");
-        checkActiveFileTransferNotification(3);
+        checkActiveFileTransferNotifications(3);
         solo.sleep(500);
 
         xen.cancelFileSending(me, image.getFile());
@@ -198,7 +198,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         checkMainChatMessage("*** XenMaster is trying to send the file kouchat-1600x1600.png");
-        checkActiveFileTransferNotification(4);
+        checkActiveFileTransferNotifications(4);
         solo.sleep(500);
 
         openReceiveFileController(xen, 4);
@@ -231,7 +231,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         checkMainChatMessage("*** SuperTina is trying to send the file kouchat-1600x1600.png");
-        checkActiveFileTransferNotification(5);
+        checkActiveFileTransferNotifications(5);
         solo.sleep(500);
 
         openReceiveFileController(tina, 5);
@@ -264,7 +264,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         checkMainChatMessage("*** Alban is trying to send the file kouchat-1600x1600.png");
-        checkActiveFileTransferNotification(6);
+        checkActiveFileTransferNotifications(6);
         solo.sleep(500);
 
         // First try
@@ -281,7 +281,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         checkThatTheMainChatIsInFront();
-        checkActiveFileTransferNotification(6); // The notification should still be there
+        checkActiveFileTransferNotifications(6); // The notification should still be there
 
         // Second try
         openReceiveFileController(albert, 6);
@@ -359,11 +359,13 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(notificationService.getCurrentFileTransferIds().isEmpty());
     }
 
-    private void checkActiveFileTransferNotification(final int fileTransferId) {
+    private void checkActiveFileTransferNotifications(final int... expectedFileTransferIds) {
         final Set<Integer> currentFileTransferIds = notificationService.getCurrentFileTransferIds();
+        assertEquals(expectedFileTransferIds.length, currentFileTransferIds.size());
 
-        assertTrue(currentFileTransferIds.contains(fileTransferId));
-        assertEquals(1, currentFileTransferIds.size());
+        for (final Integer expectedFileTransferId : expectedFileTransferIds) {
+            assertTrue(currentFileTransferIds.contains(expectedFileTransferId));
+        }
     }
 
     private void rejectFileTransfer() {
