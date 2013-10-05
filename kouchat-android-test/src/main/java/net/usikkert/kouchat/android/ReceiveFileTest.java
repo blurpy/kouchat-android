@@ -97,7 +97,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         }
 
         solo.sleep(500);
-        checkNoFileTransferNotificationsActive();
+        checkThatNoFileTransferNotificationsAreActive();
     }
 
     public void test01ShouldShowMissingFileDialogIfNoFileTransferRequestAvailable() {
@@ -105,13 +105,13 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         solo.sleep(500);
         checkDialogMessage("Unable to find the specified file transfer request");
-        assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
+        checkThatTheDialogIsInFront();
 
         solo.clickOnText("OK"); // Close dialog
 
         solo.sleep(500);
-        assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
-        checkNoFileTransferNotificationsActive();
+        checkThatTheMainChatIsInFront();
+        checkThatNoFileTransferNotificationsAreActive();
     }
 
     public void test02RejectFileTransferRequest() {
@@ -129,7 +129,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         // Message in the popup dialog
-        assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
+        checkThatTheDialogIsInFront();
         checkDialogMessage("Tina is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
                 "Do you want to accept the file transfer?");
         solo.sleep(500);
@@ -139,9 +139,9 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         // Message in the main chat
-        assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
+        checkThatTheMainChatIsInFront();
         checkMainChatMessage("*** You declined to receive kouchat-1600x1600.png from Tina");
-        checkNoFileTransferNotificationsActive();
+        checkThatNoFileTransferNotificationsAreActive();
 
         // Verify that the file was not transferred
         assertFalse(requestedFile.exists());
@@ -162,7 +162,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         // Message in the popup dialog
-        assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
+        checkThatTheDialogIsInFront();
         checkDialogMessage("Albert is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
                 "Do you want to accept the file transfer?");
         solo.sleep(500);
@@ -172,9 +172,9 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(1000);
 
         // Message in the main chat
-        assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
+        checkThatTheMainChatIsInFront();
         checkMainChatMessage("*** Successfully received kouchat-1600x1600.png from Albert, and saved as kouchat-1600x1600.png");
-        checkNoFileTransferNotificationsActive();
+        checkThatNoFileTransferNotificationsAreActive();
 
         // Verify that the file was correctly received
         assertTrue("Should exist: " + requestedFile, requestedFile.exists());
@@ -198,7 +198,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         solo.sleep(500);
         checkMainChatMessage("*** Xen aborted sending of kouchat-1600x1600.png");
-        checkNoFileTransferNotificationsActive();
+        checkThatNoFileTransferNotificationsAreActive();
 
         // Verify that the file was not transferred
         assertFalse(requestedFile.exists());
@@ -222,7 +222,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         // Message in the popup dialog
-        assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
+        checkThatTheDialogIsInFront();
         checkDialogMessage("XenMaster is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
                 "Do you want to accept the file transfer?");
         solo.sleep(500);
@@ -234,9 +234,9 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.clickOnText("Reject");
         solo.sleep(500);
 
-        assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
+        checkThatTheMainChatIsInFront();
         checkMainChatMessage("*** XenMaster aborted sending of kouchat-1600x1600.png");
-        checkNoFileTransferNotificationsActive();
+        checkThatNoFileTransferNotificationsAreActive();
 
         // Verify that the file was not transferred
         assertFalse(requestedFile.exists());
@@ -260,7 +260,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         // Message in the popup dialog
-        assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
+        checkThatTheDialogIsInFront();
         checkDialogMessage("SuperTina is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
                 "Do you want to accept the file transfer?");
         solo.sleep(500);
@@ -272,9 +272,9 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.clickOnText("Accept");
         solo.sleep(500);
 
-        assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
+        checkThatTheMainChatIsInFront();
         checkMainChatMessage("*** SuperTina aborted sending of kouchat-1600x1600.png");
-        checkNoFileTransferNotificationsActive();
+        checkThatNoFileTransferNotificationsAreActive();
 
         // Verify that the file was not transferred
         assertFalse(requestedFile.exists());
@@ -333,7 +333,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         assertTrue(RobotiumTestUtils.searchText(solo, textToFind));
     }
 
-    private void checkNoFileTransferNotificationsActive() {
+    private void checkThatNoFileTransferNotificationsAreActive() {
         assertTrue(notificationService.getCurrentFileTransferIds().isEmpty());
     }
 
@@ -342,5 +342,13 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         assertTrue(currentFileTransferIds.contains(fileTransferId));
         assertEquals(1, currentFileTransferIds.size());
+    }
+
+    private void checkThatTheDialogIsInFront() {
+        assertFalse(getActivity().isVisible()); // The dialog should be in front of the main chat
+    }
+
+    private void checkThatTheMainChatIsInFront() {
+        assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
     }
 }
