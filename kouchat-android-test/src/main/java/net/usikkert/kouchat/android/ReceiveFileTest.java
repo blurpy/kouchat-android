@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Set;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
@@ -70,11 +71,12 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void setUp() {
+        Locale.setDefault(Locale.US); // To avoid issues with "." and "," in asserts containing file sizes
+
         final MainChatController mainChatController = getActivity();
         final Instrumentation instrumentation = getInstrumentation();
 
         solo = new Solo(instrumentation, mainChatController);
-
         me = RobotiumTestUtils.getMe(mainChatController);
 
         final AndroidUserInterface ui =
@@ -269,7 +271,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         // Close dialog without accepting or rejecting
-        RobotiumTestUtils.goBack(solo);
+        solo.goBack();
         solo.sleep(500);
 
         checkThatTheMainChatIsInFront();
