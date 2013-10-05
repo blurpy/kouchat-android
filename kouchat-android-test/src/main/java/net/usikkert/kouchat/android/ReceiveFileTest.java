@@ -97,6 +97,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         }
 
         solo.sleep(500);
+        checkThatTheFileHasNotBeenNotTransferred();
         checkThatNoFileTransferNotificationsAreActive();
     }
 
@@ -115,8 +116,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test02RejectFileTransferRequest() {
-        assertFalse(requestedFile.exists());
-
         tina.sendFile(me, image.getFile());
         solo.sleep(500);
 
@@ -143,12 +142,10 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkThatNoFileTransferNotificationsAreActive();
 
         // Verify that the file was not transferred
-        assertFalse(requestedFile.exists());
+        checkThatTheFileHasNotBeenNotTransferred();
     }
 
     public void test03AcceptFileTransferRequest() throws IOException {
-        assertFalse(requestedFile.exists());
-
         albert.sendFile(me, image.getFile());
         solo.sleep(500);
 
@@ -182,8 +179,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test04CancelFileTransferRequestBeforeOpeningActivity() {
-        assertFalse(requestedFile.exists());
-
         xen.sendFile(me, image.getFile());
         solo.sleep(500);
 
@@ -199,14 +194,12 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkThatNoFileTransferNotificationsAreActive();
 
         // Verify that the file was not transferred
-        assertFalse(requestedFile.exists());
+        checkThatTheFileHasNotBeenNotTransferred();
     }
 
     public void test05CancelFileTransferRequestBeforeRejecting() {
         xen.changeNickName("XenMaster");
         solo.sleep(500);
-
-        assertFalse(requestedFile.exists());
 
         xen.sendFile(me, image.getFile());
         solo.sleep(500);
@@ -236,14 +229,12 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkThatNoFileTransferNotificationsAreActive();
 
         // Verify that the file was not transferred
-        assertFalse(requestedFile.exists());
+        checkThatTheFileHasNotBeenNotTransferred();
     }
 
     public void test06CancelFileTransferRequestBeforeAccepting() {
         tina.changeNickName("SuperTina");
         solo.sleep(500);
-
-        assertFalse(requestedFile.exists());
 
         tina.sendFile(me, image.getFile());
         solo.sleep(500);
@@ -273,7 +264,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkThatNoFileTransferNotificationsAreActive();
 
         // Verify that the file was not transferred
-        assertFalse(requestedFile.exists());
+        checkThatTheFileHasNotBeenNotTransferred();
     }
 
     public void test99Quit() {
@@ -354,5 +345,9 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     private void checkThatTheMainChatIsInFront() {
         assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
+    }
+
+    private void checkThatTheFileHasNotBeenNotTransferred() {
+        assertFalse(requestedFile.exists());
     }
 }
