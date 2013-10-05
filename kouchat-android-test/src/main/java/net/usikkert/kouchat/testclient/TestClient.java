@@ -75,6 +75,10 @@ public class TestClient {
         commandParser = new CommandParser(controller, ui, settings);
     }
 
+    public int getUserCode() {
+        return me.getCode();
+    }
+
     public void logon() {
         controller.logOn();
 

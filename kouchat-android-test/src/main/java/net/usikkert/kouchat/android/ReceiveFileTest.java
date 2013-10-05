@@ -126,7 +126,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkActiveFileTransferNotification(1);
         solo.sleep(500);
 
-        openReceiveFileController(1235, 1);
+        openReceiveFileController(tina, 1);
         solo.sleep(500);
 
         // Message in the popup dialog
@@ -163,7 +163,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkActiveFileTransferNotification(2);
         solo.sleep(500);
 
-        openReceiveFileController(1234, 2);
+        openReceiveFileController(albert, 2);
         solo.sleep(500);
 
         // Message in the popup dialog
@@ -230,7 +230,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkActiveFileTransferNotification(4);
         solo.sleep(500);
 
-        openReceiveFileController(1236, 4);
+        openReceiveFileController(xen, 4);
         solo.sleep(500);
 
         // Message in the popup dialog
@@ -271,7 +271,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkActiveFileTransferNotification(5);
         solo.sleep(500);
 
-        openReceiveFileController(1235, 5);
+        openReceiveFileController(tina, 5);
         solo.sleep(500);
 
         // Message in the popup dialog
@@ -322,9 +322,9 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         System.gc();
     }
 
-    private void openReceiveFileController(final int userCode, final int fileTransferId) {
+    private void openReceiveFileController(final TestClient client, final int fileTransferId) {
         final Intent intent = new Intent();
-        intent.putExtra("userCode", userCode);
+        intent.putExtra("userCode", client.getUserCode());
         intent.putExtra("fileTransferId", fileTransferId);
 
         final String packageName = getInstrumentation().getTargetContext().getPackageName();
