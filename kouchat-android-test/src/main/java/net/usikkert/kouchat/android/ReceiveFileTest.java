@@ -63,6 +63,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     private Solo solo;
 
     private NotificationService notificationService;
+    private User me;
 
     public ReceiveFileTest() {
         super(MainChatController.class);
@@ -73,6 +74,8 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         final Instrumentation instrumentation = getInstrumentation();
 
         solo = new Solo(instrumentation, mainChatController);
+
+        me = RobotiumTestUtils.getMe(mainChatController);
 
         final AndroidUserInterface ui =
                 TestUtils.getFieldValue(mainChatController, AndroidUserInterface.class, "androidUserInterface");
@@ -113,7 +116,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void test02RejectFileTransferRequest() {
         solo.sleep(500);
-        final User me = RobotiumTestUtils.getMe(getActivity());
 
         assertFalse(requestedFile.exists());
         checkNoFileTransferNotificationsActive();
@@ -150,7 +152,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void test03AcceptFileTransferRequest() throws IOException {
         solo.sleep(500);
-        final User me = RobotiumTestUtils.getMe(getActivity());
 
         assertFalse(requestedFile.exists());
         checkNoFileTransferNotificationsActive();
@@ -190,7 +191,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     public void test04CancelFileTransferRequestBeforeOpeningActivity() {
         solo.sleep(500);
-        final User me = RobotiumTestUtils.getMe(getActivity());
 
         assertFalse(requestedFile.exists());
         checkNoFileTransferNotificationsActive();
@@ -216,8 +216,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     public void test05CancelFileTransferRequestBeforeRejecting() {
         xen.changeNickName("XenMaster");
         solo.sleep(500);
-
-        final User me = RobotiumTestUtils.getMe(getActivity());
 
         assertFalse(requestedFile.exists());
         checkNoFileTransferNotificationsActive();
@@ -257,8 +255,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     public void test06CancelFileTransferRequestBeforeAccepting() {
         tina.changeNickName("SuperTina");
         solo.sleep(500);
-
-        final User me = RobotiumTestUtils.getMe(getActivity());
 
         assertFalse(requestedFile.exists());
         checkNoFileTransferNotificationsActive();
