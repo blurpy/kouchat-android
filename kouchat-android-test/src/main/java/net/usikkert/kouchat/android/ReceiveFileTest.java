@@ -99,7 +99,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         }
 
         solo.sleep(500);
-        checkThatTheFileHasNotBeenNotTransferred();
         checkThatNoFileTransferNotificationsAreActive();
     }
 
@@ -118,6 +117,8 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test02RejectFileTransferRequest() {
+        checkThatTheFileHasNotBeenNotTransferred();
+
         tina.sendFile(me, image.getFile());
         solo.sleep(500);
 
@@ -143,6 +144,8 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test03AcceptFileTransferRequest() throws IOException {
+        checkThatTheFileHasNotBeenNotTransferred();
+
         albert.sendFile(me, image.getFile());
         solo.sleep(500);
 
@@ -168,6 +171,8 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test04CancelFileTransferRequestBeforeOpeningActivity() {
+        checkThatTheFileHasNotBeenNotTransferred();
+
         xen.sendFile(me, image.getFile());
         solo.sleep(500);
 
@@ -184,6 +189,8 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test05CancelFileTransferRequestBeforeRejecting() {
+        checkThatTheFileHasNotBeenNotTransferred();
+
         xen.changeNickName("XenMaster");
         solo.sleep(500);
 
@@ -215,6 +222,8 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test06CancelFileTransferRequestBeforeAccepting() {
+        checkThatTheFileHasNotBeenNotTransferred();
+
         tina.changeNickName("SuperTina");
         solo.sleep(500);
 
@@ -246,6 +255,8 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test07CloseAndReopenDialog() {
+        checkThatTheFileHasNotBeenNotTransferred();
+
         albert.changeNickName("Alban");
         solo.sleep(500);
 
