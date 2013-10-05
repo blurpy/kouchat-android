@@ -368,7 +368,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         tina.logoff();
-        solo.sleep(500);
+        solo.sleep(1000);
 
         checkMainChatMessage("*** TinaTurner logged off");
         checkThatNoFileTransferNotificationsAreActive();
@@ -384,6 +384,8 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         xen = null;
         image = null;
         requestedFile = null;
+        requestedFile1 = null;
+        requestedFile2 = null;
 
         RobotiumTestUtils.quit(solo);
     }
