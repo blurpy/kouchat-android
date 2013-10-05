@@ -40,6 +40,7 @@ public class AndroidFile {
     private final Uri uri;
     private final File file;
     private final String extension;
+    private final String baseName;
 
     public AndroidFile(final Cursor cursor) {
         final String uriPath = MediaStore.Images.Media.EXTERNAL_CONTENT_URI + "/" +
@@ -49,6 +50,7 @@ public class AndroidFile {
         this.uri = Uri.parse(uriPath);
         this.file = new File(path);
         this.extension = Tools.getFileExtension(getName());
+        this.baseName = Tools.getFileBaseName(getName());
     }
 
     public Uri getUri() {
@@ -65,5 +67,9 @@ public class AndroidFile {
 
     public String getExtension() {
         return extension;
+    }
+
+    public String getBaseName() {
+        return baseName;
     }
 }

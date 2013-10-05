@@ -95,7 +95,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
             // Make sure we have an image to send from a test client to the real client
             FileUtils.copyKouChatImageFromAssetsToSdCard(instrumentation, mainChatController);
             image = FileUtils.getKouChatImage(mainChatController);
-            requestedFile = getLocationToRequestedFile();
+            requestedFile = getLocationToRequestedFile("");
         }
 
         solo.sleep(500);
@@ -342,8 +342,9 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         launchActivity(packageName, ReceiveFileController.class, null);
     }
 
-    private File getLocationToRequestedFile() {
-        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), image.getName());
+    private File getLocationToRequestedFile(final String postfix) {
+        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                image.getBaseName() + postfix + image.getExtension());
     }
 
     private void checkMainChatMessage(final String textToFind) {
