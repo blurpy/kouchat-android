@@ -248,6 +248,51 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkThatTheFileHasNotBeenNotTransferred();
     }
 
+    public void test07CloseAndReopenDialog() {
+        albert.changeNickName("Alban");
+        solo.sleep(500);
+
+        albert.sendFile(me, image.getFile());
+        solo.sleep(500);
+
+        checkMainChatMessage("*** Alban is trying to send the file kouchat-1600x1600.png");
+        checkActiveFileTransferNotification(6);
+        solo.sleep(500);
+
+        // First try
+        openReceiveFileController(albert, 6);
+        solo.sleep(500);
+
+        checkThatTheDialogIsInFront();
+        checkDialogMessage("Alban is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
+                "Do you want to accept the file transfer?");
+        solo.sleep(500);
+
+        // Close dialog without accepting or rejecting
+        RobotiumTestUtils.goBack(solo);
+        solo.sleep(500);
+
+        checkThatTheMainChatIsInFront();
+        checkActiveFileTransferNotification(6); // The notification should still be there
+
+        // Second try
+        openReceiveFileController(albert, 6);
+        solo.sleep(500);
+
+        checkThatTheDialogIsInFront();
+        checkDialogMessage("Alban is trying to send you the file ‘kouchat-1600x1600.png’ (67.16KB). " +
+                "Do you want to accept the file transfer?");
+        solo.sleep(500);
+
+        rejectFileTransfer();
+        solo.sleep(500);
+
+        checkThatTheMainChatIsInFront();
+        checkMainChatMessage("*** You declined to receive kouchat-1600x1600.png from Alban");
+        checkThatNoFileTransferNotificationsAreActive();
+        checkThatTheFileHasNotBeenNotTransferred();
+    }
+
     public void test99Quit() {
         albert.logoff();
         tina.logoff();
