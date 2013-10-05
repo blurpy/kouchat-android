@@ -95,12 +95,12 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
             image = FileUtils.getKouChatImage(mainChatController);
             requestedFile = getLocationToRequestedFile();
         }
+
+        solo.sleep(500);
+        checkNoFileTransferNotificationsActive();
     }
 
     public void test01ShouldShowMissingFileDialogIfNoFileTransferRequestAvailable() {
-        solo.sleep(500);
-        checkNoFileTransferNotificationsActive();
-
         openReceiveFileController();
 
         solo.sleep(500);
@@ -115,10 +115,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test02RejectFileTransferRequest() {
-        solo.sleep(500);
-
         assertFalse(requestedFile.exists());
-        checkNoFileTransferNotificationsActive();
 
         tina.sendFile(me, image.getFile());
         solo.sleep(500);
@@ -151,10 +148,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test03AcceptFileTransferRequest() throws IOException {
-        solo.sleep(500);
-
         assertFalse(requestedFile.exists());
-        checkNoFileTransferNotificationsActive();
 
         albert.sendFile(me, image.getFile());
         solo.sleep(500);
@@ -190,10 +184,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test04CancelFileTransferRequestBeforeOpeningActivity() {
-        solo.sleep(500);
-
         assertFalse(requestedFile.exists());
-        checkNoFileTransferNotificationsActive();
 
         xen.sendFile(me, image.getFile());
         solo.sleep(500);
@@ -218,7 +209,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         assertFalse(requestedFile.exists());
-        checkNoFileTransferNotificationsActive();
 
         xen.sendFile(me, image.getFile());
         solo.sleep(500);
@@ -257,7 +247,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         assertFalse(requestedFile.exists());
-        checkNoFileTransferNotificationsActive();
 
         tina.sendFile(me, image.getFile());
         solo.sleep(500);
