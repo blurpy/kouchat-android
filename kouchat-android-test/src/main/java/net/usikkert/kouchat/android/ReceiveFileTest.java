@@ -134,8 +134,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
                 "Do you want to accept the file transfer?");
         solo.sleep(500);
 
-        // Button in the popup dialog
-        solo.clickOnText("Reject");
+        rejectFileTransfer();
         solo.sleep(500);
 
         // Message in the main chat
@@ -167,8 +166,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
                 "Do you want to accept the file transfer?");
         solo.sleep(500);
 
-        // Button in the popup dialog
-        solo.clickOnText("Accept");
+        acceptFileTransfer();
         solo.sleep(1000);
 
         // Message in the main chat
@@ -230,8 +228,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         xen.cancelFileSending(me, image.getFile());
         solo.sleep(500);
 
-        // Button in the popup dialog
-        solo.clickOnText("Reject");
+        rejectFileTransfer();
         solo.sleep(500);
 
         checkThatTheMainChatIsInFront();
@@ -268,8 +265,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         tina.cancelFileSending(me, image.getFile());
         solo.sleep(500);
 
-        // Button in the popup dialog
-        solo.clickOnText("Accept");
+        acceptFileTransfer();
         solo.sleep(500);
 
         checkThatTheMainChatIsInFront();
@@ -342,6 +338,14 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         assertTrue(currentFileTransferIds.contains(fileTransferId));
         assertEquals(1, currentFileTransferIds.size());
+    }
+
+    private void rejectFileTransfer() {
+        solo.clickOnText("Reject"); // Button in the popup dialog
+    }
+
+    private void acceptFileTransfer() {
+        solo.clickOnText("Accept"); // Button in the popup dialog
     }
 
     private void checkThatTheDialogIsInFront() {
