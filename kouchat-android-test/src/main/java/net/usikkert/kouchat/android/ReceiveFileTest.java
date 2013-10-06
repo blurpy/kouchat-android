@@ -333,12 +333,15 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         openReceiveFileDialog(albert, 7);
         acceptFileTransfer();
+        solo.sleep(100);
 
         openReceiveFileDialog(xen, 8);
         acceptFileTransfer();
+        solo.sleep(100);
 
         openReceiveFileDialog(tina, 9);
         acceptFileTransfer();
+        solo.sleep(100);
 
         solo.sleep(1000);
 
