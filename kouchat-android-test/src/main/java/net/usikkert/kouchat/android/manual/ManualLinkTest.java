@@ -37,7 +37,7 @@ import android.test.ActivityInstrumentationTestCase2;
  *
  * @author Christian Ihle
  */
-public class LinkTest extends ActivityInstrumentationTestCase2<MainChatController> {
+public class ManualLinkTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private static final String URL = Constants.APP_WEB;
 
@@ -46,7 +46,7 @@ public class LinkTest extends ActivityInstrumentationTestCase2<MainChatControlle
     private Solo solo;
     private int defaultOrientation;
 
-    public LinkTest() {
+    public ManualLinkTest() {
         super(MainChatController.class);
     }
 

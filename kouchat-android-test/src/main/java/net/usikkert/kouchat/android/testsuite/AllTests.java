@@ -62,7 +62,7 @@ public class AllTests extends TestSuite {
         testSuite.addTestSuite(ReceiveFileTest.class);
 
         // Run these manually:
-//        testSuite.addTestSuite(LinkTest.class);
+//        testSuite.addTestSuite(ManualLinkTest.class);
 //        testSuite.addTestSuite(ManualReceiveFileTest.class);
 
         return testSuite;
