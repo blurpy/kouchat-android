@@ -70,7 +70,7 @@ public final class FileUtils {
         final File fileToStore = new File(externalStorageDirectory, KOUCHAT_FILE);
 
         if (!fileToStore.exists()) {
-            copyFileToSdCard(fileToStore, instrumentation);
+            copyFileToDevice(fileToStore, instrumentation);
             addFileToDatabase(activity, fileToStore);
         }
     }
@@ -89,7 +89,7 @@ public final class FileUtils {
         final File fileToStore = new File(cacheDir, KOUCHAT_FILE);
 
         if (!fileToStore.exists()) {
-            copyFileToSdCard(fileToStore, instrumentation);
+            copyFileToDevice(fileToStore, instrumentation);
             addFileToDatabase(activity, fileToStore);
         }
     }
@@ -101,8 +101,8 @@ public final class FileUtils {
      * @param activity The activity under test.
      * @return <code>kouchat-1600x1600.png</code>.
      */
-    public static AndroidFile getKouChatImage(final Activity activity) {
-        final Cursor cursor = getCursorForKouChatImage(activity);
+    public static AndroidFile getKouChatImageFromSdCard(final Activity activity) {
+        final Cursor cursor = getCursorForKouChatImageFromExternalStorage(activity);
 
         if (cursor == null || cursor.getCount() == 0) {
             throw new RuntimeException("No files in the database");
@@ -145,7 +145,7 @@ public final class FileUtils {
         return new File(externalStorageDirectory, fileName);
     }
 
-    private static Cursor getCursorForKouChatImage(final Activity activity) {
+    private static Cursor getCursorForKouChatImageFromExternalStorage(final Activity activity) {
         final ContentResolver contentResolver = activity.getContentResolver();
 
         final Uri from = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
@@ -169,7 +169,7 @@ public final class FileUtils {
         return contentResolver.query(from, null, where, whereArguments, orderBy);
     }
 
-    private static void copyFileToSdCard(final File fileToStore, final Instrumentation instrumentation) {
+    private static void copyFileToDevice(final File fileToStore, final Instrumentation instrumentation) {
         final Closer closer = Closer.create();
         final AssetManager assets = instrumentation.getContext().getResources().getAssets();
 

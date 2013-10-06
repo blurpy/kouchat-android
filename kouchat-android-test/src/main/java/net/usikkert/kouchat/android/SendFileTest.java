@@ -76,7 +76,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         solo.sleep(2000);
 
         FileUtils.copyKouChatImageFromAssetsToSdCard(instrumentation, activity);
-        image = FileUtils.getKouChatImage(activity);
+        image = FileUtils.getKouChatImageFromSdCard(activity);
 
         assertTrue(RobotiumTestUtils.searchText(solo, "Unable to locate the file to send."));
     }
