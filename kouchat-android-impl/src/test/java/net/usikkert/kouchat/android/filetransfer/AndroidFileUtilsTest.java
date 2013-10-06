@@ -42,8 +42,11 @@ import org.robolectric.shadows.ShadowContentResolver;
 import org.robolectric.tester.android.database.SimpleTestCursor;
 import org.robolectric.tester.android.database.TestCursor;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Environment;
 
@@ -149,9 +152,28 @@ public class AndroidFileUtilsTest {
     }
 
     @Test
-    public void addFileToMediaDatabaseShouldNotCrash() {
-        // I don't know how to test this. The shadow is not implemented, and the real implementation is static.
-        androidFileUtils.addFileToMediaDatabase(mock(Context.class), mock(File.class));
+    public void addFileToMediaDatabaseShouldSendBroadcast() {
+        final Context context = Robolectric.application;
+        final File file = new File("kouchat.png");
+
+        // Hack around the fact that this needs to final in order to be modified from an anonymous class
+        final boolean[] broadcastReceived = {false};
+
+        final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(final Context context, final Intent intent) {
+                assertEquals(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, intent.getAction());
+                assertEquals(Uri.fromFile(file), intent.getData());
+                broadcastReceived[0] = true;
+            }
+        };
+
+        final IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        context.registerReceiver(broadcastReceiver, intentFilter);
+
+        androidFileUtils.addFileToMediaDatabase(context, file);
+
+        assertTrue(broadcastReceived[0]);
     }
 
     @Test

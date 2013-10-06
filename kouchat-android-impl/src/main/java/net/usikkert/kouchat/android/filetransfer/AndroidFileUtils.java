@@ -30,8 +30,8 @@ import net.usikkert.kouchat.util.Validate;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -90,14 +90,10 @@ public class AndroidFileUtils {
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(fileToAdd, "File to add can not be null");
 
-        MediaScannerConnection.scanFile(
-                context,
-                new String[] {fileToAdd.toString()},
-                null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    // Don't know what to do with the result of this, so ignore for now
-                    public void onScanCompleted(final String path, final Uri uri) { }
-                });
+        final Intent scanMediaIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        scanMediaIntent.setData(Uri.fromFile(fileToAdd));
+
+        context.sendBroadcast(scanMediaIntent);
     }
 
     /**
