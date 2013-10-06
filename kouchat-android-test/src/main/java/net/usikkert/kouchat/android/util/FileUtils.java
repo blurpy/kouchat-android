@@ -96,13 +96,7 @@ public final class FileUtils {
     public static AndroidFile getKouChatImageFromSdCard(final Activity activity) {
         final Cursor cursor = getCursorForKouChatImageFromExternalStorage(activity);
 
-        if (cursor == null || cursor.getCount() == 0) {
-            throw new RuntimeException("No files in the database");
-        }
-
-        cursor.moveToFirst();
-
-        return new AndroidFile(cursor);
+        return getKouChatImageFromStorage(cursor);
     }
 
     /**
@@ -115,13 +109,7 @@ public final class FileUtils {
     public static AndroidFile getKouChatImageFromInternalStorage(final Activity activity) {
         final Cursor cursor = getCursorForKouChatImageFromInternalStorage(activity);
 
-        if (cursor == null || cursor.getCount() == 0) {
-            throw new RuntimeException("No files in the database");
-        }
-
-        cursor.moveToFirst();
-
-        return new AndroidFile(cursor);
+        return getKouChatImageFromStorage(cursor);
     }
 
     /**
@@ -146,6 +134,16 @@ public final class FileUtils {
             copyFileToDevice(fileToStore, instrumentation);
             addFileToDatabase(activity, fileToStore);
         }
+    }
+
+    private static AndroidFile getKouChatImageFromStorage(final Cursor cursor) {
+        if (cursor == null || cursor.getCount() == 0) {
+            throw new RuntimeException("No files in the database");
+        }
+
+        cursor.moveToFirst();
+
+        return new AndroidFile(cursor);
     }
 
     private static Cursor getCursorForKouChatImageFromExternalStorage(final Activity activity) {
