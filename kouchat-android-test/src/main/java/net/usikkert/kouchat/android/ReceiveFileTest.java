@@ -109,7 +109,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test01ShouldShowMissingFileDialogIfNoFileTransferRequestAvailable() {
-        openReceiveFileController();
+        openReceiveFileDialog();
 
         solo.sleep(500);
         checkDialogMessage("Unable to find the specified file transfer request");
@@ -412,7 +412,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         launchActivityWithIntent(packageName, ReceiveFileController.class, intent);
     }
 
-    private void openReceiveFileController() {
+    private void openReceiveFileDialog() {
         final String packageName = getInstrumentation().getTargetContext().getPackageName();
         launchActivity(packageName, ReceiveFileController.class, null);
     }
