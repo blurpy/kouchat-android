@@ -82,7 +82,7 @@ public final class FileUtils {
     public static AndroidFile getKouChatImage(final Activity activity) {
         final Cursor cursor = getCursorForKouChatImage(activity);
 
-        if (cursor.getCount() == 0) {
+        if (cursor == null || cursor.getCount() == 0) {
             throw new RuntimeException("No files in the database");
         }
 
