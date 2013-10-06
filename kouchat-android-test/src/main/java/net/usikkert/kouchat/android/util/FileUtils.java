@@ -147,21 +147,16 @@ public final class FileUtils {
     }
 
     private static Cursor getCursorForKouChatImageFromExternalStorage(final Activity activity) {
-        final ContentResolver contentResolver = activity.getContentResolver();
-
-        final Uri from = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        final String where = MediaStore.Images.Media.DISPLAY_NAME + " = ?";
-        final String[] whereArguments = {KOUCHAT_FILE};
-        final String orderBy = MediaStore.Images.Media._ID + " ASC LIMIT 1";
-
-        // SELECT * FROM images WHERE (_display_name = ?) ORDER BY _id ASC LIMIT 1
-        return contentResolver.query(from, null, where, whereArguments, orderBy);
+        return getCursorForKouChatImageFromStorage(activity, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
     }
 
     private static Cursor getCursorForKouChatImageFromInternalStorage(final Activity activity) {
+        return getCursorForKouChatImageFromStorage(activity, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+    }
+
+    private static Cursor getCursorForKouChatImageFromStorage(final Activity activity, final Uri from) {
         final ContentResolver contentResolver = activity.getContentResolver();
 
-        final Uri from = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
         final String where = MediaStore.Images.Media.DISPLAY_NAME + " = ?";
         final String[] whereArguments = {KOUCHAT_FILE};
         final String orderBy = MediaStore.Images.Media._ID + " ASC LIMIT 1";
