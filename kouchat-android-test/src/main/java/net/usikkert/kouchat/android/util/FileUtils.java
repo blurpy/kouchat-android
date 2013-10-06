@@ -67,12 +67,8 @@ public final class FileUtils {
      */
     public static void copyKouChatImageFromAssetsToSdCard(final Instrumentation instrumentation, final Activity activity) {
         final File externalStorageDirectory = Environment.getExternalStorageDirectory();
-        final File fileToStore = new File(externalStorageDirectory, KOUCHAT_FILE);
 
-        if (!fileToStore.exists()) {
-            copyFileToDevice(fileToStore, instrumentation);
-            addFileToDatabase(activity, fileToStore);
-        }
+        copyKouChatImageFromAssetsToStorage(instrumentation, activity, externalStorageDirectory);
     }
 
     /**
@@ -86,12 +82,8 @@ public final class FileUtils {
      */
     public static void copyKouChatImageFromAssetsToInternalStorage(final Instrumentation instrumentation, final Activity activity) {
         final File cacheDir = activity.getCacheDir();
-        final File fileToStore = new File(cacheDir, KOUCHAT_FILE);
 
-        if (!fileToStore.exists()) {
-            copyFileToDevice(fileToStore, instrumentation);
-            addFileToDatabase(activity, fileToStore);
-        }
+        copyKouChatImageFromAssetsToStorage(instrumentation, activity, cacheDir);
     }
 
     /**
@@ -143,6 +135,17 @@ public final class FileUtils {
         final String fileName = "kouchat-" + System.currentTimeMillis() + image.getExtension();
 
         return new File(externalStorageDirectory, fileName);
+    }
+
+    private static void copyKouChatImageFromAssetsToStorage(final Instrumentation instrumentation,
+                                                            final Activity activity,
+                                                            final File storageDirectory) {
+        final File fileToStore = new File(storageDirectory, KOUCHAT_FILE);
+
+        if (!fileToStore.exists()) {
+            copyFileToDevice(fileToStore, instrumentation);
+            addFileToDatabase(activity, fileToStore);
+        }
     }
 
     private static Cursor getCursorForKouChatImageFromExternalStorage(final Activity activity) {
