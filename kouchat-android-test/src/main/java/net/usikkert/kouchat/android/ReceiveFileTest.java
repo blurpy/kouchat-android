@@ -188,7 +188,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         xen.cancelFileSending(me, image.getFile());
 
-        solo.sleep(500);
+        solo.sleep(1000);
         checkMainChatMessage("*** Xen aborted sending of kouchat-1600x1600.png");
         checkThatNoFileTransferNotificationsAreActive();
         checkThatTheFilesHaveNotBeenNotTransferred();
