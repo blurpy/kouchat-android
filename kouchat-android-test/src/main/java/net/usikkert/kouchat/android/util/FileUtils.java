@@ -60,6 +60,8 @@ public final class FileUtils {
     /**
      * Copies the file <code>kouchat-1600x1600.png</code> from assets to the SD card, if it's not already there.
      *
+     * <p>This will fail if the SD card is unmounted.</p>
+     *
      * @param instrumentation Test instrumentation.
      * @param activity The activity under test.
      */
@@ -74,13 +76,52 @@ public final class FileUtils {
     }
 
     /**
-     * Returns a representation of <code>kouchat-1600x1600.png</code> than can be used to get the actual file.
+     * Copies the file <code>kouchat-1600x1600.png</code> from assets to the cache directory of the internal storage,
+     * if it's not already there.
+     *
+     * <p>The internal storage should be available even if the SD card is unmounted.</p>
+     *
+     * @param instrumentation Test instrumentation.
+     * @param activity The activity under test.
+     */
+    public static void copyKouChatImageFromAssetsToInternalStorage(final Instrumentation instrumentation, final Activity activity) {
+        final File cacheDir = activity.getCacheDir();
+        final File fileToStore = new File(cacheDir, KOUCHAT_FILE);
+
+        if (!fileToStore.exists()) {
+            copyFileToSdCard(fileToStore, instrumentation);
+            addFileToDatabase(activity, fileToStore);
+        }
+    }
+
+    /**
+     * Returns a representation of <code>kouchat-1600x1600.png</code> than can be used to get the
+     * actual file on the SD card.
      *
      * @param activity The activity under test.
      * @return <code>kouchat-1600x1600.png</code>.
      */
     public static AndroidFile getKouChatImage(final Activity activity) {
         final Cursor cursor = getCursorForKouChatImage(activity);
+
+        if (cursor == null || cursor.getCount() == 0) {
+            throw new RuntimeException("No files in the database");
+        }
+
+        cursor.moveToFirst();
+
+        return new AndroidFile(cursor);
+    }
+
+    /**
+     * Returns a representation of <code>kouchat-1600x1600.png</code> than can be used to get the
+     * actual file on the internal storage.
+     *
+     * @param activity The activity under test.
+     * @return <code>kouchat-1600x1600.png</code>.
+     */
+    public static AndroidFile getKouChatImageFromInternalStorage(final Activity activity) {
+        final Cursor cursor = getCursorForKouChatImageFromInternalStorage(activity);
 
         if (cursor == null || cursor.getCount() == 0) {
             throw new RuntimeException("No files in the database");
@@ -108,6 +149,18 @@ public final class FileUtils {
         final ContentResolver contentResolver = activity.getContentResolver();
 
         final Uri from = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        final String where = MediaStore.Images.Media.DISPLAY_NAME + " = ?";
+        final String[] whereArguments = {KOUCHAT_FILE};
+        final String orderBy = MediaStore.Images.Media._ID + " ASC LIMIT 1";
+
+        // SELECT * FROM images WHERE (_display_name = ?) ORDER BY _id ASC LIMIT 1
+        return contentResolver.query(from, null, where, whereArguments, orderBy);
+    }
+
+    private static Cursor getCursorForKouChatImageFromInternalStorage(final Activity activity) {
+        final ContentResolver contentResolver = activity.getContentResolver();
+
+        final Uri from = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
         final String where = MediaStore.Images.Media.DISPLAY_NAME + " = ?";
         final String[] whereArguments = {KOUCHAT_FILE};
         final String orderBy = MediaStore.Images.Media._ID + " ASC LIMIT 1";
