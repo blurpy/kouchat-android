@@ -53,6 +53,13 @@ public class AndroidFile {
         this.baseName = Tools.getFileBaseName(getName());
     }
 
+    public AndroidFile(final File file) {
+        this.uri = Uri.fromFile(file);
+        this.file = file;
+        this.extension = Tools.getFileExtension(getName());
+        this.baseName = Tools.getFileBaseName(getName());
+    }
+
     public Uri getUri() {
         return uri;
     }

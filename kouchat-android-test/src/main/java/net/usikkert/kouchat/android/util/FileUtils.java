@@ -60,7 +60,7 @@ public final class FileUtils {
 
     /**
      * Copies the file <code>kouchat-1600x1600.png</code> from assets to the root of the SD card,
-     * if it's not already there.
+     * if it's not already there. It will also be added to the media database.
      *
      * <p>This will fail if the SD card is unmounted.</p>
      *
@@ -70,12 +70,12 @@ public final class FileUtils {
     public static void copyKouChatImageFromAssetsToSdCard(final Instrumentation instrumentation, final Activity activity) {
         final File externalStorageDirectory = Environment.getExternalStorageDirectory();
 
-        copyKouChatImageFromAssetsToStorage(instrumentation, activity, externalStorageDirectory);
+        copyKouChatImageFromAssetsToStorage(instrumentation, activity, externalStorageDirectory, true);
     }
 
     /**
      * Copies the file <code>kouchat-1600x1600.png</code> from assets to the cache directory of the internal storage,
-     * if it's not already there.
+     * if it's not already there. It will not be added to the media database.
      *
      * <p>The internal storage should be available even if the SD card is unmounted.</p>
      *
@@ -85,7 +85,7 @@ public final class FileUtils {
     public static void copyKouChatImageFromAssetsToInternalStorage(final Instrumentation instrumentation, final Activity activity) {
         final File cacheDir = activity.getCacheDir();
 
-        copyKouChatImageFromAssetsToStorage(instrumentation, activity, cacheDir);
+        copyKouChatImageFromAssetsToStorage(instrumentation, activity, cacheDir, false);
     }
 
     /**
@@ -109,9 +109,10 @@ public final class FileUtils {
      * @return <code>kouchat-1600x1600.png</code>.
      */
     public static AndroidFile getKouChatImageFromInternalStorage(final Activity activity) {
-        final Cursor cursor = getCursorForKouChatImageFromInternalStorage(activity);
+        final File cacheDir = activity.getCacheDir();
+        final File image = new File(cacheDir, KOUCHAT_FILE);
 
-        return getKouChatImageFromStorage(cursor);
+        return new AndroidFile(image);
     }
 
     /**
@@ -162,12 +163,16 @@ public final class FileUtils {
 
     private static void copyKouChatImageFromAssetsToStorage(final Instrumentation instrumentation,
                                                             final Activity activity,
-                                                            final File storageDirectory) {
+                                                            final File storageDirectory,
+                                                            final boolean addFileToDatabase) {
         final File fileToStore = new File(storageDirectory, KOUCHAT_FILE);
 
         if (!fileToStore.exists()) {
             copyFileToDevice(fileToStore, instrumentation);
-            addFileToDatabase(activity, fileToStore);
+
+            if (addFileToDatabase) {
+                addFileToDatabase(activity, fileToStore);
+            }
         }
     }
 
@@ -182,16 +187,9 @@ public final class FileUtils {
     }
 
     private static Cursor getCursorForKouChatImageFromExternalStorage(final Activity activity) {
-        return getCursorForKouChatImageFromStorage(activity, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-    }
-
-    private static Cursor getCursorForKouChatImageFromInternalStorage(final Activity activity) {
-        return getCursorForKouChatImageFromStorage(activity, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-    }
-
-    private static Cursor getCursorForKouChatImageFromStorage(final Activity activity, final Uri from) {
         final ContentResolver contentResolver = activity.getContentResolver();
 
+        final Uri from = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         final String where = MediaStore.Images.Media.DISPLAY_NAME + " = ?";
         final String[] whereArguments = {KOUCHAT_FILE};
         final String orderBy = MediaStore.Images.Media._ID + " ASC LIMIT 1";
