@@ -38,6 +38,7 @@ import com.google.common.io.Closer;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -124,6 +125,39 @@ public final class FileUtils {
         final String fileName = "kouchat-" + System.currentTimeMillis() + image.getExtension();
 
         return new File(externalStorageDirectory, fileName);
+    }
+
+    /**
+     * Deletes the file from the SD card, and removes it from the media database.
+     *
+     * @param contentResolver The content resolver with the media database.
+     * @param file The file to delete. Can be <code>null</code>.
+     */
+    public static void deleteFileFromSdCard(final ContentResolver contentResolver, final File file) {
+        if (file == null || !file.exists()) {
+            return;
+        }
+
+        final Uri from = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        final String where = MediaStore.MediaColumns.DATA + " = ?";
+        final String[] whereArguments = {file.getPath()};
+        final String orderBy = MediaStore.Images.Media._ID + " ASC LIMIT 1";
+
+        // SELECT * FROM images WHERE (_data = ?) ORDER BY _id ASC LIMIT 1
+        final Cursor cursor = contentResolver.query(from, null, where, whereArguments, orderBy);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToNext();
+
+            final int contentId = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
+            final Uri contentUri = ContentUris.withAppendedId(from, contentId);
+
+            final int numberOfDeletedRows = contentResolver.delete(contentUri, null, null);
+
+            if (numberOfDeletedRows == 1) {
+                file.delete();
+            }
+        }
     }
 
     private static void copyKouChatImageFromAssetsToStorage(final Instrumentation instrumentation,

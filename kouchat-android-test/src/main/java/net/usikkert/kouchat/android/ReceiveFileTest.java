@@ -43,6 +43,7 @@ import com.google.common.io.Files;
 import com.jayway.android.robotium.solo.Solo;
 
 import android.app.Instrumentation;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
@@ -394,9 +395,11 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void tearDown() {
-        deleteFile(requestedFile);
-        deleteFile(requestedFile1);
-        deleteFile(requestedFile2);
+        final ContentResolver contentResolver = getActivity().getContentResolver();
+
+        FileUtils.deleteFileFromSdCard(contentResolver, requestedFile);
+        FileUtils.deleteFileFromSdCard(contentResolver, requestedFile1);
+        FileUtils.deleteFileFromSdCard(contentResolver, requestedFile2);
 
         solo.finishOpenedActivities();
 
@@ -475,11 +478,5 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         final ByteSource savedFile = Files.asByteSource(file);
 
         assertTrue(originalFile.contentEquals(savedFile));
-    }
-
-    private void deleteFile(final File file) {
-        if (file != null && file.exists()) {
-            file.delete();
-        }
     }
 }
