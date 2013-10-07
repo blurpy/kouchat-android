@@ -95,7 +95,10 @@ public class ManualReceiveFileTest extends ActivityInstrumentationTestCase2<Main
     /**
      * This test requires that the SD card is unmounted.
      *
-     * On Android 2.3.3 emulator: go to Settings/Storage and use the option "Unmount SD card".
+     * <p>On Android 2.3.3 emulator: go to Settings/Storage and use the option "Unmount SD card".</p>
+     *
+     * <p>On Android 4.3 emulator: open <code>~/.android/avd/Android-4.3.avd/config.ini</code>
+     * and set <code>hw.sdCard=no</code>.</p>
      */
     public void test01AcceptFileTransferRequestWithoutStorage() {
         checkThatTheFileHasNotBeenNotTransferred();
