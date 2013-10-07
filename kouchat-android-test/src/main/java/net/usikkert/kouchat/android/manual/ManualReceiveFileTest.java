@@ -101,7 +101,7 @@ public class ManualReceiveFileTest extends ActivityInstrumentationTestCase2<Main
      * and set <code>hw.sdCard=no</code>.</p>
      */
     public void test01AcceptFileTransferRequestWithoutStorage() {
-        checkThatTheFileHasNotBeenNotTransferred();
+        checkThatTheFileHasNotBeenTransferred();
 
         kenny.sendFile(me, image.getFile());
         solo.sleep(500);
@@ -124,7 +124,7 @@ public class ManualReceiveFileTest extends ActivityInstrumentationTestCase2<Main
         checkThatTheMainChatIsInFront();
         checkMainChatMessage("*** Failed to receive kouchat-1600x1600.png from Kenny");
         checkThatNoFileTransferNotificationsAreActive();
-        checkThatTheFileHasNotBeenNotTransferred();
+        checkThatTheFileHasNotBeenTransferred();
     }
 
     public void test99Quit() {
@@ -190,7 +190,7 @@ public class ManualReceiveFileTest extends ActivityInstrumentationTestCase2<Main
         assertTrue(getActivity().isVisible()); // The dialog should be closed, and the main chat in front
     }
 
-    private void checkThatTheFileHasNotBeenNotTransferred() {
+    private void checkThatTheFileHasNotBeenTransferred() {
         assertFalse(requestedFile.exists());
     }
 }
