@@ -58,7 +58,8 @@ public final class FileUtils {
     }
 
     /**
-     * Copies the file <code>kouchat-1600x1600.png</code> from assets to the SD card, if it's not already there.
+     * Copies the file <code>kouchat-1600x1600.png</code> from assets to the root of the SD card,
+     * if it's not already there.
      *
      * <p>This will fail if the SD card is unmounted.</p>
      *
