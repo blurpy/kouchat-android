@@ -47,6 +47,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.TextView;
 
 /**
  * Tests file reception.
@@ -172,6 +173,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(1000);
 
         checkThatTheMainChatIsInFront();
+        checkMainChatMessage("*** Receiving kouchat-1600x1600.png from Albert");
         checkMainChatMessage("*** Successfully received kouchat-1600x1600.png from Albert, and saved as kouchat-1600x1600.png");
         checkThatNoFileTransferNotificationsAreActive();
         checkThatTheFileWasReceivedSuccessfully(requestedFile);
@@ -349,8 +351,14 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkThatTheMainChatIsInFront();
         checkThatNoFileTransferNotificationsAreActive();
 
-        checkMainChatMessage("*** Successfully received kouchat-1600x1600.png from Albino, and saved as kouchat-1600x1600.png");
-        checkMainChatMessage("*** Successfully received kouchat-1600x1600.png from XenXei, and saved as kouchat-1600x1600_1.png");
+        // Depending on screen size, some of the messages might have scrolled by, currently making them invisible.
+        checkPastMainChatMessage("*** Receiving kouchat-1600x1600.png from Albino");
+        checkPastMainChatMessage("*** Successfully received kouchat-1600x1600.png from Albino, and saved as kouchat-1600x1600.png");
+
+        checkPastMainChatMessage("*** Receiving kouchat-1600x1600.png from XenXei");
+        checkPastMainChatMessage("*** Successfully received kouchat-1600x1600.png from XenXei, and saved as kouchat-1600x1600_1.png");
+
+        checkMainChatMessage("*** Receiving kouchat-1600x1600.png from TinaBurger");
         checkMainChatMessage("*** Successfully received kouchat-1600x1600.png from TinaBurger, and saved as kouchat-1600x1600_2.png");
 
         checkThatTheFileWasReceivedSuccessfully(requestedFile);
@@ -430,6 +438,11 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
     private void checkMainChatMessage(final String textToFind) {
         assertTrue(RobotiumTestUtils.textIsVisible(solo, R.id.mainChatView, R.id.mainChatScroll, textToFind));
+    }
+
+    private void checkPastMainChatMessage(final String text) {
+        final TextView mainChatView = (TextView) getActivity().findViewById(R.id.mainChatView);
+        assertTrue(mainChatView.getText().toString().contains(text));
     }
 
     private void checkDialogMessage(final String textToFind) {
