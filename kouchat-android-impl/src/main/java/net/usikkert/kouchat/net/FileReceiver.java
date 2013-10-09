@@ -58,6 +58,9 @@ public class FileReceiver implements FileTransfer {
     /** The file from the user. */
     private File file;
 
+    /** The original file name. */
+    private final String originalFileName;
+
     /** The unique ID of this file transfer. */
     private final int id;
 
@@ -110,6 +113,7 @@ public class FileReceiver implements FileTransfer {
         this.file = file;
         this.size = size;
         this.id = id;
+        this.originalFileName = file.getName();
 
         bCounter = new ByteCounter();
     }
@@ -341,6 +345,16 @@ public class FileReceiver implements FileTransfer {
      */
     public void setFile(final File file) {
         this.file = file;
+    }
+
+    /**
+     * Gets the file name of the original file from the other user.
+     * As opposed to the current file which might have been renamed.
+     *
+     * @return The original file name.
+     */
+    public String getOriginalFileName() {
+        return originalFileName;
     }
 
     /**
