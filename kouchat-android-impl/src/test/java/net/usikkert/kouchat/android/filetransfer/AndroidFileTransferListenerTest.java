@@ -26,6 +26,8 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 
+import net.usikkert.kouchat.misc.MessageController;
+import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 
@@ -48,8 +50,10 @@ public class AndroidFileTransferListenerTest {
 
     private FileSender fileSender;
     private FileReceiver fileReceiver;
+
     private Context context;
     private AndroidFileUtils androidFileUtils;
+    private MessageController messageController;
 
     private AndroidFileTransferListener fileSenderListener;
     private AndroidFileTransferListener fileReceiverListener;
@@ -60,9 +64,10 @@ public class AndroidFileTransferListenerTest {
         context = mock(Context.class);
         androidFileUtils = mock(AndroidFileUtils.class);
         fileReceiver = mock(FileReceiver.class);
+        messageController = mock(MessageController.class);
 
         fileSenderListener = new AndroidFileTransferListener(fileSender);
-        fileReceiverListener = new AndroidFileTransferListener(fileReceiver, context, androidFileUtils);
+        fileReceiverListener = new AndroidFileTransferListener(fileReceiver, context, androidFileUtils, messageController);
     }
 
     @Test
@@ -70,7 +75,7 @@ public class AndroidFileTransferListenerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("FileReceiver can not be null");
 
-        new AndroidFileTransferListener(null, context, androidFileUtils);
+        new AndroidFileTransferListener(null, context, androidFileUtils, messageController);
     }
 
     @Test
@@ -78,7 +83,7 @@ public class AndroidFileTransferListenerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Context can not be null");
 
-        new AndroidFileTransferListener(fileReceiver, null, androidFileUtils);
+        new AndroidFileTransferListener(fileReceiver, null, androidFileUtils, messageController);
     }
 
     @Test
@@ -86,7 +91,15 @@ public class AndroidFileTransferListenerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("AndroidFileUtils can not be null");
 
-        new AndroidFileTransferListener(fileReceiver, context, null);
+        new AndroidFileTransferListener(fileReceiver, context, null, messageController);
+    }
+
+    @Test
+    public void constructorWithFileReceiverShouldThrowExceptionIfMessageControllerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("MessageController can not be null");
+
+        new AndroidFileTransferListener(fileReceiver, context, androidFileUtils, null);
     }
 
     @Test
@@ -118,8 +131,18 @@ public class AndroidFileTransferListenerTest {
     }
 
     @Test
-    public void statusTransferringShouldDoNothing() {
+    public void statusTransferringForFileSenderShouldDoNothing() {
         fileSenderListener.statusTransferring();
+    }
+
+    @Test
+    public void statusTransferringForFileReceiverShouldShowSystemMessageWithOriginalFileName() {
+        when(fileReceiver.getOriginalFileName()).thenReturn("sunset.jpg");
+        when(fileReceiver.getUser()).thenReturn(new User("Dude", 1234));
+
+        fileReceiverListener.statusTransferring();
+
+        verify(messageController).showSystemMessage("Receiving sunset.jpg from Dude");
     }
 
     @Test

@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.android.filetransfer;
 
 import net.usikkert.kouchat.event.FileTransferListener;
+import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.util.Validate;
@@ -39,16 +40,21 @@ public class AndroidFileTransferListener implements FileTransferListener {
     private FileReceiver fileReceiver;
     private Context context;
     private AndroidFileUtils androidFileUtils;
+    private MessageController messageController;
 
-    public AndroidFileTransferListener(final FileReceiver fileReceiver, final Context context,
-                                       final AndroidFileUtils androidFileUtils) {
+    public AndroidFileTransferListener(final FileReceiver fileReceiver,
+                                       final Context context,
+                                       final AndroidFileUtils androidFileUtils,
+                                       final MessageController messageController) {
         Validate.notNull(fileReceiver, "FileReceiver can not be null");
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(androidFileUtils, "AndroidFileUtils can not be null");
+        Validate.notNull(messageController, "MessageController can not be null");
 
         this.fileReceiver = fileReceiver;
         this.context = context;
         this.androidFileUtils = androidFileUtils;
+        this.messageController = messageController;
 
         fileReceiver.registerListener(this);
     }
@@ -69,9 +75,28 @@ public class AndroidFileTransferListener implements FileTransferListener {
 
     }
 
+    /**
+     * Shows a message if starting to receive a file.
+     *
+     * <p>There is no need to show a message when sending a message,
+     * as that is taken care of elsewhere.</p>
+     *
+     * <p>It's important to use the original file name instead of the current file name, because
+     * when the file transfer has started, the current file might be renamed.</p>
+     *
+     * <p>The series of messages would then look weird:</p>
+     *
+     * <ul>
+     *   <li>*** Receiving sunset_1.jpg from Dude</li>
+     *   <li>*** Successfully received sunset.jpg from Dude, and saved as sunset_1.jpg</li>
+     * </ul>
+     */
     @Override
     public void statusTransferring() {
-
+        if (fileReceiver != null) {
+            messageController.showSystemMessage("Receiving " + fileReceiver.getOriginalFileName() +
+                    " from " + fileReceiver.getUser().getNick());
+        }
     }
 
     /**
