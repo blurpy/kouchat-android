@@ -126,8 +126,18 @@ public class AndroidFileTransferListenerTest {
     }
 
     @Test
+    public void statusWaitingWithFileReceiverShouldDoNothing() {
+        fileReceiverListener.statusWaiting();
+    }
+
+    @Test
     public void statusConnectingWithFileSenderShouldDoNothing() {
         fileSenderListener.statusConnecting();
+    }
+
+    @Test
+    public void statusConnectingWithFileReceiverShouldDoNothing() {
+        fileReceiverListener.statusConnecting();
     }
 
     @Test
@@ -166,7 +176,17 @@ public class AndroidFileTransferListenerTest {
     }
 
     @Test
+    public void statusFailedWithFileReceiverShouldDoNothing() {
+        fileReceiverListener.statusFailed();
+    }
+
+    @Test
     public void transferUpdateWithFileSenderShouldDoNothing() {
         fileSenderListener.transferUpdate();
+    }
+
+    @Test
+    public void transferUpdateWithFileReceiverShouldDoNothing() {
+        fileReceiverListener.transferUpdate();
     }
 }
