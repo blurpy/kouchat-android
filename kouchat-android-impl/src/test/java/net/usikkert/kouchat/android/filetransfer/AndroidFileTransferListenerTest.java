@@ -121,22 +121,22 @@ public class AndroidFileTransferListenerTest {
     }
 
     @Test
-    public void statusWaitingShouldDoNothing() {
+    public void statusWaitingWithFileSenderShouldDoNothing() {
         fileSenderListener.statusWaiting();
     }
 
     @Test
-    public void statusConnectingShouldDoNothing() {
+    public void statusConnectingWithFileSenderShouldDoNothing() {
         fileSenderListener.statusConnecting();
     }
 
     @Test
-    public void statusTransferringForFileSenderShouldDoNothing() {
+    public void statusTransferringWithFileSenderShouldDoNothing() {
         fileSenderListener.statusTransferring();
     }
 
     @Test
-    public void statusTransferringForFileReceiverShouldShowSystemMessageWithOriginalFileName() {
+    public void statusTransferringWithFileReceiverShouldShowSystemMessageWithOriginalFileName() {
         when(fileReceiver.getOriginalFileName()).thenReturn("sunset.jpg");
         when(fileReceiver.getUser()).thenReturn(new User("Dude", 1234));
 
@@ -146,12 +146,12 @@ public class AndroidFileTransferListenerTest {
     }
 
     @Test
-    public void statusCompletedForFileSenderShouldDoNothing() {
+    public void statusCompletedWithFileSenderShouldDoNothing() {
         fileSenderListener.statusCompleted();
     }
 
     @Test
-    public void statusCompletedForFileReceiverShouldAddMediaToDatabase() {
+    public void statusCompletedWithFileReceiverShouldAddMediaToDatabase() {
         final File file = mock(File.class);
         when(fileReceiver.getFile()).thenReturn(file);
 
@@ -161,12 +161,12 @@ public class AndroidFileTransferListenerTest {
     }
 
     @Test
-    public void statusFailedShouldDoNothing() {
+    public void statusFailedWithFileSenderShouldDoNothing() {
         fileSenderListener.statusFailed();
     }
 
     @Test
-    public void transferUpdateShouldDoNothing() {
+    public void transferUpdateWithFileSenderShouldDoNothing() {
         fileSenderListener.transferUpdate();
     }
 }
