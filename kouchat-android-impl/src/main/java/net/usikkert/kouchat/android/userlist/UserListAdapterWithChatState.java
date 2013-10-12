@@ -42,8 +42,8 @@ import android.widget.TextView;
  */
 public class UserListAdapterWithChatState extends UserListAdapter {
 
-    private final Drawable envelope;
-    private final Drawable dot;
+    private Drawable envelope;
+    private Drawable dot;
 
     /**
      * Constructor.
@@ -83,6 +83,18 @@ public class UserListAdapterWithChatState extends UserListAdapter {
         showIfCurrentlyWriting(textView, user);
 
         return linearLayout;
+    }
+
+    /**
+     * Removing the icons to avoid memory leaks. Drawables contain references to the context that created
+     * them, like an activity.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        envelope = null;
+        dot = null;
     }
 
     private void showIfNewPrivateMessage(final ImageView imageView, final User user) {

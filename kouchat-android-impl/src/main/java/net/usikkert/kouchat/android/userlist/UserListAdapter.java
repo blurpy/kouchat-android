@@ -78,4 +78,11 @@ public class UserListAdapter extends ArrayAdapter<User> {
              add(userList.get(i));
         }
     }
+
+    /**
+     * Cleanup to do when the activity using this is destroyed.
+     */
+    public void onDestroy() {
+        clear();
+    }
 }

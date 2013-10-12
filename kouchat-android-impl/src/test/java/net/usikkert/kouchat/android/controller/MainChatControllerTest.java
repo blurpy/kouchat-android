@@ -144,7 +144,7 @@ public class MainChatControllerTest {
         verify(mainChatInput).setOnKeyListener(null);
         verify(mainChatUserList).setOnItemClickListener(null);
         verify(mainChatUserList).setAdapter(null);
-        verify(userListAdapter).clear();
+        verify(userListAdapter).onDestroy();
         verify(controllerUtils).removeReferencesToTextViewFromText(mainChatView);
         verify(controllerUtils).removeReferencesToTextViewFromText(mainChatInput);
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());

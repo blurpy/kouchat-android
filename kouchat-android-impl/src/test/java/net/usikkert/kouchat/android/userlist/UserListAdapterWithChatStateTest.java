@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -136,6 +137,24 @@ public class UserListAdapterWithChatStateTest {
 
         assertEquals("User1", getDisplayTextForUser(0));
         assertEquals("User2", getDisplayTextForUser(1));
+    }
+
+    @Test
+    public void onDestroyShouldClearTheList() {
+        assertEquals(2, userListAdapter.getCount());
+
+        userListAdapter.onDestroy();
+
+        assertEquals(0, userListAdapter.getCount());
+    }
+
+    @Test
+    public void onDestroyShouldSetAllFieldsToNull() {
+        assertTrue(TestUtils.allFieldsHaveValue(userListAdapter));
+
+        userListAdapter.onDestroy();
+
+        assertTrue(TestUtils.allFieldsAreNull(userListAdapter));
     }
 
     private boolean userIsBold(final int userPosition) {

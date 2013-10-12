@@ -144,6 +144,21 @@ public class UserListAdapterTest {
         assertOrder(user2, user3, user1);
     }
 
+    @Test
+    public void onDestroyShouldClearTheList() {
+        assertEquals(0, adapter.getCount());
+
+        adapter.add(user1);
+        adapter.add(user2);
+        adapter.add(user3);
+
+        assertEquals(3, adapter.getCount());
+
+        adapter.onDestroy();
+
+        assertEquals(0, adapter.getCount());
+    }
+
     private void assertOrder(final User... users) {
         for (int i = 0; i < users.length; i++) {
             final User user = users[i];
