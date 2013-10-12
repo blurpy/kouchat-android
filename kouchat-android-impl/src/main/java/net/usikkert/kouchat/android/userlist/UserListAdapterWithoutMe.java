@@ -30,11 +30,13 @@ import android.content.Context;
 /**
  * A user list adapter that hides "me".
  *
+ * <p>Expects that "me" is in the list at all times, or else it will misbehave.</p>
+ *
  * @author Christian Ihle
  */
 public class UserListAdapterWithoutMe extends UserListAdapter {
 
-    private final User me;
+    private User me;
 
     public UserListAdapterWithoutMe(final Context context, final User me) {
         super(context);
@@ -59,5 +61,15 @@ public class UserListAdapterWithoutMe extends UserListAdapter {
     @Override
     public int getCount() {
         return super.getCount() - 1;
+    }
+
+    /**
+     * Cleanup to avoid memory leak after sending files.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        me = null;
     }
 }

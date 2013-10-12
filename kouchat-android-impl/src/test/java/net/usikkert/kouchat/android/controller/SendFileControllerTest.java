@@ -57,6 +57,7 @@ public class SendFileControllerTest {
     private AndroidUserInterface ui;
     private UserList userList;
     private ServiceConnection serviceConnection;
+    private UserListAdapter userListAdapter;
 
     @Before
     public void setUp() {
@@ -71,6 +72,8 @@ public class SendFileControllerTest {
         userList = mock(UserList.class);
         when(ui.getUserList()).thenReturn(userList);
 
+        userListAdapter = mock(UserListAdapter.class);
+
         serviceConnection = mock(ServiceConnection.class);
     }
 
@@ -81,6 +84,7 @@ public class SendFileControllerTest {
         controller.onDestroy();
 
         verify(userList).removeUserListListener(controller);
+        verify(userListAdapter).onDestroy();
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
 
@@ -111,7 +115,7 @@ public class SendFileControllerTest {
         TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
 
         TestUtils.setFieldValue(controller, "fileToSend", mock(File.class));
-        TestUtils.setFieldValue(controller, "userListAdapter", mock(UserListAdapter.class));
+        TestUtils.setFieldValue(controller, "userListAdapter", userListAdapter);
         TestUtils.setFieldValue(controller, "line2TextView", mock(TextView.class));
         TestUtils.setFieldValue(controller, "userListView", mock(ListView.class));
     }

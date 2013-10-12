@@ -123,6 +123,7 @@ public class SendFileController extends Activity implements UserListListener {
     protected void onDestroy() {
         if (userList != null) {
             userList.removeUserListListener(this);
+            userListAdapter.onDestroy();
             unbindService(serviceConnection);
         }
 

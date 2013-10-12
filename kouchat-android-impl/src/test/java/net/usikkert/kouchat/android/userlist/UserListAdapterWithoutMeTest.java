@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -82,6 +83,11 @@ public class UserListAdapterWithoutMeTest {
     }
 
     @Test
+    public void getCountShouldBeMinus1WhenEmpty() {
+        assertEquals(-1, adapter.getCount()); // Looks strange, but should never happen
+    }
+
+    @Test
     public void getCountShouldBe0WhenOnlyMe() {
         adapter.add(me);
 
@@ -128,5 +134,30 @@ public class UserListAdapterWithoutMeTest {
         assertSame(fido, adapter.getItem(1));
         assertSame(penny, adapter.getItem(2));
         assertSame(que, adapter.getItem(3));
+    }
+
+    @Test
+    public void onDestroyShouldClearTheListIncludingMe() {
+        final User penny = new User("Penny", 1);
+        final User amy = new User("Amy", 2);
+
+        adapter.add(me);
+        adapter.add(penny);
+        adapter.add(amy);
+
+        assertEquals(2, adapter.getCount());
+
+        adapter.onDestroy();
+
+        assertEquals(-1, adapter.getCount()); // -1 since "me" is removed as well
+    }
+
+    @Test
+    public void onDestroyShouldSetAllFieldsToNull() {
+        assertTrue(TestUtils.allFieldsHaveValue(adapter));
+
+        adapter.onDestroy();
+
+        assertTrue(TestUtils.allFieldsAreNull(adapter));
     }
 }
