@@ -25,6 +25,8 @@ package net.usikkert.kouchat.android;
 import java.util.Calendar;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.controller.ReceiveFileController;
+import net.usikkert.kouchat.android.util.AndroidFile;
 import net.usikkert.kouchat.android.util.FileUtils;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.CommandException;
@@ -34,6 +36,7 @@ import net.usikkert.kouchat.testclient.TestClient;
 import com.jayway.android.robotium.solo.Solo;
 
 import android.app.Instrumentation;
+import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 
 /**
@@ -50,6 +53,7 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
     private static TestClient trillian;
 
     private static String originalNickName;
+    private static AndroidFile image;
 
     private Solo solo;
     private User me;
@@ -79,14 +83,18 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         solo = new Solo(instrumentation, activity);
         me = RobotiumTestUtils.getMe(activity);
 
-        FileUtils.copyKouChatImageFromAssetsToSdCard(instrumentation, activity);
+        if (originalNickName == null) {
+            originalNickName = me.getNick();
+
+            FileUtils.copyKouChatImageFromAssetsToSdCard(instrumentation, activity);
+            image = FileUtils.getKouChatImageFromSdCard(activity);
+        }
     }
 
     public void test01SetNickNameAndQuit() {
-        originalNickName = me.getNick();
-
         RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
         RobotiumTestUtils.changeNickNameTo(solo, "Christian");
+        RobotiumTestUtils.goHome(solo);
 
         sleep(15000); // Take screenshot of the settings
 
@@ -131,7 +139,20 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         sleep(1000);
         arthur.sendPrivateChatMessage("Show me the envelope!", me);
 
-        // Take screenshot of the main chat, and the file transfer popup in the gallery
+        // Take screenshot of the main chat
+        sleep(15000);
+
+        ford.sendFile(me, image.getFile());
+        sleep(1000);
+        openReceiveFileDialog(ford, 1);
+        sleep(1000);
+        solo.clickOnText("File transfer request"); // To remove the highlight on the default button
+
+        // Take screenshot of the file transfer request
+        sleep(15000);
+        solo.clickOnText("Reject");
+
+        // Take screenshot of the file transfer popup in the gallery
         sleep(45000);
 
         arthur.logoff();
@@ -184,7 +205,9 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         arthur = null;
         ford = null;
         trillian = null;
+
         originalNickName = null;
+        image = null;
     }
 
     public void tearDown() {
@@ -210,5 +233,14 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
     private void sleep(final int ms) {
 //        solo.sleep(ms); // Screenshot mode
         solo.sleep(1500); // Test mode
+    }
+
+    private void openReceiveFileDialog(final TestClient client, final int fileTransferId) {
+        final Intent intent = new Intent();
+        intent.putExtra("userCode", client.getUserCode());
+        intent.putExtra("fileTransferId", fileTransferId);
+
+        final String packageName = getInstrumentation().getTargetContext().getPackageName();
+        launchActivityWithIntent(packageName, ReceiveFileController.class, intent);
     }
 }
