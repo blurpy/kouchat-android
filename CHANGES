@@ -1,6 +1,10 @@
 
 - KouChat CHANGES
 
+* version 0.12.0 (xx.xx.2013)
+  - Nothing yet.
+
+
 * version 0.11.0 (14.10.2013)
   - Fixed several issues leading to memory leaks.
   - Added basic support for receiving files.
