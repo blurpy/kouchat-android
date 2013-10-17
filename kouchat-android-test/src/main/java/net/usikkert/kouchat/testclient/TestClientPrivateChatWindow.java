@@ -22,6 +22,9 @@
 
 package net.usikkert.kouchat.testclient;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.ui.PrivateChatWindow;
 
@@ -33,16 +36,22 @@ import net.usikkert.kouchat.ui.PrivateChatWindow;
 public class TestClientPrivateChatWindow implements PrivateChatWindow {
 
     private final User user;
+    private final BufferedWriter writer;
     private final TestClientMessageReceiver messageReceiver;
 
-    public TestClientPrivateChatWindow(final User user) {
+    public TestClientPrivateChatWindow(final User user, final BufferedWriter writer) {
         this.user = user;
+        this.writer = writer;
         this.messageReceiver = new TestClientMessageReceiver();
     }
 
     @Override
     public void appendToPrivateChat(final String message, final int color) {
         messageReceiver.addMessage(message);
+
+        if (writer != null) {
+            sendPrivateMessage(message);
+        }
     }
 
     @Override
@@ -100,5 +109,17 @@ public class TestClientPrivateChatWindow implements PrivateChatWindow {
 
     public void resetPrivateMessages() {
         messageReceiver.resetMessages();
+    }
+
+    private void sendPrivateMessage(final String message) {
+        try {
+            writer.write("(privmsg) " + message);
+            writer.newLine();
+            writer.flush();
+        }
+
+        catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

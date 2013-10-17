@@ -79,6 +79,13 @@ public class TestClient {
         return me.getCode();
     }
 
+    /**
+     * Starts a telnet server at port 20000 and blocks until /quit.
+     */
+    public void startTelnetServer() {
+        new TestClientTelnetServer(ui, controller, commandParser);
+    }
+
     public void logon() {
         controller.logOn();
 

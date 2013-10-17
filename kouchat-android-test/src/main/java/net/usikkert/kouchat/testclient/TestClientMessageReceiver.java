@@ -78,6 +78,10 @@ public class TestClientMessageReceiver {
         return !receivedMessages.isEmpty();
     }
 
+    public List<String> getMessages() {
+        return new ArrayList<String>(receivedMessages);
+    }
+
     public void resetMessages() {
         receivedMessages.clear();
     }

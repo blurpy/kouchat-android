@@ -22,6 +22,10 @@
 
 package net.usikkert.kouchat.testclient;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.List;
+
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.Settings;
@@ -42,6 +46,7 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
     private final MessageController messageController;
     private final TestClientMessageReceiver messageReceiver;
     private final Settings settings;
+    private BufferedWriter writer;
 
     public TestClientUserInterface(final Settings settings) {
         this.settings = settings;
@@ -105,7 +110,7 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
     @Override
     public void createPrivChat(final User user) {
         if (user.getPrivchat() == null) {
-            user.setPrivchat(new TestClientPrivateChatWindow(user));
+            user.setPrivchat(new TestClientPrivateChatWindow(user, writer));
         }
 
         if (user.getPrivateChatLogger() == null) {
@@ -131,9 +136,36 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
     @Override
     public void appendToChat(final String message, final int color) {
         messageReceiver.addMessage(message);
+
+        if (writer != null) {
+            sendMessage(message);
+        }
     }
 
     public boolean gotMessage(final User user, final String message) {
         return messageReceiver.gotMessage(user.getNick(), message);
+    }
+
+    public void setWriter(final BufferedWriter writer) {
+        this.writer = writer;
+
+        final List<String> messages = messageReceiver.getMessages();
+
+        // Send all previously registered messages as well
+        for (final String message : messages) {
+            sendMessage(message);
+        }
+    }
+
+    private void sendMessage(final String message) {
+        try {
+            writer.write(message);
+            writer.newLine();
+            writer.flush();
+        }
+
+        catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
