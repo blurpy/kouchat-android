@@ -24,11 +24,12 @@ package net.usikkert.kouchat.android.component;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
+import android.os.Build;
 import android.text.method.MovementMethod;
 
 /**
@@ -48,14 +49,23 @@ public class LinkMovementMethodWithSelectSupportTest {
     }
 
     @Test
-    public void canSelectArbitrarilyShouldReturnTrueWhenHoneycomb() {
+    @Config(reportSdk = Build.VERSION_CODES.JELLY_BEAN)
+    public void canSelectArbitrarilyShouldReturnTrueWhenJellyBean() {
         final MovementMethod instance = LinkMovementMethodWithSelectSupport.getInstance();
 
-        assertTrue(instance.canSelectArbitrarily()); // API 14 is returned
+        assertTrue(instance.canSelectArbitrarily());
     }
 
     @Test
-    @Ignore("Don't know how to change Build.VERSION.SDK_INT")
+    @Config(reportSdk = Build.VERSION_CODES.HONEYCOMB)
+    public void canSelectArbitrarilyShouldReturnTrueWhenHoneycomb() {
+        final MovementMethod instance = LinkMovementMethodWithSelectSupport.getInstance();
+
+        assertTrue(instance.canSelectArbitrarily());
+    }
+
+    @Test
+    @Config(reportSdk = Build.VERSION_CODES.GINGERBREAD_MR1)
     public void canSelectArbitrarilyShouldReturnFalseWhenGingerbread() {
         final MovementMethod instance = LinkMovementMethodWithSelectSupport.getInstance();
 

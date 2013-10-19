@@ -32,12 +32,13 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowHandler;
+import org.robolectric.util.ActivityController;
 
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -53,6 +54,8 @@ import android.widget.TextView;
 @RunWith(RobolectricTestRunner.class)
 public class PrivateChatControllerTest {
 
+    private ActivityController<PrivateChatController> activityController;
+
     private PrivateChatController controller;
 
     private AndroidPrivateChatWindow privateChatWindow;
@@ -63,7 +66,8 @@ public class PrivateChatControllerTest {
 
     @Before
     public void setUp() {
-        controller = new PrivateChatController();
+        activityController = Robolectric.buildActivity(PrivateChatController.class);
+        controller = activityController.get();
 
         final User user = new User("User", 1234);
         privateChatWindow = mock(AndroidPrivateChatWindow.class);
@@ -98,20 +102,20 @@ public class PrivateChatControllerTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.") // Sherlock
+    @Config(reportSdk = 10) // To avoid getSupportActionBar returning null
     public void isVisibleShouldBeTrueOnlyBetweenOnResumeAndOnPause() {
         assertFalse(controller.isVisible());
 
-        controller.onCreate(null);
+        activityController.create();
         assertFalse(controller.isVisible());
 
-        controller.onResume();
+        activityController.resume();
         assertTrue(controller.isVisible());
 
-        controller.onPause();
+        activityController.pause();
         assertFalse(controller.isVisible());
 
-        controller.onDestroy();
+        activityController.destroy();
         assertFalse(controller.isVisible());
     }
 

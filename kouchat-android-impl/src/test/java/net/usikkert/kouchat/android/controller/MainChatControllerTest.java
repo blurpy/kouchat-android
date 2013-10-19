@@ -32,12 +32,12 @@ import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowHandler;
+import org.robolectric.util.ActivityController;
 
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -55,6 +55,8 @@ import android.widget.TextView;
 @RunWith(RobolectricTestRunner.class)
 public class MainChatControllerTest {
 
+    private ActivityController<MainChatController> activityController;
+
     private MainChatController controller;
 
     private AndroidUserInterface ui;
@@ -69,7 +71,8 @@ public class MainChatControllerTest {
 
     @Before
     public void setUp() {
-        controller = new MainChatController();
+        activityController = Robolectric.buildActivity(MainChatController.class);
+        controller = activityController.get();
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
@@ -103,20 +106,19 @@ public class MainChatControllerTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.") // Sherlock
     public void isVisibleShouldBeTrueOnlyBetweenOnResumeAndOnPause() {
         assertFalse(controller.isVisible());
 
-        controller.onCreate(null);
+        activityController.create();
         assertFalse(controller.isVisible());
 
-        controller.onResume();
+        activityController.resume();
         assertTrue(controller.isVisible());
 
-        controller.onPause();
+        activityController.pause();
         assertFalse(controller.isVisible());
 
-        controller.onDestroy();
+        activityController.destroy();
         assertFalse(controller.isVisible());
     }
 
