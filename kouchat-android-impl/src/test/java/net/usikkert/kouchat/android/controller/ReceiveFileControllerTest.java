@@ -41,6 +41,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowIntent;
+import org.robolectric.util.ActivityController;
 
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -53,6 +54,9 @@ import android.content.ServiceConnection;
 @RunWith(RobolectricTestRunner.class)
 public class ReceiveFileControllerTest {
 
+    private ActivityController<ReceiveFileController> activityController;
+    private Intent intent;
+
     private ReceiveFileController controller;
 
     private AndroidUserInterface ui;
@@ -61,8 +65,8 @@ public class ReceiveFileControllerTest {
 
     @Before
     public void setUp() {
-        controller = new ReceiveFileController();
-
+        activityController = Robolectric.buildActivity(ReceiveFileController.class);
+        controller = activityController.get();
         receiveFileDialog = TestUtils.setFieldValueWithMock(controller, "receiveFileDialog", ReceiveFileDialog.class);
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
@@ -76,17 +80,16 @@ public class ReceiveFileControllerTest {
 
         when(ui.getFileReceiver(1234, 5678)).thenReturn(fileReceiver);
 
-        final Intent intent = new Intent();
+        intent = new Intent(Robolectric.application, ReceiveFileController.class);
         intent.putExtra("userCode", 1234);
         intent.putExtra("fileTransferId", 5678);
-        controller.setIntent(intent);
     }
 
     @Test
     public void onCreateShouldCreateServiceConnectionAndBindChatService() {
         assertTrue(TestUtils.fieldValueIsNull(controller, "serviceConnection"));
 
-        controller.onCreate(null);
+        activityController.create();
 
         final ShadowIntent startedServiceIntent =
                 Robolectric.shadowOf(Robolectric.getShadowApplication().getNextStartedService());
@@ -113,7 +116,7 @@ public class ReceiveFileControllerTest {
 
     @Test
     public void boundServiceShouldGetFileReceiverUsingIntentAndShowReceiveFileDialog() {
-        controller.onCreate(null);
+        activityController.withIntent(intent).create();
 
         verify(ui).getFileReceiver(1234, 5678);
         verify(receiveFileDialog).showReceiveFileDialog(controller, fileReceiver);
@@ -121,9 +124,7 @@ public class ReceiveFileControllerTest {
 
     @Test
     public void boundServiceShouldHandleMissingIntentAndShowMissingFileDialog() {
-        controller.setIntent(new Intent());
-
-        controller.onCreate(null);
+        activityController.create();
 
         verify(ui).getFileReceiver(-1, -1);
         verify(receiveFileDialog).showMissingFileDialog(controller);

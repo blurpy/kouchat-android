@@ -67,7 +67,7 @@ public class ReceiveFileDialogTest {
         when(fileReceiver.getFileName()).thenReturn("superkou.png");
         when(fileReceiver.getFileSize()).thenReturn(165000L);
 
-        activity = new Activity();
+        activity = Robolectric.buildActivity(Activity.class).create().get();
         receiveFileDialog = new ReceiveFileDialog();
     }
 
