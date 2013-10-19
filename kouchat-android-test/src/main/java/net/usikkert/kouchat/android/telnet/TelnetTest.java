@@ -37,6 +37,8 @@ import junit.framework.TestCase;
  *   <li>exit (disconnects from the emulator)</li>
  * </ul>
  *
+ * <p>Alternatively use <code>adb forward tcp:20000 tcp:20000</code>.</p>
+ *
  * <p>Then connect to the test client using: <code>telnet localhost 20000</code></p>
  *
  * <p>The test image is available at <code>/mnt/sdcard/kouchat-1600x1600.png</code>.</p>
