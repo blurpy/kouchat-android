@@ -344,8 +344,6 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
         openReceiveFileDialog(tina, 9);
         acceptFileTransfer();
-        solo.sleep(100);
-
         solo.sleep(1000);
 
         checkThatTheMainChatIsInFront();
