@@ -97,6 +97,10 @@ public class ConnectionWorker implements Runnable {
         while (run) {
             final boolean networkUp = updateNetwork();
 
+            if (!run) {
+                break;
+            }
+
             try {
                 if (networkUp) {
                     Thread.sleep(SLEEP_UP);

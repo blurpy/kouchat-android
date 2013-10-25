@@ -2,7 +2,7 @@
 - KouChat CHANGES
 
 * version 0.12.0 (xx.xx.2013)
-  - Nothing yet.
+  - Fixed rare bug where quitting would not log off the network right away.
 
 
 * version 0.11.0 (14.10.2013)
