@@ -177,6 +177,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkMainChatMessage("*** Successfully received kouchat-1600x1600.png from Albert, and saved as kouchat-1600x1600.png");
         checkThatNoFileTransferNotificationsAreActive();
         checkThatTheFileWasReceivedSuccessfully(requestedFile);
+        solo.sleep(500);
     }
 
     public void test04CancelFileTransferRequestBeforeOpeningActivity() {
@@ -319,15 +320,15 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.sleep(500);
 
         albert.sendFile(me, image.getFile());
-        solo.sleep(100);
+        solo.sleep(500);
         checkActiveFileTransferNotifications(7);
 
         xen.sendFile(me, image.getFile());
-        solo.sleep(100);
+        solo.sleep(500);
         checkActiveFileTransferNotifications(7, 8);
 
         tina.sendFile(me, image.getFile());
-        solo.sleep(100);
+        solo.sleep(500);
         checkActiveFileTransferNotifications(7, 8, 9);
 
         checkMainChatMessage("*** Albino is trying to send the file kouchat-1600x1600.png");
@@ -362,6 +363,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         checkThatTheFileWasReceivedSuccessfully(requestedFile);
         checkThatTheFileWasReceivedSuccessfully(requestedFile1);
         checkThatTheFileWasReceivedSuccessfully(requestedFile2);
+        solo.sleep(500);
     }
 
     public void test09UserLoggingOffShouldCancelFileTransferRequest() {
