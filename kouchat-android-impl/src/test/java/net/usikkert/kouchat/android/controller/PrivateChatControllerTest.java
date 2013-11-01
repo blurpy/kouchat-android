@@ -63,18 +63,19 @@ public class PrivateChatControllerTest {
     private EditText privateChatInput;
     private ScrollView privateChatScroll;
     private ControllerUtils controllerUtils;
+    private User vivi;
 
     @Before
     public void setUp() {
         activityController = Robolectric.buildActivity(PrivateChatController.class);
         controller = activityController.get();
 
-        final User user = new User("User", 1234);
+        vivi = new User("Vivi", 1234);
         privateChatWindow = mock(AndroidPrivateChatWindow.class);
-        user.setPrivchat(privateChatWindow);
+        vivi.setPrivchat(privateChatWindow);
 
         final AndroidUserInterface ui = mock(AndroidUserInterface.class);
-        when(ui.getUser(1234)).thenReturn(user);
+        when(ui.getUser(1234)).thenReturn(vivi);
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
@@ -92,7 +93,7 @@ public class PrivateChatControllerTest {
         controllerUtils = mock(ControllerUtils.class);
 
         TestUtils.setFieldValue(controller, "privateChatWindow", privateChatWindow);
-        TestUtils.setFieldValue(controller, "user", user);
+        TestUtils.setFieldValue(controller, "user", vivi);
         TestUtils.setFieldValue(controller, "androidUserInterface", ui);
         TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
         TestUtils.setFieldValue(controller, "privateChatView", privateChatView);
@@ -190,5 +191,44 @@ public class PrivateChatControllerTest {
 
         verify(privateChatView).setText("Set this text");
         verifyZeroInteractions(controllerUtils);
+    }
+
+    @Test
+    public void updateTitleShouldSetNickNameAndAppName() {
+        assertNull(controller.getTitle());
+
+        controller.updateTitle();
+
+        assertEquals("Vivi - KouChat", controller.getTitle());
+    }
+
+    @Test
+    public void updateTitleShouldIncludeOfflineInTheTitleIfUserIsOffline() {
+        vivi.setOnline(false);
+
+        controller.updateTitle();
+
+        assertEquals("Vivi (offline) - KouChat", controller.getTitle());
+    }
+
+    @Test
+    public void updateTitleShouldIncludeAwayAndAwayMessageInTheTitleIfUserIsAway() {
+        vivi.setAway(true);
+        vivi.setAwayMsg("on the road again");
+
+        controller.updateTitle();
+
+        assertEquals("Vivi (away: on the road again) - KouChat", controller.getTitle());
+    }
+
+    @Test
+    public void updateTitleShouldOnlyIncludeOfflineInTheTitleIfUserIsBothOfflineAndAway() {
+        vivi.setOnline(false);
+        vivi.setAway(true);
+        vivi.setAwayMsg("I left");
+
+        controller.updateTitle();
+
+        assertEquals("Vivi (offline) - KouChat", controller.getTitle());
     }
 }
