@@ -40,8 +40,13 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowHandler;
 import org.robolectric.util.ActivityController;
 
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -64,6 +69,8 @@ public class PrivateChatControllerTest {
     private ScrollView privateChatScroll;
     private ControllerUtils controllerUtils;
     private User vivi;
+    private AndroidUserInterface ui;
+    private ServiceConnection serviceConnection;
 
     @Before
     public void setUp() {
@@ -74,14 +81,14 @@ public class PrivateChatControllerTest {
         privateChatWindow = mock(AndroidPrivateChatWindow.class);
         vivi.setPrivchat(privateChatWindow);
 
-        final AndroidUserInterface ui = mock(AndroidUserInterface.class);
+        ui = mock(AndroidUserInterface.class);
         when(ui.getUser(1234)).thenReturn(vivi);
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
 
-        final ServiceConnection serviceConnection = mock(ServiceConnection.class);
+        serviceConnection = mock(ServiceConnection.class);
 
         final Intent intent = new Intent();
         intent.putExtra("userCode", 1234);
@@ -92,6 +99,10 @@ public class PrivateChatControllerTest {
         privateChatScroll = mock(ScrollView.class);
         controllerUtils = mock(ControllerUtils.class);
 
+        setMocks();
+    }
+
+    private void setMocks() {
         TestUtils.setFieldValue(controller, "privateChatWindow", privateChatWindow);
         TestUtils.setFieldValue(controller, "user", vivi);
         TestUtils.setFieldValue(controller, "androidUserInterface", ui);
@@ -230,5 +241,55 @@ public class PrivateChatControllerTest {
         controller.updateTitle();
 
         assertEquals("Vivi (offline) - KouChat", controller.getTitle());
+    }
+
+    @Test
+    @Config(reportSdk = 10)
+    public void dispatchKeyEventShouldDelegateToSuperClassFirst() {
+        activityController.create();
+        setMocks();
+
+        // Force ActionBarSherlock to respond to the back event
+        controller.startActionMode(new ActionMode.Callback() {
+            public boolean onCreateActionMode(final ActionMode mode, final Menu menu) { return true; }
+            public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) { return false; }
+            public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) { return false; }
+            public void onDestroyActionMode(final ActionMode mode) { }
+        });
+
+        assertTrue(controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK)));
+        verifyZeroInteractions(privateChatInput); // Not delegating, and not requesting focus
+    }
+
+    @Test
+    @Config(reportSdk = 10)
+    public void dispatchKeyEventShouldDelegateToPrivateChatInputSecond() {
+        activityController.create();
+        setMocks();
+
+        final KeyEvent event1 = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A);
+        when(privateChatInput.dispatchKeyEvent(event1)).thenReturn(false);
+        assertFalse(controller.dispatchKeyEvent(event1));
+        verify(privateChatInput).dispatchKeyEvent(event1);
+
+        final KeyEvent event2 = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_B);
+        when(privateChatInput.dispatchKeyEvent(event2)).thenReturn(true);
+        assertTrue(controller.dispatchKeyEvent(event2));
+        verify(privateChatInput).dispatchKeyEvent(event2);
+    }
+
+    @Test
+    @Config(reportSdk = 10)
+    public void dispatchKeyEventShouldRequestFocusIfFocusIsMissingIfDelegatingToPrivateChatInput() {
+        activityController.create();
+        setMocks();
+
+        when(privateChatInput.hasFocus()).thenReturn(true);
+        controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A));
+        verify(privateChatInput, never()).requestFocus();
+
+        when(privateChatInput.hasFocus()).thenReturn(false);
+        controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A));
+        verify(privateChatInput).requestFocus();
     }
 }
