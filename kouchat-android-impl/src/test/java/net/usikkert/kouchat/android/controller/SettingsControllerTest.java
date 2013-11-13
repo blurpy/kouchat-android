@@ -41,6 +41,7 @@ import org.robolectric.shadows.ShadowPreferenceManager;
 import org.robolectric.tester.android.content.TestSharedPreferences;
 
 import android.content.ServiceConnection;
+import android.preference.EditTextPreference;
 
 /**
  * Test of {@link SettingsController}.
@@ -51,13 +52,17 @@ import android.content.ServiceConnection;
 public class SettingsControllerTest {
 
     private SettingsController controller;
+    private SettingsController controllerSpy;
 
     private AndroidUserInterface ui;
     private ServiceConnection serviceConnection;
 
+    private EditTextPreference nickNamePreference;
+
     @Before
     public void setUp() {
         controller = new SettingsController();
+        controllerSpy = spy(controller);
 
         ui = mock(AndroidUserInterface.class);
 
@@ -66,6 +71,9 @@ public class SettingsControllerTest {
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
 
         serviceConnection = mock(ServiceConnection.class);
+
+        nickNamePreference = mock(EditTextPreference.class);
+        doReturn(nickNamePreference).when(controllerSpy).findPreference("nick_name");
     }
 
     @Test
@@ -134,6 +142,48 @@ public class SettingsControllerTest {
         controller.onDestroy();
 
         assertEquals(0, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
+    }
+
+    @Test
+    public void onPreferenceChangeShouldAskAndroidUserInterfaceToChangeNickNameAndReturnTheResultIfFalse() {
+        setupMocks();
+        when(ui.changeNickName(anyString())).thenReturn(false);
+
+        final boolean change = controller.onPreferenceChange(null, "Kelly");
+
+        assertFalse(change);
+        verify(ui).changeNickName("Kelly");
+    }
+
+    @Test
+    public void onPreferenceChangeShouldAskAndroidUserInterfaceToChangeNickNameAndReturnTheResultIfTrue() {
+        setupMocks();
+        when(ui.changeNickName(anyString())).thenReturn(true);
+
+        final boolean change = controller.onPreferenceChange(null, "Holly");
+
+        assertTrue(change);
+        verify(ui).changeNickName("Holly");
+    }
+
+    @Test
+    public void onSharedPreferenceChangedShouldSetValueAsSummaryIfTextIsNotNull() {
+        when(nickNamePreference.getText()).thenReturn("This is the value");
+
+        controllerSpy.onSharedPreferenceChanged(null, "nick_name");
+
+        verify(controllerSpy).findPreference("nick_name");
+        verify(nickNamePreference).setSummary("This is the value");
+    }
+
+    @Test
+    public void onSharedPreferenceChangedShouldNotSetSummaryIfTextIsNull() {
+        when(nickNamePreference.getText()).thenReturn(null);
+
+        controllerSpy.onSharedPreferenceChanged(null, "nick_name");
+
+        verify(controllerSpy).findPreference("nick_name");
+        verify(nickNamePreference, never()).setSummary(anyString());
     }
 
     private void setupMocks() {
