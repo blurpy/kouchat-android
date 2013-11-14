@@ -38,6 +38,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.shadows.ShadowPreferenceManager;
+import org.robolectric.shadows.ShadowToast;
 import org.robolectric.tester.android.content.TestSharedPreferences;
 
 import com.actionbarsherlock.internal.view.menu.ActionMenuItem;
@@ -45,6 +46,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 
 /**
@@ -62,10 +64,15 @@ public class SettingsControllerTest {
     private ServiceConnection serviceConnection;
 
     private EditTextPreference nickNamePreference;
+    private CheckBoxPreference wakeLockPreference;
 
     @Before
     public void setUp() {
         controller = new SettingsController();
+
+        TestUtils.setFieldValue(controller, "nickNameKey", "nick_name");
+        TestUtils.setFieldValue(controller, "wakeLockKey", "wake_lock");
+
         controllerSpy = spy(controller);
 
         ui = mock(AndroidUserInterface.class);
@@ -77,7 +84,12 @@ public class SettingsControllerTest {
         serviceConnection = mock(ServiceConnection.class);
 
         nickNamePreference = mock(EditTextPreference.class);
+        when(nickNamePreference.getKey()).thenReturn("nick_name");
         doReturn(nickNamePreference).when(controllerSpy).findPreference("nick_name");
+
+        wakeLockPreference = mock(CheckBoxPreference.class);
+        when(wakeLockPreference.getKey()).thenReturn("wake_lock");
+        doReturn(wakeLockPreference).when(controllerSpy).findPreference("wake_lock");
     }
 
     @Test
@@ -153,7 +165,7 @@ public class SettingsControllerTest {
         setupMocks();
         when(ui.changeNickName(anyString())).thenReturn(false);
 
-        final boolean change = controller.onPreferenceChange(null, "Kelly");
+        final boolean change = controller.onPreferenceChange(nickNamePreference, "Kelly");
 
         assertFalse(change);
         verify(ui).changeNickName("Kelly");
@@ -164,14 +176,24 @@ public class SettingsControllerTest {
         setupMocks();
         when(ui.changeNickName(anyString())).thenReturn(true);
 
-        final boolean change = controller.onPreferenceChange(null, "Holly");
+        final boolean change = controller.onPreferenceChange(nickNamePreference, "Holly");
 
         assertTrue(change);
         verify(ui).changeNickName("Holly");
     }
 
     @Test
-    public void onSharedPreferenceChangedShouldSetValueAsSummaryIfTextIsNotNull() {
+    public void onPreferenceChangeShouldDoNothingAndReturnTrueIfAnotherPreference() {
+        setupMocks();
+
+        final boolean change = controller.onPreferenceChange(wakeLockPreference, "on");
+
+        assertTrue(change);
+        verifyZeroInteractions(ui);
+    }
+
+    @Test
+    public void onSharedPreferenceChangedShouldSetNickNameAsSummaryIfTextIsNotNull() {
         when(nickNamePreference.getText()).thenReturn("This is the value");
 
         controllerSpy.onSharedPreferenceChanged(null, "nick_name");
@@ -181,13 +203,23 @@ public class SettingsControllerTest {
     }
 
     @Test
-    public void onSharedPreferenceChangedShouldNotSetSummaryIfTextIsNull() {
+    public void onSharedPreferenceChangedShouldNotSetNickNameAsSummaryIfTextIsNull() {
         when(nickNamePreference.getText()).thenReturn(null);
 
         controllerSpy.onSharedPreferenceChanged(null, "nick_name");
 
         verify(controllerSpy).findPreference("nick_name");
         verify(nickNamePreference, never()).setSummary(anyString());
+    }
+
+    @Test
+    public void onSharedPreferenceChangedShouldMakeToastOnWakeLockChange() {
+        when(wakeLockPreference.isChecked()).thenReturn(true);
+
+        controllerSpy.onSharedPreferenceChanged(null, "wake_lock");
+
+        verify(controllerSpy).findPreference("wake_lock");
+        assertEquals("Enable wake lock: true", ShadowToast.getTextOfLatestToast());
     }
 
     @Test

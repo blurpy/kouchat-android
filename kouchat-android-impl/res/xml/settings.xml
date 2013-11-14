@@ -12,4 +12,9 @@
       android:dialogMessage="@string/settings_nick_name_dialog_message"
       android:dialogIcon="@drawable/ic_dialog"/>
 
+  <CheckBoxPreference
+    android:key="@string/settings_wake_lock_key"
+    android:title="@string/settings_wake_lock_title"
+    android:summary="@string/settings_wake_lock_summary"/>
+
 </PreferenceScreen>

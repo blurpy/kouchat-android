@@ -22,8 +22,8 @@
 
 package net.usikkert.kouchat.android.controller;
 
-import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 
@@ -37,11 +37,20 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.widget.Toast;
 
 /**
  * Controller for changing the settings.
+ *
+ * <p>Supports the following settings:</p>
+ *
+ * <ul>
+ *   <li>The nick name of the user</li>
+ *   <li>To use a wake lock or not</li>
+ * </ul>
  *
  * @author Christian Ihle
  */
@@ -52,13 +61,17 @@ public class SettingsController extends SherlockPreferenceActivity
     private AndroidUserInterface androidUserInterface;
     private ServiceConnection serviceConnection;
 
+    private String nickNameKey;
+    private String wakeLockKey;
+
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
-        final String nickNameKey = getString(R.string.settings_key_nick_name);
-        final Preference nickNamePreference = findPreference(nickNameKey);
+        nickNameKey = getString(R.string.settings_key_nick_name);
+        wakeLockKey = getString(R.string.settings_wake_lock_key);
 
+        final Preference nickNamePreference = findPreference(nickNameKey);
         nickNamePreference.setOnPreferenceChangeListener(this);
         setValueAsSummary(nickNamePreference);
 
@@ -77,17 +90,34 @@ public class SettingsController extends SherlockPreferenceActivity
      */
     @Override
     public boolean onPreferenceChange(final Preference preference, final Object value) {
-        return androidUserInterface.changeNickName(value.toString());
+        if (preference.getKey().equals(nickNameKey)) {
+            return androidUserInterface.changeNickName(value.toString());
+        }
+
+        return true;
     }
 
     /**
-     * Updates the summary of the setting after it's been changed.
+     * Updates state after a setting has been changed and saved.
+     *
+     * <ul>
+     *   <li>Changed nick name: the nick name is set as the summary of the preference.</li>
+     *   <li>Changed wake lock: stores the setting in the {@link Settings}.</li>
+     * </ul>
      *
      * {@inheritDoc}
      */
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        setValueAsSummary(key);
+        if (key.equals(nickNameKey)) {
+            setValueAsSummary(key);
+        }
+
+        else if (key.equals(wakeLockKey)) {
+            final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(key);
+            // TODO
+            Toast.makeText(this, "Enable wake lock: " + checkBoxPreference.isChecked(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -110,6 +140,8 @@ public class SettingsController extends SherlockPreferenceActivity
 
         androidUserInterface = null;
         serviceConnection = null;
+        nickNameKey = null;
+        wakeLockKey = null;
 
         super.onDestroy();
     }
