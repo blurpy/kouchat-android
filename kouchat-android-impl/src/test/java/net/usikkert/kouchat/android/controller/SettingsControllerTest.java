@@ -40,6 +40,10 @@ import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.shadows.ShadowPreferenceManager;
 import org.robolectric.tester.android.content.TestSharedPreferences;
 
+import com.actionbarsherlock.internal.view.menu.ActionMenuItem;
+import com.actionbarsherlock.view.MenuItem;
+
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.preference.EditTextPreference;
 
@@ -184,6 +188,29 @@ public class SettingsControllerTest {
 
         verify(controllerSpy).findPreference("nick_name");
         verify(nickNamePreference, never()).setSummary(anyString());
+    }
+
+    @Test
+    public void onOptionsItemSelectedShouldGoBackToMainChatWhenClickOnUpInActionBar() {
+        final MenuItem up = new ActionMenuItem(Robolectric.application, 0, android.R.id.home, 0, 0, "Up");
+
+        controller.onOptionsItemSelected(up);
+
+        final Intent nextStartedActivity = Robolectric.getShadowApplication().getNextStartedActivity();
+        assertNotNull(nextStartedActivity);
+
+        final ShadowIntent nextStartedActivityShadow = Robolectric.shadowOf(nextStartedActivity);
+        assertEquals(MainChatController.class, nextStartedActivityShadow.getIntentClass());
+    }
+
+    @Test
+    public void onOptionsItemSelectedShouldDoNothingOnOtherClicks() {
+        final MenuItem up = new ActionMenuItem(Robolectric.application, 0, 0, 0, 0, "Up");
+
+        controller.onOptionsItemSelected(up);
+
+        final Intent nextStartedActivity = Robolectric.getShadowApplication().getNextStartedActivity();
+        assertNull(nextStartedActivity);
     }
 
     private void setupMocks() {
