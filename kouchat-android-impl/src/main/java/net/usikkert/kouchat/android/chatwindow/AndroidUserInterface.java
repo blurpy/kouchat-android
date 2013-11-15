@@ -336,7 +336,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
                     msgController.showPrivateOwnMessage(user, privateMessage);
                 }
 
-                catch (CommandException e) {
+                catch (final CommandException e) {
                     msgController.showPrivateSystemMessage(user, e.getMessage());
                 }
 
@@ -412,11 +412,11 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
             return changeNickNameTask.get();
         }
 
-        catch (InterruptedException e) {
+        catch (final InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        catch (ExecutionException e) {
+        catch (final ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
@@ -486,6 +486,15 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
      */
     public User getMe() {
         return me;
+    }
+
+    /**
+     * Gets the application settings.
+     *
+     * @return The settings.
+     */
+    public Settings getSettings() {
+        return settings;
     }
 
     /**

@@ -26,6 +26,7 @@ import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.misc.Settings;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -59,6 +60,8 @@ public class SettingsController extends SherlockPreferenceActivity
                                            SharedPreferences.OnSharedPreferenceChangeListener {
 
     private AndroidUserInterface androidUserInterface;
+    private Settings settings;
+
     private ServiceConnection serviceConnection;
 
     private String nickNameKey;
@@ -115,6 +118,8 @@ public class SettingsController extends SherlockPreferenceActivity
 
         else if (key.equals(wakeLockKey)) {
             final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(key);
+            settings.setWakeLockEnabled(checkBoxPreference.isChecked());
+
             // TODO
             Toast.makeText(this, "Enable wake lock: " + checkBoxPreference.isChecked(), Toast.LENGTH_SHORT).show();
         }
@@ -139,6 +144,7 @@ public class SettingsController extends SherlockPreferenceActivity
         }
 
         androidUserInterface = null;
+        settings = null;
         serviceConnection = null;
         nickNameKey = null;
         wakeLockKey = null;
@@ -189,6 +195,7 @@ public class SettingsController extends SherlockPreferenceActivity
             public void onServiceConnected(final ComponentName componentName, final IBinder iBinder) {
                 final ChatServiceBinder binder = (ChatServiceBinder) iBinder;
                 androidUserInterface = binder.getAndroidUserInterface();
+                settings = androidUserInterface.getSettings();
             }
 
             @Override

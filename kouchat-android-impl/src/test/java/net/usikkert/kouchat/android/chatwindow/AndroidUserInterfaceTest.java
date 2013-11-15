@@ -87,10 +87,11 @@ public class AndroidUserInterfaceTest {
     private CommandParser commandParser;
     private TransferList transferList;
     private AndroidFileUtils androidFileUtils;
+    private Settings settings;
 
     @Before
     public void setUp() {
-        final Settings settings = mock(Settings.class);
+        settings = mock(Settings.class);
         me = new User("Me", 1234);
         when(settings.getMe()).thenReturn(me);
         testUser = new User("TestUser", 1235);
@@ -842,6 +843,11 @@ public class AndroidUserInterfaceTest {
         assertSame(originalFileReceiver, fileReceiver);
         verify(transferList).getFileReceiver(testUser, 100);
         verify(controller).getUser(1235);
+    }
+
+    @Test
+    public void getSettingsShouldReturnSettingsFromConstructor() {
+        assertSame(settings, androidUserInterface.getSettings());
     }
 
     private Thread createShowFileSaveThread(final FileReceiver fileReceiver) {

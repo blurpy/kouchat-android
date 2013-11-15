@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
@@ -61,6 +62,7 @@ public class SettingsControllerTest {
     private SettingsController controllerSpy;
 
     private AndroidUserInterface ui;
+    private Settings settings;
     private ServiceConnection serviceConnection;
 
     private EditTextPreference nickNamePreference;
@@ -76,6 +78,7 @@ public class SettingsControllerTest {
         controllerSpy = spy(controller);
 
         ui = mock(AndroidUserInterface.class);
+        settings = mock(Settings.class);
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
@@ -213,12 +216,14 @@ public class SettingsControllerTest {
     }
 
     @Test
-    public void onSharedPreferenceChangedShouldMakeToastOnWakeLockChange() {
+    public void onSharedPreferenceChangedShouldMakeToastAndSaveSettingOnWakeLockChange() {
+        setupMocks();
         when(wakeLockPreference.isChecked()).thenReturn(true);
 
         controllerSpy.onSharedPreferenceChanged(null, "wake_lock");
 
         verify(controllerSpy).findPreference("wake_lock");
+        verify(settings).setWakeLockEnabled(true);
         assertEquals("Enable wake lock: true", ShadowToast.getTextOfLatestToast());
     }
 
@@ -247,7 +252,13 @@ public class SettingsControllerTest {
 
     private void setupMocks() {
         TestUtils.setFieldValue(controller, "androidUserInterface", ui);
+        TestUtils.setFieldValue(controllerSpy, "androidUserInterface", ui);
+
+        TestUtils.setFieldValue(controller, "settings", settings);
+        TestUtils.setFieldValue(controllerSpy, "settings", settings);
+
         TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
+        TestUtils.setFieldValue(controllerSpy, "serviceConnection", serviceConnection);
     }
 
     private TestSharedPreferences getTestSharedPreferences() {

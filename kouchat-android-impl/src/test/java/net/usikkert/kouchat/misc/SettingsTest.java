@@ -25,6 +25,7 @@ package net.usikkert.kouchat.misc;
 import static org.junit.Assert.*;
 
 import net.usikkert.kouchat.Constants;
+import net.usikkert.kouchat.event.SettingsListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,10 +39,18 @@ public class SettingsTest {
 
     private Settings settings;
 
+    private String lastChangedSetting;
+
     @Before
     public void setUp() throws Exception {
         settings = new Settings();
         System.setProperty("file.separator", "/");
+
+        settings.addSettingsListener(new SettingsListener() {
+            public void settingChanged(final String setting) {
+                lastChangedSetting = setting;
+            }
+        });
     }
 
     @Test
@@ -63,5 +72,25 @@ public class SettingsTest {
         settings.setLogLocation(null);
 
         assertEquals(Constants.APP_LOG_FOLDER, settings.getLogLocation());
+    }
+
+    @Test
+    public void setWakeLockEnabledShouldNotNotifyListenersIfSettingIsUnchanged() {
+        assertFalse(settings.isWakeLockEnabled());
+
+        settings.setWakeLockEnabled(false);
+
+        assertFalse(settings.isWakeLockEnabled());
+        assertNull(lastChangedSetting);
+    }
+
+    @Test
+    public void setWakeLockEnabledShouldNotifyListenersIfSettingIsChanged() {
+        assertFalse(settings.isWakeLockEnabled());
+
+        settings.setWakeLockEnabled(true);
+
+        assertTrue(settings.isWakeLockEnabled());
+        assertEquals("wakeLockEnabled", lastChangedSetting);
     }
 }
