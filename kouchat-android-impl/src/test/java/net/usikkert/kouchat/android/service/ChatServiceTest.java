@@ -56,7 +56,7 @@ public class ChatServiceTest {
 
     private AndroidUserInterface ui;
     private NotificationService notificationService;
-    private MulticastLockHandler multicastLockHandler;
+    private LockHandler lockHandler;
     private ChatServiceBinder chatServiceBinder;
 
     @Before
@@ -65,7 +65,7 @@ public class ChatServiceTest {
 
         ui = mock(AndroidUserInterface.class);
         notificationService = mock(NotificationService.class);
-        multicastLockHandler = mock(MulticastLockHandler.class);
+        lockHandler = mock(LockHandler.class);
         chatServiceBinder = mock(ChatServiceBinder.class);
 
         System.clearProperty(Constants.PROPERTY_CLIENT_UI);
@@ -92,14 +92,14 @@ public class ChatServiceTest {
     }
 
     @Test
-    public void onCreateShouldCreateMulticastLockHandler() {
+    public void onCreateShouldCreateLockHandler() {
         mockSystemServices();
 
-        assertTrue(TestUtils.fieldValueIsNull(chatService, "multicastLockHandler"));
+        assertTrue(TestUtils.fieldValueIsNull(chatService, "lockHandler"));
 
         chatService.onCreate();
 
-        assertFalse(TestUtils.fieldValueIsNull(chatService, "multicastLockHandler"));
+        assertFalse(TestUtils.fieldValueIsNull(chatService, "lockHandler"));
     }
 
     @Test
@@ -175,7 +175,7 @@ public class ChatServiceTest {
 
         chatService.onDestroy();
 
-        verify(multicastLockHandler).releaseAllLocks();
+        verify(lockHandler).releaseAllLocks();
     }
 
     @Test
@@ -207,7 +207,7 @@ public class ChatServiceTest {
     private void setMockedFields() {
         TestUtils.setFieldValue(chatService, "androidUserInterface", ui);
         TestUtils.setFieldValue(chatService, "notificationService", notificationService);
-        TestUtils.setFieldValue(chatService, "multicastLockHandler", multicastLockHandler);
+        TestUtils.setFieldValue(chatService, "lockHandler", lockHandler);
         TestUtils.setFieldValue(chatService, "chatServiceBinder", chatServiceBinder);
     }
 

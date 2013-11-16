@@ -45,7 +45,7 @@ import android.os.PowerManager;
  *
  * @author Christian Ihle
  */
-public class MulticastLockHandler implements NetworkConnectionListener, SettingsListener {
+public class LockHandler implements NetworkConnectionListener, SettingsListener {
 
     public static final String MULTICAST_LOCK = "KouChat multicast lock";
     public static final String WAKE_LOCK = "KouChat wake lock";
@@ -54,10 +54,10 @@ public class MulticastLockHandler implements NetworkConnectionListener, Settings
     private final PowerManager.WakeLock wakeLock;
     private final Settings settings;
 
-    public MulticastLockHandler(final AndroidUserInterface androidUserInterface,
-                                final Settings settings,
-                                final WifiManager wifiManager,
-                                final PowerManager powerManager) {
+    public LockHandler(final AndroidUserInterface androidUserInterface,
+                       final Settings settings,
+                       final WifiManager wifiManager,
+                       final PowerManager powerManager) {
         Validate.notNull(androidUserInterface, "AndroidUserInterface can not be null");
         Validate.notNull(settings, "Settings can not be null");
         Validate.notNull(wifiManager, "WifiManager can not be null");

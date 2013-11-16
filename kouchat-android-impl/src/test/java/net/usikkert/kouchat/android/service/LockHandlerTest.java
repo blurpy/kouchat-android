@@ -36,16 +36,16 @@ import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 
 /**
- * Test of {@link MulticastLockHandler}.
+ * Test of {@link LockHandler}.
  *
  * @author Christian Ihle
  */
-public class MulticastLockHandlerTest {
+public class LockHandlerTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    private MulticastLockHandler handler;
+    private LockHandler handler;
 
     private WifiManager wifiManager;
     private AndroidUserInterface ui;
@@ -67,7 +67,7 @@ public class MulticastLockHandlerTest {
         when(wifiManager.createMulticastLock("KouChat multicast lock")).thenReturn(multicastLock);
         when(powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KouChat wake lock")).thenReturn(wakeLock);
 
-        handler = new MulticastLockHandler(ui, settings, wifiManager, powerManager);
+        handler = new LockHandler(ui, settings, wifiManager, powerManager);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class MulticastLockHandlerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("WifiManager can not be null");
 
-        new MulticastLockHandler(ui, settings, null, powerManager);
+        new LockHandler(ui, settings, null, powerManager);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class MulticastLockHandlerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("PowerManager can not be null");
 
-        new MulticastLockHandler(ui, settings, wifiManager, null);
+        new LockHandler(ui, settings, wifiManager, null);
     }
 
     @Test
@@ -91,7 +91,7 @@ public class MulticastLockHandlerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("AndroidUserInterface can not be null");
 
-        new MulticastLockHandler(null, settings, wifiManager, powerManager);
+        new LockHandler(null, settings, wifiManager, powerManager);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class MulticastLockHandlerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Settings can not be null");
 
-        new MulticastLockHandler(ui, null, wifiManager, powerManager);
+        new LockHandler(ui, null, wifiManager, powerManager);
     }
 
     @Test
