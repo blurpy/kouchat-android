@@ -25,6 +25,7 @@ package net.usikkert.kouchat.android.service;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.misc.Settings;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -32,6 +33,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import android.net.wifi.WifiManager;
+import android.os.PowerManager;
 
 /**
  * Test of {@link MulticastLockHandler}.
@@ -47,17 +49,25 @@ public class MulticastLockHandlerTest {
 
     private WifiManager wifiManager;
     private AndroidUserInterface ui;
+    private Settings settings;
+    private PowerManager powerManager;
+
     private WifiManager.MulticastLock multicastLock;
+    private PowerManager.WakeLock wakeLock;
 
     @Before
     public void setUp() {
+        settings = mock(Settings.class);
         wifiManager = mock(WifiManager.class);
         multicastLock = mock(WifiManager.MulticastLock.class);
         ui = mock(AndroidUserInterface.class);
+        powerManager = mock(PowerManager.class);
+        wakeLock = mock(PowerManager.WakeLock.class);
 
         when(wifiManager.createMulticastLock("KouChat multicast lock")).thenReturn(multicastLock);
+        when(powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KouChat wake lock")).thenReturn(wakeLock);
 
-        handler = new MulticastLockHandler(wifiManager, ui);
+        handler = new MulticastLockHandler(ui, settings, wifiManager, powerManager);
     }
 
     @Test
@@ -65,7 +75,15 @@ public class MulticastLockHandlerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("WifiManager can not be null");
 
-        new MulticastLockHandler(null, ui);
+        new MulticastLockHandler(ui, settings, null, powerManager);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfPowerManagerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("PowerManager can not be null");
+
+        new MulticastLockHandler(ui, settings, wifiManager, null);
     }
 
     @Test
@@ -73,12 +91,22 @@ public class MulticastLockHandlerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("AndroidUserInterface can not be null");
 
-        new MulticastLockHandler(wifiManager, null);
+        new MulticastLockHandler(null, settings, wifiManager, powerManager);
     }
 
     @Test
-    public void constructorShouldCreateMulticastLockAndRegisterListener() {
+    public void constructorShouldThrowExceptionIfSettingsIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Settings can not be null");
+
+        new MulticastLockHandler(ui, null, wifiManager, powerManager);
+    }
+
+    @Test
+    public void constructorShouldCreateLocksAndRegisterListener() {
         verify(wifiManager).createMulticastLock("KouChat multicast lock");
+        verify(powerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KouChat wake lock");
+
         verify(ui).registerNetworkConnectionListener(handler);
     }
 

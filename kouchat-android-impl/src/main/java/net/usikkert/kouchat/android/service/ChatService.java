@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+import android.os.PowerManager;
 
 /**
  * Service for accessing the chat operations in lower layers.
@@ -53,11 +54,13 @@ public class ChatService extends Service {
         System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
 
         notificationService = new NotificationService(this);
-        androidUserInterface = new AndroidUserInterface(this, new Settings(), notificationService);
+        final Settings settings = new Settings();
+        androidUserInterface = new AndroidUserInterface(this, settings, notificationService);
         androidUserInterface.setNickNameFromSettings();
 
         final WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        multicastLockHandler = new MulticastLockHandler(wifiManager, androidUserInterface);
+        final PowerManager powerManager = (PowerManager) this.getSystemService(POWER_SERVICE);
+        multicastLockHandler = new MulticastLockHandler(androidUserInterface, settings, wifiManager, powerManager);
 
         chatServiceBinder = new ChatServiceBinder(androidUserInterface);
 

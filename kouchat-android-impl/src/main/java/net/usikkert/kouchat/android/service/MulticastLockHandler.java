@@ -24,17 +24,22 @@ package net.usikkert.kouchat.android.service;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
+import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.util.Validate;
 
 import android.net.wifi.WifiManager;
+import android.os.PowerManager;
 
 /**
- * Acquires and releases the multicast lock when appropriate.
+ * Acquires and releases the multicast lock and the wake lock when appropriate.
  *
- * <p>This is needed on some devices. The <code>Asus Transformer TF101</code> tablet does not care,
+ * <p>The multicast lock is needed on some devices. The <code>Asus Transformer TF101</code> tablet does not care,
  * but the <code>HTC One</code> phone does not send or receive any multicast messages without a lock.</p>
+ *|
+ * <p>The wake lock is optional, and helps avoid timeouts because the cpu goes to sleep,
+ * and thus can't process packets from the network.</p>
  *
- * <p>It's important to keep the lock as a field, and not just a variable, since
+ * <p>It's important to keep the locks as fields, and not just as variables, since
  * garbage collected locks are automatically released.</p>
  *
  * @author Christian Ihle
@@ -42,14 +47,25 @@ import android.net.wifi.WifiManager;
 public class MulticastLockHandler implements NetworkConnectionListener {
 
     public static final String MULTICAST_LOCK = "KouChat multicast lock";
+    public static final String WAKE_LOCK = "KouChat wake lock";
 
     private final WifiManager.MulticastLock multicastLock;
+    private final PowerManager.WakeLock wakeLock;
+    private final Settings settings;
 
-    public MulticastLockHandler(final WifiManager wifiManager, final AndroidUserInterface androidUserInterface) {
-        Validate.notNull(wifiManager, "WifiManager can not be null");
+    public MulticastLockHandler(final AndroidUserInterface androidUserInterface,
+                                final Settings settings,
+                                final WifiManager wifiManager,
+                                final PowerManager powerManager) {
         Validate.notNull(androidUserInterface, "AndroidUserInterface can not be null");
+        Validate.notNull(settings, "Settings can not be null");
+        Validate.notNull(wifiManager, "WifiManager can not be null");
+        Validate.notNull(powerManager, "PowerManager can not be null");
 
-        multicastLock = wifiManager.createMulticastLock(MULTICAST_LOCK);
+        this.settings = settings;
+        this.multicastLock = wifiManager.createMulticastLock(MULTICAST_LOCK);
+        this.wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK);
+
         androidUserInterface.registerNetworkConnectionListener(this);
     }
 

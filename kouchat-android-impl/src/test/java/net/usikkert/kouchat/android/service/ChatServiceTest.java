@@ -42,6 +42,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+import android.os.PowerManager;
 
 /**
  * Test of {@link ChatService}.
@@ -110,8 +111,8 @@ public class ChatServiceTest {
         final IBinder binder = chatService.onBind(null);
         assertEquals(ChatServiceBinder.class, binder.getClass());
 
-        final ChatServiceBinder chatServiceBinder = (ChatServiceBinder) binder;
-        assertNotNull(chatServiceBinder.getAndroidUserInterface());
+        final ChatServiceBinder binderAsChatServiceBinder = (ChatServiceBinder) binder;
+        assertNotNull(binderAsChatServiceBinder.getAndroidUserInterface());
     }
 
     @Test
@@ -216,5 +217,6 @@ public class ChatServiceTest {
 
         doReturn(mock(NotificationManager.class)).when(context).getSystemService(Context.NOTIFICATION_SERVICE);
         doReturn(mock(WifiManager.class)).when(context).getSystemService(Context.WIFI_SERVICE);
+        doReturn(mock(PowerManager.class)).when(context).getSystemService(Context.POWER_SERVICE);
     }
 }
