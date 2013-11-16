@@ -70,20 +70,24 @@ public class MulticastLockHandler implements NetworkConnectionListener {
     }
 
     /**
-     * It's important to release the lock when the network goes down,
+     * It's important to release the multicast lock when the network goes down,
      * as it can't be reused when the network is back up.
+     *
+     * <p>Releasing the wake lock as well, as there is no point in keeping a wake lock when there is no network.</p>
      */
     @Override
     public void networkWentDown(final boolean silent) {
-        release();
+        releaseAllLocks();
     }
 
     /**
-     * Need to get the lock before it starts to connect. If not, some of the first messages will be filtered.
+     * Need to get the multicast lock before it starts to connect. If not, some of the first messages will be filtered.
+     *
+     * <p>Gets the wake lock too, if it's enabled, to keep awake from the start.</p>
      */
     @Override
     public void beforeNetworkCameUp() {
-        acquire();
+        acquireEnabledLocks();
     }
 
     /**
@@ -95,20 +99,46 @@ public class MulticastLockHandler implements NetworkConnectionListener {
     }
 
     /**
-     * Releases the multicast lock, if it's being held.
+     * Releases all the locks, if they are being held.
      */
-    public void release() {
+    public void releaseAllLocks() {
+        releaseMulticastLock();
+        releaseWakeLock();
+    }
+
+    /**
+     * Acquires the multicast lock, if it's not already held.
+     * And the wake lock, if it's enabled and not already held.
+     */
+    public void acquireEnabledLocks() {
+        acquireMulticastLock();
+
+        if (settings.isWakeLockEnabled()) {
+            acquireWakeLock();
+        }
+    }
+
+    private void acquireMulticastLock() {
+        if (!multicastLock.isHeld()) {
+            multicastLock.acquire();
+        }
+    }
+
+    private void releaseMulticastLock() {
         if (multicastLock.isHeld()) {
             multicastLock.release();
         }
     }
 
-    /**
-     * Acquires the multicast lock, if it's not already held.
-     */
-    public void acquire() {
-        if (!multicastLock.isHeld()) {
-            multicastLock.acquire();
+    private void acquireWakeLock() {
+        if (!wakeLock.isHeld()) {
+            wakeLock.acquire();
+        }
+    }
+
+    private void releaseWakeLock() {
+        if (wakeLock.isHeld()) {
+            wakeLock.release();
         }
     }
 }

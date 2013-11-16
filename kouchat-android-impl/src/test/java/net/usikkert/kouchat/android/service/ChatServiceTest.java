@@ -170,12 +170,12 @@ public class ChatServiceTest {
     }
 
     @Test
-    public void onDestroyShouldReleaseMulticastLock() {
+    public void onDestroyShouldReleaseAllLocks() {
         setMockedFields();
 
         chatService.onDestroy();
 
-        verify(multicastLockHandler).release();
+        verify(multicastLockHandler).releaseAllLocks();
     }
 
     @Test

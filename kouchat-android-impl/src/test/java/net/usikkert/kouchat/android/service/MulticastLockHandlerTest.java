@@ -111,48 +111,131 @@ public class MulticastLockHandlerTest {
     }
 
     @Test
-    public void releaseShouldReleaseMulticastLockIfItIsHeld() {
+    public void releaseAllLocksShouldReleaseMulticastLockIfItIsHeld() {
         when(multicastLock.isHeld()).thenReturn(true);
 
-        handler.release();
+        handler.releaseAllLocks();
 
         verify(multicastLock).release();
     }
 
     @Test
-    public void releaseShouldNotReleaseMulticastLockIfItIsNotHeld() {
+    public void releaseAllLocksShouldReleaseWakeLockIfItIsHeld() {
+        when(wakeLock.isHeld()).thenReturn(true);
+
+        handler.releaseAllLocks();
+
+        verify(wakeLock).release();
+    }
+
+    @Test
+    public void releaseAllLocksShouldReleaseAllLocksIfAllIsHeld() {
+        when(multicastLock.isHeld()).thenReturn(true);
+        when(wakeLock.isHeld()).thenReturn(true);
+
+        handler.releaseAllLocks();
+
+        verify(multicastLock).release();
+        verify(wakeLock).release();
+    }
+
+    @Test
+    public void releaseAllLocksShouldNotReleaseMulticastLockIfItIsNotHeld() {
         when(multicastLock.isHeld()).thenReturn(false);
 
-        handler.release();
+        handler.releaseAllLocks();
 
         verify(multicastLock, never()).release();
     }
 
     @Test
-    public void acquireShouldAcquireMulticastLockIfItIsNotHeld() {
+    public void releaseAllLocksShouldNotReleaseWakeLockIfItIsNotHeld() {
+        when(wakeLock.isHeld()).thenReturn(false);
+
+        handler.releaseAllLocks();
+
+        verify(wakeLock, never()).release();
+    }
+
+    @Test
+    public void releaseAllLocksShouldNotReleaseAnyLocksIfNoneIsHeld() {
+        when(multicastLock.isHeld()).thenReturn(false);
+        when(wakeLock.isHeld()).thenReturn(false);
+
+        handler.releaseAllLocks();
+
+        verify(multicastLock, never()).release();
+        verify(wakeLock, never()).release();
+    }
+
+    @Test
+    public void acquireEnabledLocksShouldAcquireMulticastLockIfItIsNotHeld() {
         when(multicastLock.isHeld()).thenReturn(false);
 
-        handler.acquire();
+        handler.acquireEnabledLocks();
 
         verify(multicastLock).acquire();
     }
 
     @Test
-    public void acquireShouldNotAcquireMulticastLockIfItIsHeld() {
+    public void acquireEnabledLocksShouldNotAcquireMulticastLockIfItIsHeld() {
         when(multicastLock.isHeld()).thenReturn(true);
 
-        handler.acquire();
+        handler.acquireEnabledLocks();
 
         verify(multicastLock, never()).acquire();
     }
 
     @Test
-    public void beforeNetworkCameUpShouldAcquireMulticastLock() {
+    public void acquireEnabledLocksShouldAcquireWakeLockIfItIsNotHeldAndEnabled() {
+        when(wakeLock.isHeld()).thenReturn(false);
+        when(settings.isWakeLockEnabled()).thenReturn(true);
+
+        handler.acquireEnabledLocks();
+
+        verify(wakeLock).acquire();
+    }
+
+    @Test
+    public void acquireEnabledLocksShouldNotAcquireWakeLockIfItIsNotHeldAndDisabled() {
+        when(wakeLock.isHeld()).thenReturn(false);
+        when(settings.isWakeLockEnabled()).thenReturn(false);
+
+        handler.acquireEnabledLocks();
+
+        verify(wakeLock, never()).acquire();
+    }
+
+    @Test
+    public void acquireEnabledLocksShouldNotAcquireWakeLockIfItIsHeldAndEnabled() {
+        when(wakeLock.isHeld()).thenReturn(true);
+        when(settings.isWakeLockEnabled()).thenReturn(true);
+
+        handler.acquireEnabledLocks();
+
+        verify(wakeLock, never()).acquire();
+    }
+
+    @Test
+    public void acquireEnabledLocksShouldNotAcquireWakeLockIfItIsHeldAndDisabled() {
+        when(wakeLock.isHeld()).thenReturn(true);
+        when(settings.isWakeLockEnabled()).thenReturn(false);
+
+        handler.acquireEnabledLocks();
+
+        verify(wakeLock, never()).acquire();
+    }
+
+    @Test
+    public void beforeNetworkCameUpShouldAcquireAllLocks() {
         when(multicastLock.isHeld()).thenReturn(false);
+        when(wakeLock.isHeld()).thenReturn(false);
+        when(settings.isWakeLockEnabled()).thenReturn(true);
 
         handler.beforeNetworkCameUp();
 
         verify(multicastLock).acquire();
+        verify(wakeLock).acquire();
     }
 
     @Test
@@ -163,11 +246,13 @@ public class MulticastLockHandlerTest {
     }
 
     @Test
-    public void networkWentDownShouldReleaseMulticastLock() {
+    public void networkWentDownShouldReleaseAllLocks() {
         when(multicastLock.isHeld()).thenReturn(true);
+        when(wakeLock.isHeld()).thenReturn(true);
 
         handler.networkWentDown(false);
 
         verify(multicastLock).release();
+        verify(wakeLock).release();
     }
 }

@@ -86,7 +86,7 @@ public class ChatService extends Service {
     @Override
     public void onDestroy() {
         androidUserInterface.logOff();
-        multicastLockHandler.release();
+        multicastLockHandler.releaseAllLocks();
         chatServiceBinder.onDestroy();
 
         androidUserInterface = null;
