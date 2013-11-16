@@ -103,11 +103,12 @@ public class MulticastLockHandlerTest {
     }
 
     @Test
-    public void constructorShouldCreateLocksAndRegisterListener() {
+    public void constructorShouldCreateLocksAndRegisterListeners() {
         verify(wifiManager).createMulticastLock("KouChat multicast lock");
         verify(powerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KouChat wake lock");
 
         verify(ui).registerNetworkConnectionListener(handler);
+        verify(settings).addSettingsListener(handler);
     }
 
     @Test
@@ -254,5 +255,32 @@ public class MulticastLockHandlerTest {
 
         verify(multicastLock).release();
         verify(wakeLock).release();
+    }
+
+    @Test
+    public void settingChangedShouldAcquireWakeLockIfItIsChangedToEnabled() {
+        when(wakeLock.isHeld()).thenReturn(false);
+        when(settings.isWakeLockEnabled()).thenReturn(true);
+
+        handler.settingChanged("wakeLockEnabled");
+
+        verify(wakeLock).acquire();
+    }
+
+    @Test
+    public void settingChangedShouldReleaseWakeLockIfItIsChangedToDisabled() {
+        when(wakeLock.isHeld()).thenReturn(true);
+        when(settings.isWakeLockEnabled()).thenReturn(false);
+
+        handler.settingChanged("wakeLockEnabled");
+
+        verify(wakeLock).release();
+    }
+
+    @Test
+    public void settingChangedShouldNotCareAboutOtherSettings() {
+        handler.settingChanged("nickName");
+
+        verifyZeroInteractions(wakeLock, multicastLock);
     }
 }

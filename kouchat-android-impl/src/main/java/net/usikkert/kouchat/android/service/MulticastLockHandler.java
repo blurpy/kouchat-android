@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android.service;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
+import net.usikkert.kouchat.event.SettingsListener;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.util.Validate;
 
@@ -44,7 +45,7 @@ import android.os.PowerManager;
  *
  * @author Christian Ihle
  */
-public class MulticastLockHandler implements NetworkConnectionListener {
+public class MulticastLockHandler implements NetworkConnectionListener, SettingsListener {
 
     public static final String MULTICAST_LOCK = "KouChat multicast lock";
     public static final String WAKE_LOCK = "KouChat wake lock";
@@ -67,6 +68,7 @@ public class MulticastLockHandler implements NetworkConnectionListener {
         this.wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK);
 
         androidUserInterface.registerNetworkConnectionListener(this);
+        settings.addSettingsListener(this);
     }
 
     /**
@@ -96,6 +98,24 @@ public class MulticastLockHandler implements NetworkConnectionListener {
     @Override
     public void networkCameUp(final boolean silent) {
 
+    }
+
+    /**
+     * Listens for changes in the wake lock setting, and acquires or releases the wake lock accordingly.
+     *
+     * @param setting The setting which was changed.
+     */
+    @Override
+    public void settingChanged(final String setting) {
+        if (setting.equals("wakeLockEnabled")) {
+            if (settings.isWakeLockEnabled()) {
+                acquireWakeLock();
+            }
+
+            else {
+                releaseWakeLock();
+            }
+        }
     }
 
     /**
