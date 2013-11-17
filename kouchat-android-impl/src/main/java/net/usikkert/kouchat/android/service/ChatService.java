@@ -25,6 +25,7 @@ package net.usikkert.kouchat.android.service;
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.notification.NotificationService;
+import net.usikkert.kouchat.android.setting.AndroidSettingsLoader;
 import net.usikkert.kouchat.misc.Settings;
 
 import android.app.Service;
@@ -54,9 +55,12 @@ public class ChatService extends Service {
         System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
 
         notificationService = new NotificationService(this);
+
         final Settings settings = new Settings();
+        final AndroidSettingsLoader androidSettingsLoader = new AndroidSettingsLoader();
+        androidSettingsLoader.loadStoredSettings(this, settings);
+
         androidUserInterface = new AndroidUserInterface(this, settings, notificationService);
-        androidUserInterface.setNickNameFromSettings();
 
         final WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         final PowerManager powerManager = (PowerManager) this.getSystemService(POWER_SERVICE);

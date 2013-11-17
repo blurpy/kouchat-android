@@ -50,9 +50,7 @@ import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 /**
@@ -345,24 +343,6 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         };
 
         sendMessageTask.execute((Void) null);
-    }
-
-    public void setNickNameFromSettings() {
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        final String nickNameKey = context.getString(R.string.settings_key_nick_name);
-        final String nickName = getNickNameFromSettings(preferences, nickNameKey);
-
-        me.setNick(nickName);
-    }
-
-    private String getNickNameFromSettings(final SharedPreferences preferences, final String nickNameKey) {
-        final String nickNameFromSettings = preferences.getString(nickNameKey, null);
-
-        if (Tools.isValidNick(nickNameFromSettings)) {
-            return nickNameFromSettings;
-        }
-
-        return Integer.toString(me.getCode());
     }
 
     public boolean changeNickName(final String nick) {

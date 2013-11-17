@@ -31,7 +31,6 @@ import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.filetransfer.AndroidFileTransferListener;
 import net.usikkert.kouchat.android.filetransfer.AndroidFileUtils;
 import net.usikkert.kouchat.android.notification.NotificationService;
-import net.usikkert.kouchat.android.util.RobolectricTestUtils;
 import net.usikkert.kouchat.event.FileTransferListener;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.misc.ChatLogger;
@@ -532,35 +531,6 @@ public class AndroidUserInterfaceTest {
         verify(controller).sendPrivateMessage("Fail now", testUser);
         verify(msgController).showPrivateSystemMessage(testUser, "This failed");
         verifyNoMoreInteractions(msgController);
-    }
-
-    @Test
-    public void setNickNameFromSettingsShouldSetValidNickInMeFromSettings() {
-        RobolectricTestUtils.setNickNameInTheAndroidSettingsTo("Robofied");
-        assertEquals("Me", me.getNick());
-
-        androidUserInterface.setNickNameFromSettings();
-
-        assertEquals("Robofied", me.getNick());
-    }
-
-    @Test
-    public void setNickNameFromSettingsShouldSetInvalidNickInMeFromCode() {
-        RobolectricTestUtils.setNickNameInTheAndroidSettingsTo("123456789012345");
-        assertEquals("Me", me.getNick());
-
-        androidUserInterface.setNickNameFromSettings();
-
-        assertEquals("1234", me.getNick());
-    }
-
-    @Test
-    public void setNickNameFromSettingsShouldSetMissingNickInMeFromCode() {
-        assertEquals("Me", me.getNick());
-
-        androidUserInterface.setNickNameFromSettings();
-
-        assertEquals("1234", me.getNick());
     }
 
     @Test
