@@ -2,12 +2,14 @@ http://petrnohejl.github.io/Android-Cheatsheet-For-Graphic-Designers/
 http://developer.android.com/design/style/iconography.html
 http://developer.android.com/guide/practices/screens_support.html
 
+Nexus 5 is xxhdpi, with xxxhdpi launcher icons.
 
-  ldip = 0.75
-  mdpi = 1.0
-  hdpi = 1.5
- xhdpi = 2.0
-xxhdpi = 3.0
+   ldpi = 0.75
+   mdpi = 1.0
+   hdpi = 1.5
+  xhdpi = 2.0
+ xxhdpi = 3.0
+xxxhdpi = 4.0
 
 
 ic_dialog.png:
@@ -17,10 +19,11 @@ ic_dialog.png:
 xxhdpi: 96*96 (90*90)
 
 ic_launcher.png:
-  mdpi: 48*48 (42*42)
-  hdpi: 72*72 (64*64)
- xhdpi: 96*96 (84*84)
-xxhdpi: 144*144 (126*126)
+   mdpi: 48*48 (42*42)
+   hdpi: 72*72 (64*64)
+  xhdpi: 96*96 (84*84)
+ xxhdpi: 144*144 (126*126)
+xxxhdpi: 192*192 (168*168)
 
 ic_stat_notify.png:
   mdpi: 24*24 (22*22)
