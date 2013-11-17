@@ -39,6 +39,7 @@ import android.preference.PreferenceManager;
  *
  * <ul>
  *   <li>Nick name</li>
+ *   <li>Wake lock</li>
  * </ul>
  *
  * @author Christian Ihle
@@ -49,12 +50,13 @@ public class AndroidSettingsLoader {
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(settings, "Settings can not be null");
 
-        setNickName(context, settings.getMe());
-    }
-
-    private void setNickName(final Context context, final User me) {
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
+        loadNickName(context, preferences, settings.getMe());
+        loadWakeLock(context, preferences, settings);
+    }
+
+    private void loadNickName(final Context context, final SharedPreferences preferences, final User me) {
         final String nickNameKey = context.getString(R.string.settings_key_nick_name);
         final String nickName = getNickNameFromPreferences(preferences, nickNameKey, me);
 
@@ -71,5 +73,16 @@ public class AndroidSettingsLoader {
         }
 
         return Integer.toString(me.getCode());
+    }
+
+    private void loadWakeLock(final Context context, final SharedPreferences preferences, final Settings settings) {
+        final String wakeLockKey = context.getString(R.string.settings_wake_lock_key);
+        final boolean wakeLockEnabled = getWakeLockFromPreferences(preferences, wakeLockKey);
+
+        settings.setWakeLockEnabled(wakeLockEnabled);
+    }
+
+    private boolean getWakeLockFromPreferences(final SharedPreferences preferences, final String wakeLockKey) {
+        return preferences.getBoolean(wakeLockKey, false);
     }
 }

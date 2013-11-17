@@ -105,11 +105,36 @@ public class AndroidSettingsLoaderTest {
     }
 
     @Test
-    public void loadStoredSettingsShouldSetMissingNickToUserCode() {
+    public void loadStoredSettingsShouldSetNickToUserCodeIfNotSet() {
         assertEquals("Me", me.getNick());
 
         settingsLoader.loadStoredSettings(context, settings);
 
         assertEquals("1234", me.getNick());
+    }
+
+    @Test
+    public void loadStoredSettingsShouldSetWakeLockToFalseIfNotSet() {
+        settingsLoader.loadStoredSettings(context, settings);
+
+        assertFalse(settings.isWakeLockEnabled());
+    }
+
+    @Test
+    public void loadStoredSettingsShouldSetWakeLockToFalseIfSetToFalse() {
+        RobolectricTestUtils.setWakeLockInTheAndroidSettingsTo(false);
+
+        settingsLoader.loadStoredSettings(context, settings);
+
+        assertFalse(settings.isWakeLockEnabled());
+    }
+
+    @Test
+    public void loadStoredSettingsShouldSetWakeLockToTrueIfSetToTrue() {
+        RobolectricTestUtils.setWakeLockInTheAndroidSettingsTo(true);
+
+        settingsLoader.loadStoredSettings(context, settings);
+
+        assertTrue(settings.isWakeLockEnabled());
     }
 }
