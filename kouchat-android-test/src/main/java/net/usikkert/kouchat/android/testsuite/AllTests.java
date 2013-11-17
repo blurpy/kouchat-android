@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android.testsuite;
 
 import net.usikkert.kouchat.android.AboutTest;
 import net.usikkert.kouchat.android.HitchhikerTest;
+import net.usikkert.kouchat.android.LockTest;
 import net.usikkert.kouchat.android.MainChatTest;
 import net.usikkert.kouchat.android.NotificationTest;
 import net.usikkert.kouchat.android.PrivateChatErrorHandlingTest;
@@ -60,6 +61,7 @@ public class AllTests extends TestSuite {
         testSuite.addTestSuite(NotificationTest.class);
         testSuite.addTestSuite(SendFileTest.class);
         testSuite.addTestSuite(ReceiveFileTest.class);
+        testSuite.addTestSuite(LockTest.class);
 
         // Run these manually:
 //        testSuite.addTestSuite(ManualLinkTest.class);
