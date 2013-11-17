@@ -39,7 +39,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.shadows.ShadowPreferenceManager;
-import org.robolectric.shadows.ShadowToast;
 import org.robolectric.tester.android.content.TestSharedPreferences;
 
 import com.actionbarsherlock.internal.view.menu.ActionMenuItem;
@@ -224,7 +223,6 @@ public class SettingsControllerTest {
 
         verify(controllerSpy).findPreference("wake_lock");
         verify(settings).setWakeLockEnabled(true);
-        assertEquals("Enable wake lock: true", ShadowToast.getTextOfLatestToast());
     }
 
     @Test

@@ -41,7 +41,6 @@ import android.os.IBinder;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.widget.Toast;
 
 /**
  * Controller for changing the settings.
@@ -119,9 +118,6 @@ public class SettingsController extends SherlockPreferenceActivity
         else if (key.equals(wakeLockKey)) {
             final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(key);
             settings.setWakeLockEnabled(checkBoxPreference.isChecked());
-
-            // TODO
-            Toast.makeText(this, "Enable wake lock: " + checkBoxPreference.isChecked(), Toast.LENGTH_SHORT).show();
         }
     }
 

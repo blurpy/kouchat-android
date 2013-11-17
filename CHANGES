@@ -3,7 +3,7 @@
 
 * version 0.12.0 (xx.xx.2013)
   - Fixed rare bug where quitting would not log off the network right away.
-  - Added option to enable a wake lock, to keep the device from sleeping and losing the network connection. (in progress)
+  - Added option to enable a wake lock, to keep the device from sleeping and losing the network connection.
 
 
 * version 0.11.0 (14.10.2013)
