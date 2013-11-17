@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android.service;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
@@ -282,5 +283,23 @@ public class LockHandlerTest {
         handler.settingChanged("nickName");
 
         verifyZeroInteractions(wakeLock, multicastLock);
+    }
+
+    @Test
+    public void multicastLockIsHeldShouldReturnValueFromMulticastLock() {
+        when(multicastLock.isHeld()).thenReturn(true);
+        assertTrue(handler.multicastLockIsHeld());
+
+        when(multicastLock.isHeld()).thenReturn(false);
+        assertFalse(handler.multicastLockIsHeld());
+    }
+
+    @Test
+    public void wakeLockIsHeldShouldReturnValueFromWakeLock() {
+        when(wakeLock.isHeld()).thenReturn(true);
+        assertTrue(handler.wakeLockIsHeld());
+
+        when(wakeLock.isHeld()).thenReturn(false);
+        assertFalse(handler.wakeLockIsHeld());
     }
 }

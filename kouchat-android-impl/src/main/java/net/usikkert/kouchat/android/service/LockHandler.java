@@ -138,26 +138,44 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
         }
     }
 
+    /**
+     * Returns if the multicast lock has been acquired and is currently held (active).
+     *
+     * @return If the multicast lock is held.
+     */
+    public boolean multicastLockIsHeld() {
+        return multicastLock.isHeld();
+    }
+
+    /**
+     * Returns if the wake lock has been acquired and is currently held (active).
+     *
+     * @return If the wake lock is held.
+     */
+    public boolean wakeLockIsHeld() {
+        return wakeLock.isHeld();
+    }
+
     private void acquireMulticastLock() {
-        if (!multicastLock.isHeld()) {
+        if (!multicastLockIsHeld()) {
             multicastLock.acquire();
         }
     }
 
     private void releaseMulticastLock() {
-        if (multicastLock.isHeld()) {
+        if (multicastLockIsHeld()) {
             multicastLock.release();
         }
     }
 
     private void acquireWakeLock() {
-        if (!wakeLock.isHeld()) {
+        if (!wakeLockIsHeld()) {
             wakeLock.acquire();
         }
     }
 
     private void releaseWakeLock() {
-        if (wakeLock.isHeld()) {
+        if (wakeLockIsHeld()) {
             wakeLock.release();
         }
     }
