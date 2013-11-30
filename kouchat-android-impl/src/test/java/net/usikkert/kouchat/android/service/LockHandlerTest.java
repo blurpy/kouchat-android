@@ -32,6 +32,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
@@ -301,5 +303,30 @@ public class LockHandlerTest {
 
         when(wakeLock.isHeld()).thenReturn(false);
         assertFalse(handler.wakeLockIsHeld());
+    }
+
+    @Test
+    public void settingsListenerShouldEnableAndDisableWakeLockBasedOnChangedSetting() {
+        final Settings realSettings = new Settings();
+        new LockHandler(ui, realSettings, wifiManager, powerManager);
+
+        verifyZeroInteractions(wakeLock);
+        makeWakeLockIsHeldReturnTrueAfterAcquire(); // Like it would with the real implementation
+
+        realSettings.setWakeLockEnabled(true);
+        verify(wakeLock).acquire();
+
+        realSettings.setWakeLockEnabled(false);
+        verify(wakeLock).release();
+    }
+
+    private void makeWakeLockIsHeldReturnTrueAfterAcquire() {
+        doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(final InvocationOnMock invocation) throws Throwable {
+                when(wakeLock.isHeld()).thenReturn(true);
+                return null;
+            }
+        }).when(wakeLock).acquire();
     }
 }
