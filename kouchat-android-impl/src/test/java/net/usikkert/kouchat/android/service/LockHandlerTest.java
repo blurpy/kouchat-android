@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.misc.Setting;
 import net.usikkert.kouchat.misc.Settings;
 
 import org.junit.Before;
@@ -265,7 +266,7 @@ public class LockHandlerTest {
         when(wakeLock.isHeld()).thenReturn(false);
         when(settings.isWakeLockEnabled()).thenReturn(true);
 
-        handler.settingChanged("wakeLockEnabled");
+        handler.settingChanged(Setting.WAKE_LOCK);
 
         verify(wakeLock).acquire();
     }
@@ -275,14 +276,14 @@ public class LockHandlerTest {
         when(wakeLock.isHeld()).thenReturn(true);
         when(settings.isWakeLockEnabled()).thenReturn(false);
 
-        handler.settingChanged("wakeLockEnabled");
+        handler.settingChanged(Setting.WAKE_LOCK);
 
         verify(wakeLock).release();
     }
 
     @Test
     public void settingChangedShouldNotCareAboutOtherSettings() {
-        handler.settingChanged("nickName");
+        handler.settingChanged(Setting.LOGGING);
 
         verifyZeroInteractions(wakeLock, multicastLock);
     }

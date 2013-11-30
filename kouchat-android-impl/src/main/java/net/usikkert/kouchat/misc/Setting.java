@@ -20,22 +20,20 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.event;
-
-import net.usikkert.kouchat.misc.Setting;
+package net.usikkert.kouchat.misc;
 
 /**
- * This is the interface used by classes wishing to be notified
- * when a setting is changed in Settings.
+ * An enum representing the different types of settings that can be changed.
+ *
+ * <p>Not a complete list.</p>
  *
  * @author Christian Ihle
  */
-public interface SettingsListener {
+public enum Setting {
 
-    /**
-     * When a setting is changed, this method is called.
-     *
-     * @param setting The setting which was changed.
-     */
-    void settingChanged(Setting setting);
+    OWN_COLOR,
+    SYS_COLOR,
+    LOGGING,
+    SOUND,
+    WAKE_LOCK
 }

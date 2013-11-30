@@ -39,7 +39,7 @@ public class SettingsTest {
 
     private Settings settings;
 
-    private String lastChangedSetting;
+    private Setting lastChangedSetting;
 
     @Before
     public void setUp() throws Exception {
@@ -54,7 +54,7 @@ public class SettingsTest {
         System.setProperty("file.separator", "/");
 
         settings.addSettingsListener(new SettingsListener() {
-            public void settingChanged(final String setting) {
+            public void settingChanged(final Setting setting) {
                 lastChangedSetting = setting;
             }
         });
@@ -98,7 +98,7 @@ public class SettingsTest {
         settings.setWakeLockEnabled(true);
 
         assertTrue(settings.isWakeLockEnabled());
-        assertEquals("wakeLockEnabled", lastChangedSetting);
+        assertEquals(Setting.WAKE_LOCK, lastChangedSetting);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class SettingsTest {
         settings.setLogging(true);
 
         assertTrue(settings.isLogging());
-        assertEquals("logging", lastChangedSetting);
+        assertEquals(Setting.LOGGING, lastChangedSetting);
     }
 
     @Test
@@ -138,7 +138,7 @@ public class SettingsTest {
         settings.setSound(true);
 
         assertTrue(settings.isSound());
-        assertEquals("sound", lastChangedSetting);
+        assertEquals(Setting.SOUND, lastChangedSetting);
     }
 
     @Test
@@ -158,7 +158,7 @@ public class SettingsTest {
         settings.setOwnColor(100);
 
         assertEquals(100, settings.getOwnColor());
-        assertEquals("ownColor", lastChangedSetting);
+        assertEquals(Setting.OWN_COLOR, lastChangedSetting);
     }
 
     @Test
@@ -178,6 +178,6 @@ public class SettingsTest {
         settings.setSysColor(100);
 
         assertEquals(100, settings.getSysColor());
-        assertEquals("sysColor", lastChangedSetting);
+        assertEquals(Setting.SYS_COLOR, lastChangedSetting);
     }
 }
