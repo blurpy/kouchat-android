@@ -40,6 +40,8 @@ import android.test.ActivityInstrumentationTestCase2;
  */
 public class LockTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
+    private static boolean wakeLockEnabledInitially;
+
     private Solo solo;
     private LockHandler lockHandler;
 
@@ -60,6 +62,7 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
         assertTrue(solo.searchText("Enable wake lock"));
 
         if (wakeLockCheckBoxIsEnabled()) {
+            wakeLockEnabledInitially = true;
             clickOnWakeLockCheckBox();
         }
 
@@ -98,6 +101,13 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
 
     public void test06WakeLockShouldBeDisabledOnStartupWhenDisabledInTheSettings() {
         checkThatWakeLockIsDisabled();
+    }
+
+    public void test07ActivateWakeLockAgainIfEnabledInitially() {
+        if (wakeLockEnabledInitially) {
+            RobotiumTestUtils.openSettings(solo);
+            clickOnWakeLockCheckBox();
+        }
     }
 
     public void test99Quit() {
