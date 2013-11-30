@@ -71,6 +71,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
 
         assertEquals(1, userList.getCount());
         assertSame(me, userList.getItemAtPosition(0));
+        assertTrue(me.getClient().endsWith("Android"));
     }
 
     public void test02UserListShouldAddNewUser() {
