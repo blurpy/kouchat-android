@@ -44,6 +44,13 @@ public class SettingsTest {
     @Before
     public void setUp() throws Exception {
         settings = new Settings();
+
+        // Setting these to known values to avoid tests behaving differently on different machines
+        settings.setSound(false);
+        settings.setLogging(false);
+        settings.setOwnColor(0);
+        settings.setSysColor(0);
+
         System.setProperty("file.separator", "/");
 
         settings.addSettingsListener(new SettingsListener() {
@@ -92,5 +99,85 @@ public class SettingsTest {
 
         assertTrue(settings.isWakeLockEnabled());
         assertEquals("wakeLockEnabled", lastChangedSetting);
+    }
+
+    @Test
+    public void setLoggingShouldNotNotifyListenersIfSettingIsUnchanged() {
+        assertFalse(settings.isLogging());
+
+        settings.setLogging(false);
+
+        assertFalse(settings.isLogging());
+        assertNull(lastChangedSetting);
+    }
+
+    @Test
+    public void setLoggingShouldNotifyListenersIfSettingIsChanged() {
+        assertFalse(settings.isLogging());
+
+        settings.setLogging(true);
+
+        assertTrue(settings.isLogging());
+        assertEquals("logging", lastChangedSetting);
+    }
+
+    @Test
+    public void setSoundShouldNotNotifyListenersIfSettingIsUnchanged() {
+        assertFalse(settings.isSound());
+
+        settings.setSound(false);
+
+        assertFalse(settings.isSound());
+        assertNull(lastChangedSetting);
+    }
+
+    @Test
+    public void setSoundShouldNotifyListenersIfSettingIsChanged() {
+        assertFalse(settings.isSound());
+
+        settings.setSound(true);
+
+        assertTrue(settings.isSound());
+        assertEquals("sound", lastChangedSetting);
+    }
+
+    @Test
+    public void setOwnColorShouldNotNotifyListenersIfSettingIsUnchanged() {
+        assertEquals(0, settings.getOwnColor());
+
+        settings.setOwnColor(0);
+
+        assertEquals(0, settings.getOwnColor());
+        assertNull(lastChangedSetting);
+    }
+
+    @Test
+    public void setOwnColorShouldNotifyListenersIfSettingIsChanged() {
+        assertEquals(0, settings.getOwnColor());
+
+        settings.setOwnColor(100);
+
+        assertEquals(100, settings.getOwnColor());
+        assertEquals("ownColor", lastChangedSetting);
+    }
+
+    @Test
+    public void setSysColorShouldNotNotifyListenersIfSettingIsUnchanged() {
+        assertEquals(0, settings.getSysColor());
+
+        settings.setSysColor(0);
+
+        assertEquals(0, settings.getSysColor());
+        assertNull(lastChangedSetting);
+    }
+
+    @Test
+    public void setSysColorShouldNotifyListenersIfSettingIsChanged() {
+        assertEquals(0, settings.getSysColor());
+
+        settings.setSysColor(100);
+
+        assertEquals(100, settings.getSysColor());
+        assertEquals("sysColor", lastChangedSetting);
     }
 }
