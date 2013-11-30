@@ -25,18 +25,12 @@ package net.usikkert.kouchat.android;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.service.ChatService;
-import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.android.service.LockHandler;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.testclient.TestUtils;
 
 import com.jayway.android.robotium.solo.Solo;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.test.ActivityInstrumentationTestCase2;
 
 /**
@@ -47,7 +41,6 @@ import android.test.ActivityInstrumentationTestCase2;
 public class LockTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private Solo solo;
-    private ServiceConnection serviceConnection;
     private LockHandler lockHandler;
 
     public LockTest() {
@@ -58,7 +51,7 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
         final MainChatController activity = getActivity();
 
         solo = new Solo(getInstrumentation(), activity);
-        bindChatService(activity);
+        lockHandler = getLockHandler(activity);
     }
 
     public void test01DisableWakeLockAndQuit() {
@@ -76,6 +69,8 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
     }
 
     public void test02MulticastLockShouldBeEnabledAndWakeLockDisabledByDefault() {
+        solo.sleep(1000);
+
         assertTrue(lockHandler.multicastLockIsHeld());
         assertFalse(lockHandler.wakeLockIsHeld());
     }
@@ -87,41 +82,20 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
     }
 
     public void tearDown() {
-        getActivity().unbindService(serviceConnection);
-
         solo.finishOpenedActivities();
 
         solo = null;
         lockHandler = null;
-        serviceConnection = null;
         setActivity(null);
 
         System.gc();
     }
 
-    private void bindChatService(final MainChatController activity) {
-        final Intent chatServiceIntent = new Intent(activity, ChatService.class);
-        serviceConnection = createServiceConnection();
-
-        activity.bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
-        solo.sleep(500); // To let the bind complete
-    }
-
-    private ServiceConnection createServiceConnection() {
-        return new ServiceConnection() {
-            @Override
-            public void onServiceConnected(final ComponentName name, final IBinder iBinder) {
-                final ChatServiceBinder binder = (ChatServiceBinder) iBinder;
-                lockHandler = getLockHandler(binder.getAndroidUserInterface());
-            }
-
-            @Override
-            public void onServiceDisconnected(final ComponentName name) { }
-        };
-    }
-
-    private LockHandler getLockHandler(final AndroidUserInterface androidUserInterface) {
+    private LockHandler getLockHandler(final MainChatController activity) {
+        final AndroidUserInterface androidUserInterface =
+                TestUtils.getFieldValue(activity, AndroidUserInterface.class, "androidUserInterface");
         final ChatService chatService = TestUtils.getFieldValue(androidUserInterface, ChatService.class, "context");
+
         return TestUtils.getFieldValue(chatService, LockHandler.class, "lockHandler");
     }
 }
