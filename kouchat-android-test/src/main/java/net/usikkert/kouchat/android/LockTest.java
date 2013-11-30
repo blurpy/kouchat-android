@@ -72,7 +72,33 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
         checkThatWakeLockIsDisabled();
     }
 
-    // TODO
+    public void test03EnablingWakeLockShouldHappenImmediately() {
+        RobotiumTestUtils.openSettings(solo);
+
+        checkThatWakeLockIsDisabled();
+        clickOnWakeLockCheckBox();
+        checkThatWakeLockIsEnabled();
+
+        RobotiumTestUtils.quit(solo);
+    }
+
+    public void test04WakeLockShouldBeEnabledOnStartupWhenEnabledInTheSettings() {
+        checkThatWakeLockIsEnabled();
+    }
+
+    public void test05DisablingWakeLockShouldHappenImmediately() {
+        RobotiumTestUtils.openSettings(solo);
+
+        checkThatWakeLockIsEnabled();
+        clickOnWakeLockCheckBox();
+        checkThatWakeLockIsDisabled();
+
+        RobotiumTestUtils.quit(solo);
+    }
+
+    public void test06WakeLockShouldBeDisabledOnStartupWhenDisabledInTheSettings() {
+        checkThatWakeLockIsDisabled();
+    }
 
     public void test99Quit() {
         RobotiumTestUtils.quit(solo);
@@ -102,6 +128,13 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
 
     private void clickOnWakeLockCheckBox() {
         solo.clickOnCheckBox(0);
+    }
+
+    private void checkThatWakeLockIsEnabled() {
+        solo.sleep(1000);
+
+        assertTrue(lockHandler.multicastLockIsHeld()); // Always on
+        assertTrue(lockHandler.wakeLockIsHeld());
     }
 
     private void checkThatWakeLockIsDisabled() {
