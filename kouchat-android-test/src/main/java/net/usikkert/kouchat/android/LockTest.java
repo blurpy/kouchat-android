@@ -54,25 +54,22 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
         lockHandler = getLockHandler(activity);
     }
 
-    public void test01DisableWakeLockAndQuit() {
+    public void test01DisableWakeLockIfNecessaryAndQuit() {
         RobotiumTestUtils.openSettings(solo);
 
         assertTrue(solo.searchText("Enable wake lock"));
 
-        if (solo.isCheckBoxChecked(0)) {
-            solo.clickOnCheckBox(0);
+        if (wakeLockCheckBoxIsEnabled()) {
+            clickOnWakeLockCheckBox();
         }
 
-        assertFalse(solo.isCheckBoxChecked(0));
+        assertFalse(wakeLockCheckBoxIsEnabled());
 
         RobotiumTestUtils.quit(solo);
     }
 
-    public void test02MulticastLockShouldBeEnabledAndWakeLockDisabledByDefault() {
-        solo.sleep(1000);
-
-        assertTrue(lockHandler.multicastLockIsHeld());
-        assertFalse(lockHandler.wakeLockIsHeld());
+    public void test02WakeLockShouldBeDisabledNow() {
+        checkThatWakeLockIsDisabled();
     }
 
     // TODO
@@ -97,5 +94,20 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
         final ChatService chatService = TestUtils.getFieldValue(androidUserInterface, ChatService.class, "context");
 
         return TestUtils.getFieldValue(chatService, LockHandler.class, "lockHandler");
+    }
+
+    private boolean wakeLockCheckBoxIsEnabled() {
+        return solo.isCheckBoxChecked(0);
+    }
+
+    private void clickOnWakeLockCheckBox() {
+        solo.clickOnCheckBox(0);
+    }
+
+    private void checkThatWakeLockIsDisabled() {
+        solo.sleep(1000);
+
+        assertTrue(lockHandler.multicastLockIsHeld()); // Always on
+        assertFalse(lockHandler.wakeLockIsHeld());
     }
 }
