@@ -71,11 +71,7 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
         RobotiumTestUtils.quit(solo);
     }
 
-    public void test02WakeLockShouldBeDisabledNow() {
-        checkThatWakeLockIsDisabled();
-    }
-
-    public void test03EnablingWakeLockShouldHappenImmediately() {
+    public void test02EnablingWakeLockShouldHappenImmediately() {
         RobotiumTestUtils.openSettings(solo);
 
         checkThatWakeLockIsDisabled();
@@ -85,11 +81,11 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
         RobotiumTestUtils.quit(solo);
     }
 
-    public void test04WakeLockShouldBeEnabledOnStartupWhenEnabledInTheSettings() {
+    public void test03WakeLockShouldBeEnabledOnStartupWhenEnabledInTheSettings() {
         checkThatWakeLockIsEnabled();
     }
 
-    public void test05DisablingWakeLockShouldHappenImmediately() {
+    public void test04DisablingWakeLockShouldHappenImmediately() {
         RobotiumTestUtils.openSettings(solo);
 
         checkThatWakeLockIsEnabled();
@@ -99,11 +95,11 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
         RobotiumTestUtils.quit(solo);
     }
 
-    public void test06WakeLockShouldBeDisabledOnStartupWhenDisabledInTheSettings() {
+    public void test05WakeLockShouldBeDisabledOnStartupWhenDisabledInTheSettings() {
         checkThatWakeLockIsDisabled();
     }
 
-    public void test07ActivateWakeLockAgainIfEnabledInitially() {
+    public void test06ActivateWakeLockAgainIfEnabledInitially() {
         if (wakeLockEnabledInitially) {
             RobotiumTestUtils.openSettings(solo);
             clickOnWakeLockCheckBox();
