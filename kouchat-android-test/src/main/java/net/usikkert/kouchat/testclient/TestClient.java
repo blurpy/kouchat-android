@@ -67,7 +67,10 @@ public class TestClient {
 
         me = settings.getMe();
         me.setNick(nickName);
-        TestUtils.setFieldValue(me, "code", userCode);
+
+        if (userCode != 0) {
+            TestUtils.setFieldValue(me, "code", userCode);
+        }
 
         ui = new TestClientUserInterface(settings);
         controller = new Controller(ui, settings);
@@ -225,7 +228,7 @@ public class TestClient {
     public void changeNickName(final String newNickName) {
         try {
             controller.changeMyNick(newNickName);
-        } catch (CommandException e) {
+        } catch (final CommandException e) {
             throw new RuntimeException(e);
         }
     }
@@ -275,7 +278,7 @@ public class TestClient {
 
         try {
             commandParser.sendFile(localUser, file);
-        } catch (CommandException e) {
+        } catch (final CommandException e) {
             throw new RuntimeException(e);
         }
     }

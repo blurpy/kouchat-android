@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.testclient;
 
+import static org.junit.Assert.*;
+
 import net.usikkert.kouchat.misc.User;
 
 import org.junit.After;
@@ -55,6 +57,46 @@ public class TestClientTest {
         user.setIpAddress("localhost");
 
         testClient.sendPrivateChatMessage("Hey there", user);
+    }
+
+    @Test
+    public void testClientWithNickNameAndUserCodeShouldCreateUniqueUserCodeWhenZeroIsSpecified() {
+        final TestClient testClient1 = new TestClient("1", 0);
+        assertNotEquals(0, testClient1.getUserCode());
+
+        final TestClient testClient2 = new TestClient("2", 0);
+        assertNotEquals(0, testClient2.getUserCode());
+
+        assertNotEquals(testClient1.getUserCode(), testClient2.getUserCode());
+    }
+
+    @Test
+    public void testClientWithNickNameAndUserCodeShouldUseSpecifiedUserCodeIfNotZero() {
+        final TestClient testClient1 = new TestClient("1", 1234);
+        assertEquals(1234, testClient1.getUserCode());
+
+        final TestClient testClient2 = new TestClient("2", 6789);
+        assertEquals(6789, testClient2.getUserCode());
+    }
+
+    @Test
+    public void testClientWithNickNameAndUserCodeAndColorShouldCreateUniqueUserCodeWhenZeroIsSpecified() {
+        final TestClient testClient1 = new TestClient("1", 0, 100);
+        assertNotEquals(0, testClient1.getUserCode());
+
+        final TestClient testClient2 = new TestClient("2", 0, 200);
+        assertNotEquals(0, testClient2.getUserCode());
+
+        assertNotEquals(testClient1.getUserCode(), testClient2.getUserCode());
+    }
+
+    @Test
+    public void testClientWithNickNameAndUserCodeAndColorShouldUseSpecifiedUserCodeIfNotZero() {
+        final TestClient testClient1 = new TestClient("1", 1234, 100);
+        assertEquals(1234, testClient1.getUserCode());
+
+        final TestClient testClient2 = new TestClient("2", 6789, 200);
+        assertEquals(6789, testClient2.getUserCode());
     }
 
     @After

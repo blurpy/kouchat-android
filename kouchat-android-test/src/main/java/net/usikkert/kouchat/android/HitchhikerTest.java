@@ -66,14 +66,14 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
     public void setUp() {
         // Making sure the test clients only logs on once during all the tests
         if (arthur == null) {
-            arthur = new TestClient("Arthur", 12345671, -6750208);
+            arthur = new TestClient("Arthur", 0, -6750208);
             arthur.logon();
 
-            ford = new TestClient("Ford", 12345672, -10066432);
+            ford = new TestClient("Ford", 0, -10066432);
             ford.setInitialTopic("DON'T PANIC", getDateInPast());
             ford.logon();
 
-            trillian = new TestClient("Trillian", 12345673);
+            trillian = new TestClient("Trillian", 0);
             trillian.logon();
         }
 

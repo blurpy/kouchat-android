@@ -89,9 +89,9 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
         notificationService = TestUtils.getFieldValue(ui, NotificationService.class, "notificationService");
 
         if (albert == null) {
-            albert = new TestClient("Albert", 1234);
-            tina = new TestClient("Tina", 1235);
-            xen = new TestClient("Xen", 1236);
+            albert = new TestClient("Albert", 0);
+            tina = new TestClient("Tina", 0);
+            xen = new TestClient("Xen", 0);
 
             albert.logon();
             tina.logon();
