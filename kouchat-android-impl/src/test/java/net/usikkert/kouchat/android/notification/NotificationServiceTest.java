@@ -421,6 +421,7 @@ public class NotificationServiceTest {
         assertEquals(ReceiveFileController.class, pendingIntent.getIntentClass());
         assertEquals(1234, pendingIntent.getIntExtra("userCode", -1));
         assertEquals(12, pendingIntent.getIntExtra("fileTransferId", -1));
+        assertTrue(pendingIntent.getAction().matches("openReceiveFileDialog \\d{13}"));
     }
 
     @Test

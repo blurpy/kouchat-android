@@ -323,6 +323,7 @@ public class NotificationService {
 
         intent.putExtra("userCode", fileReceiver.getUser().getCode());
         intent.putExtra("fileTransferId", fileReceiver.getId());
+        intent.setAction("openReceiveFileDialog " + System.currentTimeMillis()); // Unique - to avoid it being cached
 
         return intent;
     }
