@@ -94,10 +94,10 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
     public void test01SetNickNameAndQuit() {
         RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
         RobotiumTestUtils.changeNickNameTo(solo, "Christian");
-        RobotiumTestUtils.goHome(solo);
 
         sleep(15000); // Take screenshot of the settings
 
+        RobotiumTestUtils.goHome(solo);
         RobotiumTestUtils.quit(solo);
     }
 
