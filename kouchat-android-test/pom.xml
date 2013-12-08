@@ -8,7 +8,7 @@
   <parent>
     <artifactId>kouchat-android</artifactId>
     <groupId>net.usikkert.kouchat</groupId>
-    <version>0.12.0-SNAPSHOT</version>
+    <version>0.12.0</version>
   </parent>
 
   <dependencies>
