@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+  <ScrollView android:id="@+id/privateChatScroll"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="#fff"
+              android:layout_alignParentLeft="true"
+              android:layout_above="@+id/privateChatInput">
+
+    <TextView android:id="@+id/privateChatView"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:lineSpacingMultiplier="1.1"
+              android:padding="1dp"
+              android:textIsSelectable="true"/>
+  </ScrollView>
+
+  <EditText android:id="@+id/privateChatInput"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:imeOptions="actionSend|flagNoFullscreen"
+            android:singleLine="true"
+            android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
