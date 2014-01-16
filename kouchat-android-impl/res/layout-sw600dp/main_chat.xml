@@ -22,7 +22,7 @@
   </ScrollView>
 
   <ListView android:id="@+id/mainChatUserList"
-            android:layout_width="130dp"
+            android:layout_width="130sp"
             android:layout_height="fill_parent"
             android:layout_above="@+id/mainChatInput"
             android:layout_alignParentRight="true"/>
