@@ -12,9 +12,9 @@
              android:src="@drawable/ic_dot"/>
 
   <TextView android:id="@+id/mainChatUserListLabel"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:textSize="16sp"
-            android:gravity="center"/>
+            android:gravity="center|left"/>
 
 </LinearLayout>
