@@ -13,6 +13,7 @@
   <TextView android:id="@+id/sendFileLine1TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
             android:paddingBottom="4dp"
             android:paddingRight="8dp"
             android:paddingLeft="8dp"/>
@@ -20,6 +21,7 @@
   <TextView android:id="@+id/sendFileLine2TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
             android:paddingBottom="4dp"
             android:paddingRight="8dp"
             android:paddingLeft="8dp"/>
@@ -37,6 +39,7 @@
           android:layout_height="wrap_content"
           android:text="@string/cancel"
           android:padding="8dp"
+          android:textSize="16sp"
           android:layout_gravity="center"/>
 
 </LinearLayout>
