@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- Layout of the private chat, for phones. -->
+<!-- Layout of the private chat. -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
@@ -17,7 +17,8 @@
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:lineSpacingMultiplier="1.1"
-              android:padding="1dp"
+              android:padding="@dimen/chat_view_padding"
+              android:textSize="@dimen/text_size"
               android:textIsSelectable="true"/>
   </ScrollView>
 

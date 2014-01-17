@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- Layout of the main chat, for phones. -->
+<!-- Layout of the main chat. -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
@@ -18,12 +18,13 @@
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:lineSpacingMultiplier="1.1"
-              android:padding="1dp"
+              android:padding="@dimen/chat_view_padding"
+              android:textSize="@dimen/text_size"
               android:textIsSelectable="true"/>
   </ScrollView>
 
   <ListView android:id="@+id/mainChatUserList"
-            android:layout_width="120sp"
+            android:layout_width="@dimen/user_list_width"
             android:layout_height="fill_parent"
             android:layout_above="@+id/mainChatInput"
             android:layout_alignParentRight="true"/>

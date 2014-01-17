@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Definition of sizes, for phones. -->
+
+<resources>
+  <dimen name="text_size">14sp</dimen>
+  <dimen name="user_list_width">120sp</dimen>
+  <dimen name="chat_view_padding">2dp</dimen>
+</resources>

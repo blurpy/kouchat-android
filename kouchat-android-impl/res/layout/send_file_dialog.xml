@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- Layout of the send file dialog, for phones. -->
+<!-- Layout of the send file dialog. -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
@@ -13,6 +13,7 @@
   <TextView android:id="@+id/sendFileLine1TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size"
             android:paddingBottom="4dp"
             android:paddingRight="8dp"
             android:paddingLeft="8dp"/>
@@ -20,6 +21,7 @@
   <TextView android:id="@+id/sendFileLine2TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size"
             android:paddingBottom="4dp"
             android:paddingRight="8dp"
             android:paddingLeft="8dp"/>
@@ -37,6 +39,7 @@
           android:layout_height="wrap_content"
           android:text="@string/cancel"
           android:padding="8dp"
+          android:textSize="@dimen/text_size"
           android:layout_gravity="center"/>
 
 </LinearLayout>

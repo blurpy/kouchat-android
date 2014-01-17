@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Definition of sizes, for tablets with smallest width 720dp (10"). -->
+
+<resources>
+  <dimen name="text_size">16sp</dimen>
+  <dimen name="chat_view_padding">6dp</dimen>
+</resources>
