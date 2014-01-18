@@ -16,7 +16,7 @@
     <TextView android:id="@+id/privateChatView"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:lineSpacingMultiplier="1.1"
+              android:lineSpacingMultiplier="@dimen/line_spacing_multiplier"
               android:padding="@dimen/chat_view_padding"
               android:textSize="@dimen/text_size"
               android:textIsSelectable="true"/>
