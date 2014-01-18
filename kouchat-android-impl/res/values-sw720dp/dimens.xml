@@ -4,5 +4,6 @@
 
 <resources>
   <dimen name="text_size">16sp</dimen>
+  <dimen name="user_list_width">140sp</dimen>
   <dimen name="chat_view_padding">6dp</dimen>
 </resources>
