@@ -92,6 +92,14 @@ public class AboutDialogTest {
     }
 
     @Test
+    @Ignore("This does not work with Robolectric yet.")
+    public void dialogShouldHaveMessageOfTheCorrectSize() {
+        final TextView messageView = (TextView) shadowDialog.getView();
+
+        assertEquals(15, messageView.getTextSize(), 0); // getTextSize returns 0
+    }
+
+    @Test
     public void dialogShouldHaveUrlAndMailToLinks() {
         final TextView messageView = (TextView) shadowDialog.getView();
         final SpannableString message = (SpannableString) messageView.getText();

@@ -29,8 +29,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.text.SpannableString;
 import android.text.util.Linkify;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 
@@ -80,7 +82,9 @@ public class AboutDialog {
     private TextView createMessageView(final Context context, final String aboutText) {
         final TextView messageView = new TextView(context);
         final SpannableString message = new SpannableString(aboutText);
+        final Resources resources = context.getResources();
 
+        messageView.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.text_size));
         messageView.setPadding(PADDING, PADDING, PADDING, PADDING);
         messageView.setText(message);
 
@@ -94,7 +98,7 @@ public class AboutDialog {
             return context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);
         }
 
-        catch (PackageManager.NameNotFoundException e) {
+        catch (final PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
