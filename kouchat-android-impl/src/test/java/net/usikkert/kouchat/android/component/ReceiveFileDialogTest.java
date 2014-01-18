@@ -43,6 +43,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * Test of {@link ReceiveFileDialog}
@@ -123,6 +124,17 @@ public class ReceiveFileDialogTest {
         final ShadowAlertDialog shadowDialog = getShadowDialog();
         assertEquals("Ferdinand is trying to send you the file ‘superkou.png’ (161.13KB)." +
                 " Do you want to accept the file transfer?", shadowDialog.getMessage());
+    }
+
+    @Test
+    @Ignore("This does not work with Robolectric yet.")
+    public void showReceiveFileDialogShouldHaveMessageOfTheCorrectSize() {
+        receiveFileDialog.showReceiveFileDialog(activity, fileReceiver);
+
+        final AlertDialog dialog = getDialog();
+        final TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
+
+        assertEquals(15, messageView.getTextSize(), 0); // getTextSize returns 0
     }
 
     @Test
@@ -234,6 +246,17 @@ public class ReceiveFileDialogTest {
 
         final ShadowAlertDialog shadowDialog = getShadowDialog();
         assertEquals("Unable to find the specified file transfer request.", shadowDialog.getMessage());
+    }
+
+    @Test
+    @Ignore("This does not work with Robolectric yet.")
+    public void showMissingFileDialogShouldHaveMessageOfTheCorrectSize() {
+        receiveFileDialog.showMissingFileDialog(activity);
+
+        final AlertDialog dialog = getDialog();
+        final TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
+
+        assertEquals(15, messageView.getTextSize(), 0); // getTextSize returns 0
     }
 
     @Test

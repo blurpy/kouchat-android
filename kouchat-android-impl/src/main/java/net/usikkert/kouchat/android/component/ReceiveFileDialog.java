@@ -31,7 +31,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
+import android.widget.TextView;
 
 /**
  * Dialog for accepting or rejecting a file transfer request.
@@ -73,7 +76,8 @@ public class ReceiveFileDialog {
             }
         });
 
-        builder.show();
+        final AlertDialog receiveFileDialog = builder.show();
+        setTextSize(activity, receiveFileDialog);
     }
 
     /**
@@ -96,7 +100,8 @@ public class ReceiveFileDialog {
             }
         });
 
-        builder.show();
+        final AlertDialog missingFileDialog = builder.show();
+        setTextSize(activity, missingFileDialog);
     }
 
     private AlertDialog.Builder setupSharedDialogDetails(final Activity activity) {
@@ -114,5 +119,12 @@ public class ReceiveFileDialog {
         });
 
         return builder;
+    }
+
+    private void setTextSize(final Activity activity, final AlertDialog dialog) {
+        final TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
+        final Resources resources = activity.getResources();
+
+        messageView.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.text_size));
     }
 }
