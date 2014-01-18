@@ -3,7 +3,10 @@
 
 
 * version 0.13.0 (xx.xx.2014)
-  - Nothing yet.
+  - Increased the height of list items in the user list to 48dp, as recommended by Google.
+  - Increased the width of the user list on tablets.
+  - Added padding around the chat area.
+  - Increased the font size on tablets.
 
 
 * version 0.12.0 (08.12.2013)
