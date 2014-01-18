@@ -25,6 +25,7 @@ package net.usikkert.kouchat.android.chatwindow;
 import static org.junit.Assert.*;
 
 import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.android.component.DefaultLineHeightSpan;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,6 +39,7 @@ import android.graphics.drawable.Drawable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
+import android.text.style.LineHeightSpan;
 import android.text.style.URLSpan;
 
 /**
@@ -124,6 +126,20 @@ public class MessageStylerWithHistoryTest {
         checkSmileys((SpannableStringBuilder) messageStyler.getHistory());
     }
 
+    @Test
+    public void styleAndAppendShouldFixLineHeight() {
+        final CharSequence message = messageStyler.styleAndAppend(":)", 0);
+
+        checkLineHeight((SpannableStringBuilder) message);
+    }
+
+    @Test
+    public void getHistoryShouldRememberLineHeight() {
+        messageStyler.styleAndAppend(":)", 0);
+
+        checkLineHeight((SpannableStringBuilder) messageStyler.getHistory());
+    }
+
     private void checkColor(final SpannableStringBuilder builder) {
         final ForegroundColorSpan[] spans = builder.getSpans(0, builder.length(), ForegroundColorSpan.class);
 
@@ -147,6 +163,14 @@ public class MessageStylerWithHistoryTest {
         assertEquals(1, spans.length);
         assertEquals(":)", spans[0].getSource());
         assertEquals(R.drawable.ic_smiley_smile, smileyId(spans[0].getDrawable()));
+    }
+
+    private void checkLineHeight(final SpannableStringBuilder builder) {
+        final LineHeightSpan[] spans = builder.getSpans(0, builder.length(), LineHeightSpan.class);
+
+        assertNotNull(spans);
+        assertEquals(1, spans.length);
+        assertEquals(DefaultLineHeightSpan.class, spans[0].getClass());
     }
 
     private int smileyId(final Drawable drawable) {

@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android.chatwindow;
 
 import java.util.List;
 
+import net.usikkert.kouchat.android.component.DefaultLineHeightSpan;
 import net.usikkert.kouchat.android.smiley.Smiley;
 import net.usikkert.kouchat.android.smiley.SmileyLocator;
 import net.usikkert.kouchat.android.smiley.SmileyMap;
@@ -69,6 +70,7 @@ public class MessageStylerWithHistory {
         addColor(message, color, messageBuilder);
         addSmileys(message, messageBuilder);
         addLinks(messageBuilder);
+        fixLineHeight(message, messageBuilder);
 
         history.append(messageBuilder);
 
@@ -101,5 +103,9 @@ public class MessageStylerWithHistory {
 
             messageBuilder.setSpan(smileySpan, smiley.getStartPosition(), smiley.getEndPosition(), 0);
         }
+    }
+
+    private void fixLineHeight(final String message, final SpannableStringBuilder messageBuilder) {
+        messageBuilder.setSpan(new DefaultLineHeightSpan(), 0, message.length(), 0);
     }
 }
