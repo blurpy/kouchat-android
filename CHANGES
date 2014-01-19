@@ -8,6 +8,7 @@
   - Added padding around the chat area.
   - Increased the font size on tablets.
   - Fixed issue that caused lines in the chat area with smileys to have extra padding.
+  - Updated copyright to include 2014.
 
 
 * version 0.12.0 (08.12.2013)
