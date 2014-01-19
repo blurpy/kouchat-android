@@ -35,7 +35,7 @@ import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestUtils;
 
-import com.jayway.android.robotium.solo.Solo;
+import com.robotium.solo.Solo;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -316,7 +316,7 @@ public final class RobotiumTestUtils {
     /**
      * Changes the nick name, if already in the correct menu.
      *
-     * Use {@link #clickOnChangeNickNameInTheSettings(com.jayway.android.robotium.solo.Solo)} first.
+     * Use {@link #clickOnChangeNickNameInTheSettings(com.robotium.solo.Solo)} first.
      *
      * @param solo The solo tester.
      * @param nickName The nick name to change to.

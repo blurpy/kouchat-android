@@ -30,7 +30,7 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestClient;
 import net.usikkert.kouchat.testclient.TestUtils;
 
-import com.jayway.android.robotium.solo.Solo;
+import com.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
 

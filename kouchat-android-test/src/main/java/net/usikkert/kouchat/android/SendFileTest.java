@@ -34,7 +34,7 @@ import net.usikkert.kouchat.testclient.TestClient;
 
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-import com.jayway.android.robotium.solo.Solo;
+import com.robotium.solo.Solo;
 
 import android.app.Instrumentation;
 import android.content.Intent;

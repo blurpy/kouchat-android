@@ -28,7 +28,7 @@ import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.testclient.TestClient;
 import net.usikkert.kouchat.testclient.TestUtils;
 
-import com.jayway.android.robotium.solo.Solo;
+import com.robotium.solo.Solo;
 
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
