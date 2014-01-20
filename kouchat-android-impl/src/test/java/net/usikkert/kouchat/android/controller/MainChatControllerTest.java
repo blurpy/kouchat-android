@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.android.userlist.UserListAdapter;
+import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
 
@@ -232,5 +233,62 @@ public class MainChatControllerTest {
 
         verify(mainChatView).setText("Set this text");
         verifyZeroInteractions(controllerUtils);
+    }
+
+    @Test
+    public void userAddedShouldAddUserWithUserListAdapter() {
+        final User user = new User("User", 1234);
+
+        controller.userAdded(0, user);
+
+        verify(userListAdapter).add(user);
+    }
+
+    @Test
+    public void userRemovedShouldRemoveUserWithUserListAdapter() {
+        final User user = new User("User", 1234);
+
+        controller.userRemoved(0, user);
+
+        verify(userListAdapter).remove(user);
+    }
+
+    @Test
+    public void userChangedShouldSortWithUserListAdapter() {
+        final User user = new User("User", 1234);
+
+        controller.userChanged(0, user);
+
+        verify(userListAdapter).sort();
+    }
+
+    @Test
+    public void sendMessageShouldSendUsingAndroidUserInterface() {
+        controller.sendMessage("A message");
+
+        verify(ui).sendMessage("A message");
+    }
+
+    @Test
+    public void sendMessageShouldNotSendIfMessageIsNull() {
+        controller.sendMessage(null);
+
+        verifyZeroInteractions(ui);
+    }
+
+    @Test
+    public void sendMessageShouldNotSendIfMessageIsWhitespace() {
+        controller.sendMessage(" ");
+
+        verifyZeroInteractions(ui);
+    }
+
+    @Test
+    public void updateTopicShouldSetTitle() {
+        assertNull(controller.getTitle());
+
+        controller.updateTopic("The topic");
+
+        assertEquals("The topic", controller.getTitle());
     }
 }
