@@ -204,6 +204,15 @@ public class MainChatControllerTest {
     }
 
     @Test
+    public void appendToChatShouldDoNothingIfDestroyed() {
+        TestUtils.setFieldValue(controller, "destroyed", true);
+
+        controller.appendToChat("Don't append");
+
+        verifyZeroInteractions(controllerUtils, mainChatView);
+    }
+
+    @Test
     public void updateChatShouldSetTextAndScrollToBottomIfNotDestroyed() {
         controller.updateChat("Set this text");
 

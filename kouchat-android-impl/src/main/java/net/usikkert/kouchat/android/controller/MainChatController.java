@@ -337,7 +337,10 @@ public class MainChatController extends SherlockActivity implements UserListList
     public void appendToChat(final CharSequence message) {
         runOnUiThread(new Runnable() {
             public void run() {
-                // TODO destroyed check
+                if (destroyed) {
+                    return; // If rotating fast, this activity could already be destroyed before this runs
+                }
+
                 mainChatView.append(message);
 
                 // Allow a way to avoid automatic scrolling to the bottom.
