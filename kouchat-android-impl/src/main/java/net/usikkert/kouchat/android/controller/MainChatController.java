@@ -364,7 +364,7 @@ public class MainChatController extends SherlockActivity implements UserListList
             @Override
             public void run() {
                 // If rotating fast, this activity could already be destroyed before this runs
-                if (controllerUtils != null) {
+                if (!destroyed) {
                     controllerUtils.scrollTextViewToBottom(mainChatView, mainChatScroll);
                 }
             }
