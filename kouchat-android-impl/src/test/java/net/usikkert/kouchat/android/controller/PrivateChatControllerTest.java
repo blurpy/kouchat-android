@@ -214,11 +214,11 @@ public class PrivateChatControllerTest {
 
     @Test
     public void updatePrivateChatShouldSetTextAndNotScrollToBottomIfDestroyed() {
-        TestUtils.setFieldValue(controller, "controllerUtils", null);
+        TestUtils.setFieldValue(controller, "destroyed", true);
 
         controller.updatePrivateChat("Set this text");
 
-        ShadowHandler.runMainLooperOneTask(); // Should not give NullPointerException
+        ShadowHandler.runMainLooperOneTask();
 
         verify(privateChatView).setText("Set this text");
         verifyZeroInteractions(controllerUtils);

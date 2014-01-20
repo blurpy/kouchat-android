@@ -271,7 +271,7 @@ public class PrivateChatController extends SherlockActivity {
             @Override
             public void run() {
                 // If rotating fast, this activity could already be destroyed before this runs
-                if (controllerUtils != null) {
+                if (!destroyed) {
                     controllerUtils.scrollTextViewToBottom(privateChatView, privateChatScroll);
                 }
             }
