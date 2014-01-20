@@ -164,6 +164,15 @@ public class MainChatControllerTest {
     }
 
     @Test
+    public void onDestroyShouldSetDestroyedToTrue() {
+        assertFalse(TestUtils.getFieldValue(controller, Boolean.class, "destroyed"));
+
+        controller.onDestroy();
+
+        assertTrue(TestUtils.getFieldValue(controller, Boolean.class, "destroyed"));
+    }
+
+    @Test
     public void onDestroyShouldNotFailIfServiceHasNotBeenBound() {
         TestUtils.setFieldValue(controller, "androidUserInterface", null);
         TestUtils.setFieldValue(controller, "userList", null);

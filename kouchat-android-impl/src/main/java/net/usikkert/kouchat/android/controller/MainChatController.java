@@ -97,6 +97,9 @@ public class MainChatController extends SherlockActivity implements UserListList
     /** If the main chat is currently visible. */
     private boolean visible;
 
+    /** If the main chat has been destroyed. */
+    private boolean destroyed;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -224,6 +227,8 @@ public class MainChatController extends SherlockActivity implements UserListList
 
     @Override
     protected void onDestroy() {
+        destroyed = true;
+
         if (androidUserInterface != null) {
             userList.removeUserListListener(this);
             androidUserInterface.unregisterMainChatController();
@@ -332,6 +337,7 @@ public class MainChatController extends SherlockActivity implements UserListList
     public void appendToChat(final CharSequence message) {
         runOnUiThread(new Runnable() {
             public void run() {
+                // TODO destroyed check
                 mainChatView.append(message);
 
                 // Allow a way to avoid automatic scrolling to the bottom.
@@ -378,6 +384,7 @@ public class MainChatController extends SherlockActivity implements UserListList
     public void userAdded(final int pos, final User user) {
         runOnUiThread(new Runnable() {
             public void run() {
+                // TODO destroyed check
                 userListAdapter.add(user);
             }
         });
@@ -387,6 +394,7 @@ public class MainChatController extends SherlockActivity implements UserListList
     public void userRemoved(final int pos, final User user) {
         runOnUiThread(new Runnable() {
             public void run() {
+                // TODO destroyed check
                 userListAdapter.remove(user);
             }
         });
@@ -396,6 +404,7 @@ public class MainChatController extends SherlockActivity implements UserListList
     public void userChanged(final int pos, final User user) {
         runOnUiThread(new Runnable() {
             public void run() {
+                // TODO destroyed check
                 userListAdapter.sort();
             }
         });
