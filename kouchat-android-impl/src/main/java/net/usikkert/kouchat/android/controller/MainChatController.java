@@ -387,8 +387,9 @@ public class MainChatController extends SherlockActivity implements UserListList
     public void userAdded(final int pos, final User user) {
         runOnUiThread(new Runnable() {
             public void run() {
-                // TODO destroyed check
-                userListAdapter.add(user);
+                if (!destroyed) {
+                    userListAdapter.add(user);
+                }
             }
         });
     }
@@ -397,8 +398,9 @@ public class MainChatController extends SherlockActivity implements UserListList
     public void userRemoved(final int pos, final User user) {
         runOnUiThread(new Runnable() {
             public void run() {
-                // TODO destroyed check
-                userListAdapter.remove(user);
+                if (!destroyed) {
+                    userListAdapter.remove(user);
+                }
             }
         });
     }
@@ -407,8 +409,9 @@ public class MainChatController extends SherlockActivity implements UserListList
     public void userChanged(final int pos, final User user) {
         runOnUiThread(new Runnable() {
             public void run() {
-                // TODO destroyed check
-                userListAdapter.sort();
+                if (!destroyed) {
+                    userListAdapter.sort();
+                }
             }
         });
     }

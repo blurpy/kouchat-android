@@ -245,6 +245,15 @@ public class MainChatControllerTest {
     }
 
     @Test
+    public void userAddedShouldNotAddUserIfDestroyed() {
+        TestUtils.setFieldValue(controller, "destroyed", true);
+
+        controller.userAdded(0, new User("User", 1234));
+
+        verifyZeroInteractions(userListAdapter);
+    }
+
+    @Test
     public void userRemovedShouldRemoveUserWithUserListAdapter() {
         final User user = new User("User", 1234);
 
@@ -254,12 +263,30 @@ public class MainChatControllerTest {
     }
 
     @Test
+    public void userRemovedShouldNotRemoveUserIfDestroyed() {
+        TestUtils.setFieldValue(controller, "destroyed", true);
+
+        controller.userRemoved(0, new User("User", 1234));
+
+        verifyZeroInteractions(userListAdapter);
+    }
+
+    @Test
     public void userChangedShouldSortWithUserListAdapter() {
         final User user = new User("User", 1234);
 
         controller.userChanged(0, user);
 
         verify(userListAdapter).sort();
+    }
+
+    @Test
+    public void userChangedShouldNotSortIfDestroyed() {
+        TestUtils.setFieldValue(controller, "destroyed", true);
+
+        controller.userChanged(0, new User("User", 1234));
+
+        verifyZeroInteractions(userListAdapter);
     }
 
     @Test
