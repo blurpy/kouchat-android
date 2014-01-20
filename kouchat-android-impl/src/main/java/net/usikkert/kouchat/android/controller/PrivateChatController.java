@@ -68,6 +68,9 @@ public class PrivateChatController extends SherlockActivity {
     /** If this private chat is currently visible. */
     private boolean visible;
 
+    /** If this private chat has been destroyed. */
+    private boolean destroyed;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +94,8 @@ public class PrivateChatController extends SherlockActivity {
 
     @Override
     protected void onDestroy() {
+        destroyed = true;
+
         if (privateChatWindow != null) {
             privateChatWindow.unregisterPrivateChatController();
             unbindService(serviceConnection);
@@ -276,6 +281,10 @@ public class PrivateChatController extends SherlockActivity {
     public void appendToPrivateChat(final CharSequence privateMessage) {
         runOnUiThread(new Runnable() {
             public void run() {
+                if (destroyed) {
+                    return; // If rotating fast, this activity could already be destroyed before this runs
+                }
+
                 privateChatView.append(privateMessage);
 
                 // Allow a way to avoid automatic scrolling to the bottom.

@@ -154,6 +154,15 @@ public class PrivateChatControllerTest {
     }
 
     @Test
+    public void onDestroyShouldSetDestroyedToTrue() {
+        assertFalse(TestUtils.getFieldValue(controller, Boolean.class, "destroyed"));
+
+        controller.onDestroy();
+
+        assertTrue(TestUtils.getFieldValue(controller, Boolean.class, "destroyed"));
+    }
+
+    @Test
     public void onDestroyShouldNotFailIfServiceHasNotBeenBound() {
         TestUtils.setFieldValue(controller, "privateChatWindow", null);
         TestUtils.setFieldValue(controller, "user", null);
@@ -182,6 +191,15 @@ public class PrivateChatControllerTest {
 
         verify(privateChatView).append("Some other text");
         verifyZeroInteractions(controllerUtils);
+    }
+
+    @Test
+    public void appendToPrivateChatShouldDoNothingIfDestroyed() {
+        TestUtils.setFieldValue(controller, "destroyed", true);
+
+        controller.appendToPrivateChat("Don't append");
+
+        verifyZeroInteractions(controllerUtils, privateChatView);
     }
 
     @Test
