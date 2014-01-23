@@ -76,6 +76,20 @@ public class MessageStylerWithHistoryTest {
     }
 
     @Test
+    public void styleAndAppendShouldTrimMessage() {
+        final CharSequence message = messageStyler.styleAndAppend("      Trim me!       ", 0);
+
+        assertEquals("Trim me!\n", message.toString());
+    }
+
+    @Test
+    public void getHistoryShouldRememberTrimmedMessage() {
+        messageStyler.styleAndAppend("      Trim me!       ", 0);
+
+        assertEquals("Trim me!\n", messageStyler.getHistory().toString());
+    }
+
+    @Test
     public void getHistoryShouldReturnAllAppendedMessages() {
         messageStyler.styleAndAppend("Message 1", 0);
         messageStyler.styleAndAppend("Message 2", 0);
@@ -115,6 +129,13 @@ public class MessageStylerWithHistoryTest {
     @Test
     public void styleAndAppendShouldAddSmileys() {
         final CharSequence message = messageStyler.styleAndAppend(":)", 0);
+
+        checkSmileys((SpannableStringBuilder) message);
+    }
+
+    @Test
+    public void styleAndAppendShouldAddSmileysOnTrimmedMessage() {
+        final CharSequence message = messageStyler.styleAndAppend("   :)  ", 0);
 
         checkSmileys((SpannableStringBuilder) message);
     }

@@ -60,17 +60,20 @@ public class MessageStylerWithHistory {
     /**
      * Adds styling to the message, and appends it to the history.
      *
+     * <p>Trims the message first, to avoid blank lines.</p>
+     *
      * @param message The message to style and add to the history.
      * @param color The color to style the message with.
      * @return The styled message.
      */
     public CharSequence styleAndAppend(final String message, final int color) {
-        final SpannableStringBuilder messageBuilder = new SpannableStringBuilder(message + "\n");
+        final String trimmedMessage = message.trim();
+        final SpannableStringBuilder messageBuilder = new SpannableStringBuilder(trimmedMessage + "\n");
 
-        addColor(message, color, messageBuilder);
-        addSmileys(message, messageBuilder);
+        addColor(trimmedMessage, color, messageBuilder);
+        addSmileys(trimmedMessage, messageBuilder);
         addLinks(messageBuilder);
-        fixLineHeight(message, messageBuilder);
+        fixLineHeight(trimmedMessage, messageBuilder);
 
         history.append(messageBuilder);
 
