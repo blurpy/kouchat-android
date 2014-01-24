@@ -122,7 +122,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
             RobotiumTestUtils.writeLine(solo, MiscTestUtils.createLongMessage(i));
 
             solo.sleep(500);
-            assertTrue(textIsVisible("This is message number " + i + ".9!"));
+            assertTrue("Line " + i + " was not visible", textIsVisible("This is message number " + i + ".9!"));
         }
 
         solo.sleep(500);
