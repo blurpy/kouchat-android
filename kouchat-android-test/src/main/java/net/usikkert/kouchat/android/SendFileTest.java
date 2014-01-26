@@ -157,7 +157,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         albert.acceptFile(me, image.getName(), newFile);
         solo.sleep(2000);
 
-        assertTrue(RobotiumTestUtils.searchText(solo, image.getName() + " successfully sent to Albert"));
+        assertTrue(textIsVisible(image.getName() + " successfully sent to Albert"));
         assertTrue("Should exist: " + newFile, newFile.exists());
         final ByteSource originalFile = Files.asByteSource(image.getFile());
         final ByteSource savedFile = Files.asByteSource(newFile);
@@ -187,8 +187,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         tina.rejectFile(me, image.getName());
         solo.sleep(2000);
 
-        assertTrue(RobotiumTestUtils.textIsVisible(solo, R.id.mainChatView, R.id.mainChatScroll,
-                "Tina aborted reception of " + image.getName()));
+        assertTrue(textIsVisible("Tina aborted reception of " + image.getName()));
     }
 
     public void test99Quit() {
@@ -241,5 +240,9 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
                 assertEquals(user, solo.getCurrentViews(ListView.class).get(0).getItemAtPosition(i).toString());
             }
         }
+    }
+
+    private boolean textIsVisible(final String textToFind) {
+        return RobotiumTestUtils.textIsVisible(solo, R.id.mainChatView, R.id.mainChatScroll, textToFind);
     }
 }
