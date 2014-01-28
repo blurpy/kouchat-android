@@ -25,6 +25,8 @@ package net.usikkert.kouchat.android.component;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Locale;
+
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.FileReceiver;
 
@@ -63,6 +65,8 @@ public class ReceiveFileDialogTest {
 
     @Before
     public void setUp() {
+        Locale.setDefault(Locale.US); // To avoid issues with "." and "," in asserts containing file sizes
+
         fileReceiver = mock(FileReceiver.class);
         when(fileReceiver.getUser()).thenReturn(new User("Ferdinand", 12345));
         when(fileReceiver.getFileName()).thenReturn("superkou.png");
