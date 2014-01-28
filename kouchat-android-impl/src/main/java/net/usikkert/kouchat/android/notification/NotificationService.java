@@ -286,10 +286,14 @@ public class NotificationService {
     private Notification createNotification(final int iconId) {
         currentIconId = iconId;
 
-        return new Notification(
+        final Notification notification = new Notification(
                 iconId,
                 context.getText(R.string.notification_startup), // Text shown when starting KouChat
                 System.currentTimeMillis());
+
+        disableSwipeToCancel(notification);
+
+        return notification;
     }
 
     private PendingIntent createPendingIntent() {
@@ -313,7 +317,7 @@ public class NotificationService {
                 context.getString(R.string.notification_new_file_transfer), // Text shown when the notification arrives
                 System.currentTimeMillis());
 
-        notification.flags |= Notification.FLAG_ONGOING_EVENT; // To stop the notification from being removed by swiping
+        disableSwipeToCancel(notification);
 
         return notification;
     }
@@ -340,5 +344,9 @@ public class NotificationService {
                 context.getString(R.string.notification_file_transfer_from, nick), // First line of the notification in the drawer
                 fileReceiver.getFileName(), // Second line of the notification in the drawer
                 pendingIntent);
+    }
+
+    private void disableSwipeToCancel(final Notification notification) {
+        notification.flags |= Notification.FLAG_NO_CLEAR;
     }
 }

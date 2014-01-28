@@ -11,6 +11,7 @@
   - Updated copyright to include 2014.
   - Fixed several crash issues when rotating.
   - Messages are trimmed before added to the chat, to avoid blank lines.
+  - Fixed bug where it was possible to remove KouChat notifications by swiping on some devices.
 
 
 * version 0.12.0 (08.12.2013)

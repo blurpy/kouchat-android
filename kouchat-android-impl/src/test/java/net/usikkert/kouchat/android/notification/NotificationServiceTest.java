@@ -96,6 +96,13 @@ public class NotificationServiceTest {
     }
 
     @Test
+    public void createServiceNotificationShouldFlagNotificationWithNoClearToAvoidSwipeToCancel() {
+        final Notification notification = notificationService.createServiceNotification();
+
+        assertEquals(Notification.FLAG_NO_CLEAR, notification.flags);
+    }
+
+    @Test
     public void createServiceNotificationShouldSetNotificationTextForTheDrawer() {
         final Notification notification = notificationService.createServiceNotification();
         verifyThatNotificationTextIsRunning(notification);
@@ -123,6 +130,16 @@ public class NotificationServiceTest {
 
         final Notification notification = argumentCaptor.getValue();
         verifyThatActivityIconHasBeenSet(notification);
+    }
+
+    @Test
+    public void notifyNewMainChatMessageShouldFlagNotificationWithNoClearToAvoidSwipeToCancel() {
+        notificationService.notifyNewMainChatMessage();
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        assertEquals(Notification.FLAG_NO_CLEAR, notification.flags);
     }
 
     @Test
@@ -169,6 +186,16 @@ public class NotificationServiceTest {
 
         final Notification notification = argumentCaptor.getValue();
         verifyThatActivityIconHasBeenSet(notification);
+    }
+
+    @Test
+    public void notifyNewPrivateChatMessageShouldFlagNotificationWithNoClearToAvoidSwipeToCancel() {
+        notificationService.notifyNewPrivateChatMessage(new User("Test", 1234));
+
+        verify(notificationManager).notify(eq(1001), argumentCaptor.capture());
+
+        final Notification notification = argumentCaptor.getValue();
+        assertEquals(Notification.FLAG_NO_CLEAR, notification.flags);
     }
 
     @Test
@@ -425,13 +452,13 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void notifyNewFileTransferShouldSetNotificationAsOngoingEventToAvoidSwipeToCancel() {
+    public void notifyNewFileTransferShouldFlagNotificationWithNoClearToAvoidSwipeToCancel() {
         notificationService.notifyNewFileTransfer(fileReceiver);
 
         verify(notificationManager).notify(eq(10012), argumentCaptor.capture());
 
         final Notification notification = argumentCaptor.getValue();
-        assertEquals(Notification.FLAG_ONGOING_EVENT, notification.flags);
+        assertEquals(Notification.FLAG_NO_CLEAR, notification.flags);
     }
 
     @Test
