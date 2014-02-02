@@ -2,6 +2,10 @@
 - KouChat CHANGES
 
 
+* version 0.14.0 (xx.xx.2014)
+  - Nothing yet.
+
+
 * version 0.13.0 (01.02.2014)
   - Increased the height of list items in the user list to 48dp, as recommended by Google.
   - Increased the width of the user list on tablets.
