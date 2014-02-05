@@ -41,6 +41,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowHandler;
 import org.robolectric.util.ActivityController;
 
+import com.actionbarsherlock.app.ActionBar;
+
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.text.TextWatcher;
@@ -70,6 +72,7 @@ public class MainChatControllerTest {
     private ListView mainChatUserList;
     private TextWatcher textWatcher;
     private UserListAdapter userListAdapter;
+    private ActionBar actionBar;
 
     @Before
     public void setUp() {
@@ -79,32 +82,23 @@ public class MainChatControllerTest {
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
 
-        ui = mock(AndroidUserInterface.class);
+        ui = TestUtils.setFieldValueWithMock(controller, "androidUserInterface", AndroidUserInterface.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
 
-        userList = mock(UserList.class);
+        userList = TestUtils.setFieldValueWithMock(controller, "userList", UserList.class);
         when(ui.getUserList()).thenReturn(userList);
 
-        final ServiceConnection serviceConnection = mock(ServiceConnection.class);
-        mainChatView = mock(TextView.class);
-        mainChatInput = mock(EditText.class);
-        mainChatScroll = mock(ScrollView.class);
-        controllerUtils = mock(ControllerUtils.class);
-        mainChatUserList = mock(ListView.class);
-        textWatcher = mock(TextWatcher.class);
-        userListAdapter = mock(UserListAdapter.class);
+        mainChatView = TestUtils.setFieldValueWithMock(controller, "mainChatView", TextView.class);
+        mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
+        mainChatScroll = TestUtils.setFieldValueWithMock(controller, "mainChatScroll", ScrollView.class);
+        controllerUtils = TestUtils.setFieldValueWithMock(controller, "controllerUtils", ControllerUtils.class);
+        mainChatUserList = TestUtils.setFieldValueWithMock(controller, "mainChatUserList", ListView.class);
+        textWatcher = TestUtils.setFieldValueWithMock(controller, "textWatcher", TextWatcher.class);
+        userListAdapter = TestUtils.setFieldValueWithMock(controller, "userListAdapter", UserListAdapter.class);
+        actionBar = TestUtils.setFieldValueWithMock(controller, "actionBar", ActionBar.class);
 
-        TestUtils.setFieldValue(controller, "userList", userList);
-        TestUtils.setFieldValue(controller, "androidUserInterface", ui);
-        TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
-        TestUtils.setFieldValue(controller, "mainChatView", mainChatView);
-        TestUtils.setFieldValue(controller, "mainChatInput", mainChatInput);
-        TestUtils.setFieldValue(controller, "mainChatScroll", mainChatScroll);
-        TestUtils.setFieldValue(controller, "controllerUtils", controllerUtils);
+        TestUtils.setFieldValue(controller, "serviceConnection", mock(ServiceConnection.class));
         TestUtils.setFieldValue(controller, "chatServiceIntent", mock(Intent.class));
-        TestUtils.setFieldValue(controller, "userListAdapter", userListAdapter);
-        TestUtils.setFieldValue(controller, "mainChatUserList", mainChatUserList);
-        TestUtils.setFieldValue(controller, "textWatcher", textWatcher);
     }
 
     @Test

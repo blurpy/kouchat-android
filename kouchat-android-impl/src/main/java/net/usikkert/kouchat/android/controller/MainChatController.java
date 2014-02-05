@@ -33,6 +33,7 @@ import net.usikkert.kouchat.event.UserListListener;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -90,6 +91,7 @@ public class MainChatController extends SherlockActivity implements UserListList
     private ScrollView mainChatScroll;
     private UserListAdapter userListAdapter;
     private TextWatcher textWatcher;
+    private ActionBar actionBar;
 
     private AndroidUserInterface androidUserInterface;
     private UserList userList;
@@ -110,6 +112,7 @@ public class MainChatController extends SherlockActivity implements UserListList
         mainChatUserList = (ListView) findViewById(R.id.mainChatUserList);
         mainChatView = (TextView) findViewById(R.id.mainChatView);
         mainChatScroll = (ScrollView) findViewById(R.id.mainChatScroll);
+        actionBar = getSupportActionBar();
 
         registerMainChatInputListener();
         registerMainChatTextListener();
@@ -255,6 +258,7 @@ public class MainChatController extends SherlockActivity implements UserListList
         mainChatScroll = null;
         userListAdapter = null;
         textWatcher = null;
+        actionBar = null;
 
         super.onDestroy();
     }
