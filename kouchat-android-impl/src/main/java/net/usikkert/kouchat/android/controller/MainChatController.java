@@ -375,7 +375,7 @@ public class MainChatController extends SherlockActivity implements UserListList
 
     }
 
-    public void updateTopic(final String topic) {
+    public void updateTitleAndTopic(final String topic) {
         runOnUiThread(new Runnable() {
             public void run() {
                 setTitle(topic);
