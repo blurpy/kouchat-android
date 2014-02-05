@@ -314,7 +314,7 @@ public class MainChatControllerTest {
     public void updateTitleAndTopicShouldSetTitle() {
         assertNull(controller.getTitle());
 
-        controller.updateTitleAndTopic("The topic");
+        controller.updateTitleAndTopic(null, "The topic");
 
         assertEquals("The topic", controller.getTitle());
     }

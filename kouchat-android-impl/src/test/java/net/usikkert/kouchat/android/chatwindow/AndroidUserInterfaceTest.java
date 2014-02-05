@@ -144,7 +144,7 @@ public class AndroidUserInterfaceTest {
 
         androidUserInterface.showTopic();
 
-        verify(mainChatController, never()).updateTitleAndTopic(anyString());
+        verify(mainChatController, never()).updateTitleAndTopic(anyString(), anyString());
     }
 
     @Test
@@ -153,7 +153,7 @@ public class AndroidUserInterfaceTest {
 
         androidUserInterface.showTopic();
 
-        verify(mainChatController).updateTitleAndTopic("Me - KouChat");
+        verify(mainChatController).updateTitleAndTopic(null, "Me - KouChat");
     }
 
     @Test
@@ -162,7 +162,7 @@ public class AndroidUserInterfaceTest {
 
         androidUserInterface.showTopic();
 
-        verify(mainChatController).updateTitleAndTopic("Me - Topic: This rocks! (OtherGuy) - KouChat");
+        verify(mainChatController).updateTitleAndTopic(null, "Me - Topic: This rocks! (OtherGuy) - KouChat");
     }
 
     @Test
@@ -597,7 +597,7 @@ public class AndroidUserInterfaceTest {
         verifyNoMoreInteractions(controller);
 
         verify(msgController).showSystemMessage("You changed nick to Kou");
-        verify(mainChatController).updateTitleAndTopic("Kou - KouChat");
+        verify(mainChatController).updateTitleAndTopic(null, "Kou - KouChat");
     }
 
     @Test

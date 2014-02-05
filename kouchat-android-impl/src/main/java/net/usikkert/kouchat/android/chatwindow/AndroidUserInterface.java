@@ -186,7 +186,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
             title.append(" - ").append(Constants.APP_NAME);
 
-            mainChatController.updateTitleAndTopic(title.toString());
+            mainChatController.updateTitleAndTopic(null, title.toString());
         }
     }
 
