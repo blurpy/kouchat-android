@@ -180,7 +180,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
             final Topic topic = controller.getTopic();
 
-            if (!topic.getTopic().isEmpty()) {
+            if (topic.hasTopic()) {
                 title.append(" - Topic: ").append(topic);
             }
 

@@ -125,6 +125,15 @@ public class Topic {
     }
 
     /**
+     * If a topic is currently set.
+     *
+     * @return If it has a topic.
+     */
+    public boolean hasTopic() {
+        return !topic.isEmpty();
+    }
+
+    /**
      * Returns the values in this format: <code>topic (nick)</code>.
      *
      * {@inheritDoc}
