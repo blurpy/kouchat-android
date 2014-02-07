@@ -27,6 +27,8 @@ import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestClient;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
@@ -65,7 +67,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
     public void test01TopicShouldBeEmptyOnStart() {
         solo.sleep(500);
-        assertEquals(me.getNick() + " - KouChat", getCurrentTitle());
+        checkTopic(null);
     }
 
     public void test02OtherClientChangingTopicIsShownInChatAndTitle() {
@@ -73,26 +75,26 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(500);
 
         assertTrue(solo.searchText("Test changed the topic to: New topic"));
-        assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", getCurrentTitle());
+        checkTopic("New topic - Test");
     }
 
     public void test03OrientationSwitchShouldKeepTopic() {
-        assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", getCurrentTitle());
+        checkTopic("New topic - Test");
 
         RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(500);
 
-        assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", getCurrentTitle());
+        checkTopic("New topic - Test");
     }
 
     public void test04RemovingTheTopicShouldRemoveTopicFromTitle() {
-        assertEquals(me.getNick() + " - Topic: New topic (Test) - KouChat", getCurrentTitle());
+        checkTopic("New topic - Test");
 
         client.changeTopic("");
         solo.sleep(500);
 
         assertTrue(solo.searchText("Test removed the topic"));
-        assertEquals(me.getNick() + " - KouChat", getCurrentTitle());
+        checkTopic(null);
     }
 
     public void test05SettingTopicAndLoggingOffToPrepareForTest06() {
@@ -106,7 +108,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(500);
 
         assertTrue(solo.searchText("Topic is: Original topic"));
-        assertEquals(me.getNick() + " - Topic: Original topic (Test) - KouChat", getCurrentTitle());
+        checkTopic("Original topic - Test");
     }
 
     public void test99Quit() {
@@ -127,7 +129,12 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         System.gc();
     }
 
-    private String getCurrentTitle() {
-        return solo.getCurrentActivity().getTitle().toString(); // getActivity() returns the old activity after rotate
+    private void checkTopic(final String topic) {
+        // getActivity() returns the old activity after rotate
+        final SherlockActivity currentActivity = (SherlockActivity) solo.getCurrentActivity();
+        final ActionBar supportActionBar = currentActivity.getSupportActionBar();
+
+        assertEquals(me.getNick() + " - KouChat", supportActionBar.getTitle());
+        assertEquals(topic, supportActionBar.getSubtitle());
     }
 }
