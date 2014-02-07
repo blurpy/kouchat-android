@@ -148,21 +148,21 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void showTopicShouldSetTitleOfMainChatToNickNameAndApplicationNameWhenNoTopicIsSet() {
+    public void showTopicShouldOnlyUpdateTheTitleWhenNoTopicIsSet() {
         when(controller.getTopic()).thenReturn(new Topic());
 
         androidUserInterface.showTopic();
 
-        verify(mainChatController).updateTitleAndTopic(null, "Me - KouChat");
+        verify(mainChatController).updateTitleAndTopic("Me - KouChat", null);
     }
 
     @Test
-    public void showTopicShouldSetTitleOfMainChatToNickNameAndTopicAndApplicationNameWhenATopicIsSet() {
+    public void showTopicShouldUpdateBothTitleAndTopicWhenATopicIsSet() {
         when(controller.getTopic()).thenReturn(new Topic("This rocks!", "OtherGuy", System.currentTimeMillis()));
 
         androidUserInterface.showTopic();
 
-        verify(mainChatController).updateTitleAndTopic(null, "Me - Topic: This rocks! (OtherGuy) - KouChat");
+        verify(mainChatController).updateTitleAndTopic("Me - KouChat", "This rocks! - OtherGuy");
     }
 
     @Test
@@ -576,7 +576,7 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void changeNickNameShouldReturnTrueAndShowSystemMessageAndUpdateTopicIfEverythingOK() throws CommandException {
+    public void changeNickNameShouldReturnTrueAndShowSystemMessageAndUpdateTitleAndTopicIfEverythingOK() throws CommandException {
         when(controller.getTopic()).thenReturn(new Topic());
 
         // Makes sure the mocked controller changes the nick name like the real implementation would,
@@ -597,7 +597,7 @@ public class AndroidUserInterfaceTest {
         verifyNoMoreInteractions(controller);
 
         verify(msgController).showSystemMessage("You changed nick to Kou");
-        verify(mainChatController).updateTitleAndTopic(null, "Kou - KouChat");
+        verify(mainChatController).updateTitleAndTopic("Kou - KouChat", null);
     }
 
     @Test

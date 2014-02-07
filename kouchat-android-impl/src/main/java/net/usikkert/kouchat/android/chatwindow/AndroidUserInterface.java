@@ -165,28 +165,43 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     }
 
     /**
-     * Updates the title of the main chat to the current topic. Looks like this:
+     * Updates the title and topic of the main chat.
      *
-     * <p><code>Nick name - Topic: the topic (nick name of the user that set the topic) - KouChat</code>.</p>
+     * <p>If there is no topic, then <code>null</code> is sent as the topic, to hide line number two.</p>
      *
-     * <p>Example: <code>Penny - Topic: Knock knock (Sheldon) - KouChat</code>.</p>
+     * <p>Looks like this:</p>
+     * <pre>
+     *   <code>Nick name - KouChat</code>
+     *   <code>The topic - Nick name of the user that set the topic</code>
+     * </pre>
+     *
+     * <p>Example:</p>
+     * <pre>
+     *   <code>Penny - KouChat</code>
+     *   <code>Knock knock - Sheldon</code>
+     * </pre>
      */
     @Override
     public void showTopic() {
         if (mainChatController != null) {
-            final StringBuilder title = new StringBuilder();
+            final String title = formatTitle();
+            final String topic = formatTopic();
 
-            title.append(me.getNick());
+            mainChatController.updateTitleAndTopic(title, topic);
+        }
+    }
 
-            final Topic topic = controller.getTopic();
+    private String formatTitle() {
+        return me.getNick() + " - " + Constants.APP_NAME;
+    }
 
-            if (topic.hasTopic()) {
-                title.append(" - Topic: ").append(topic);
-            }
+    private String formatTopic() {
+        final Topic topic = controller.getTopic();
 
-            title.append(" - ").append(Constants.APP_NAME);
-
-            mainChatController.updateTitleAndTopic(null, title.toString());
+        if (topic.hasTopic()) {
+            return topic.getTopic() + " - " + topic.getNick();
+        } else {
+            return null;
         }
     }
 
