@@ -3,7 +3,7 @@
 
 
 * version 0.14.0 (xx.xx.2014)
-  - Nothing yet.
+  - The topic, if set, is shown as subtitle in the ActionBar.
 
 
 * version 0.13.0 (01.02.2014)
