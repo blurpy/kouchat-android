@@ -52,16 +52,19 @@ public class ThemedEditTextPreference extends EditTextPreference {
     public ThemedEditTextPreference(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         this.context = createContextThemeWrapper(context);
+        blockNewLines();
     }
 
     public ThemedEditTextPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         this.context = createContextThemeWrapper(context);
+        blockNewLines();
     }
 
     public ThemedEditTextPreference(final Context context) {
         super(context);
         this.context = createContextThemeWrapper(context);
+        blockNewLines();
     }
 
     @Override
@@ -71,5 +74,12 @@ public class ThemedEditTextPreference extends EditTextPreference {
 
     private ContextThemeWrapper createContextThemeWrapper(final Context originalContext) {
         return new ContextThemeWrapper(originalContext, R.style.Theme_Default_Dialog);
+    }
+
+    /**
+     * Avoid getting new lines when pressing 'enter'.
+     */
+    private void blockNewLines() {
+        getEditText().addTextChangedListener(new NoNewLineTextWatcher());
     }
 }

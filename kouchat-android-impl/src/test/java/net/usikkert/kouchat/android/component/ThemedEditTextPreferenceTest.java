@@ -25,6 +25,8 @@ package net.usikkert.kouchat.android.component;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
+
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.util.TestUtils;
 
@@ -35,6 +37,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import android.content.Context;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 
@@ -67,6 +70,13 @@ public class ThemedEditTextPreferenceTest {
         verifyContext(preferenceFromThreeParameterConstructor);
     }
 
+    @Test
+    public void editTextShouldAddNoNewLineTextWatcher() {
+        verifyNoNewLineTextWatcher(preferenceFromOneParameterConstructor);
+        verifyNoNewLineTextWatcher(preferenceFromTwoParameterConstructor);
+        verifyNoNewLineTextWatcher(preferenceFromThreeParameterConstructor);
+    }
+
     private void verifyContext(final ThemedEditTextPreference preference) {
         final Context context = preference.getContext();
 
@@ -76,5 +86,17 @@ public class ThemedEditTextPreferenceTest {
 
     private Integer getThemeResourceId(final Context context) {
         return TestUtils.getFieldValue(context, Integer.class, "mThemeResource");
+    }
+
+    private void verifyNoNewLineTextWatcher(final ThemedEditTextPreference preference) {
+        final List<TextWatcher> textWatchers = getTextWatchers(preference);
+
+        assertEquals(1, textWatchers.size());
+        assertEquals(NoNewLineTextWatcher.class, textWatchers.get(0).getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<TextWatcher> getTextWatchers(final ThemedEditTextPreference preference) {
+        return TestUtils.getFieldValue(preference.getEditText(), List.class, "mListeners");
     }
 }
