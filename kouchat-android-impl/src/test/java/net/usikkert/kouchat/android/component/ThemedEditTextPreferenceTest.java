@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.util.TestUtils;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -45,27 +46,25 @@ import android.view.ContextThemeWrapper;
 @RunWith(RobolectricTestRunner.class)
 public class ThemedEditTextPreferenceTest {
 
-    @Test
-    public void getContextShouldReturnThemeWrapperWithOneParameterConstructor() {
-        final ThemedEditTextPreference preference = new ThemedEditTextPreference(Robolectric.application);
+    private ThemedEditTextPreference preferenceFromOneParameterConstructor;
+    private ThemedEditTextPreference preferenceFromTwoParameterConstructor;
+    private ThemedEditTextPreference preferenceFromThreeParameterConstructor;
 
-        verifyContext(preference);
-    }
-
-    @Test
-    public void getContextShouldReturnThemeWrapperWithTwoParameterConstructor() {
-        final ThemedEditTextPreference preference =
+    @Before
+    public void setUp() {
+        preferenceFromOneParameterConstructor =
+                new ThemedEditTextPreference(Robolectric.application);
+        preferenceFromTwoParameterConstructor =
                 new ThemedEditTextPreference(Robolectric.application, mock(AttributeSet.class));
-
-        verifyContext(preference);
+        preferenceFromThreeParameterConstructor =
+                new ThemedEditTextPreference(Robolectric.application, mock(AttributeSet.class), 0);
     }
 
     @Test
-    public void getContextShouldReturnThemeWrapperWithThreeParameterConstructor() {
-        final ThemedEditTextPreference preference =
-                new ThemedEditTextPreference(Robolectric.application, mock(AttributeSet.class), 0);
-
-        verifyContext(preference);
+    public void getContextShouldReturnThemeWrapper() {
+        verifyContext(preferenceFromOneParameterConstructor);
+        verifyContext(preferenceFromTwoParameterConstructor);
+        verifyContext(preferenceFromThreeParameterConstructor);
     }
 
     private void verifyContext(final ThemedEditTextPreference preference) {
