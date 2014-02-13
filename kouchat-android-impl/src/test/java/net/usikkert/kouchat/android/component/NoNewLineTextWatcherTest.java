@@ -82,4 +82,39 @@ public class NoNewLineTextWatcherTest {
 
         assertEquals("", stringBuilder.toString());
     }
+
+    /**
+     * equals() is not implemented in the real Android class, but it is implemented in the Robolectric shadow,
+     * meaning that the tests above can go green even when it doesn't work in practice.
+     *
+     * It's important to use toString() on the stringBuilder before equals().
+     * It's not possible to mock equals() and toString(), so have to provoke the behaviour with a subclass.
+     */
+    @Test
+    public void afterTextChangedShouldUseEqualsOnTheStringAndNotTheStringBuilder() {
+        final SpannableStringBuilder stringBuilder = new SpannableStringBuilderThatNeverEquals("\n");
+
+        textWatcher.afterTextChanged(stringBuilder);
+
+        assertEquals("", stringBuilder.toString()); // Will fail if equals is used on the stringBuilder
+    }
+
+    // CHECKSTYLE:OFF
+    private class SpannableStringBuilderThatNeverEquals extends SpannableStringBuilder {
+
+        private SpannableStringBuilderThatNeverEquals(final CharSequence text) {
+            super(text);
+        }
+
+        @Override
+        public CharSequence subSequence(final int start, final int end) {
+            return new SpannableStringBuilderThatNeverEquals(super.subSequence(start, end));
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            return false;
+        }
+    }
+    // CHECKSTYLE:ON
 }

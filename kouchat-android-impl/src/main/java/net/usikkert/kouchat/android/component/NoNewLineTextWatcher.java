@@ -48,7 +48,7 @@ public class NoNewLineTextWatcher implements TextWatcher {
         for (int i = text.length(); i > 0; i--) {
             final CharSequence character = text.subSequence(i - 1, i);
 
-            if (character.equals("\n")) {
+            if (character.toString().equals("\n")) {
                 text.replace(i - 1, i, "");
             }
         }
