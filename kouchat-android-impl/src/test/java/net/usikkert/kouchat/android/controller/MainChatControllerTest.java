@@ -25,6 +25,7 @@ package net.usikkert.kouchat.android.controller;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.android.userlist.UserListAdapter;
@@ -38,10 +39,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowHandler;
+import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.util.ActivityController;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.internal.view.menu.ActionMenuItem;
 
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -73,6 +77,7 @@ public class MainChatControllerTest {
     private TextWatcher textWatcher;
     private UserListAdapter userListAdapter;
     private ActionBar actionBar;
+    private Intent chatServiceIntent;
 
     @Before
     public void setUp() {
@@ -96,9 +101,9 @@ public class MainChatControllerTest {
         textWatcher = TestUtils.setFieldValueWithMock(controller, "textWatcher", TextWatcher.class);
         userListAdapter = TestUtils.setFieldValueWithMock(controller, "userListAdapter", UserListAdapter.class);
         actionBar = TestUtils.setFieldValueWithMock(controller, "actionBar", ActionBar.class);
+        chatServiceIntent = TestUtils.setFieldValueWithMock(controller, "chatServiceIntent", Intent.class);
 
-        TestUtils.setFieldValue(controller, "serviceConnection", mock(ServiceConnection.class));
-        TestUtils.setFieldValue(controller, "chatServiceIntent", mock(Intent.class));
+        TestUtils.setFieldValueWithMock(controller, "serviceConnection", ServiceConnection.class);
     }
 
     @Test
@@ -312,5 +317,43 @@ public class MainChatControllerTest {
 
         verify(actionBar).setTitle("The title");
         verify(actionBar).setSubtitle("The topic");
+    }
+
+    @Test
+    public void onOptionsItemSelectedWithQuitShouldFinishAndStopService() {
+        final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuQuit));
+
+        assertTrue(selected);
+        assertTrue(controller.isFinishing());
+
+        final Intent stoppedService = Robolectric.getShadowApplication().getNextStoppedService();
+        assertSame(chatServiceIntent, stoppedService);
+    }
+
+    @Test
+    public void onOptionsItemSelectedWithSettingsShouldOpenSettingsController() {
+        final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuSettings));
+
+        assertTrue(selected);
+
+        final Intent startedActivityIntent = Robolectric.getShadowApplication().getNextStartedActivity();
+        final ShadowIntent startedActivityShadowIntent = Robolectric.shadowOf(startedActivityIntent);
+        assertEquals(SettingsController.class, startedActivityShadowIntent.getIntentClass());
+    }
+
+    @Test
+    @Ignore("This does not work with Robolectric yet.")
+    public void onOptionsItemSelectedWithAboutShouldOpenAboutDialog() {
+        // NullPointerException when opening the AboutDialog. Perhaps it works after create(), but create() fails...
+        final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuAbout));
+
+        assertTrue(selected);
+
+        final ShadowAlertDialog latestDialog = Robolectric.getShadowApplication().getLatestAlertDialog();
+        assertEquals("KouChat v", latestDialog.getTitle()); // KouChat v{version}
+    }
+
+    private ActionMenuItem createMenuItem(final int menuItemId) {
+        return new ActionMenuItem(null, 0, menuItemId, 0, 0, "");
     }
 }
