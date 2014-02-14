@@ -820,6 +820,31 @@ public class AndroidUserInterfaceTest {
         assertSame(settings, androidUserInterface.getSettings());
     }
 
+    @Test
+    public void getTopicShouldReturnCurrentTopic() {
+        when(controller.getTopic()).thenReturn(new Topic("Hey look at the topic", "me", 100));
+
+        assertEquals("Hey look at the topic", androidUserInterface.getTopic());
+    }
+
+    @Test
+    public void changeTopicShouldUseCommandParser() throws CommandException {
+        androidUserInterface.changeTopic("Set this topic");
+
+        verify(commandParser).fixTopic("Set this topic");
+        assertEquals(0, ShadowToast.shownToastCount());
+    }
+
+    @Test
+    public void changeTopicShouldShowToastOnException() throws CommandException {
+        doThrow(new CommandException("Can't set topic")).when(commandParser).fixTopic(anyString());
+
+        androidUserInterface.changeTopic("Don't set this topic");
+
+        verify(commandParser).fixTopic("Don't set this topic");
+        assertEquals("Can't set topic", ShadowToast.getTextOfLatestToast());
+    }
+
     private Thread createShowFileSaveThread(final FileReceiver fileReceiver) {
         return new Thread() {
             @Override

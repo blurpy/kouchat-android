@@ -205,6 +205,47 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         }
     }
 
+    /**
+     * Gets the current topic.
+     *
+     * @return The current topic.
+     */
+    public String getTopic() {
+        return controller.getTopic().getTopic();
+    }
+
+    /**
+     * Changes the topic to the specified topic. Set to empty to remove the topic.
+     *
+     * @param topic The new topic to set.
+     */
+    public void changeTopic(final String topic) {
+        final AsyncTask<Void, Void, Void> changeTopicTask = new AsyncTask<Void, Void, Void>() {
+
+            private CommandException exception;
+
+            @Override
+            public Void doInBackground(final Void... voids) {
+                try {
+                    commandParser.fixTopic(topic);
+                } catch (final CommandException e) {
+                    exception = e;
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(final Void aVoid) {
+                if (exception != null) { // Toast needs to be on UI thread, like in onPostExecute()
+                    Toast.makeText(context, exception.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        changeTopicTask.execute((Void) null);
+    }
+
     @Override
     public void clearChat() {
 
