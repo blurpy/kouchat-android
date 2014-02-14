@@ -287,6 +287,8 @@ public class MainChatController extends SherlockActivity implements UserListList
         switch (item.getItemId()) {
             case R.id.mainChatMenuQuit:
                 return shutdownApplication();
+            case R.id.mainChatMenuTopic:
+                return showTopicDialog();
             case R.id.mainChatMenuAbout:
                 return showAboutDialog();
             case R.id.mainChatMenuSettings:
@@ -315,6 +317,11 @@ public class MainChatController extends SherlockActivity implements UserListList
         }
 
         return mainChatInput.dispatchKeyEvent(event);
+    }
+
+    private boolean showTopicDialog() {
+        // TODO
+        return true;
     }
 
     private boolean showAboutDialog() {

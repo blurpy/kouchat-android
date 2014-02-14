@@ -353,6 +353,17 @@ public class MainChatControllerTest {
         assertEquals("KouChat v", latestDialog.getTitle()); // KouChat v{version}
     }
 
+    @Test
+    public void onOptionsItemSelectedWithTopicShouldOpenTopicDialog() {
+        final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuTopic));
+
+        assertTrue(selected);
+
+        // TODO not implemented yet
+//        final ShadowAlertDialog latestDialog = Robolectric.getShadowApplication().getLatestAlertDialog();
+//        assertEquals("Topic", latestDialog.getTitle());
+    }
+
     private ActionMenuItem createMenuItem(final int menuItemId) {
         return new ActionMenuItem(null, 0, menuItemId, 0, 0, "");
     }
