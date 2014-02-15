@@ -25,6 +25,7 @@ package net.usikkert.kouchat.android.controller;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.component.AboutDialog;
+import net.usikkert.kouchat.android.component.TopicDialog;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.android.userlist.UserListAdapter;
@@ -320,7 +321,7 @@ public class MainChatController extends SherlockActivity implements UserListList
     }
 
     private boolean showTopicDialog() {
-        // TODO
+        new TopicDialog(this, androidUserInterface);
         return true;
     }
 

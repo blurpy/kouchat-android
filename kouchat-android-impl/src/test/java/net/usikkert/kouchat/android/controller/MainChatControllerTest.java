@@ -354,14 +354,15 @@ public class MainChatControllerTest {
     }
 
     @Test
+    @Ignore("This does not work with Robolectric yet.")
     public void onOptionsItemSelectedWithTopicShouldOpenTopicDialog() {
+        activityController.create(); // NumberFormatException because of float in dimens.xml
         final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuTopic));
 
         assertTrue(selected);
 
-        // TODO not implemented yet
-//        final ShadowAlertDialog latestDialog = Robolectric.getShadowApplication().getLatestAlertDialog();
-//        assertEquals("Topic", latestDialog.getTitle());
+        final ShadowAlertDialog latestDialog = Robolectric.getShadowApplication().getLatestAlertDialog();
+        assertEquals("Topic", latestDialog.getTitle());
     }
 
     private ActionMenuItem createMenuItem(final int menuItemId) {
