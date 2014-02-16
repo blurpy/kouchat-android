@@ -34,6 +34,7 @@ import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestUtils;
+import net.usikkert.kouchat.util.Tools;
 
 import com.robotium.solo.Solo;
 
@@ -116,7 +117,14 @@ public final class RobotiumTestUtils {
      * @param text The text to write.
      */
     public static void writeText(final Instrumentation instrumentation, final String text) {
-        instrumentation.sendStringSync(text);
+        // Send one character at the time, with some sleep, to hack around some weird issue where sometimes
+        // the characters end up in the wrong order
+        for (int i = 0; i < text.length(); i++) {
+            final String character = String.valueOf(text.charAt(i));
+            instrumentation.sendStringSync(character);
+
+            Tools.sleep(10);
+        }
     }
 
     /**
