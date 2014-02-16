@@ -87,7 +87,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkTopic("New topic - Test");
     }
 
-    public void test04RemovingTheTopicShouldRemoveTopicFromTitle() {
+    public void test04OtherClientRemovingTheTopicShouldRemoveTopicFromTitle() {
         checkTopic("New topic - Test");
 
         client.changeTopic("");
@@ -109,6 +109,38 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         assertTrue(solo.searchText("Topic is: Original topic"));
         checkTopic("Original topic - Test");
+    }
+
+    public void test07MeChangingTopicIsShownInChatAndTitle() {
+        solo.sleep(500);
+
+        RobotiumTestUtils.openMenu(solo);
+        solo.clickOnText("Topic");
+
+        assertTrue(solo.searchText("Set or change the current topic."));
+
+        solo.enterText(0, "This is my topic");
+        solo.sleep(500);
+        solo.clickOnText("OK");
+
+        assertTrue(solo.searchText("You changed the topic to: This is my topic"));
+        checkTopic("This is my topic - " + me.getNick());
+    }
+
+    public void test08MeRemovingTheTopicShouldRemoveTopicFromTitle() {
+        solo.sleep(500);
+
+        RobotiumTestUtils.openMenu(solo);
+        solo.clickOnText("Topic");
+
+        assertTrue(solo.searchText("Set or change the current topic."));
+
+        solo.enterText(0, "");
+        solo.sleep(500);
+        solo.clickOnText("OK");
+
+        assertTrue(solo.searchText("You removed the topic"));
+        checkTopic(null);
     }
 
     public void test99Quit() {
