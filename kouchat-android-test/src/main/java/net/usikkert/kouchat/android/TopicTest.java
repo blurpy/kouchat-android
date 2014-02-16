@@ -31,7 +31,9 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.robotium.solo.Solo;
 
+import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.KeyEvent;
 
 /**
  * Test of topic handling.
@@ -45,6 +47,8 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     private static TestClient client;
 
     private Solo solo;
+    private Instrumentation instrumentation;
+
     private User me;
     private int defaultOrientation;
 
@@ -53,8 +57,9 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     public void setUp() {
+        instrumentation = getInstrumentation();
         final MainChatController activity = getActivity();
-        solo = new Solo(getInstrumentation(), activity);
+        solo = new Solo(instrumentation, activity);
 
         if (client == null) {
             client = new TestClient();
@@ -119,7 +124,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         assertTrue(solo.searchText("Set or change the current topic."));
 
-        solo.enterText(0, "This is my topic");
+        RobotiumTestUtils.writeText(instrumentation, "This is my topic");
         solo.sleep(500);
         solo.clickOnText("OK");
 
@@ -135,12 +140,28 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         assertTrue(solo.searchText("Set or change the current topic."));
 
-        solo.enterText(0, "");
+        solo.sendKey(KeyEvent.KEYCODE_DEL);
         solo.sleep(500);
         solo.clickOnText("OK");
 
         assertTrue(solo.searchText("You removed the topic"));
         checkTopic(null);
+    }
+
+    public void test09PressingEnterShouldNotAddANewLine() {
+        solo.sleep(500);
+
+        RobotiumTestUtils.openMenu(solo);
+        solo.clickOnText("Topic");
+
+        assertTrue(solo.searchText("Set or change the current topic."));
+
+        RobotiumTestUtils.writeText(instrumentation, "Line1");
+        solo.sendKey(KeyEvent.KEYCODE_ENTER);
+        RobotiumTestUtils.writeText(instrumentation, "Line2");
+
+        solo.sleep(500);
+        assertTrue(solo.searchText("Line1Line2"));
     }
 
     public void test99Quit() {

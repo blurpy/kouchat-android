@@ -38,6 +38,7 @@ import net.usikkert.kouchat.testclient.TestUtils;
 import com.robotium.solo.Solo;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -102,6 +103,20 @@ public final class RobotiumTestUtils {
     public static void writeLine(final Solo solo, final String text) {
         solo.enterText(0, text);
         solo.sendKey(KeyEvent.KEYCODE_ENTER);
+    }
+
+    /**
+     * Writes the text to the field with current focus.
+     *
+     * <p>This can be used when it's important not to change the state of the view with focus.
+     * Using the regular method to enter text will put the view in a strange state where the cursor
+     * disappears, and pressing 'enter' changes focus to the next view instead of adding a new line.</p>
+     *
+     * @param instrumentation The test instrumentation.
+     * @param text The text to write.
+     */
+    public static void writeText(final Instrumentation instrumentation, final String text) {
+        instrumentation.sendStringSync(text);
     }
 
     /**
