@@ -30,6 +30,8 @@ import net.usikkert.kouchat.testclient.TestClient;
 import com.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.KeyEvent;
+import android.widget.EditText;
 
 /**
  * Test of changing the settings.
@@ -103,6 +105,21 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertTrue(mainChat.isVisible());
     }
 
+    public void test05PressingEnterShouldNotAddANewLine() {
+        RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
+
+        solo.hideSoftKeyboard();
+        clearNickName();
+        solo.sleep(500);
+
+        RobotiumTestUtils.writeText(getInstrumentation(), "Line1");
+        solo.sendKey(KeyEvent.KEYCODE_ENTER);
+        RobotiumTestUtils.writeText(getInstrumentation(), "Line2");
+
+        solo.sleep(500);
+        assertTrue(solo.searchText("Line1Line2"));
+    }
+
     public void test99Quit() {
         RobotiumTestUtils.quit(solo);
 
@@ -122,5 +139,19 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
         setActivity(null);
 
         System.gc();
+    }
+
+    /**
+     * A hack to avoid strange focus issues where the cursor is hidden when using solo.
+     */
+    private void clearNickName() {
+        final EditText editText = solo.getEditText(0);
+
+        editText.post(new Runnable() {
+            @Override
+            public void run() {
+                editText.setText("");
+            }
+        });
     }
 }
