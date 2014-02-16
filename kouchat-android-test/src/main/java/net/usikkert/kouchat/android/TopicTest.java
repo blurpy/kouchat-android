@@ -128,6 +128,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(500);
         solo.clickOnText("OK");
 
+        solo.sleep(500);
         assertTrue(solo.searchText("You changed the topic to: This is my topic"));
         checkTopic("This is my topic - " + me.getNick());
     }
@@ -144,6 +145,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(500);
         solo.clickOnText("OK");
 
+        solo.sleep(500);
         assertTrue(solo.searchText("You removed the topic"));
         checkTopic(null);
     }
