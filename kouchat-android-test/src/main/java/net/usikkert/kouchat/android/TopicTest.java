@@ -178,6 +178,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.finishOpenedActivities();
 
         solo = null;
+        instrumentation = null;
         me = null;
         setActivity(null);
 
