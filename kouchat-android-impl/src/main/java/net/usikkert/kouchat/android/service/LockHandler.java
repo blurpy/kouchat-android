@@ -145,6 +145,15 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
     }
 
     /**
+     * Returns if the wifi lock has been acquired and is currently held (active).
+     *
+     * @return If the wifi lock is held.
+     */
+    public boolean wifiLockIsHeld() {
+        return wifiLock.isHeld();
+    }
+
+    /**
      * Returns if the multicast lock has been acquired and is currently held (active).
      *
      * @return If the multicast lock is held.

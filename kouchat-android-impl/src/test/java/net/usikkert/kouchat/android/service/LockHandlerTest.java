@@ -319,6 +319,15 @@ public class LockHandlerTest {
     }
 
     @Test
+    public void wifiLockIsHeldShouldReturnValueFromWifiLock() {
+        when(wifiLock.isHeld()).thenReturn(true);
+        assertTrue(handler.wifiLockIsHeld());
+
+        when(wifiLock.isHeld()).thenReturn(false);
+        assertFalse(handler.wifiLockIsHeld());
+    }
+
+    @Test
     public void multicastLockIsHeldShouldReturnValueFromMulticastLock() {
         when(multicastLock.isHeld()).thenReturn(true);
         assertTrue(handler.multicastLockIsHeld());
