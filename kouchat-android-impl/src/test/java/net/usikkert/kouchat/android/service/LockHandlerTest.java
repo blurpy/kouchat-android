@@ -148,19 +148,23 @@ public class LockHandlerTest {
     @Test
     public void releaseAllLocksShouldReleaseMulticastLockIfItIsHeld() {
         when(multicastLock.isHeld()).thenReturn(true);
+        when(wakeLock.isHeld()).thenReturn(false);
 
         handler.releaseAllLocks();
 
         verify(multicastLock).release();
+        verify(wakeLock, never()).release();
     }
 
     @Test
     public void releaseAllLocksShouldReleaseWakeLockIfItIsHeld() {
+        when(multicastLock.isHeld()).thenReturn(false);
         when(wakeLock.isHeld()).thenReturn(true);
 
         handler.releaseAllLocks();
 
         verify(wakeLock).release();
+        verify(multicastLock, never()).release();
     }
 
     @Test
@@ -172,24 +176,6 @@ public class LockHandlerTest {
 
         verify(multicastLock).release();
         verify(wakeLock).release();
-    }
-
-    @Test
-    public void releaseAllLocksShouldNotReleaseMulticastLockIfItIsNotHeld() {
-        when(multicastLock.isHeld()).thenReturn(false);
-
-        handler.releaseAllLocks();
-
-        verify(multicastLock, never()).release();
-    }
-
-    @Test
-    public void releaseAllLocksShouldNotReleaseWakeLockIfItIsNotHeld() {
-        when(wakeLock.isHeld()).thenReturn(false);
-
-        handler.releaseAllLocks();
-
-        verify(wakeLock, never()).release();
     }
 
     @Test
@@ -277,7 +263,7 @@ public class LockHandlerTest {
     public void networkCameUpShouldDoNothing() {
         handler.networkCameUp(false);
 
-        verifyZeroInteractions(multicastLock);
+        verifyZeroInteractions(multicastLock, wakeLock);
     }
 
     @Test
