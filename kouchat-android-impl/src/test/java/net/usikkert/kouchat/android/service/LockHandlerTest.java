@@ -33,9 +33,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
+import android.annotation.SuppressLint;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 
@@ -44,6 +48,8 @@ import android.os.PowerManager;
  *
  * @author Christian Ihle
  */
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest = Config.NONE)
 public class LockHandlerTest {
 
     @Rule
@@ -56,18 +62,22 @@ public class LockHandlerTest {
     private Settings settings;
     private PowerManager powerManager;
 
+    private WifiManager.WifiLock wifiLock;
     private WifiManager.MulticastLock multicastLock;
     private PowerManager.WakeLock wakeLock;
 
     @Before
+    @SuppressLint("InlinedApi")
     public void setUp() {
         settings = mock(Settings.class);
         wifiManager = mock(WifiManager.class);
+        wifiLock = mock(WifiManager.WifiLock.class);
         multicastLock = mock(WifiManager.MulticastLock.class);
         ui = mock(AndroidUserInterface.class);
         powerManager = mock(PowerManager.class);
         wakeLock = mock(PowerManager.WakeLock.class);
 
+        when(wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "KouChat wifi lock")).thenReturn(wifiLock);
         when(wifiManager.createMulticastLock("KouChat multicast lock")).thenReturn(multicastLock);
         when(powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KouChat wake lock")).thenReturn(wakeLock);
 
@@ -108,11 +118,31 @@ public class LockHandlerTest {
 
     @Test
     public void constructorShouldCreateLocksAndRegisterListeners() {
+        verify(wifiManager).createWifiLock(anyInt(), anyString());
         verify(wifiManager).createMulticastLock("KouChat multicast lock");
         verify(powerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KouChat wake lock");
 
         verify(ui).registerNetworkConnectionListener(handler);
         verify(settings).addSettingsListener(handler);
+    }
+
+    @Test
+    @Config(reportSdk = 10)
+    public void constructorShouldCreateOlderWifiLockOnApi10() {
+        verify(wifiManager).createWifiLock(WifiManager.WIFI_MODE_FULL, "KouChat wifi lock");
+    }
+
+    @Test
+    @Config(reportSdk = 11)
+    public void constructorShouldCreateOlderWifiLockOnApi11() {
+        verify(wifiManager).createWifiLock(WifiManager.WIFI_MODE_FULL, "KouChat wifi lock");
+    }
+
+    @Test
+    @Config(reportSdk = 12)
+    @SuppressLint("InlinedApi")
+    public void constructorShouldCreateNewWifiLockOnApi12() {
+        verify(wifiManager).createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "KouChat wifi lock");
     }
 
     @Test

@@ -30,6 +30,7 @@ import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.util.Validate;
 
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.PowerManager;
 
 /**
@@ -48,11 +49,14 @@ import android.os.PowerManager;
  */
 public class LockHandler implements NetworkConnectionListener, SettingsListener {
 
+    public static final String WIFI_LOCK = "KouChat wifi lock";
     public static final String MULTICAST_LOCK = "KouChat multicast lock";
     public static final String WAKE_LOCK = "KouChat wake lock";
 
+    private final WifiManager.WifiLock wifiLock;
     private final WifiManager.MulticastLock multicastLock;
     private final PowerManager.WakeLock wakeLock;
+
     private final Settings settings;
 
     public LockHandler(final AndroidUserInterface androidUserInterface,
@@ -65,6 +69,7 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
         Validate.notNull(powerManager, "PowerManager can not be null");
 
         this.settings = settings;
+        this.wifiLock = wifiManager.createWifiLock(selectWifiLockMode(), WIFI_LOCK);
         this.multicastLock = wifiManager.createMulticastLock(MULTICAST_LOCK);
         this.wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK);
 
@@ -178,6 +183,14 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
     private void releaseWakeLock() {
         if (wakeLockIsHeld()) {
             wakeLock.release();
+        }
+    }
+
+    private int selectWifiLockMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            return WifiManager.WIFI_MODE_FULL_HIGH_PERF;
+        } else {
+            return WifiManager.WIFI_MODE_FULL;
         }
     }
 }
