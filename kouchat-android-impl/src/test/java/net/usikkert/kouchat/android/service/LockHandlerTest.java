@@ -82,6 +82,8 @@ public class LockHandlerTest {
         when(powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KouChat wake lock")).thenReturn(wakeLock);
 
         handler = new LockHandler(ui, settings, wifiManager, powerManager);
+
+        when(settings.isWakeLockEnabled()).thenReturn(true);
     }
 
     @Test
@@ -168,7 +170,7 @@ public class LockHandlerTest {
     }
 
     @Test
-    public void releaseAllLocksShouldReleaseAllLocksIfAllIsHeld() {
+    public void releaseAllLocksShouldReleaseAllLocksIfAllAreHeld() {
         when(multicastLock.isHeld()).thenReturn(true);
         when(wakeLock.isHeld()).thenReturn(true);
 
@@ -179,7 +181,7 @@ public class LockHandlerTest {
     }
 
     @Test
-    public void releaseAllLocksShouldNotReleaseAnyLocksIfNoneIsHeld() {
+    public void releaseAllLocksShouldNotReleaseAnyLocksIfNoneAreHeld() {
         when(multicastLock.isHeld()).thenReturn(false);
         when(wakeLock.isHeld()).thenReturn(false);
 
@@ -192,45 +194,51 @@ public class LockHandlerTest {
     @Test
     public void acquireEnabledLocksShouldAcquireMulticastLockIfItIsNotHeld() {
         when(multicastLock.isHeld()).thenReturn(false);
+        when(wakeLock.isHeld()).thenReturn(true);
 
         handler.acquireEnabledLocks();
 
         verify(multicastLock).acquire();
+        verify(wakeLock, never()).acquire();
     }
 
     @Test
-    public void acquireEnabledLocksShouldNotAcquireMulticastLockIfItIsHeld() {
+    public void acquireEnabledLocksShouldAcquireWakeLockIfItIsNotHeld() {
+        when(wakeLock.isHeld()).thenReturn(false);
         when(multicastLock.isHeld()).thenReturn(true);
 
         handler.acquireEnabledLocks();
 
+        verify(wakeLock).acquire();
         verify(multicastLock, never()).acquire();
     }
 
     @Test
-    public void acquireEnabledLocksShouldAcquireWakeLockIfItIsNotHeldAndEnabled() {
+    public void acquireEnabledLocksShouldAcquireAllLocksIfNoneAreHeld() {
+        when(multicastLock.isHeld()).thenReturn(false);
         when(wakeLock.isHeld()).thenReturn(false);
-        when(settings.isWakeLockEnabled()).thenReturn(true);
 
         handler.acquireEnabledLocks();
 
+        verify(multicastLock).acquire();
         verify(wakeLock).acquire();
+    }
+
+    @Test
+    public void acquireEnabledLocksShouldNotAcquireAnyLocksIfAllAreHeld() {
+        when(multicastLock.isHeld()).thenReturn(true);
+        when(wakeLock.isHeld()).thenReturn(true);
+
+        handler.acquireEnabledLocks();
+
+        verify(multicastLock, never()).acquire();
+        verify(wakeLock, never()).acquire();
     }
 
     @Test
     public void acquireEnabledLocksShouldNotAcquireWakeLockIfItIsNotHeldAndDisabled() {
         when(wakeLock.isHeld()).thenReturn(false);
         when(settings.isWakeLockEnabled()).thenReturn(false);
-
-        handler.acquireEnabledLocks();
-
-        verify(wakeLock, never()).acquire();
-    }
-
-    @Test
-    public void acquireEnabledLocksShouldNotAcquireWakeLockIfItIsHeldAndEnabled() {
-        when(wakeLock.isHeld()).thenReturn(true);
-        when(settings.isWakeLockEnabled()).thenReturn(true);
 
         handler.acquireEnabledLocks();
 
@@ -251,7 +259,6 @@ public class LockHandlerTest {
     public void beforeNetworkCameUpShouldAcquireAllLocks() {
         when(multicastLock.isHeld()).thenReturn(false);
         when(wakeLock.isHeld()).thenReturn(false);
-        when(settings.isWakeLockEnabled()).thenReturn(true);
 
         handler.beforeNetworkCameUp();
 
@@ -280,7 +287,6 @@ public class LockHandlerTest {
     @Test
     public void settingChangedShouldAcquireWakeLockIfItIsChangedToEnabled() {
         when(wakeLock.isHeld()).thenReturn(false);
-        when(settings.isWakeLockEnabled()).thenReturn(true);
 
         handler.settingChanged(Setting.WAKE_LOCK);
 
