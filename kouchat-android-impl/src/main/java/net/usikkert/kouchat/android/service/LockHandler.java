@@ -49,13 +49,13 @@ import android.os.PowerManager;
  */
 public class LockHandler implements NetworkConnectionListener, SettingsListener {
 
+    public static final String WAKE_LOCK = "KouChat wake lock";
     public static final String WIFI_LOCK = "KouChat wifi lock";
     public static final String MULTICAST_LOCK = "KouChat multicast lock";
-    public static final String WAKE_LOCK = "KouChat wake lock";
 
+    private final PowerManager.WakeLock wakeLock;
     private final WifiManager.WifiLock wifiLock;
     private final WifiManager.MulticastLock multicastLock;
-    private final PowerManager.WakeLock wakeLock;
 
     private final Settings settings;
 
@@ -69,9 +69,10 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
         Validate.notNull(powerManager, "PowerManager can not be null");
 
         this.settings = settings;
+
+        this.wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK);
         this.wifiLock = wifiManager.createWifiLock(selectWifiLockMode(), WIFI_LOCK);
         this.multicastLock = wifiManager.createMulticastLock(MULTICAST_LOCK);
-        this.wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK);
 
         androidUserInterface.registerNetworkConnectionListener(this);
         settings.addSettingsListener(this);
@@ -137,11 +138,11 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
      * And the wake lock, if it's enabled and not already held.
      */
     public void acquireEnabledLocks() {
-        acquireMulticastLock();
-
         if (settings.isWakeLockEnabled()) {
             acquireWakeLock();
         }
+
+        acquireMulticastLock();
     }
 
     /**

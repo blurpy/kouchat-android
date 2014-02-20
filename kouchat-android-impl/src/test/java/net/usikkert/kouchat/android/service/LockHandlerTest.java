@@ -57,29 +57,32 @@ public class LockHandlerTest {
 
     private LockHandler handler;
 
-    private WifiManager wifiManager;
-    private AndroidUserInterface ui;
     private Settings settings;
+    private AndroidUserInterface ui;
+
+    private WifiManager wifiManager;
     private PowerManager powerManager;
 
+    private PowerManager.WakeLock wakeLock;
     private WifiManager.WifiLock wifiLock;
     private WifiManager.MulticastLock multicastLock;
-    private PowerManager.WakeLock wakeLock;
 
     @Before
     @SuppressLint("InlinedApi")
     public void setUp() {
         settings = mock(Settings.class);
+        ui = mock(AndroidUserInterface.class);
+
         wifiManager = mock(WifiManager.class);
+        powerManager = mock(PowerManager.class);
+
+        wakeLock = mock(PowerManager.WakeLock.class);
         wifiLock = mock(WifiManager.WifiLock.class);
         multicastLock = mock(WifiManager.MulticastLock.class);
-        ui = mock(AndroidUserInterface.class);
-        powerManager = mock(PowerManager.class);
-        wakeLock = mock(PowerManager.WakeLock.class);
 
+        when(powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KouChat wake lock")).thenReturn(wakeLock);
         when(wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "KouChat wifi lock")).thenReturn(wifiLock);
         when(wifiManager.createMulticastLock("KouChat multicast lock")).thenReturn(multicastLock);
-        when(powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KouChat wake lock")).thenReturn(wakeLock);
 
         handler = new LockHandler(ui, settings, wifiManager, powerManager);
 
@@ -120,9 +123,9 @@ public class LockHandlerTest {
 
     @Test
     public void constructorShouldCreateLocksAndRegisterListeners() {
+        verify(powerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KouChat wake lock");
         verify(wifiManager).createWifiLock(anyInt(), anyString());
         verify(wifiManager).createMulticastLock("KouChat multicast lock");
-        verify(powerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KouChat wake lock");
 
         verify(ui).registerNetworkConnectionListener(handler);
         verify(settings).addSettingsListener(handler);
@@ -165,8 +168,8 @@ public class LockHandlerTest {
 
         handler.releaseAllLocks();
 
-        verify(wakeLock).release();
         verify(multicastLock, never()).release();
+        verify(wakeLock).release();
     }
 
     @Test
@@ -193,13 +196,13 @@ public class LockHandlerTest {
 
     @Test
     public void acquireEnabledLocksShouldAcquireMulticastLockIfItIsNotHeld() {
-        when(multicastLock.isHeld()).thenReturn(false);
         when(wakeLock.isHeld()).thenReturn(true);
+        when(multicastLock.isHeld()).thenReturn(false);
 
         handler.acquireEnabledLocks();
 
-        verify(multicastLock).acquire();
         verify(wakeLock, never()).acquire();
+        verify(multicastLock).acquire();
     }
 
     @Test
@@ -215,24 +218,24 @@ public class LockHandlerTest {
 
     @Test
     public void acquireEnabledLocksShouldAcquireAllLocksIfNoneAreHeld() {
-        when(multicastLock.isHeld()).thenReturn(false);
         when(wakeLock.isHeld()).thenReturn(false);
+        when(multicastLock.isHeld()).thenReturn(false);
 
         handler.acquireEnabledLocks();
 
-        verify(multicastLock).acquire();
         verify(wakeLock).acquire();
+        verify(multicastLock).acquire();
     }
 
     @Test
     public void acquireEnabledLocksShouldNotAcquireAnyLocksIfAllAreHeld() {
-        when(multicastLock.isHeld()).thenReturn(true);
         when(wakeLock.isHeld()).thenReturn(true);
+        when(multicastLock.isHeld()).thenReturn(true);
 
         handler.acquireEnabledLocks();
 
-        verify(multicastLock, never()).acquire();
         verify(wakeLock, never()).acquire();
+        verify(multicastLock, never()).acquire();
     }
 
     @Test
@@ -257,20 +260,20 @@ public class LockHandlerTest {
 
     @Test
     public void beforeNetworkCameUpShouldAcquireAllLocks() {
-        when(multicastLock.isHeld()).thenReturn(false);
         when(wakeLock.isHeld()).thenReturn(false);
+        when(multicastLock.isHeld()).thenReturn(false);
 
         handler.beforeNetworkCameUp();
 
-        verify(multicastLock).acquire();
         verify(wakeLock).acquire();
+        verify(multicastLock).acquire();
     }
 
     @Test
     public void networkCameUpShouldDoNothing() {
         handler.networkCameUp(false);
 
-        verifyZeroInteractions(multicastLock, wakeLock);
+        verifyZeroInteractions(wakeLock, multicastLock);
     }
 
     @Test
