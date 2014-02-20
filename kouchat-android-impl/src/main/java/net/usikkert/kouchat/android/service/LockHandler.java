@@ -34,15 +34,16 @@ import android.os.Build;
 import android.os.PowerManager;
 
 /**
- * Acquires and releases the multicast lock and the wake lock when appropriate.
+ * Acquires and releases the wake lock, the wifi lock and the multicast lock when appropriate.
  *
- * TODO
- *
- * <p>The multicast lock is needed on some devices. The <code>Asus Transformer TF101</code> tablet does not care,
- * but the <code>HTC One</code> phone does not send or receive any multicast messages without a lock.</p>
- *|
  * <p>The wake lock is optional, and helps avoid timeouts because the cpu goes to sleep,
  * and thus can't process packets from the network.</p>
+ *
+ * <p>The wifi lock can help with packet loss on some devices.</p>
+ *
+ * <p>The multicast lock is needed to process multicast packets on some devices.
+ * The <code>Asus Transformer TF101</code> does not care, but the <code>HTC One</code> does not send
+ * or receive any multicast packets without a lock.</p>
  *
  * <p>It's important to keep the locks as fields, and not just as variables, since
  * garbage collected locks are automatically released.</p>
@@ -84,7 +85,7 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
      * It's important to release the multicast lock when the network goes down,
      * as it can't be reused when the network is back up.
      *
-     * <p>Releasing the wake lock as well, as there is no point in keeping a wake lock when there is no network.</p>
+     * <p>Releasing the other locks as well, as there is no point in keeping locks when there is no network.</p>
      */
     @Override
     public void networkWentDown(final boolean silent) {
@@ -94,7 +95,7 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
     /**
      * Need to get the multicast lock before it starts to connect. If not, some of the first messages will be filtered.
      *
-     * <p>Gets the wake lock too, if it's enabled, to keep awake from the start.</p>
+     * <p>Gets the other locks too, if it's enabled, to keep awake from the start.</p>
      */
     @Override
     public void beforeNetworkCameUp() {
@@ -137,7 +138,7 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
     }
 
     /**
-     * Acquires the multicast lock, if it's not already held.
+     * Acquires the wifi lock and multicast lock, if not already held.
      * And the wake lock, if it's enabled and not already held.
      */
     public void acquireEnabledLocks() {
