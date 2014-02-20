@@ -6,6 +6,7 @@
   - The topic, if set, is shown as subtitle in the ActionBar.
   - Fixed bug where it was possible to get new lines in the nick name settings dialog.
   - Added support for setting the topic.
+  - Added high performance wifi lock.
 
 
 * version 0.13.0 (01.02.2014)
