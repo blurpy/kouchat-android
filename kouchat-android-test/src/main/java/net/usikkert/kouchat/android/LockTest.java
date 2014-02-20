@@ -34,7 +34,7 @@ import com.robotium.solo.Solo;
 import android.test.ActivityInstrumentationTestCase2;
 
 /**
- * Tests the multicast and wake locks.
+ * Tests the multicast, wifi and wake locks.
  *
  * @author Christian Ihle
  */
@@ -140,6 +140,7 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.sleep(1000);
 
         assertTrue(lockHandler.multicastLockIsHeld()); // Always on
+        assertTrue(lockHandler.wifiLockIsHeld()); // Always on
         assertTrue(lockHandler.wakeLockIsHeld());
     }
 
@@ -147,6 +148,7 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.sleep(1000);
 
         assertTrue(lockHandler.multicastLockIsHeld()); // Always on
+        assertTrue(lockHandler.wifiLockIsHeld()); // Always on
         assertFalse(lockHandler.wakeLockIsHeld());
     }
 }
