@@ -36,6 +36,8 @@ import android.os.PowerManager;
 /**
  * Acquires and releases the multicast lock and the wake lock when appropriate.
  *
+ * TODO
+ *
  * <p>The multicast lock is needed on some devices. The <code>Asus Transformer TF101</code> tablet does not care,
  * but the <code>HTC One</code> phone does not send or receive any multicast messages without a lock.</p>
  *|
@@ -130,6 +132,7 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
      */
     public void releaseAllLocks() {
         releaseMulticastLock();
+        releaseWifiLock();
         releaseWakeLock();
     }
 
@@ -142,6 +145,7 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
             acquireWakeLock();
         }
 
+        acquireWifiLock();
         acquireMulticastLock();
     }
 
@@ -170,6 +174,18 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
      */
     public boolean wakeLockIsHeld() {
         return wakeLock.isHeld();
+    }
+
+    private void acquireWifiLock() {
+        if (!wifiLockIsHeld()) {
+            wifiLock.acquire();
+        }
+    }
+
+    private void releaseWifiLock() {
+        if (wifiLockIsHeld()) {
+            wifiLock.release();
+        }
     }
 
     private void acquireMulticastLock() {
