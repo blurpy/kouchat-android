@@ -136,7 +136,7 @@
         <groupId>com.actionbarsherlock</groupId>
         <artifactId>actionbarsherlock</artifactId>
         <version>4.4.0</version>
-        <type>apklib</type>
+        <type>aar</type>
       </dependency>
 
       <dependency>

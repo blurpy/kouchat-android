@@ -58,7 +58,7 @@
     <dependency>
       <groupId>com.actionbarsherlock</groupId>
       <artifactId>actionbarsherlock</artifactId>
-      <type>apklib</type>
+      <type>aar</type>
     </dependency>
 
     <dependency>
