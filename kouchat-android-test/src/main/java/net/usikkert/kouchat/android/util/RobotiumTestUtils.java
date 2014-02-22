@@ -27,6 +27,7 @@ import static junit.framework.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
@@ -41,6 +42,7 @@ import com.robotium.solo.Solo;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
@@ -48,6 +50,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.InstrumentationTestCase;
 import android.text.Layout;
 import android.text.TextPaint;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -314,6 +317,23 @@ public final class RobotiumTestUtils {
      */
     public static int getCurrentOrientation(final Solo solo) {
         return solo.getCurrentActivity().getResources().getConfiguration().orientation;
+    }
+
+    /**
+     * Switches the entire user interface to {@link Locale#US}.
+     *
+     * @param activity The activity to change the language of.
+     */
+    public static void switchUserInterfaceToEnglish(final Activity activity) {
+        Locale.setDefault(Locale.US); // Switches the decimal separators, time format and so on
+
+        final Resources resources = activity.getResources();
+        final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        final Configuration configuration = resources.getConfiguration();
+
+        configuration.locale = Locale.US; // Switches the actual language shown in the user interface
+
+        resources.updateConfiguration(configuration, displayMetrics);
     }
 
     /**

@@ -22,8 +22,6 @@
 
 package net.usikkert.kouchat.android;
 
-import java.util.Locale;
-
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
@@ -59,10 +57,11 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     public void setUp() {
-        Locale.setDefault(Locale.US); // To get the buttons in English
-
         instrumentation = getInstrumentation();
         final MainChatController activity = getActivity();
+
+        RobotiumTestUtils.switchUserInterfaceToEnglish(activity); // To get the buttons in English
+
         solo = new Solo(instrumentation, activity);
 
         if (client == null) {

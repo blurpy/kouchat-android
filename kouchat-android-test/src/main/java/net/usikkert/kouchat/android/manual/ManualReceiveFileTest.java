@@ -23,7 +23,6 @@
 package net.usikkert.kouchat.android.manual;
 
 import java.io.File;
-import java.util.Locale;
 import java.util.Set;
 
 import net.usikkert.kouchat.android.R;
@@ -66,10 +65,11 @@ public class ManualReceiveFileTest extends ActivityInstrumentationTestCase2<Main
     }
 
     public void setUp() {
-        Locale.setDefault(Locale.US); // To avoid issues with "." and "," in asserts containing file sizes
-
         final MainChatController mainChatController = getActivity();
         final Instrumentation instrumentation = getInstrumentation();
+
+        // To avoid issues with "." and "," in asserts containing file sizes
+        RobotiumTestUtils.switchUserInterfaceToEnglish(mainChatController);
 
         solo = new Solo(instrumentation, mainChatController);
         me = RobotiumTestUtils.getMe(mainChatController);
