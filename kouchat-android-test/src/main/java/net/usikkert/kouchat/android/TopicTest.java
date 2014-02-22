@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.android;
 
+import java.util.Locale;
+
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
@@ -57,6 +59,8 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     public void setUp() {
+        Locale.setDefault(Locale.US); // To get the buttons in English
+
         instrumentation = getInstrumentation();
         final MainChatController activity = getActivity();
         solo = new Solo(instrumentation, activity);
@@ -121,6 +125,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         RobotiumTestUtils.openMenu(solo);
         solo.clickOnText("Topic");
+        solo.sleep(500);
 
         assertTrue(solo.searchText("Set or change the current topic."));
 
@@ -138,8 +143,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         RobotiumTestUtils.openMenu(solo);
         solo.clickOnText("Topic");
-
-        assertTrue(solo.searchText("Set or change the current topic."));
+        solo.sleep(500);
 
         solo.sendKey(KeyEvent.KEYCODE_DEL);
         solo.sleep(500);
@@ -155,8 +159,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         RobotiumTestUtils.openMenu(solo);
         solo.clickOnText("Topic");
-
-        assertTrue(solo.searchText("Set or change the current topic."));
+        solo.sleep(500);
 
         RobotiumTestUtils.writeText(instrumentation, "Line1");
         solo.sendKey(KeyEvent.KEYCODE_ENTER);
@@ -164,6 +167,21 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         solo.sleep(500);
         assertTrue(solo.searchText("Line1Line2"));
+    }
+
+    public void test10ClickingCancelShouldNotChangeTopic() {
+        solo.sleep(500);
+
+        RobotiumTestUtils.openMenu(solo);
+        solo.clickOnText("Topic");
+        solo.sleep(500);
+
+        RobotiumTestUtils.writeText(instrumentation, "Don't set this topic");
+        solo.sleep(500);
+        solo.clickOnText("Cancel");
+
+        solo.sleep(500);
+        checkTopic(null);
     }
 
     public void test99Quit() {
