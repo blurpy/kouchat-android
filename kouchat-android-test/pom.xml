@@ -31,6 +31,13 @@
     </dependency>
 
     <dependency>
+      <groupId>com.larswerkman</groupId>
+      <artifactId>HoloColorPicker</artifactId>
+      <type>aar</type>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>net.usikkert.kouchat</groupId>
       <artifactId>kouchat-android-impl</artifactId>
       <version>${project.version}</version>
