@@ -26,6 +26,12 @@
   <string name="settings_wake_lock_summary">
     Enable the wake lock to keep the device from sleeping while KouChat is running. Can help with timeout issues.
   </string>
+  <string name="settings_own_color_key">own_color</string>
+  <string name="settings_own_color_title">Set own message color</string>
+  <string name="settings_own_color_summary">Set the color for your own messages.</string>
+  <string name="settings_sys_color_key">sys_color</string>
+  <string name="settings_sys_color_title">Set system message color</string>
+  <string name="settings_sys_color_summary">Set the color for system messages.</string>
   <string name="settings_title">Settings - KouChat</string>
   <string name="private_chat_title">User not found - KouChat</string>
   <string name="error_nick_name_invalid">Invalid nick name</string>
