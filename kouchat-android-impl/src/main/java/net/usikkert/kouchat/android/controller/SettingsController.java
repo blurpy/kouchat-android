@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android.controller;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.component.HoloColorPickerPreference;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.misc.Settings;
@@ -48,8 +49,10 @@ import android.preference.Preference;
  * <p>Supports the following settings:</p>
  *
  * <ul>
- *   <li>The nick name of the user</li>
- *   <li>To use a wake lock or not</li>
+ *   <li>The nick name of the user.</li>
+ *   <li>The color of your own messages.</li>
+ *   <li>The color of system messages.</li>
+ *   <li>To use a wake lock or not.</li>
  * </ul>
  *
  * @author Christian Ihle
@@ -65,6 +68,8 @@ public class SettingsController extends SherlockPreferenceActivity
 
     private String nickNameKey;
     private String wakeLockKey;
+    private String ownColorKey;
+    private String systemColorKey;
 
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +77,8 @@ public class SettingsController extends SherlockPreferenceActivity
 
         nickNameKey = getString(R.string.settings_key_nick_name);
         wakeLockKey = getString(R.string.settings_wake_lock_key);
+        ownColorKey = getString(R.string.settings_own_color_key);
+        systemColorKey = getString(R.string.settings_sys_color_key);
 
         final Preference nickNamePreference = findPreference(nickNameKey);
         nickNamePreference.setOnPreferenceChangeListener(this);
@@ -105,6 +112,8 @@ public class SettingsController extends SherlockPreferenceActivity
      * <ul>
      *   <li>Changed nick name: the nick name is set as the summary of the preference.</li>
      *   <li>Changed wake lock: stores the setting in the {@link Settings}.</li>
+     *   <li>Changed own color: stores the setting in the {@link Settings}.</li>
+     *   <li>Changed system color: stores the setting in the {@link Settings}.</li>
      * </ul>
      *
      * {@inheritDoc}
@@ -118,6 +127,16 @@ public class SettingsController extends SherlockPreferenceActivity
         else if (key.equals(wakeLockKey)) {
             final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(key);
             settings.setWakeLockEnabled(checkBoxPreference.isChecked());
+        }
+
+        else if (key.equals(ownColorKey)) {
+            final HoloColorPickerPreference preference = (HoloColorPickerPreference) findPreference(key);
+            settings.setOwnColor(preference.getPersistedColor());
+        }
+
+        else if (key.equals(systemColorKey)) {
+            final HoloColorPickerPreference preference = (HoloColorPickerPreference) findPreference(key);
+            settings.setSysColor(preference.getPersistedColor());
         }
     }
 
@@ -144,6 +163,8 @@ public class SettingsController extends SherlockPreferenceActivity
         serviceConnection = null;
         nickNameKey = null;
         wakeLockKey = null;
+        ownColorKey = null;
+        systemColorKey = null;
 
         super.onDestroy();
     }
@@ -195,9 +216,7 @@ public class SettingsController extends SherlockPreferenceActivity
             }
 
             @Override
-            public void onServiceDisconnected(final ComponentName componentName) {
-
-            }
+            public void onServiceDisconnected(final ComponentName componentName) { }
         };
     }
 }

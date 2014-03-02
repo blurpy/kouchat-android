@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.component.HoloColorPickerPreference;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.misc.Settings;
@@ -66,6 +67,8 @@ public class SettingsControllerTest {
 
     private EditTextPreference nickNamePreference;
     private CheckBoxPreference wakeLockPreference;
+    private HoloColorPickerPreference ownColorPreference;
+    private HoloColorPickerPreference systemColorPreference;
 
     @Before
     public void setUp() {
@@ -73,6 +76,8 @@ public class SettingsControllerTest {
 
         TestUtils.setFieldValue(controller, "nickNameKey", "nick_name");
         TestUtils.setFieldValue(controller, "wakeLockKey", "wake_lock");
+        TestUtils.setFieldValue(controller, "ownColorKey", "own_color");
+        TestUtils.setFieldValue(controller, "systemColorKey", "sys_color");
 
         controllerSpy = spy(controller);
 
@@ -92,6 +97,14 @@ public class SettingsControllerTest {
         wakeLockPreference = mock(CheckBoxPreference.class);
         when(wakeLockPreference.getKey()).thenReturn("wake_lock");
         doReturn(wakeLockPreference).when(controllerSpy).findPreference("wake_lock");
+
+        ownColorPreference = mock(HoloColorPickerPreference.class);
+        when(ownColorPreference.getKey()).thenReturn("own_color");
+        doReturn(ownColorPreference).when(controllerSpy).findPreference("own_color");
+
+        systemColorPreference = mock(HoloColorPickerPreference.class);
+        when(systemColorPreference.getKey()).thenReturn("sys_color");
+        doReturn(systemColorPreference).when(controllerSpy).findPreference("sys_color");
     }
 
     @Test
@@ -202,6 +215,7 @@ public class SettingsControllerTest {
 
         verify(controllerSpy).findPreference("nick_name");
         verify(nickNamePreference).setSummary("This is the value");
+        verifyZeroInteractions(settings);
     }
 
     @Test
@@ -212,10 +226,11 @@ public class SettingsControllerTest {
 
         verify(controllerSpy).findPreference("nick_name");
         verify(nickNamePreference, never()).setSummary(anyString());
+        verifyZeroInteractions(settings);
     }
 
     @Test
-    public void onSharedPreferenceChangedShouldMakeToastAndSaveSettingOnWakeLockChange() {
+    public void onSharedPreferenceChangedShouldSaveSettingOnWakeLockChange() {
         setupMocks();
         when(wakeLockPreference.isChecked()).thenReturn(true);
 
@@ -223,6 +238,31 @@ public class SettingsControllerTest {
 
         verify(controllerSpy).findPreference("wake_lock");
         verify(settings).setWakeLockEnabled(true);
+        verifyNoMoreInteractions(settings);
+    }
+
+    @Test
+    public void onSharedPreferenceChangedShouldSaveSettingOnOwnColorChange() {
+        setupMocks();
+        when(ownColorPreference.getPersistedColor()).thenReturn(12345);
+
+        controllerSpy.onSharedPreferenceChanged(null, "own_color");
+
+        verify(controllerSpy).findPreference("own_color");
+        verify(settings).setOwnColor(12345);
+        verifyNoMoreInteractions(settings);
+    }
+
+    @Test
+    public void onSharedPreferenceChangedShouldSaveSettingOnSystemColorChange() {
+        setupMocks();
+        when(systemColorPreference.getPersistedColor()).thenReturn(54321);
+
+        controllerSpy.onSharedPreferenceChanged(null, "sys_color");
+
+        verify(controllerSpy).findPreference("sys_color");
+        verify(settings).setSysColor(54321);
+        verifyNoMoreInteractions(settings);
     }
 
     @Test
