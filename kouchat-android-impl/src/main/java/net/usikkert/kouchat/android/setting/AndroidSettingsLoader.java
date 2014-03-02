@@ -39,6 +39,8 @@ import android.preference.PreferenceManager;
  *
  * <ul>
  *   <li>Nick name</li>
+ *   <li>Own color</li>
+ *   <li>System color</li>
  *   <li>Wake lock</li>
  * </ul>
  *
@@ -53,6 +55,8 @@ public class AndroidSettingsLoader {
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         loadNickName(context, preferences, settings.getMe());
+        loadOwnColor(context, preferences, settings);
+        loadSystemColor(context, preferences, settings);
         loadWakeLock(context, preferences, settings);
     }
 
@@ -73,6 +77,24 @@ public class AndroidSettingsLoader {
         }
 
         return Integer.toString(me.getCode());
+    }
+
+    private void loadOwnColor(final Context context, final SharedPreferences preferences, final Settings settings) {
+        final String ownColorKey = context.getString(R.string.settings_own_color_key);
+        final int ownColor = preferences.getInt(ownColorKey, -1);
+
+        if (ownColor != -1) {
+            settings.setOwnColor(ownColor);
+        }
+    }
+
+    private void loadSystemColor(final Context context, final SharedPreferences preferences, final Settings settings) {
+        final String systemColorKey = context.getString(R.string.settings_sys_color_key);
+        final int systemColor = preferences.getInt(systemColorKey, -1);
+
+        if (systemColor != -1) {
+            settings.setSysColor(systemColor);
+        }
     }
 
     private void loadWakeLock(final Context context, final SharedPreferences preferences, final Settings settings) {

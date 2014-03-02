@@ -66,6 +66,9 @@ public class AndroidSettingsLoaderTest {
 
         me = new User("Me", 1234);
         TestUtils.setFieldValue(settings, "me", me);
+
+        settings.setOwnColor(0);
+        settings.setSysColor(0);
     }
 
     @Test
@@ -136,5 +139,37 @@ public class AndroidSettingsLoaderTest {
         settingsLoader.loadStoredSettings(context, settings);
 
         assertTrue(settings.isWakeLockEnabled());
+    }
+
+    @Test
+    public void loadStoredSettingsShouldNotSetOwnColorIfNotSet() {
+        settingsLoader.loadStoredSettings(context, settings);
+
+        assertEquals(0, settings.getOwnColor());
+    }
+
+    @Test
+    public void loadStoredSettingsShouldSetOwnColorWhenSet() {
+        RobolectricTestUtils.setOwnColorInTheAndroidSettingsTo(12345);
+
+        settingsLoader.loadStoredSettings(context, settings);
+
+        assertEquals(12345, settings.getOwnColor());
+    }
+
+    @Test
+    public void loadStoredSettingsShouldNotSetSystemColorIfNotSet() {
+        settingsLoader.loadStoredSettings(context, settings);
+
+        assertEquals(0, settings.getSysColor());
+    }
+
+    @Test
+    public void loadStoredSettingsShouldSetSystemColorWhenSet() {
+        RobolectricTestUtils.setSystemColorInTheAndroidSettingsTo(54321);
+
+        settingsLoader.loadStoredSettings(context, settings);
+
+        assertEquals(54321, settings.getSysColor());
     }
 }

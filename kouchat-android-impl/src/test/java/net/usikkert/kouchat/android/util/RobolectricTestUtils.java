@@ -60,6 +60,28 @@ public final class RobolectricTestUtils {
         sharedPreferences.edit().putBoolean("wake_lock", enabled).commit();
     }
 
+    /**
+     * Configures own color in the shadow pretending to be the actual settings.
+     *
+     * @param ownColor The color to use as own color in the settings.
+     */
+    public static void setOwnColorInTheAndroidSettingsTo(final int ownColor) {
+        final SharedPreferences sharedPreferences = getSharedPreferences();
+
+        sharedPreferences.edit().putInt("own_color", ownColor).commit();
+    }
+
+    /**
+     * Configures system color in the shadow pretending to be the actual settings.
+     *
+     * @param systemColor The color to use as system color in the settings.
+     */
+    public static void setSystemColorInTheAndroidSettingsTo(final int systemColor) {
+        final SharedPreferences sharedPreferences = getSharedPreferences();
+
+        sharedPreferences.edit().putInt("sys_color", systemColor).commit();
+    }
+
     private static SharedPreferences getSharedPreferences() {
         return ShadowPreferenceManager.getDefaultSharedPreferences(Robolectric.application.getApplicationContext());
     }
