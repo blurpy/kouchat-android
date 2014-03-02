@@ -7,16 +7,20 @@
 
   <com.larswerkman.holocolorpicker.ColorPicker
       android:id="@+id/colorPicker"
+      android:layout_weight="100"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"/>
 
   <com.larswerkman.holocolorpicker.ValueBar
       android:id="@+id/colorPickerValueBar"
+      android:layout_weight="1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"/>
 
   <com.larswerkman.holocolorpicker.SaturationBar
       android:id="@+id/colorPickerSaturationBar"
+      android:layout_weight="1"
+      android:layout_marginBottom="4dp"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"/>
 
