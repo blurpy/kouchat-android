@@ -44,8 +44,7 @@ public final class RobolectricTestUtils {
      * @param nickName The nick name to use in the settings.
      */
     public static void setNickNameInTheAndroidSettingsTo(final String nickName) {
-        final SharedPreferences sharedPreferences =
-                ShadowPreferenceManager.getDefaultSharedPreferences(Robolectric.application.getApplicationContext());
+        final SharedPreferences sharedPreferences = getSharedPreferences();
 
         sharedPreferences.edit().putString("nick_name", nickName).commit();
     }
@@ -56,9 +55,12 @@ public final class RobolectricTestUtils {
      * @param enabled If the wake lock is enabled in the settings.
      */
     public static void setWakeLockInTheAndroidSettingsTo(final boolean enabled) {
-        final SharedPreferences sharedPreferences =
-                ShadowPreferenceManager.getDefaultSharedPreferences(Robolectric.application.getApplicationContext());
+        final SharedPreferences sharedPreferences = getSharedPreferences();
 
         sharedPreferences.edit().putBoolean("wake_lock", enabled).commit();
+    }
+
+    private static SharedPreferences getSharedPreferences() {
+        return ShadowPreferenceManager.getDefaultSharedPreferences(Robolectric.application.getApplicationContext());
     }
 }
