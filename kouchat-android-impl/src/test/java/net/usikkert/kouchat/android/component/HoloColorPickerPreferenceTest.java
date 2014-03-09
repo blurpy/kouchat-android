@@ -41,10 +41,13 @@ import com.larswerkman.holocolorpicker.ColorPicker;
 
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 /**
  * Test of {@link HoloColorPickerPreference}.
@@ -60,6 +63,10 @@ public class HoloColorPickerPreferenceTest {
     private ColorPicker colorPicker;
     private ShadowDialogPreference shadowDialogPreference;
 
+    private LinearLayout colorPreview;
+    private ImageView colorPreviewImage;
+    private GradientDrawable colorPickerDrawable;
+
     @Before
     public void setUp() {
         preference = new HoloColorPickerPreference(Robolectric.application, mock(AttributeSet.class));
@@ -69,12 +76,26 @@ public class HoloColorPickerPreferenceTest {
         final LayoutInflater inflater = LayoutInflater.from(Robolectric.application);
         colorPickerDialog = inflater.inflate(R.layout.color_picker_dialog, null);
         colorPicker = (ColorPicker) colorPickerDialog.findViewById(R.id.colorPicker);
+
+        // Simulating the view expected in onBindView(), as the real one is private and can't be inflated
+        colorPreviewImage = new ImageView(Robolectric.application);
+        colorPreviewImage.setId(R.id.colorPreviewImage);
+        colorPickerDrawable = mock(GradientDrawable.class);
+        colorPreviewImage.setImageDrawable(colorPickerDrawable);
+        TestUtils.setFieldValue(preference, "colorPreviewImage", colorPreviewImage);
+
+        colorPreview = new LinearLayout(Robolectric.application);
+        colorPreview.addView(colorPreviewImage);
     }
 
     @Test
     public void constructorShouldSetColorPickerDialogLayout() {
-        assertEquals(Integer.valueOf(R.layout.color_picker_dialog),
-                TestUtils.getFieldValue(preference, Integer.class, "mDialogLayoutResId"));
+        assertEquals(R.layout.color_picker_dialog, preference.getDialogLayoutResource());
+    }
+
+    @Test
+    public void constructorShouldSetColorPreviewLayout() {
+        assertEquals(R.layout.color_preview, preference.getWidgetLayoutResource());
     }
 
     @Test
@@ -211,6 +232,7 @@ public class HoloColorPickerPreferenceTest {
 
         assertEquals(0, preference.getPersistedColor());
         assertEquals(0, shadowDialogPreference.getPersistedInt(-1));
+        verifyZeroInteractions(colorPickerDrawable);
     }
 
     @Test
@@ -227,11 +249,39 @@ public class HoloColorPickerPreferenceTest {
     }
 
     @Test
+    public void onDialogClosedWithTrueShouldUpdatePreviewWithCurrentColor() {
+        shadowDialogPreference.setPersistent(true);
+        TestUtils.setFieldValue(preference, "currentColor", 500);
+
+        preference.onDialogClosed(true);
+
+        verify(colorPickerDrawable).setColor(500);
+    }
+
+    @Test
     public void onColorChangedShouldSetCurrentColorToValueOfParameter() {
         assertEquals(Integer.valueOf(0), TestUtils.getFieldValue(preference, Integer.class, "currentColor"));
 
         preference.onColorChanged(50);
 
         assertEquals(Integer.valueOf(50), TestUtils.getFieldValue(preference, Integer.class, "currentColor"));
+    }
+
+    @Test
+    public void onBindViewShouldSetColorPreviewImage() {
+        TestUtils.setFieldValue(preference, "colorPreviewImage", null);
+
+        preference.onBindView(colorPreview);
+
+        assertSame(colorPreviewImage, TestUtils.getFieldValue(preference, ImageView.class, "colorPreviewImage"));
+    }
+
+    @Test
+    public void onBindViewShouldUpdatePreviewWithPersistedColor() {
+        TestUtils.setFieldValue(preference, "persistedColor", 500);
+
+        preference.onBindView(colorPreview);
+
+        verify(colorPickerDrawable).setColor(500);
     }
 }

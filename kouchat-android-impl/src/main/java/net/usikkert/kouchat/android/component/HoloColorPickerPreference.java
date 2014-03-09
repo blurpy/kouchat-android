@@ -31,12 +31,15 @@ import com.larswerkman.holocolorpicker.ValueBar;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 
 /**
- * A preference using the Holo Color Picker.
+ * A preference using the Holo Color Picker. Displays a dialog with the color picker,
+ * and a preview of the persisted color on the preference itself.
  *
  * @author Christian Ihle
  */
@@ -51,10 +54,14 @@ public class HoloColorPickerPreference extends DialogPreference implements Color
     /** The color that apply now. */
     private int persistedColor;
 
+    /** The preview image of the persisted color. */
+    private ImageView colorPreviewImage;
+
     public HoloColorPickerPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
 
         setDialogLayoutResource(R.layout.color_picker_dialog);
+        setWidgetLayoutResource(R.layout.color_preview);
         setPositiveButtonText(android.R.string.ok);
         setNegativeButtonText(android.R.string.cancel);
     }
@@ -95,11 +102,26 @@ public class HoloColorPickerPreference extends DialogPreference implements Color
     }
 
     /**
+     * Initializes the preview image of the persisted color.
+     *
+     * <p>Runs when opening the settings.</p>
+     *
+     * @param view The inflated preference layout. See <code>preference.xml</code> in the Android framework.
+     */
+    @Override
+    protected void onBindView(final View view) {
+        super.onBindView(view);
+
+        colorPreviewImage = (ImageView) view.findViewById(R.id.colorPreviewImage);
+        updatePreviewColor();
+    }
+
+    /**
      * Initializes the color picker dialog components.
      *
      * <p>Runs when the dialog opens.</p>
      *
-     * @param view The layout that contains all the components of the dialog.
+     * @param view The color picker dialog layout.
      */
     @Override
     protected void onBindDialogView(final View view) {
@@ -117,7 +139,7 @@ public class HoloColorPickerPreference extends DialogPreference implements Color
     }
 
     /**
-     * Persists the chosen color when closing the dialog with <code>OK</code>.
+     * Persists the chosen color and updates the preview image when closing the dialog with <code>OK</code>.
      * Does nothing if closing with <code>Cancel</code>.
      *
      * @param positiveResult If the positive button (<code>OK</code>) was pressed.
@@ -127,6 +149,7 @@ public class HoloColorPickerPreference extends DialogPreference implements Color
         if (positiveResult) {
             persistedColor = currentColor;
             persistInt(persistedColor);
+            updatePreviewColor();
         }
     }
 
@@ -147,5 +170,13 @@ public class HoloColorPickerPreference extends DialogPreference implements Color
      */
     public int getPersistedColor() {
         return persistedColor;
+    }
+
+    /**
+     * Updates the preview image to use the persisted color.
+     */
+    private void updatePreviewColor() {
+        final GradientDrawable colorPreviewDrawable = (GradientDrawable) colorPreviewImage.getDrawable();
+        colorPreviewDrawable.setColor(persistedColor);
     }
 }
