@@ -25,6 +25,7 @@ package net.usikkert.kouchat.android.controller;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
@@ -34,7 +35,6 @@ import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -107,11 +107,10 @@ public class MainChatControllerTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void isVisibleShouldBeTrueOnlyBetweenOnResumeAndOnPause() {
         assertFalse(controller.isVisible());
 
-        activityController.create(); // NumberFormatException because of float in dimens.xml
+        activityController.create();
         assertFalse(controller.isVisible());
 
         activityController.resume();
@@ -342,21 +341,21 @@ public class MainChatControllerTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void onOptionsItemSelectedWithAboutShouldOpenAboutDialog() {
-        // NullPointerException when opening the AboutDialog. Perhaps it works after create(), but create() fails...
+        activityController.create();
+
         final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuAbout));
 
         assertTrue(selected);
 
         final ShadowAlertDialog latestDialog = Robolectric.getShadowApplication().getLatestAlertDialog();
-        assertEquals("KouChat v", latestDialog.getTitle()); // KouChat v{version}
+        assertEquals("KouChat v" + Constants.APP_VERSION, latestDialog.getTitle());
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void onOptionsItemSelectedWithTopicShouldOpenTopicDialog() {
-        activityController.create(); // NumberFormatException because of float in dimens.xml
+        activityController.create();
+
         final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuTopic));
 
         assertTrue(selected);
