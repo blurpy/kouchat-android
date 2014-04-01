@@ -30,13 +30,13 @@ import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -131,11 +131,11 @@ public class SmileyMapTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
+    @Config(qualifiers = "xhdpi")
     public void getSmileyShouldReturnDrawableWithCorrectBounds() {
         final Drawable smiley = smileyMap.getSmiley(":)");
 
-        assertEquals(new Rect(0, 0, 22, 22), smiley.getBounds()); // Returns Rect(0, 0 - 100, 100)
+        assertEquals(new Rect(0, 0, 40, 40), smiley.getBounds());
     }
 
     private int smileyId(final String code) {
