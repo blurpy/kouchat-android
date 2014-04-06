@@ -34,6 +34,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowAlertDialog;
 
 import android.text.SpannableString;
@@ -74,9 +75,9 @@ public class AboutDialogTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
+    @Ignore("#1031")
     public void dialogIconShouldBeSet() {
-//        assertEquals(R.drawable.kou_icon_32x32, shadowDialog.getIcon()); // Does not compile
+//        assertEquals(R.drawable.ic_dialog, shadowDialog.getShadowAlertController().getIconId()); // Does not compile
     }
 
     @Test
@@ -92,11 +93,11 @@ public class AboutDialogTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
+    @Config(qualifiers = "sw600dp")
     public void dialogShouldHaveMessageOfTheCorrectSize() {
         final TextView messageView = (TextView) shadowDialog.getView();
 
-        assertEquals(15, messageView.getTextSize(), 0); // getTextSize returns 0
+        assertEquals(15, messageView.getTextSize(), 0);
     }
 
     @Test

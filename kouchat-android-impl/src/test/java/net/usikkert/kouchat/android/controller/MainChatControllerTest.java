@@ -39,6 +39,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowHandler;
 import org.robolectric.shadows.ShadowIntent;
@@ -107,6 +108,7 @@ public class MainChatControllerTest {
     }
 
     @Test
+    @Config(qualifiers = "v10")
     public void isVisibleShouldBeTrueOnlyBetweenOnResumeAndOnPause() {
         assertFalse(controller.isVisible());
 
@@ -341,6 +343,7 @@ public class MainChatControllerTest {
     }
 
     @Test
+    @Config(qualifiers = "v10")
     public void onOptionsItemSelectedWithAboutShouldOpenAboutDialog() {
         activityController.create();
 
@@ -353,6 +356,7 @@ public class MainChatControllerTest {
     }
 
     @Test
+    @Config(qualifiers = "v10")
     public void onOptionsItemSelectedWithTopicShouldOpenTopicDialog() {
         activityController.create();
 
