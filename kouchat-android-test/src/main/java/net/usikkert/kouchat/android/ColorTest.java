@@ -68,7 +68,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         }
     }
 
-    public void test01OwnColorCancel() {
+    public void test01CancelAfterChangingColorShouldNotSave() {
         sendOwnMessage("This is my color");
         checkTextColor("This is my color", originalOwnColor);
 
@@ -76,7 +76,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkPreviewColor(originalOwnColor);
 
         final ColorPicker colorPicker = openColorPicker("Set own message color");
-        move(colorPicker, originalOwnColor, -150);
+        moveColorWheelPointer(colorPicker, originalOwnColor, -150);
         cancelNewColor();
 
         RobotiumTestUtils.goHome(solo);
@@ -88,11 +88,11 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(1000);
     }
 
-    public void test02OwnColorAccept() {
+    public void test02OkAfterChangingColorShouldSave() {
         openSettings();
 
         final ColorPicker firstColorPicker = openColorPicker("Set own message color");
-        move(firstColorPicker, originalOwnColor, -150);
+        moveColorWheelPointer(firstColorPicker, originalOwnColor, -150);
         acceptNewColor();
         final int firstColor = firstColorPicker.getColor();
 
@@ -108,7 +108,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         openSettings();
 
         final ColorPicker secondColorPicker = openColorPicker("Set own message color");
-        move(secondColorPicker, firstColor, 150);
+        moveColorWheelPointer(secondColorPicker, firstColor, 150);
         acceptNewColor();
         final int secondColor = secondColorPicker.getColor();
 
@@ -158,32 +158,34 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(500);
     }
 
-    private void move(final ColorPicker colorPicker, final int expectedCurrentColor, final int degreesToMove) {
+    private void moveColorWheelPointer(final ColorPicker colorPicker,
+                                       final int expectedCurrentColor,
+                                       final int degreesToMove) {
         final float[] expectedCurrentColorHsv = hsvFrom(expectedCurrentColor);
 
-        final int originalColor = colorPicker.getColor();
-        final float[] originalLocationHsv = hsvFrom(originalColor);
-        final float[] originalLocation = getCurrentLocation(colorPicker);
-        final float[] newLocation = getNewLocation(colorPicker, originalLocationHsv, degreesToMove);
+        final int currentColor = colorPicker.getColor();
+        final float[] currentColorHsv = hsvFrom(currentColor);
+        final float[] currentPosition = getCurrentPosition(colorPicker);
+        final float[] newPosition = calculatePosition(colorPicker, currentColorHsv, degreesToMove);
 
         assertEquals(expectedCurrentColor, colorPicker.getOldCenterColor());
-        assertEquals(expectedCurrentColorHsv[0], originalLocationHsv[0], 1f);
+        assertEquals(expectedCurrentColorHsv[0], currentColorHsv[0], 1f);
 
-        move(originalLocation, newLocation);
+        moveColorWheelPointer(currentPosition, newPosition);
 
         final int newColor = colorPicker.getColor();
-        final float[] newLocationHsv = hsvFrom(newColor);
-        final float degreesMoved = getDegreesMoved(originalLocationHsv, newLocationHsv);
+        final float[] newColorHsv = hsvFrom(newColor);
+        final float degreesMoved = getDegreesMoved(currentColorHsv, newColorHsv);
 
-        assertNotSame(originalColor, newColor);
+        assertNotSame(currentColor, newColor);
         assertEquals(Math.abs(degreesToMove), degreesMoved, 2f);
     }
 
-    private void checkTextColor(final String text, final int color) {
+    private void checkTextColor(final String text, final int expectedColor) {
         final TextView mainChatView = (TextView) solo.getView(R.id.mainChatView);
+        final int colorForText = getColorForText(mainChatView, text);
 
-        final int ownTextColor = getColorForText(mainChatView, text);
-        assertEquals(color, ownTextColor);
+        assertEquals(expectedColor, colorForText);
     }
 
     private void sendOwnMessage(final String text) {
@@ -192,10 +194,11 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(500);
     }
 
-    private void checkPreviewColor(final int color) {
-        final ImageView ownColorPreview = (ImageView) solo.getView(R.id.colorPreviewImage, 0);
-        final int ownColorFromPreview = getColorFromPreviewImage(ownColorPreview);
-        assertEquals(color, ownColorFromPreview);
+    private void checkPreviewColor(final int expectedColor) {
+        final ImageView colorPreviewImage = (ImageView) solo.getView(R.id.colorPreviewImage, 0);
+        final int colorFromPreviewImage = getColorFromPreviewImage(colorPreviewImage);
+
+        assertEquals(expectedColor, colorFromPreviewImage);
     }
 
     private void openSettings() {
@@ -228,22 +231,23 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         return spans[0].getForegroundColor();
     }
 
-    private int getColorFromPreviewImage(final ImageView preview) {
-        preview.buildDrawingCache();
-        final Bitmap drawingCache = preview.getDrawingCache();
+    private int getColorFromPreviewImage(final ImageView previewImage) {
+        previewImage.buildDrawingCache();
+        final Bitmap drawingCache = previewImage.getDrawingCache();
 
         return drawingCache.getPixel(10, 10);
     }
 
-    private ColorPicker openColorPicker(final String text) {
-        solo.clickOnText(text);
+    private ColorPicker openColorPicker(final String colorPickerText) {
+        solo.clickOnText(colorPickerText);
         solo.sleep(500);
+
         return solo.getView(ColorPicker.class, 0);
     }
 
-    private void move(final float[] fromLocation, final float[] toLocation) {
+    private void moveColorWheelPointer(final float[] fromPosition, final float[] toPosition) {
         solo.sleep(500);
-        solo.drag(fromLocation[0], toLocation[0], fromLocation[1], toLocation[1], 10);
+        solo.drag(fromPosition[0], toPosition[0], fromPosition[1], toPosition[1], 10);
         solo.sleep(500);
     }
 
@@ -253,23 +257,27 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         return Math.min(360 - diff, diff);
     }
 
-    private float[] getNewLocation(final ColorPicker colorPicker, final float[] originalColorPickerHsv, final int degreesToMove) {
-        final float angle = (float) Math.toRadians(-(originalColorPickerHsv[0] + degreesToMove % 360));
+    private float[] calculatePosition(final ColorPicker colorPicker,
+                                      final float[] currentColorHsv,
+                                      final int degreesToMove) {
+        final float currentDegree = currentColorHsv[0];
+        final float newDegree = currentDegree + degreesToMove % 360;
+        final float angle = (float) Math.toRadians(-newDegree);
 
-        return getLocation(colorPicker, angle);
+        return getPosition(colorPicker, angle);
     }
 
-    private float[] getCurrentLocation(final ColorPicker colorPicker) {
-        final Float mAngle = field("mAngle")
+    private float[] getCurrentPosition(final ColorPicker colorPicker) {
+        final float mAngle = field("mAngle")
                 .ofType(float.class)
                 .in(colorPicker)
                 .get();
 
-        return getLocation(colorPicker, mAngle);
+        return getPosition(colorPicker, mAngle);
     }
 
-    private float[] getLocation(final ColorPicker colorPicker, final Float mAngle) {
-        final Float mTranslationOffset = field("mTranslationOffset")
+    private float[] getPosition(final ColorPicker colorPicker, final float angle) {
+        final float mTranslationOffset = field("mTranslationOffset")
                 .ofType(float.class)
                 .in(colorPicker)
                 .get();
@@ -278,7 +286,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
                 .withReturnType(float[].class)
                 .withParameterTypes(float.class)
                 .in(colorPicker)
-                .invoke(mAngle);
+                .invoke(angle);
 
         final int[] locationOnScreen = new int[2];
         colorPicker.getLocationOnScreen(locationOnScreen);
