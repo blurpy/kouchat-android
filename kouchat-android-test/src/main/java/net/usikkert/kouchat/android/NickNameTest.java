@@ -34,11 +34,11 @@ import android.view.KeyEvent;
 import android.widget.EditText;
 
 /**
- * Test of changing the settings.
+ * Tests changing nick name in the settings.
  *
  * @author Christian Ihle
  */
-public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatController> {
+public class NickNameTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private static String originalNickName;
 
@@ -46,7 +46,7 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<MainChatContr
     private User me;
     private TestClient client;
 
-    public SettingsTest() {
+    public NickNameTest() {
         super(MainChatController.class);
     }
 

@@ -27,13 +27,13 @@ import net.usikkert.kouchat.android.ColorTest;
 import net.usikkert.kouchat.android.HitchhikerTest;
 import net.usikkert.kouchat.android.LockTest;
 import net.usikkert.kouchat.android.MainChatTest;
+import net.usikkert.kouchat.android.NickNameTest;
 import net.usikkert.kouchat.android.NotificationTest;
 import net.usikkert.kouchat.android.PrivateChatErrorHandlingTest;
 import net.usikkert.kouchat.android.PrivateChatStateTest;
 import net.usikkert.kouchat.android.PrivateChatTest;
 import net.usikkert.kouchat.android.ReceiveFileTest;
 import net.usikkert.kouchat.android.SendFileTest;
-import net.usikkert.kouchat.android.SettingsTest;
 import net.usikkert.kouchat.android.TopicTest;
 import net.usikkert.kouchat.android.UserListTest;
 
@@ -55,7 +55,7 @@ public class AllTests extends TestSuite {
         testSuite.addTestSuite(PrivateChatTest.class);
         testSuite.addTestSuite(PrivateChatStateTest.class);
         testSuite.addTestSuite(PrivateChatErrorHandlingTest.class);
-        testSuite.addTestSuite(SettingsTest.class);
+        testSuite.addTestSuite(NickNameTest.class);
         testSuite.addTestSuite(TopicTest.class);
         testSuite.addTestSuite(UserListTest.class);
         testSuite.addTestSuite(HitchhikerTest.class);

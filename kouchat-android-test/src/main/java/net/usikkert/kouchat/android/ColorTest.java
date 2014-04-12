@@ -41,7 +41,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Test of changing message colors.
+ * Tests changing message colors in the settings.
  *
  * @author Christian Ihle
  */

@@ -34,7 +34,7 @@ import com.robotium.solo.Solo;
 import android.test.ActivityInstrumentationTestCase2;
 
 /**
- * Tests the multicast, wifi and wake locks.
+ * Tests the multicast, wifi and wake locks in the settings.
  *
  * @author Christian Ihle
  */
