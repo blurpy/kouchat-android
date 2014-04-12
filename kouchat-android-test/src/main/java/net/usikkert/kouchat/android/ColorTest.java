@@ -106,13 +106,14 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkTextColor("This is my new color", firstColor);
 
         openSettings();
+        checkPreviewColor(firstColor);
 
         final ColorPicker secondColorPicker = openColorPicker("Set own message color");
         moveColorWheelPointer(secondColorPicker, firstColor, 150);
         acceptNewColor();
         final int secondColor = secondColorPicker.getColor();
 
-        assertEquals(hsvFrom(originalOwnColor)[0], hsvFrom(secondColor)[0], 1f);
+        assertEquals(hsvFrom(originalOwnColor)[0], hsvFrom(secondColor)[0], 1.5f);
         assertEquals(secondColor, settings.getOwnColor());
         checkPreviewColor(secondColor);
 
@@ -235,7 +236,10 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         previewImage.buildDrawingCache();
         final Bitmap drawingCache = previewImage.getDrawingCache();
 
-        return drawingCache.getPixel(10, 10);
+        final int pixelColor = drawingCache.getPixel(10, 10);
+        previewImage.destroyDrawingCache();
+
+        return pixelColor;
     }
 
     private ColorPicker openColorPicker(final String colorPickerText) {
