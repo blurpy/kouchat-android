@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.android.testsuite;
 
 import net.usikkert.kouchat.android.AboutTest;
+import net.usikkert.kouchat.android.ColorTest;
 import net.usikkert.kouchat.android.HitchhikerTest;
 import net.usikkert.kouchat.android.LockTest;
 import net.usikkert.kouchat.android.MainChatTest;
@@ -62,6 +63,7 @@ public class AllTests extends TestSuite {
         testSuite.addTestSuite(SendFileTest.class);
         testSuite.addTestSuite(ReceiveFileTest.class);
         testSuite.addTestSuite(LockTest.class);
+        testSuite.addTestSuite(ColorTest.class);
 
         // Run these manually:
 //        testSuite.addTestSuite(ManualLinkTest.class);

@@ -378,10 +378,19 @@ public final class RobotiumTestUtils {
      * @return The application user.
      */
     public static User getMe(final Activity activity) {
-        final AndroidUserInterface androidUserInterface =
-                TestUtils.getFieldValue(activity, AndroidUserInterface.class, "androidUserInterface");
+        final AndroidUserInterface androidUserInterface = getAndroidUserInterface(activity);
 
         return TestUtils.getFieldValue(androidUserInterface, User.class, "me");
+    }
+
+    /**
+     * Extracts the android user interface from an activity.
+     *
+     * @param activity An activity with an android user interface object.
+     * @return The android user interface.
+     */
+    public static AndroidUserInterface getAndroidUserInterface(final Activity activity) {
+        return TestUtils.getFieldValue(activity, AndroidUserInterface.class, "androidUserInterface");
     }
 
     /**
