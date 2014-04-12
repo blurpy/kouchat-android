@@ -48,6 +48,7 @@ import android.widget.TextView;
 public class ColorTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private static int originalOwnColor;
+    private static int originalSystemColor;
 
     private Solo solo;
     private Settings settings;
@@ -65,15 +66,16 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         if (originalOwnColor == 0) {
             originalOwnColor = settings.getOwnColor();
+            originalSystemColor = settings.getSysColor();
         }
     }
 
-    public void test01CancelAfterChangingColorShouldNotSave() {
+    public void test01CancelAfterChangingOwnColorShouldNotSave() {
         sendOwnMessage("This is my color");
         checkTextColor("This is my color", originalOwnColor);
 
         openSettings();
-        checkPreviewColor(originalOwnColor);
+        checkPreviewColor(originalOwnColor, 0);
 
         final ColorPicker colorPicker = openColorPicker("Set own message color");
         moveColorWheelPointer(colorPicker, originalOwnColor, -150);
@@ -88,7 +90,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(1000);
     }
 
-    public void test02OkAfterChangingColorShouldSave() {
+    public void test02OkAfterChangingOwnColorShouldSave() {
         openSettings();
 
         final ColorPicker firstColorPicker = openColorPicker("Set own message color");
@@ -97,7 +99,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         final int firstColor = firstColorPicker.getColor();
 
         assertEquals(firstColor, settings.getOwnColor());
-        checkPreviewColor(firstColor);
+        checkPreviewColor(firstColor, 0);
 
         RobotiumTestUtils.goHome(solo);
 
@@ -106,21 +108,40 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkTextColor("This is my new color", firstColor);
 
         openSettings();
-        checkPreviewColor(firstColor);
+        checkPreviewColor(firstColor, 0);
 
         final ColorPicker secondColorPicker = openColorPicker("Set own message color");
         moveColorWheelPointer(secondColorPicker, firstColor, 150);
         acceptNewColor();
         final int secondColor = secondColorPicker.getColor();
 
-        assertEquals(hsvFrom(originalOwnColor)[0], hsvFrom(secondColor)[0], 1.5f);
+        assertEquals(hsvFrom(originalOwnColor)[0], hsvFrom(secondColor)[0], 3f);
         assertEquals(secondColor, settings.getOwnColor());
-        checkPreviewColor(secondColor);
+        checkPreviewColor(secondColor, 0);
 
         RobotiumTestUtils.goHome(solo);
 
         sendOwnMessage("Color is back");
         checkTextColor("Color is back", secondColor);
+
+        solo.sleep(1000);
+    }
+
+    public void test03CancelAfterChangingSystemColorShouldNotSave() {
+        checkTextColor("*** Welcome to KouChat", originalSystemColor);
+
+        openSettings();
+        checkPreviewColor(originalSystemColor, 1);
+
+        final ColorPicker colorPicker = openColorPicker("Set info message color");
+        moveColorWheelPointer(colorPicker, originalSystemColor, -150);
+        cancelNewColor();
+
+        RobotiumTestUtils.goHome(solo);
+
+        checkTextColor("*** Welcome to KouChat", originalSystemColor);
+        setTopic("New info message");
+        checkTextColor("New info message", originalSystemColor);
 
         solo.sleep(1000);
     }
@@ -195,8 +216,20 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(500);
     }
 
-    private void checkPreviewColor(final int expectedColor) {
-        final ImageView colorPreviewImage = (ImageView) solo.getView(R.id.colorPreviewImage, 0);
+    private void setTopic(final String topic) {
+        solo.sleep(500);
+        RobotiumTestUtils.openMenu(solo);
+
+        solo.clickOnText("Topic");
+        solo.sleep(500);
+
+        RobotiumTestUtils.writeText(getInstrumentation(), topic);
+        solo.sleep(500);
+        solo.clickOnText("OK");
+    }
+
+    private void checkPreviewColor(final int expectedColor, final int previewIndex) {
+        final ImageView colorPreviewImage = (ImageView) solo.getView(R.id.colorPreviewImage, previewIndex);
         final int colorFromPreviewImage = getColorFromPreviewImage(colorPreviewImage);
 
         assertEquals(expectedColor, colorFromPreviewImage);
