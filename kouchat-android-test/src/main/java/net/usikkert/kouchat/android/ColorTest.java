@@ -146,6 +146,43 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(1000);
     }
 
+    public void test04OkAfterChangingSystemColorShouldSave() {
+        openSettings();
+
+        final ColorPicker firstColorPicker = openColorPicker("Set info message color");
+        moveColorWheelPointer(firstColorPicker, originalSystemColor, -150);
+        acceptNewColor();
+        final int firstColor = firstColorPicker.getColor();
+
+        assertEquals(firstColor, settings.getSysColor());
+        checkPreviewColor(firstColor, 1);
+
+        RobotiumTestUtils.goHome(solo);
+
+        checkTextColor("*** Welcome to KouChat", originalSystemColor);
+        setTopic("This is new info color");
+        checkTextColor("This is new info color", firstColor);
+
+        openSettings();
+        checkPreviewColor(firstColor, 1);
+
+        final ColorPicker secondColorPicker = openColorPicker("Set info message color");
+        moveColorWheelPointer(secondColorPicker, firstColor, 150);
+        acceptNewColor();
+        final int secondColor = secondColorPicker.getColor();
+
+        assertEquals(hsvFrom(originalSystemColor)[0], hsvFrom(secondColor)[0], 3f);
+        assertEquals(secondColor, settings.getSysColor());
+        checkPreviewColor(secondColor, 1);
+
+        RobotiumTestUtils.goHome(solo);
+
+        setTopic("Info color is back");
+        checkTextColor("Info color is back", secondColor);
+
+        solo.sleep(1000);
+    }
+
     public void test99Quit() {
         // TODO reset back to original color directly using the settings?
         RobotiumTestUtils.quit(solo);
