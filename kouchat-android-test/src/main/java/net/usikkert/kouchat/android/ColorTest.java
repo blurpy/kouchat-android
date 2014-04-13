@@ -52,6 +52,9 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
     private static int originalOwnColor;
     private static int originalSystemColor;
 
+    private static int newOwnColor;
+    private static int newSystemColor;
+
     private Solo solo;
     private Settings settings;
 
@@ -127,6 +130,8 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         sendOwnMessage("This is my second new color");
         checkTextColor("This is my second new color", secondColor);
 
+        newOwnColor = secondColor;
+
         solo.sleep(1000);
     }
 
@@ -184,11 +189,43 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         setTopic("This is the second new info color");
         checkTextColor("This is the second new info color", secondColor);
 
+        newSystemColor = secondColor;
+
         solo.sleep(1000);
     }
 
     public void test05SettingsShouldSurviveRestart() {
-        // TODO test both
+        solo.sleep(500);
+
+        assertNotSame(originalOwnColor, newOwnColor);
+        assertNotSame(originalSystemColor, newSystemColor);
+
+        checkTextColor("This is my second new color", newOwnColor);
+        checkTextColor("This is the second new info color", newSystemColor);
+
+        openSettings();
+
+        checkPreviewColor(newOwnColor, 0);
+        checkPreviewColor(newSystemColor, 1);
+
+        RobotiumTestUtils.goHome(solo);
+        solo.sleep(500);
+        RobotiumTestUtils.quit(solo);
+
+        solo.sleep(500);
+        RobotiumTestUtils.launchMainChat(this);
+        solo.sleep(500);
+
+        sendOwnMessage("This is my saved color");
+        checkTextColor("This is my saved color", newOwnColor);
+        checkTextColor("*** Welcome to KouChat", newSystemColor);
+
+        openSettings();
+
+        checkPreviewColor(newOwnColor, 0);
+        checkPreviewColor(newSystemColor, 1);
+
+        solo.sleep(500);
     }
 
     public void test98ResetOriginalColorsInTheSettings() {
@@ -205,8 +242,10 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         editor.putInt(sysColorKey, originalSystemColor);
         editor.commit();
 
-        originalSystemColor = 0;
         originalOwnColor = 0;
+        originalSystemColor = 0;
+        newOwnColor = 0;
+        newSystemColor = 0;
 
         solo.sleep(500);
     }
