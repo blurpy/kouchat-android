@@ -67,6 +67,9 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         final MainChatController activity = getActivity();
         solo = new Solo(getInstrumentation(), activity);
 
+        // To get english text on the buttons to click
+        RobotiumTestUtils.switchUserInterfaceToEnglish(activity);
+
         final AndroidUserInterface androidUserInterface = RobotiumTestUtils.getAndroidUserInterface(activity);
         settings = androidUserInterface.getSettings();
 
