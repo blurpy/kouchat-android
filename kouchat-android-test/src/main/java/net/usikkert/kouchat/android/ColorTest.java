@@ -219,6 +219,8 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkPreviewColor(newSystemColor, 1);
     }
 
+    // TODO Privat chat test
+
     public void test98ResetOriginalColorsInTheSettings() {
         final MainChatController activity = getActivity();
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -345,7 +347,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
             }
         });
 
-        solo.sleep(100);
+        solo.sleep(200);
 
         final Spannable textToFindSpan = resultArray[0];
         assertEquals(textToFind, textToFindSpan.toString());
