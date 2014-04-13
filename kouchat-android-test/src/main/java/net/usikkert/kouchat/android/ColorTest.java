@@ -311,11 +311,12 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         RobotiumTestUtils.openMenu(solo);
 
         solo.clickOnText("Topic");
-        solo.sleep(200);
+        solo.sleep(400);
 
         RobotiumTestUtils.writeText(getInstrumentation(), topic);
         solo.sleep(200);
         solo.clickOnText("OK");
+        solo.sleep(200);
     }
 
     private void checkPreviewColor(final int expectedColor, final int previewIndex) {

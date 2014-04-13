@@ -126,7 +126,7 @@ public final class RobotiumTestUtils {
             final String character = String.valueOf(text.charAt(i));
             instrumentation.sendStringSync(character);
 
-            Tools.sleep(10);
+            Tools.sleep(15);
         }
     }
 
