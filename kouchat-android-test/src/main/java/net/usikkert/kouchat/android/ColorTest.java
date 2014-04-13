@@ -75,7 +75,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         }
     }
 
-    public void test01CancelAfterChangingOwnColorShouldNotSave() {
+    public void test01ClickingCancelAfterChangingOwnColorShouldNotSave() {
         sendOwnMessage("This is my original color");
         checkTextColor("This is my original color", originalOwnColor);
 
@@ -95,7 +95,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(1000);
     }
 
-    public void test02OkAfterChangingOwnColorShouldSave() {
+    public void test02ClickingOkAfterChangingOwnColorShouldSave() {
         openSettings();
 
         final ColorPicker firstColorPicker = openColorPicker("Set own message color");
@@ -135,7 +135,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(1000);
     }
 
-    public void test03CancelAfterChangingSystemColorShouldNotSave() {
+    public void test03ClickingCancelAfterChangingSystemColorShouldNotSave() {
         checkTextColor("*** Welcome to KouChat", originalSystemColor);
 
         openSettings();
@@ -154,7 +154,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(1000);
     }
 
-    public void test04OkAfterChangingSystemColorShouldSave() {
+    public void test04ClickingOkAfterChangingSystemColorShouldSave() {
         openSettings();
 
         final ColorPicker firstColorPicker = openColorPicker("Set info message color");
