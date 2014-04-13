@@ -92,8 +92,6 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkTextColor("This is my original color", originalOwnColor);
         sendOwnMessage("This is still my original color");
         checkTextColor("This is still my original color", originalOwnColor);
-
-        solo.sleep(1000);
     }
 
     public void test02ClickingOkAfterChangingOwnColorShouldSave() {
@@ -132,8 +130,6 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkTextColor("This is my second new color", secondColor);
 
         newOwnColor = secondColor;
-
-        solo.sleep(1000);
     }
 
     public void test03ClickingCancelAfterChangingSystemColorShouldNotSave() {
@@ -151,8 +147,6 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkTextColor("*** Welcome to KouChat", originalSystemColor);
         setTopic("This is still the original info color");
         checkTextColor("This is still the original info color", originalSystemColor);
-
-        solo.sleep(1000);
     }
 
     public void test04ClickingOkAfterChangingSystemColorShouldSave() {
@@ -191,13 +185,9 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkTextColor("This is the second new info color", secondColor);
 
         newSystemColor = secondColor;
-
-        solo.sleep(1000);
     }
 
     public void test05SettingsShouldSurviveRestart() {
-        solo.sleep(500);
-
         assertNotEqual(originalOwnColor, newOwnColor);
         assertNotEqual(originalSystemColor, newSystemColor);
 
@@ -210,7 +200,6 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkPreviewColor(newSystemColor, 1);
 
         RobotiumTestUtils.goHome(solo);
-        solo.sleep(500);
         RobotiumTestUtils.quit(solo);
 
         solo.sleep(500);
@@ -225,13 +214,9 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         checkPreviewColor(newOwnColor, 0);
         checkPreviewColor(newSystemColor, 1);
-
-        solo.sleep(500);
     }
 
     public void test98ResetOriginalColorsInTheSettings() {
-        solo.sleep(500);
-
         final MainChatController activity = getActivity();
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
         final SharedPreferences.Editor editor = preferences.edit();
@@ -247,8 +232,6 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         originalSystemColor = 0;
         newOwnColor = 0;
         newSystemColor = 0;
-
-        solo.sleep(500);
     }
 
     public void test99Quit() {
@@ -275,13 +258,13 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
     private void cancelNewColor() {
         solo.sleep(100);
         solo.clickOnText("Cancel");
-        solo.sleep(500);
+        solo.sleep(200);
     }
 
     private void acceptNewColor() {
         solo.sleep(100);
         solo.clickOnText("OK");
-        solo.sleep(500);
+        solo.sleep(200);
     }
 
     private void moveColorWheelPointer(final ColorPicker colorPicker,
@@ -315,20 +298,20 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     private void sendOwnMessage(final String text) {
-        solo.sleep(500);
+        solo.sleep(100);
         RobotiumTestUtils.writeLine(solo, text);
-        solo.sleep(500);
+        solo.sleep(200);
     }
 
     private void setTopic(final String topic) {
-        solo.sleep(500);
+        solo.sleep(100);
         RobotiumTestUtils.openMenu(solo);
 
         solo.clickOnText("Topic");
-        solo.sleep(500);
+        solo.sleep(200);
 
         RobotiumTestUtils.writeText(getInstrumentation(), topic);
-        solo.sleep(500);
+        solo.sleep(200);
         solo.clickOnText("OK");
     }
 
@@ -340,9 +323,9 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     private void openSettings() {
-        solo.sleep(500);
+        solo.sleep(100);
         RobotiumTestUtils.openSettings(solo);
-        solo.sleep(500);
+        solo.sleep(200);
     }
 
     private int getColorForText(final TextView textView, final String textToFind) {
@@ -381,15 +364,15 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
 
     private ColorPicker openColorPicker(final String colorPickerText) {
         solo.clickOnText(colorPickerText);
-        solo.sleep(500);
+        solo.sleep(200);
 
         return solo.getView(ColorPicker.class, 0);
     }
 
     private void moveColorWheelPointer(final float[] fromPosition, final float[] toPosition) {
-        solo.sleep(500);
+        solo.sleep(200);
         solo.drag(fromPosition[0], toPosition[0], fromPosition[1], toPosition[1], 10);
-        solo.sleep(500);
+        solo.sleep(200);
     }
 
     private float getDegreesMoved(final float[] degreeOneHsv, final float[] degreeTwoHsv) {
