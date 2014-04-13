@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android;
 
+import static android.test.MoreAsserts.*;
 import static org.fest.reflect.core.Reflection.*;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
@@ -197,8 +198,8 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
     public void test05SettingsShouldSurviveRestart() {
         solo.sleep(500);
 
-        assertNotSame(originalOwnColor, newOwnColor);
-        assertNotSame(originalSystemColor, newSystemColor);
+        assertNotEqual(originalOwnColor, newOwnColor);
+        assertNotEqual(originalSystemColor, newSystemColor);
 
         checkTextColor("This is my second new color", newOwnColor);
         checkTextColor("This is the second new info color", newSystemColor);
@@ -302,7 +303,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         final float[] newColorHsv = hsvFrom(newColor);
         final float degreesMoved = getDegreesMoved(currentColorHsv, newColorHsv);
 
-        assertNotSame(currentColor, newColor);
+        assertNotEqual(currentColor, newColor);
         assertEquals(Math.abs(degreesToMove), degreesMoved, 2f);
     }
 
