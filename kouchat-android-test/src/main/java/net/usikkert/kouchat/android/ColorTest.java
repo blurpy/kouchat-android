@@ -73,8 +73,8 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     public void test01CancelAfterChangingOwnColorShouldNotSave() {
-        sendOwnMessage("This is my color");
-        checkTextColor("This is my color", originalOwnColor);
+        sendOwnMessage("This is my original color");
+        checkTextColor("This is my original color", originalOwnColor);
 
         openSettings();
         checkPreviewColor(originalOwnColor, 0);
@@ -85,9 +85,9 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         RobotiumTestUtils.goHome(solo);
 
-        checkTextColor("This is my color", originalOwnColor);
-        sendOwnMessage("This is still my color");
-        checkTextColor("This is still my color", originalOwnColor);
+        checkTextColor("This is my original color", originalOwnColor);
+        sendOwnMessage("This is still my original color");
+        checkTextColor("This is still my original color", originalOwnColor);
 
         solo.sleep(1000);
     }
@@ -105,26 +105,27 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         RobotiumTestUtils.goHome(solo);
 
-        checkTextColor("This is my color", originalOwnColor);
-        sendOwnMessage("This is my new color");
-        checkTextColor("This is my new color", firstColor);
+        checkTextColor("This is my original color", originalOwnColor);
+        sendOwnMessage("This is my first new color");
+        checkTextColor("This is my first new color", firstColor);
 
         openSettings();
         checkPreviewColor(firstColor, 0);
 
         final ColorPicker secondColorPicker = openColorPicker("Set own message color");
-        moveColorWheelPointer(secondColorPicker, firstColor, 150);
+        moveColorWheelPointer(secondColorPicker, firstColor, -150);
         acceptNewColor();
         final int secondColor = secondColorPicker.getColor();
 
-        assertEquals(hsvFrom(originalOwnColor)[0], hsvFrom(secondColor)[0], 3f);
         assertEquals(secondColor, settings.getOwnColor());
         checkPreviewColor(secondColor, 0);
 
         RobotiumTestUtils.goHome(solo);
 
-        sendOwnMessage("Color is back");
-        checkTextColor("Color is back", secondColor);
+        checkTextColor("This is my original color", originalOwnColor);
+        checkTextColor("This is my first new color", firstColor);
+        sendOwnMessage("This is my second new color");
+        checkTextColor("This is my second new color", secondColor);
 
         solo.sleep(1000);
     }
@@ -183,6 +184,10 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkTextColor("Info color is back", secondColor);
 
         solo.sleep(1000);
+    }
+
+    public void test05SettingsShouldSurviveRestart() {
+        // TODO test both
     }
 
     public void test98ResetOriginalColorsInTheSettings() {
