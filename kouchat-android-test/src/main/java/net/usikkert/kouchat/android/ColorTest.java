@@ -32,8 +32,10 @@ import net.usikkert.kouchat.misc.Settings;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.robotium.solo.Solo;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
@@ -183,8 +185,27 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(1000);
     }
 
+    public void test98ResetOriginalColorsInTheSettings() {
+        solo.sleep(500);
+
+        final MainChatController activity = getActivity();
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        final SharedPreferences.Editor editor = preferences.edit();
+
+        final String ownColorKey = activity.getString(R.string.settings_own_color_key);
+        final String sysColorKey = activity.getString(R.string.settings_sys_color_key);
+
+        editor.putInt(ownColorKey, originalOwnColor);
+        editor.putInt(sysColorKey, originalSystemColor);
+        editor.commit();
+
+        originalSystemColor = 0;
+        originalOwnColor = 0;
+
+        solo.sleep(500);
+    }
+
     public void test99Quit() {
-        // TODO reset back to original color directly using the settings?
         RobotiumTestUtils.quit(solo);
     }
 
