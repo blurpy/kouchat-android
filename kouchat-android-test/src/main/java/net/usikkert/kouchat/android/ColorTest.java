@@ -137,14 +137,14 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkPreviewColor(originalSystemColor, 1);
 
         final ColorPicker colorPicker = openColorPicker("Set info message color");
-        moveColorWheelPointer(colorPicker, originalSystemColor, -150);
+        moveColorWheelPointer(colorPicker, originalSystemColor, 150);
         cancelNewColor();
 
         RobotiumTestUtils.goHome(solo);
 
         checkTextColor("*** Welcome to KouChat", originalSystemColor);
-        setTopic("New info message");
-        checkTextColor("New info message", originalSystemColor);
+        setTopic("This is still the original info color");
+        checkTextColor("This is still the original info color", originalSystemColor);
 
         solo.sleep(1000);
     }
@@ -153,7 +153,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         openSettings();
 
         final ColorPicker firstColorPicker = openColorPicker("Set info message color");
-        moveColorWheelPointer(firstColorPicker, originalSystemColor, -150);
+        moveColorWheelPointer(firstColorPicker, originalSystemColor, 150);
         acceptNewColor();
         final int firstColor = firstColorPicker.getColor();
 
@@ -163,8 +163,8 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         RobotiumTestUtils.goHome(solo);
 
         checkTextColor("*** Welcome to KouChat", originalSystemColor);
-        setTopic("This is new info color");
-        checkTextColor("This is new info color", firstColor);
+        setTopic("This is the first new info color");
+        checkTextColor("This is the first new info color", firstColor);
 
         openSettings();
         checkPreviewColor(firstColor, 1);
@@ -174,14 +174,15 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         acceptNewColor();
         final int secondColor = secondColorPicker.getColor();
 
-        assertEquals(hsvFrom(originalSystemColor)[0], hsvFrom(secondColor)[0], 3f);
         assertEquals(secondColor, settings.getSysColor());
         checkPreviewColor(secondColor, 1);
 
         RobotiumTestUtils.goHome(solo);
 
-        setTopic("Info color is back");
-        checkTextColor("Info color is back", secondColor);
+        checkTextColor("*** Welcome to KouChat", originalSystemColor);
+        checkTextColor("This is the first new info color", firstColor);
+        setTopic("This is the second new info color");
+        checkTextColor("This is the second new info color", secondColor);
 
         solo.sleep(1000);
     }
