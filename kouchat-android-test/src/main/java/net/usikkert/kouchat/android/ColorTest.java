@@ -145,6 +145,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     public void test03ClickingCancelAfterChangingSystemColorShouldNotSave() {
+        solo.sleep(500);
         checkTextColor("*** Welcome to KouChat", originalSystemColor);
 
         openSettings();
@@ -242,12 +243,12 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         openSettings();
 
         final ColorPicker ownColorPicker = openColorPicker("Set own message color");
-        moveColorWheelPointer(ownColorPicker, newOwnColor, 100);
+        moveColorWheelPointer(ownColorPicker, newOwnColor, 120);
         acceptNewColor();
         final int ownColor = ownColorPicker.getColor();
 
         final ColorPicker systemColorPicker = openColorPicker("Set info message color");
-        moveColorWheelPointer(systemColorPicker, newSystemColor, -100);
+        moveColorWheelPointer(systemColorPicker, newSystemColor, -120);
         acceptNewColor();
         final int systemColor = systemColorPicker.getColor();
 
