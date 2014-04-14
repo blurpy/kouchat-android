@@ -58,6 +58,31 @@ public class TestClientMessageReceiver {
      * @return If the message has arrived.
      */
     public boolean gotMessage(final String nickName, final String message) {
+        final TestClientMessage testClientMessage = getMessage(nickName, message);
+
+        return testClientMessage != null;
+    }
+
+    /**
+     * Returns the color of the specified message from the specified user.
+     *
+     * <p>Expects messages in this format: <code>[14:29:21] &lt;Christian&gt;: hello there</code>.</p>
+     *
+     * @param nickName The nick name of the user who sent the message.
+     * @param message The message the user sent.
+     * @return The color of the message, or <code>-1</code> if the message was not found.
+     */
+    public int getColorOfMessage(final String nickName, final String message) {
+        final TestClientMessage testClientMessage = getMessage(nickName, message);
+
+        if (testClientMessage == null) {
+            return -1;
+        } else {
+            return testClientMessage.getColor();
+        }
+    }
+
+    private TestClientMessage getMessage(final String nickName, final String message) {
         for (final TestClientMessage receivedMessage : receivedMessages) {
             final Matcher matcher = messagePattern.matcher(receivedMessage.getMessage());
 
@@ -66,12 +91,12 @@ public class TestClientMessageReceiver {
                 final String messageMatch = matcher.group(2);
 
                 if (nickNameMatch.equals(nickName) && messageMatch.equals(message)) {
-                    return true;
+                    return receivedMessage;
                 }
             }
         }
 
-        return false;
+        return null;
     }
 
     public boolean gotAnyMessages() {

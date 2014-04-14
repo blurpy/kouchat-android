@@ -84,4 +84,25 @@ public class TestClientMessageReceiverTest {
         assertTrue(messages.contains("[14:29:21] <Christian>: one"));
         assertTrue(messages.contains("[14:29:22] <Christian>: two"));
     }
+
+    @Test
+    public void getColorOfMessageShouldReturnMinusOneIfMessageIsNotFound() {
+        assertEquals(-1, messageReceiver.getColorOfMessage("NoOne", "With this message"));
+
+        messageReceiver.addMessage("[14:29:21] <Christian>: a message", 100);
+
+        assertEquals(-1, messageReceiver.getColorOfMessage("Christian", "different message"));
+        assertEquals(-1, messageReceiver.getColorOfMessage("SomeOneElse", "a message"));
+    }
+
+    @Test
+    public void getColorOfMessageShouldReturnCorrectColorOfMessage() {
+        messageReceiver.addMessage("[14:29:21] <Christian>: a message", 100);
+        messageReceiver.addMessage("[14:29:22] <Lilly>: another message", 200);
+        messageReceiver.addMessage("[14:29:23] <Christian>: mou?", 300);
+
+        assertEquals(100, messageReceiver.getColorOfMessage("Christian", "a message"));
+        assertEquals(200, messageReceiver.getColorOfMessage("Lilly", "another message"));
+        assertEquals(300, messageReceiver.getColorOfMessage("Christian", "mou?"));
+    }
 }
