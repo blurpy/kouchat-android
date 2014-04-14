@@ -201,6 +201,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     public void test05SettingsShouldSurviveRestart() {
+        solo.sleep(500);
         assertNotEqual(originalOwnColor, newOwnColor);
         assertNotEqual(originalSystemColor, newSystemColor);
 
