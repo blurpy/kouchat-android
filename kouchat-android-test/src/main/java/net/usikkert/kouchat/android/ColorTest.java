@@ -29,6 +29,8 @@ import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.testclient.TestClient;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.robotium.solo.Solo;
@@ -56,8 +58,11 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
     private static int newOwnColor;
     private static int newSystemColor;
 
+    private static TestClient client;
+
     private Solo solo;
     private Settings settings;
+    private User me;
 
     public ColorTest() {
         super(MainChatController.class);
@@ -72,8 +77,12 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         final AndroidUserInterface androidUserInterface = RobotiumTestUtils.getAndroidUserInterface(activity);
         settings = androidUserInterface.getSettings();
+        me = androidUserInterface.getMe();
 
-        if (originalOwnColor == 0) {
+        if (client == null) {
+            client = new TestClient();
+            client.logon();
+
             originalOwnColor = settings.getOwnColor();
             originalSystemColor = settings.getSysColor();
         }
@@ -219,7 +228,40 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkPreviewColor(newSystemColor, 1);
     }
 
-    // TODO Privat chat test
+    public void test06ChangingColorsShouldWorkWithPrivateChat() {
+        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+
+        sendOwnMessage("This is my original color in the private chat");
+        checkPrivateTextColorAndClient("This is my original color in the private chat", newOwnColor);
+
+        goAway("This is the original info color in the private chat");
+        checkPrivateTextColor("This is the original info color in the private chat", newSystemColor);
+
+        RobotiumTestUtils.goHome(solo);
+        client.comeBack();
+        openSettings();
+
+        final ColorPicker ownColorPicker = openColorPicker("Set own message color");
+        moveColorWheelPointer(ownColorPicker, newOwnColor, 100);
+        acceptNewColor();
+        final int ownColor = ownColorPicker.getColor();
+
+        final ColorPicker systemColorPicker = openColorPicker("Set info message color");
+        moveColorWheelPointer(systemColorPicker, newSystemColor, -100);
+        acceptNewColor();
+        final int systemColor = systemColorPicker.getColor();
+
+        RobotiumTestUtils.goHome(solo);
+        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+
+        sendOwnMessage("This is my new color in the private chat");
+        checkPrivateTextColor("This is my original color in the private chat", newOwnColor);
+        checkPrivateTextColorAndClient("This is my new color in the private chat", ownColor);
+
+        goAway("This is the new info color in the private chat");
+        checkPrivateTextColor("This is the original info color in the private chat", newSystemColor);
+        checkPrivateTextColor("This is the new info color in the private chat", systemColor);
+    }
 
     public void test98ResetOriginalColorsInTheSettings() {
         final MainChatController activity = getActivity();
@@ -240,7 +282,10 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     public void test99Quit() {
+        client.logoff();
         RobotiumTestUtils.quit(solo);
+
+        client = null;
     }
 
     public void tearDown() {
@@ -248,6 +293,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         solo = null;
         settings = null;
+        me = null;
         setActivity(null);
 
         System.gc();
@@ -292,12 +338,24 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         final float degreesMoved = getDegreesMoved(currentColorHsv, newColorHsv);
 
         assertNotEqual(currentColor, newColor);
-        assertEquals(Math.abs(degreesToMove), degreesMoved, 2f);
+        assertEquals(Math.abs(degreesToMove), degreesMoved, 3f);
     }
 
     private void checkTextColor(final String text, final int expectedColor) {
         final TextView mainChatView = (TextView) solo.getView(R.id.mainChatView);
         final int colorForText = getColorForText(mainChatView, text);
+
+        assertEquals(expectedColor, colorForText);
+    }
+
+    private void checkPrivateTextColorAndClient(final String text, final int expectedColor) {
+        checkPrivateTextColor(text, expectedColor);
+        assertEquals(expectedColor, client.getColorOfPrivateMessage(me, text));
+    }
+
+    private void checkPrivateTextColor(final String text, final int expectedColor) {
+        final TextView privateChatView = (TextView) solo.getView(R.id.privateChatView);
+        final int colorForText = getColorForText(privateChatView, text);
 
         assertEquals(expectedColor, colorForText);
     }
@@ -319,6 +377,12 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(200);
         solo.clickOnText("OK");
         solo.sleep(200);
+    }
+
+    private void goAway(final String awayMessage) {
+        solo.sleep(100);
+        client.goAway(awayMessage);
+        solo.sleep(100);
     }
 
     private void checkPreviewColor(final int expectedColor, final int previewIndex) {

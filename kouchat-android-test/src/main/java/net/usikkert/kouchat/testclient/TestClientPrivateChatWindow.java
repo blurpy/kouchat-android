@@ -103,6 +103,10 @@ public class TestClientPrivateChatWindow implements PrivateChatWindow {
         return messageReceiver.gotMessage(theUser.getNick(), message);
     }
 
+    public int getColorOfPrivateMessage(final User theUser, final String message) {
+        return messageReceiver.getColorOfMessage(theUser.getNick(), message);
+    }
+
     public boolean gotAnyPrivateMessages() {
         return messageReceiver.gotAnyMessages();
     }

@@ -181,6 +181,20 @@ public class TestClient {
         return privchat.gotPrivateMessage(localUser, message);
     }
 
+    /**
+     * Gets the color of the specified private message from the specified user in the private chat.
+     *
+     * @param user The user who sent the private message.
+     * @param message The private message the user sent.
+     * @return The color of the private message.
+     */
+    public int getColorOfPrivateMessage(final User user, final String message) {
+        final User localUser = controller.getUser(user.getCode()); // Because user might be from another context
+        final TestClientPrivateChatWindow privchat = (TestClientPrivateChatWindow) localUser.getPrivchat();
+
+        return privchat.getColorOfPrivateMessage(localUser, message);
+    }
+
     public boolean gotAnyPrivateMessages() {
         final UserList userList = controller.getUserList();
 
