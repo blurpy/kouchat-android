@@ -34,16 +34,16 @@ import java.util.regex.Pattern;
  */
 public class TestClientMessageReceiver {
 
-    private final List<String> receivedMessages;
+    private final List<TestClientMessage> receivedMessages;
     private final Pattern messagePattern;
 
     public TestClientMessageReceiver() {
-        receivedMessages = new ArrayList<String>();
+        receivedMessages = new ArrayList<TestClientMessage>();
         messagePattern = Pattern.compile("\\[\\d{2}:\\d{2}:\\d{2}\\] <(\\w+)>: (.+)");
     }
 
     public void addMessage(final String message, final int color) {
-        receivedMessages.add(message);
+        receivedMessages.add(new TestClientMessage(message, color));
     }
 
     /**
@@ -58,8 +58,8 @@ public class TestClientMessageReceiver {
      * @return If the message has arrived.
      */
     public boolean gotMessage(final String nickName, final String message) {
-        for (final String receivedMessage : receivedMessages) {
-            final Matcher matcher = messagePattern.matcher(receivedMessage);
+        for (final TestClientMessage receivedMessage : receivedMessages) {
+            final Matcher matcher = messagePattern.matcher(receivedMessage.getMessage());
 
             if (matcher.matches()) {
                 final String nickNameMatch = matcher.group(1);
@@ -79,7 +79,13 @@ public class TestClientMessageReceiver {
     }
 
     public List<String> getMessages() {
-        return new ArrayList<String>(receivedMessages);
+        final List<String> messages = new ArrayList<String>();
+
+        for (final TestClientMessage receivedMessage : receivedMessages) {
+            messages.add(receivedMessage.getMessage());
+        }
+
+        return messages;
     }
 
     public void resetMessages() {
