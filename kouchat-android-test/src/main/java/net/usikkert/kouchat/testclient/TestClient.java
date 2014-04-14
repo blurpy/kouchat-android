@@ -168,6 +168,17 @@ public class TestClient {
     }
 
     /**
+     * Gets the color of the specified message from the specified user in the main chat.
+     *
+     * @param user The user who sent the message.
+     * @param message The message the user sent.
+     * @return The color of the message.
+     */
+    public int getColorOfMessage(final User user, final String message) {
+        return ui.getColorOfMessage(user, message);
+    }
+
+    /**
      * Checks if the specified private message has arrived from the specified user in the private chat.
      *
      * @param user The user who sent the private message.

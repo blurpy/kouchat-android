@@ -90,7 +90,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
 
     public void test01ClickingCancelAfterChangingOwnColorShouldNotSave() {
         sendOwnMessage("This is my original color");
-        checkTextColor("This is my original color", originalOwnColor);
+        checkTextColorAndClient("This is my original color", originalOwnColor);
 
         openSettings();
         checkPreviewColor(originalOwnColor, 0);
@@ -103,7 +103,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         checkTextColor("This is my original color", originalOwnColor);
         sendOwnMessage("This is still my original color");
-        checkTextColor("This is still my original color", originalOwnColor);
+        checkTextColorAndClient("This is still my original color", originalOwnColor);
     }
 
     public void test02ClickingOkAfterChangingOwnColorShouldSave() {
@@ -121,7 +121,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         checkTextColor("This is my original color", originalOwnColor);
         sendOwnMessage("This is my first new color");
-        checkTextColor("This is my first new color", firstColor);
+        checkTextColorAndClient("This is my first new color", firstColor);
 
         openSettings();
         checkPreviewColor(firstColor, 0);
@@ -139,7 +139,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         checkTextColor("This is my original color", originalOwnColor);
         checkTextColor("This is my first new color", firstColor);
         sendOwnMessage("This is my second new color");
-        checkTextColor("This is my second new color", secondColor);
+        checkTextColorAndClient("This is my second new color", secondColor);
 
         newOwnColor = secondColor;
     }
@@ -339,6 +339,11 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
 
         assertNotEqual(currentColor, newColor);
         assertEquals(Math.abs(degreesToMove), degreesMoved, 3f);
+    }
+
+    private void checkTextColorAndClient(final String text, final int expectedColor) {
+        checkTextColor(text, expectedColor);
+        assertEquals(expectedColor, client.getColorOfMessage(me, text));
     }
 
     private void checkTextColor(final String text, final int expectedColor) {

@@ -146,6 +146,10 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
         return messageReceiver.gotMessage(user.getNick(), message);
     }
 
+    public int getColorOfMessage(final User user, final String message) {
+        return messageReceiver.getColorOfMessage(user.getNick(), message);
+    }
+
     public void setWriter(final BufferedWriter writer) {
         this.writer = writer;
 
