@@ -24,6 +24,8 @@ package net.usikkert.kouchat.testclient;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -66,5 +68,20 @@ public class TestClientMessageReceiverTest {
 
         messageReceiver.resetMessages();
         assertFalse(messageReceiver.gotAnyMessages());
+    }
+
+    @Test
+    public void getMessagesShouldReturnAllStoredMessages() {
+        assertEquals(0, messageReceiver.getMessages().size());
+
+        messageReceiver.addMessage("[14:29:21] <Christian>: one");
+        assertEquals(1, messageReceiver.getMessages().size());
+
+        messageReceiver.addMessage("[14:29:22] <Christian>: two");
+        final List<String> messages = messageReceiver.getMessages();
+
+        assertEquals(2, messages.size());
+        assertTrue(messages.contains("[14:29:21] <Christian>: one"));
+        assertTrue(messages.contains("[14:29:22] <Christian>: two"));
     }
 }
