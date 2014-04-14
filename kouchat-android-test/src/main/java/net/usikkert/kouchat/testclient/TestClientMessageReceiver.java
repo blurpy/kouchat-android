@@ -42,7 +42,7 @@ public class TestClientMessageReceiver {
         messagePattern = Pattern.compile("\\[\\d{2}:\\d{2}:\\d{2}\\] <(\\w+)>: (.+)");
     }
 
-    public void addMessage(final String message) {
+    public void addMessage(final String message, final int color) {
         receivedMessages.add(message);
     }
 

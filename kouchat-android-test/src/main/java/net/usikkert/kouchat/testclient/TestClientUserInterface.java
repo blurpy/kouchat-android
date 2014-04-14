@@ -135,7 +135,7 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
 
     @Override
     public void appendToChat(final String message, final int color) {
-        messageReceiver.addMessage(message);
+        messageReceiver.addMessage(message, color);
 
         if (writer != null) {
             sendMessage(message);

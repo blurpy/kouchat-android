@@ -47,7 +47,7 @@ public class TestClientPrivateChatWindow implements PrivateChatWindow {
 
     @Override
     public void appendToPrivateChat(final String message, final int color) {
-        messageReceiver.addMessage(message);
+        messageReceiver.addMessage(message, color);
 
         if (writer != null) {
             sendPrivateMessage(message);

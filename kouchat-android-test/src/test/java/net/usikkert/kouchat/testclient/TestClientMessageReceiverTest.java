@@ -45,7 +45,7 @@ public class TestClientMessageReceiverTest {
 
     @Test
     public void gotMessageShouldFindTheMessageWithTheExactSameNickNameAndMessage() {
-        messageReceiver.addMessage("[14:29:21] <Christian>: hello there");
+        messageReceiver.addMessage("[14:29:21] <Christian>: hello there", -1);
 
         assertTrue(messageReceiver.gotMessage("Christian", "hello there"));
         assertFalse(messageReceiver.gotMessage("Christian1", "hello there"));
@@ -56,14 +56,14 @@ public class TestClientMessageReceiverTest {
     public void gotAnyMessagesShouldOnlyBeTrueWhenAMessageExist() {
         assertFalse(messageReceiver.gotAnyMessages());
 
-        messageReceiver.addMessage("something");
+        messageReceiver.addMessage("something", -1);
 
         assertTrue(messageReceiver.gotAnyMessages());
     }
 
     @Test
     public void resetMessagesShouldRemoveAllMessages() {
-        messageReceiver.addMessage("something");
+        messageReceiver.addMessage("something", -1);
         assertTrue(messageReceiver.gotAnyMessages());
 
         messageReceiver.resetMessages();
@@ -74,10 +74,10 @@ public class TestClientMessageReceiverTest {
     public void getMessagesShouldReturnAllStoredMessages() {
         assertEquals(0, messageReceiver.getMessages().size());
 
-        messageReceiver.addMessage("[14:29:21] <Christian>: one");
+        messageReceiver.addMessage("[14:29:21] <Christian>: one", -1);
         assertEquals(1, messageReceiver.getMessages().size());
 
-        messageReceiver.addMessage("[14:29:22] <Christian>: two");
+        messageReceiver.addMessage("[14:29:22] <Christian>: two", -1);
         final List<String> messages = messageReceiver.getMessages();
 
         assertEquals(2, messages.size());
