@@ -244,12 +244,12 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         openSettings();
 
         final ColorPicker ownColorPicker = openColorPicker("Set own message color");
-        moveColorWheelPointer(ownColorPicker, newOwnColor, 120);
+        moveColorWheelPointer(ownColorPicker, newOwnColor, -150);
         acceptNewColor();
         final int ownColor = ownColorPicker.getColor();
 
         final ColorPicker systemColorPicker = openColorPicker("Set info message color");
-        moveColorWheelPointer(systemColorPicker, newSystemColor, -120);
+        moveColorWheelPointer(systemColorPicker, newSystemColor, 150);
         acceptNewColor();
         final int systemColor = systemColorPicker.getColor();
 
