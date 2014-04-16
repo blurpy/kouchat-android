@@ -34,6 +34,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowAlertDialog;
 
 import android.text.SpannableString;
@@ -92,6 +93,7 @@ public class AboutDialogTest {
     }
 
     @Test
+    @Config(qualifiers = "sw600dp")
     @Ignore("This does not work with Robolectric yet.")
     public void dialogShouldHaveMessageOfTheCorrectSize() {
         final TextView messageView = (TextView) shadowDialog.getView();

@@ -39,6 +39,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowContextThemeWrapper;
 
@@ -144,6 +145,7 @@ public class ReceiveFileDialogTest {
     }
 
     @Test
+    @Config(qualifiers = "sw720dp")
     @Ignore("This does not work with Robolectric yet.")
     public void showReceiveFileDialogShouldHaveMessageOfTheCorrectSize() {
         receiveFileDialog.showReceiveFileDialog(activity, fileReceiver);
@@ -151,7 +153,7 @@ public class ReceiveFileDialogTest {
         final AlertDialog dialog = getDialog();
         final TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
 
-        assertEquals(15, messageView.getTextSize(), 0); // getTextSize returns 0
+        assertEquals(16, messageView.getTextSize(), 0); // getTextSize returns 0
     }
 
     @Test
@@ -273,7 +275,7 @@ public class ReceiveFileDialogTest {
         final AlertDialog dialog = getDialog();
         final TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
 
-        assertEquals(15, messageView.getTextSize(), 0); // getTextSize returns 0
+        assertEquals(14, messageView.getTextSize(), 0); // getTextSize returns 0
     }
 
     @Test
