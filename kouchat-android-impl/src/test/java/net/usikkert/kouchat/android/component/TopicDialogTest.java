@@ -110,7 +110,7 @@ public class TopicDialogTest {
     @Test
     @Ignore("This does not work with Robolectric yet.")
     public void dialogIconShouldBeSet() {
-//        assertEquals(R.drawable.ic_dialog, shadowDialog.getIcon()); // Does not compile
+//        assertEquals(R.drawable.ic_dialog, shadowDialog.getShadowAlertController().getIconId()); // Does not compile
     }
 
     @Test

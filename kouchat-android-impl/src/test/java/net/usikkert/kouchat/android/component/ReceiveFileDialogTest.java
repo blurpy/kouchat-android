@@ -115,7 +115,10 @@ public class ReceiveFileDialogTest {
     @Test
     @Ignore("This does not work with Robolectric yet.")
     public void showReceiveFileDialogShouldSetIcon() {
-//        assertEquals(R.drawable.ic_dialog, shadowDialog.getIcon()); // Does not compile
+        receiveFileDialog.showReceiveFileDialog(activity, fileReceiver);
+
+        final ShadowAlertDialog shadowDialog = getShadowDialog();
+//        assertEquals(R.drawable.ic_dialog, shadowDialog.getShadowAlertController().getIconId()); // Does not compile
     }
 
     @Test
