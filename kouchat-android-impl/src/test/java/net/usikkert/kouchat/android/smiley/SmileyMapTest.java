@@ -37,6 +37,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -131,11 +132,12 @@ public class SmileyMapTest {
     }
 
     @Test
+    @Config(qualifiers = "xhdpi")
     @Ignore("This does not work with Robolectric yet.")
     public void getSmileyShouldReturnDrawableWithCorrectBounds() {
         final Drawable smiley = smileyMap.getSmiley(":)");
 
-        assertEquals(new Rect(0, 0, 22, 22), smiley.getBounds()); // Returns Rect(0, 0 - 100, 100)
+        assertEquals(new Rect(0, 0, 40, 40), smiley.getBounds()); // Returns Rect(0, 0 - 100, 100)
     }
 
     private int smileyId(final String code) {
