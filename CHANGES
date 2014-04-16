@@ -2,6 +2,10 @@
 - KouChat CHANGES
 
 
+* version 0.15.0 (xx.xx.2014)
+  - Nothing yet.
+
+
 * version 0.14.0 (15.04.2014)
   - The topic, if set, is shown as subtitle in the ActionBar.
   - Fixed bug where it was possible to get new lines in the nick name settings dialog.
