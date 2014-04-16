@@ -40,10 +40,12 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowAlertDialog;
+import org.robolectric.shadows.ShadowContextThemeWrapper;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -112,9 +114,13 @@ public class TopicDialogTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void dialogThemeShouldBeSet() {
-//        assertEquals(R.style.Theme_Default_Dialog, shadowDialog.getTheme()); // Does not compile
+        final ContextThemeWrapper context = (ContextThemeWrapper) dialog.getContext();
+        final ContextThemeWrapper baseContext = (ContextThemeWrapper) context.getBaseContext();
+        final ShadowContextThemeWrapper shadowBaseContext = (ShadowContextThemeWrapper) Robolectric.shadowOf(baseContext);
+        final int themeResId = shadowBaseContext.callGetThemeResId();
+
+        assertEquals(R.style.Theme_Default_Dialog, themeResId);
     }
 
     @Test
