@@ -18,9 +18,7 @@
   </string>
   <string name="settings_nick_name_title">Set nick name</string>
   <string name="settings_key_nick_name">nick_name</string>
-  <string name="settings_nick_name_summary">
-    Set your own nick name, so others can identify you in the chat.
-  </string>
+  <string name="settings_nick_name_summary">Set your own nick name, so others can identify you in the chat.</string>
   <string name="settings_wake_lock_key">wake_lock</string>
   <string name="settings_wake_lock_title">Enable wake lock</string>
   <string name="settings_wake_lock_summary">
