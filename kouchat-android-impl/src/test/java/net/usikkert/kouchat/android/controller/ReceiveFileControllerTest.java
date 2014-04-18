@@ -100,17 +100,15 @@ public class ReceiveFileControllerTest {
 
     @Test
     public void onDestroyShouldUnbindServiceConnectionAndResetAllFields() {
-        final ServiceConnection serviceConnection =
-                TestUtils.setFieldValueWithMock(controller, "serviceConnection", ServiceConnection.class);
+        activityController.create();
         assertTrue(TestUtils.allFieldsHaveValue(controller));
 
-        controller.onDestroy();
+        activityController.destroy();
 
         final List<ServiceConnection> unboundServiceConnections =
                 Robolectric.getShadowApplication().getUnboundServiceConnections();
 
         assertEquals(1, unboundServiceConnections.size());
-        assertSame(serviceConnection, unboundServiceConnections.get(0));
         assertTrue(TestUtils.allFieldsAreNull(controller));
     }
 
