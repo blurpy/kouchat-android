@@ -243,6 +243,104 @@ public class SendFileControllerTest {
         assertEquals(0, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
 
+    @Test
+    public void userAddedShouldAddUserToAdapterAndUpdateLine2() {
+        setupControllerIntentWithValidFile();
+        activityController.create();
+
+        final TextView line2TextView = (TextView) controller.findViewById(R.id.sendFileLine2TextView);
+        final ListView userListView = (ListView) controller.findViewById(R.id.sendFileUserListView);
+        final ListAdapter adapter = userListView.getAdapter();
+
+        assertEquals("-- No connected users.", line2TextView.getText());
+        assertEquals(0, adapter.getCount());
+
+        controller.userAdded(0, new User("Lilly", 125)); // Position is not used
+
+        assertEquals("Please select the user to send the file to.", line2TextView.getText());
+        assertEquals(1, adapter.getCount());
+    }
+
+    @Test
+    public void userAddedShouldSortUsers() {
+        final User xing = new User("Xing", 127);
+        final User cecilia = new User("Cecilia", 128);
+
+        userList.add(xing);
+        userList.add(cecilia);
+
+        setupControllerIntentWithValidFile();
+        activityController.create();
+
+        final ListView userListView = (ListView) controller.findViewById(R.id.sendFileUserListView);
+        final ListAdapter adapter = userListView.getAdapter();
+
+        assertEquals(2, adapter.getCount());
+        assertSame(cecilia, adapter.getItem(0));
+        assertSame(xing, adapter.getItem(1));
+
+        final User penny = new User("Penny", 126);
+
+        controller.userAdded(0, penny);
+
+        assertEquals(3, adapter.getCount());
+        assertSame(cecilia, adapter.getItem(0));
+        assertSame(penny, adapter.getItem(1));
+        assertSame(xing, adapter.getItem(2));
+    }
+
+    @Test
+    public void userRemovedShouldRemoveUserFromAdapterAndUpdateLine2() {
+        final User lilly = new User("Lilly", 125);
+        userList.add(lilly);
+
+        setupControllerIntentWithValidFile();
+        activityController.create();
+
+        final TextView line2TextView = (TextView) controller.findViewById(R.id.sendFileLine2TextView);
+        final ListView userListView = (ListView) controller.findViewById(R.id.sendFileUserListView);
+        final ListAdapter adapter = userListView.getAdapter();
+
+        assertEquals("Please select the user to send the file to.", line2TextView.getText());
+        assertEquals(1, adapter.getCount());
+
+        controller.userRemoved(0, lilly); // Position is not used
+
+        assertEquals("-- No connected users.", line2TextView.getText());
+        assertEquals(0, adapter.getCount());
+    }
+
+    @Test
+    public void userChangedShouldSortAdapter() {
+        final User penny = new User("Penny", 126);
+        final User xing = new User("Xing", 127);
+        final User cecilia = new User("Cecilia", 128);
+
+        userList.add(penny);
+        userList.add(xing);
+        userList.add(cecilia);
+
+        setupControllerIntentWithValidFile();
+        activityController.create();
+
+        final ListView userListView = (ListView) controller.findViewById(R.id.sendFileUserListView);
+        final ListAdapter adapter = userListView.getAdapter();
+
+        assertEquals(3, adapter.getCount());
+        assertSame(cecilia, adapter.getItem(0));
+        assertSame(penny, adapter.getItem(1));
+        assertSame(xing, adapter.getItem(2));
+
+        penny.setNick("Amy");
+
+        controller.userChanged(0, null); // Doesn't use any of the parameters
+
+        assertEquals(3, adapter.getCount());
+        assertSame(penny, adapter.getItem(0)); // Now Amy
+        assertSame(cecilia, adapter.getItem(1));
+        assertSame(xing, adapter.getItem(2));
+    }
+
     private void setupControllerWithUnknownFile() {
         setupControllerWithIntent(Uri.fromParts("ftp", "google.com", "search"));
     }
