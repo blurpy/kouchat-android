@@ -156,6 +156,15 @@ public class SortedUserList implements UserList {
     }
 
     /**
+     * Returns the current listeners.
+     *
+     * @return The current listeners.
+     */
+    public List<UserListListener> getListeners() {
+        return Collections.unmodifiableList(listeners);
+    }
+
+    /**
      * Notifies the listeners that a user was added.
      *
      * @param pos The position where the user was added.

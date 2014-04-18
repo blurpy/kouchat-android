@@ -25,6 +25,8 @@ package net.usikkert.kouchat.misc;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
+
 import net.usikkert.kouchat.event.UserListListener;
 
 import org.junit.Before;
@@ -266,9 +268,48 @@ public class SortedUserListTest {
         verify(listener).userChanged(3, test1);
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void setShouldFailIfTryingToReplaceUserThatDoesNotExist() {
+        expectedException.expect(IndexOutOfBoundsException.class);
+        expectedException.expectMessage("Index: 0, Size: 0");
+
         userList.set(0, new User("Test1", 10));
+    }
+
+    @Test
+    public void getListenersShouldReturnImmutableList() {
+        expectedException.expect(UnsupportedOperationException.class); // No message
+
+        userList.getListeners().add(listener);
+    }
+
+    @Test
+    public void getListenersShouldReturnNewListEveryTime() {
+        assertNotSame(userList.getListeners(), userList.getListeners());
+    }
+
+    @Test
+    public void getListenersShouldReturnTheCurrentListeners() {
+        // Just listener from setUp()
+        final List<UserListListener> listeners1 = userList.getListeners();
+        assertEquals(1, listeners1.size());
+        assertTrue(listeners1.contains(listener));
+
+        // Adding another listener
+        final UserListListener listener2 = mock(UserListListener.class);
+        userList.addUserListListener(listener2);
+
+        final List<UserListListener> listeners2 = userList.getListeners();
+        assertEquals(2, listeners2.size());
+        assertTrue(listeners2.contains(listener));
+        assertTrue(listeners2.contains(listener2));
+
+        // Removing the first listener
+        userList.removeUserListListener(listener);
+
+        final List<UserListListener> listeners3 = userList.getListeners();
+        assertEquals(1, listeners3.size());
+        assertTrue(listeners3.contains(listener2));
     }
 
     private void addAllUsers() {
