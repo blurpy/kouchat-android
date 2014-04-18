@@ -30,6 +30,7 @@ import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.android.userlist.UserListAdapter;
+import net.usikkert.kouchat.misc.SortedUserList;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
@@ -57,6 +58,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -98,7 +100,7 @@ public class MainChatControllerTest {
         ui = TestUtils.setFieldValueWithMock(controller, "androidUserInterface", AndroidUserInterface.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
 
-        userList = TestUtils.setFieldValueWithMock(controller, "userList", UserList.class);
+        userList = new SortedUserList();
         when(ui.getUserList()).thenReturn(userList);
 
         mainChatView = TestUtils.setFieldValueWithMock(controller, "mainChatView", TextView.class);
@@ -112,6 +114,93 @@ public class MainChatControllerTest {
         chatServiceIntent = TestUtils.setFieldValueWithMock(controller, "chatServiceIntent", Intent.class);
 
         TestUtils.setFieldValueWithMock(controller, "serviceConnection", ServiceConnection.class);
+    }
+
+    @Test
+    public void onCreateShouldRegisterKeyListenerThatSendsMessageAndClearsInputOnEnter() {
+        activityController.create();
+
+        final EditText mainChatInput = (EditText) controller.findViewById(R.id.mainChatInput);
+        mainChatInput.setText("Hello");
+
+        mainChatInput.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
+
+        verify(ui).sendMessage("Hello");
+        assertEquals("", mainChatInput.getText().toString());
+    }
+
+    @Test
+    public void onCreateShouldRegisterKeyListenerThatIgnoresOtherEvents() {
+        activityController.create();
+
+        final EditText mainChatInput = (EditText) controller.findViewById(R.id.mainChatInput);
+        mainChatInput.setText("Hello");
+
+        mainChatInput.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
+        mainChatInput.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_SPACE));
+
+        verify(ui, never()).sendMessage(anyString());
+        assertEquals("Hello", mainChatInput.getText().toString());
+    }
+
+    @Test
+    public void onCreateShouldRegisterTextListenerThatUpdatesWriteStatus() {
+        activityController.create();
+
+        final EditText mainChatInput = (EditText) controller.findViewById(R.id.mainChatInput);
+
+        mainChatInput.setText("Hello");
+        verify(ui).updateMeWriting(true);
+
+        mainChatInput.setText("");
+        verify(ui).updateMeWriting(false);
+    }
+
+    @Test
+    public void onCreateShouldRegisterTextListenerThatHandlesMissingDependenciesOnRotation() {
+        activityController.create();
+        TestUtils.setFieldValue(controller, "androidUserInterface", null);
+
+        final EditText mainChatInput = (EditText) controller.findViewById(R.id.mainChatInput);
+
+        mainChatInput.setText("Hello");
+        mainChatInput.setText("");
+
+        verify(ui, never()).updateMeWriting(anyBoolean());
+    }
+
+    @Test
+    public void onCreateShouldRegisterOnClickListenerThatStartsPrivateChatWithClickedUser() {
+        userList.add(new User("Ally", 1234));
+        userList.add(new User("Molly", 2345));
+        userList.add(new User("Wanda", 3456));
+        activityController.create();
+
+        final ListView mainChatUserList = (ListView) controller.findViewById(R.id.mainChatUserList);
+        final AdapterView.OnItemClickListener listener = mainChatUserList.getOnItemClickListener();
+
+        listener.onItemClick(mainChatUserList, null, 1, 100); // Should be Molly at position 1
+
+        final Intent nextStartedActivity = Robolectric.getShadowApplication().getNextStartedActivity();
+        final ShadowIntent nextStartedActivityShadow = Robolectric.shadowOf(nextStartedActivity);
+
+        assertEquals(PrivateChatController.class, nextStartedActivityShadow.getIntentClass());
+        assertEquals(2345, nextStartedActivity.getIntExtra("userCode", 0));
+    }
+
+    @Test
+    public void onCreateShouldRegisterOnClickListenerThatIgnoresClickOnMe() {
+        final User me = new User("Me", 1234);
+        me.setMe(true);
+        userList.add(me);
+        activityController.create();
+
+        final ListView mainChatUserList = (ListView) controller.findViewById(R.id.mainChatUserList);
+        final AdapterView.OnItemClickListener listener = mainChatUserList.getOnItemClickListener();
+
+        listener.onItemClick(mainChatUserList, null, 0, 100);
+
+        assertNull(Robolectric.getShadowApplication().getNextStartedActivity());
     }
 
     @Test
@@ -146,6 +235,7 @@ public class MainChatControllerTest {
     }
 
     @Test
+    @Ignore("TODO")
     public void onDestroyShouldUnregister() {
         controller.onDestroy();
 
@@ -163,29 +253,36 @@ public class MainChatControllerTest {
 
     @Test
     public void onDestroyShouldSetAllFieldsToNull() {
+        activityController.create();
+        TestUtils.setFieldValueWithMock(controller, "actionBar", ActionBar.class); // getSupportActionBar() returns null
+
         assertTrue(TestUtils.allFieldsHaveValue(controller));
 
-        controller.onDestroy();
+        activityController.destroy();
 
         assertTrue(TestUtils.allFieldsAreNull(controller));
     }
 
     @Test
     public void onDestroyShouldSetDestroyedToTrue() {
+        activityController.create();
+
         assertFalse(TestUtils.getFieldValue(controller, Boolean.class, "destroyed"));
 
-        controller.onDestroy();
+        activityController.destroy();
 
         assertTrue(TestUtils.getFieldValue(controller, Boolean.class, "destroyed"));
     }
 
     @Test
     public void onDestroyShouldNotFailIfServiceHasNotBeenBound() {
+        activityController.create();
+
         TestUtils.setFieldValue(controller, "androidUserInterface", null);
         TestUtils.setFieldValue(controller, "userList", null);
         TestUtils.setFieldValue(controller, "serviceConnection", null);
 
-        controller.onDestroy();
+        activityController.destroy();
 
         assertEquals(0, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
