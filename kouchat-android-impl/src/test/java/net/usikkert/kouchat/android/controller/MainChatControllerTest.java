@@ -35,6 +35,7 @@ import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -46,6 +47,7 @@ import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.util.ActivityController;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.internal.view.menu.ActionMenu;
 import com.actionbarsherlock.internal.view.menu.ActionMenuItem;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -374,6 +376,16 @@ public class MainChatControllerTest {
 
     @Test
     @Config(qualifiers = "v10")
+    public void onOptionsItemSelectedWithUnknownMenuItemShouldReturnFalse() {
+        activityController.create();
+
+        final boolean selected = controller.onOptionsItemSelected(createMenuItem(0));
+
+        assertFalse(selected);
+    }
+
+    @Test
+    @Config(qualifiers = "v10")
     public void dispatchKeyEventShouldDelegateToSuperClassFirst() {
         activityController.create();
         mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
@@ -420,6 +432,19 @@ public class MainChatControllerTest {
         when(mainChatInput.hasFocus()).thenReturn(false);
         controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A));
         verify(mainChatInput).requestFocus();
+    }
+
+    @Test
+    @Config(qualifiers = "v10")
+    @Ignore("This does not work with Robolectric yet.")
+    public void onCreateOptionsMenuShouldLoadTheMainChatMenu() {
+        final ActionMenu menu = new ActionMenu(controller);
+        activityController.create();
+
+        // Fails with: android.content.res.Resources$NotFoundException: Resource ID #0x7f0c0000
+        controller.onCreateOptionsMenu(menu);
+
+        assertNotNull(menu.findItem(R.id.mainChatMenu));
     }
 
     private ActionMenuItem createMenuItem(final int menuItemId) {
