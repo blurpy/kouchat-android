@@ -35,7 +35,6 @@ import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -110,11 +109,10 @@ public class MainChatControllerTest {
 
     @Test
     @Config(qualifiers = "v10")
-    @Ignore("This does not work with Robolectric yet.")
     public void isVisibleShouldBeTrueOnlyBetweenOnResumeAndOnPause() {
         assertFalse(controller.isVisible());
 
-        activityController.create(); // NumberFormatException because of float in dimens.xml
+        activityController.create();
         assertFalse(controller.isVisible());
 
         activityController.resume();
@@ -346,9 +344,8 @@ public class MainChatControllerTest {
 
     @Test
     @Config(qualifiers = "v10")
-    @Ignore("This does not work with Robolectric yet.")
     public void onOptionsItemSelectedWithAboutShouldOpenAboutDialog() {
-        activityController.create(); // NumberFormatException because of float in dimens.xml
+        activityController.create();
 
         final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuAbout));
 
@@ -360,9 +357,8 @@ public class MainChatControllerTest {
 
     @Test
     @Config(qualifiers = "v10")
-    @Ignore("This does not work with Robolectric yet.")
     public void onOptionsItemSelectedWithTopicShouldOpenTopicDialog() {
-        activityController.create(); // NumberFormatException because of float in dimens.xml
+        activityController.create();
 
         final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuTopic));
 

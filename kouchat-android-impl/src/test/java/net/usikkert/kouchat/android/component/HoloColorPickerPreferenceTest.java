@@ -29,7 +29,6 @@ import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -192,7 +191,6 @@ public class HoloColorPickerPreferenceTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void onBindDialogViewShouldSetColor() {
         // String.format("#%06X", (0xFFFFFF & colorPicker.getColor())) = #80FF00 - green
         assertEquals(-8323328, colorPicker.getColor());
@@ -204,8 +202,7 @@ public class HoloColorPickerPreferenceTest {
         // getColor() returns the value set by a touch event, so this wont work
         // assertEquals(Color.BLUE, colorPicker.getColor());
 
-        // setColor() does set the value of mColor. But Color.colorToHSV used in colorToAngle()
-        // is not implemented by Robolectric. Returns Color.RED instead.
+        // setColor() does set the value of mColor.
         assertEquals(Integer.valueOf(Color.BLUE), TestUtils.getFieldValue(colorPicker, Integer.class, "mColor"));
     }
 

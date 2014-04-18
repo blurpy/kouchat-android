@@ -32,7 +32,6 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -116,11 +115,10 @@ public class PrivateChatControllerTest {
 
     @Test
     @Config(reportSdk = 10) // To avoid getSupportActionBar returning null
-    @Ignore("This does not work with Robolectric yet.")
     public void isVisibleShouldBeTrueOnlyBetweenOnResumeAndOnPause() {
         assertFalse(controller.isVisible());
 
-        activityController.create(); // NumberFormatException because of float in dimens.xml
+        activityController.create();
         assertFalse(controller.isVisible());
 
         activityController.resume();
@@ -265,9 +263,8 @@ public class PrivateChatControllerTest {
 
     @Test
     @Config(reportSdk = 10)
-    @Ignore("This does not work with Robolectric yet.")
     public void dispatchKeyEventShouldDelegateToSuperClassFirst() {
-        activityController.create(); // NumberFormatException because of float in dimens.xml
+        activityController.create();
         setMocks();
 
         // Force ActionBarSherlock to respond to the back event
@@ -284,9 +281,8 @@ public class PrivateChatControllerTest {
 
     @Test
     @Config(reportSdk = 10)
-    @Ignore("This does not work with Robolectric yet.")
     public void dispatchKeyEventShouldDelegateToPrivateChatInputSecond() {
-        activityController.create(); // NumberFormatException because of float in dimens.xml
+        activityController.create();
         setMocks();
 
         final KeyEvent event1 = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A);
@@ -302,9 +298,8 @@ public class PrivateChatControllerTest {
 
     @Test
     @Config(reportSdk = 10)
-    @Ignore("This does not work with Robolectric yet.")
     public void dispatchKeyEventShouldRequestFocusIfFocusIsMissingIfDelegatingToPrivateChatInput() {
-        activityController.create(); // NumberFormatException because of float in dimens.xml
+        activityController.create();
         setMocks();
 
         when(privateChatInput.hasFocus()).thenReturn(true);
