@@ -67,6 +67,7 @@ import android.widget.TextView;
  *
  * @author Christian Ihle
  */
+@Config(qualifiers = "v10")
 @RunWith(RobolectricTestRunner.class)
 public class MainChatControllerTest {
 
@@ -114,7 +115,6 @@ public class MainChatControllerTest {
     }
 
     @Test
-    @Config(qualifiers = "v10")
     public void isVisibleShouldBeTrueOnlyBetweenOnResumeAndOnPause() {
         assertFalse(controller.isVisible());
 
@@ -349,7 +349,6 @@ public class MainChatControllerTest {
     }
 
     @Test
-    @Config(qualifiers = "v10")
     public void onOptionsItemSelectedWithAboutShouldOpenAboutDialog() {
         activityController.create();
 
@@ -362,7 +361,6 @@ public class MainChatControllerTest {
     }
 
     @Test
-    @Config(qualifiers = "v10")
     public void onOptionsItemSelectedWithTopicShouldOpenTopicDialog() {
         activityController.create();
 
@@ -375,7 +373,6 @@ public class MainChatControllerTest {
     }
 
     @Test
-    @Config(qualifiers = "v10")
     public void onOptionsItemSelectedWithUnknownMenuItemShouldReturnFalse() {
         activityController.create();
 
@@ -385,7 +382,6 @@ public class MainChatControllerTest {
     }
 
     @Test
-    @Config(qualifiers = "v10")
     public void dispatchKeyEventShouldDelegateToSuperClassFirst() {
         activityController.create();
         mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
@@ -403,7 +399,6 @@ public class MainChatControllerTest {
     }
 
     @Test
-    @Config(qualifiers = "v10")
     public void dispatchKeyEventShouldDelegateToMainChatInputSecond() {
         activityController.create();
         mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
@@ -420,7 +415,6 @@ public class MainChatControllerTest {
     }
 
     @Test
-    @Config(qualifiers = "v10")
     public void dispatchKeyEventShouldRequestFocusIfFocusIsMissingIfDelegatingToMainChatInput() {
         activityController.create();
         mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
@@ -435,7 +429,6 @@ public class MainChatControllerTest {
     }
 
     @Test
-    @Config(qualifiers = "v10")
     @Ignore("This does not work with Robolectric yet.")
     public void onCreateOptionsMenuShouldLoadTheMainChatMenu() {
         final ActionMenu menu = new ActionMenu(controller);
