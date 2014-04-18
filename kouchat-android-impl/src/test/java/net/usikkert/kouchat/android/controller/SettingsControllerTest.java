@@ -33,20 +33,20 @@ import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.shadows.ShadowPreferenceManager;
 import org.robolectric.tester.android.content.TestSharedPreferences;
+import org.robolectric.util.ActivityController;
 
 import com.actionbarsherlock.internal.view.menu.ActionMenuItem;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 
@@ -55,15 +55,15 @@ import android.preference.EditTextPreference;
  *
  * @author Christian Ihle
  */
+@Config(reportSdk = 10)
 @RunWith(RobolectricTestRunner.class)
 public class SettingsControllerTest {
 
     private SettingsController controller;
-    private SettingsController controllerSpy;
+    private ActivityController<SettingsController> activityController;
 
     private AndroidUserInterface ui;
     private Settings settings;
-    private ServiceConnection serviceConnection;
 
     private EditTextPreference nickNamePreference;
     private CheckBoxPreference wakeLockPreference;
@@ -72,48 +72,28 @@ public class SettingsControllerTest {
 
     @Before
     public void setUp() {
-        controller = new SettingsController();
-
-        TestUtils.setFieldValue(controller, "nickNameKey", "nick_name");
-        TestUtils.setFieldValue(controller, "wakeLockKey", "wake_lock");
-        TestUtils.setFieldValue(controller, "ownColorKey", "own_color");
-        TestUtils.setFieldValue(controller, "systemColorKey", "sys_color");
-
-        controllerSpy = spy(controller);
+        activityController = Robolectric.buildActivity(SettingsController.class);
+        controller = activityController.get();
 
         ui = mock(AndroidUserInterface.class);
         settings = mock(Settings.class);
+
+        when(ui.getSettings()).thenReturn(settings);
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
 
-        serviceConnection = mock(ServiceConnection.class);
+        activityController.create();
 
-        nickNamePreference = mock(EditTextPreference.class);
-        when(nickNamePreference.getKey()).thenReturn("nick_name");
-        doReturn(nickNamePreference).when(controllerSpy).findPreference("nick_name");
-
-        wakeLockPreference = mock(CheckBoxPreference.class);
-        when(wakeLockPreference.getKey()).thenReturn("wake_lock");
-        doReturn(wakeLockPreference).when(controllerSpy).findPreference("wake_lock");
-
-        ownColorPreference = mock(HoloColorPickerPreference.class);
-        when(ownColorPreference.getKey()).thenReturn("own_color");
-        doReturn(ownColorPreference).when(controllerSpy).findPreference("own_color");
-
-        systemColorPreference = mock(HoloColorPickerPreference.class);
-        when(systemColorPreference.getKey()).thenReturn("sys_color");
-        doReturn(systemColorPreference).when(controllerSpy).findPreference("sys_color");
+        nickNamePreference = (EditTextPreference) controller.findPreference("nick_name");
+        wakeLockPreference = (CheckBoxPreference) controller.findPreference("wake_lock");
+        ownColorPreference = (HoloColorPickerPreference) controller.findPreference("own_color");
+        systemColorPreference = (HoloColorPickerPreference) controller.findPreference("sys_color");
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void onCreateShouldBindChatServiceToSetAndroidUserInterface() {
-        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
-
-        controller.onCreate(null); // findPreference() returns null, giving NullPointerException
-
         assertSame(ui, TestUtils.getFieldValue(controller, AndroidUserInterface.class, "androidUserInterface"));
 
         final ShadowIntent startedServiceIntent =
@@ -122,19 +102,17 @@ public class SettingsControllerTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void onResumeShouldSetControllerAsListener() {
         final TestSharedPreferences sharedPreferences = getTestSharedPreferences();
 
         assertFalse(sharedPreferences.hasListener(controller));
 
-        controller.onResume(); // getPreferenceScreen() returns null, giving NullPointerException
+        activityController.resume();
 
         assertTrue(sharedPreferences.hasListener(controller));
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void onPauseShouldRemoveControllerAsListener() {
         final TestSharedPreferences sharedPreferences = getTestSharedPreferences();
 
@@ -142,42 +120,38 @@ public class SettingsControllerTest {
         sharedPreferences.registerOnSharedPreferenceChangeListener(controller);
         assertTrue(sharedPreferences.hasListener(controller));
 
-        controller.onPause(); // getPreferenceScreen() returns null, giving NullPointerException
+        activityController.pause();
 
         assertFalse(sharedPreferences.hasListener(controller));
     }
 
     @Test
     public void onDestroyShouldUnregister() {
-        setupMocks();
-
-        controller.onDestroy();
+        activityController.destroy();
 
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
 
     @Test
     public void onDestroyShouldSetAllFieldsToNull() {
-        setupMocks();
         assertTrue(TestUtils.allFieldsHaveValue(controller));
 
-        controller.onDestroy();
+        activityController.destroy();
 
         assertTrue(TestUtils.allFieldsAreNull(controller));
     }
 
     @Test
     public void onDestroyShouldNotFailIfServiceHasNotBeenBound() {
-        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
+        TestUtils.setFieldValue(controller, "androidUserInterface", null);
 
-        controller.onDestroy();
+        activityController.destroy();
 
         assertEquals(0, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
 
     @Test
     public void onPreferenceChangeShouldAskAndroidUserInterfaceToChangeNickNameAndReturnTheResultIfFalse() {
-        setupMocks();
         when(ui.changeNickName(anyString())).thenReturn(false);
 
         final boolean change = controller.onPreferenceChange(nickNamePreference, "Kelly");
@@ -188,7 +162,6 @@ public class SettingsControllerTest {
 
     @Test
     public void onPreferenceChangeShouldAskAndroidUserInterfaceToChangeNickNameAndReturnTheResultIfTrue() {
-        setupMocks();
         when(ui.changeNickName(anyString())).thenReturn(true);
 
         final boolean change = controller.onPreferenceChange(nickNamePreference, "Holly");
@@ -199,7 +172,7 @@ public class SettingsControllerTest {
 
     @Test
     public void onPreferenceChangeShouldDoNothingAndReturnTrueIfAnotherPreference() {
-        setupMocks();
+        reset(ui); // onServiceConnected()
 
         final boolean change = controller.onPreferenceChange(wakeLockPreference, "on");
 
@@ -209,58 +182,52 @@ public class SettingsControllerTest {
 
     @Test
     public void onSharedPreferenceChangedShouldSetNickNameAsSummaryIfTextIsNotNull() {
-        when(nickNamePreference.getText()).thenReturn("This is the value");
+        nickNamePreference.setText("SuperKou");
+        nickNamePreference.setSummary("Existing summary");
 
-        controllerSpy.onSharedPreferenceChanged(null, "nick_name");
+        controller.onSharedPreferenceChanged(null, "nick_name");
 
-        verify(controllerSpy).findPreference("nick_name");
-        verify(nickNamePreference).setSummary("This is the value");
+        assertEquals("SuperKou", nickNamePreference.getSummary());
         verifyZeroInteractions(settings);
     }
 
     @Test
     public void onSharedPreferenceChangedShouldNotSetNickNameAsSummaryIfTextIsNull() {
-        when(nickNamePreference.getText()).thenReturn(null);
+        nickNamePreference.setText(null);
+        nickNamePreference.setSummary("Existing summary");
 
-        controllerSpy.onSharedPreferenceChanged(null, "nick_name");
+        controller.onSharedPreferenceChanged(null, "nick_name");
 
-        verify(controllerSpy).findPreference("nick_name");
-        verify(nickNamePreference, never()).setSummary(anyString());
+        assertEquals("Existing summary", nickNamePreference.getSummary());
         verifyZeroInteractions(settings);
     }
 
     @Test
     public void onSharedPreferenceChangedShouldSaveSettingOnWakeLockChange() {
-        setupMocks();
-        when(wakeLockPreference.isChecked()).thenReturn(true);
+        wakeLockPreference.setChecked(true);
 
-        controllerSpy.onSharedPreferenceChanged(null, "wake_lock");
+        controller.onSharedPreferenceChanged(null, "wake_lock");
 
-        verify(controllerSpy).findPreference("wake_lock");
         verify(settings).setWakeLockEnabled(true);
         verifyNoMoreInteractions(settings);
     }
 
     @Test
     public void onSharedPreferenceChangedShouldSaveSettingOnOwnColorChange() {
-        setupMocks();
-        when(ownColorPreference.getPersistedColor()).thenReturn(12345);
+        TestUtils.setFieldValue(ownColorPreference, "persistedColor", 12345);
 
-        controllerSpy.onSharedPreferenceChanged(null, "own_color");
+        controller.onSharedPreferenceChanged(null, "own_color");
 
-        verify(controllerSpy).findPreference("own_color");
         verify(settings).setOwnColor(12345);
         verifyNoMoreInteractions(settings);
     }
 
     @Test
     public void onSharedPreferenceChangedShouldSaveSettingOnSystemColorChange() {
-        setupMocks();
-        when(systemColorPreference.getPersistedColor()).thenReturn(54321);
+        TestUtils.setFieldValue(systemColorPreference, "persistedColor", 54321);
 
-        controllerSpy.onSharedPreferenceChanged(null, "sys_color");
+        controller.onSharedPreferenceChanged(null, "sys_color");
 
-        verify(controllerSpy).findPreference("sys_color");
         verify(settings).setSysColor(54321);
         verifyNoMoreInteractions(settings);
     }
@@ -288,19 +255,7 @@ public class SettingsControllerTest {
         assertNull(nextStartedActivity);
     }
 
-    private void setupMocks() {
-        TestUtils.setFieldValue(controller, "androidUserInterface", ui);
-        TestUtils.setFieldValue(controllerSpy, "androidUserInterface", ui);
-
-        TestUtils.setFieldValue(controller, "settings", settings);
-        TestUtils.setFieldValue(controllerSpy, "settings", settings);
-
-        TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
-        TestUtils.setFieldValue(controllerSpy, "serviceConnection", serviceConnection);
-    }
-
     private TestSharedPreferences getTestSharedPreferences() {
-        return (TestSharedPreferences) ShadowPreferenceManager
-                .getDefaultSharedPreferences(Robolectric.application.getApplicationContext());
+        return (TestSharedPreferences) ShadowPreferenceManager.getDefaultSharedPreferences(Robolectric.application);
     }
 }
