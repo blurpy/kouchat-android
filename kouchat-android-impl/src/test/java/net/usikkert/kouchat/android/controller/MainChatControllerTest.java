@@ -47,10 +47,14 @@ import org.robolectric.util.ActivityController;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.internal.view.menu.ActionMenuItem;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -366,6 +370,56 @@ public class MainChatControllerTest {
 
         final ShadowAlertDialog latestDialog = Robolectric.getShadowApplication().getLatestAlertDialog();
         assertEquals("Topic", latestDialog.getTitle());
+    }
+
+    @Test
+    @Config(qualifiers = "v10")
+    public void dispatchKeyEventShouldDelegateToSuperClassFirst() {
+        activityController.create();
+        mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
+
+        // Force ActionBarSherlock to respond to the back event
+        controller.startActionMode(new ActionMode.Callback() {
+            public boolean onCreateActionMode(final ActionMode mode, final Menu menu) { return true; }
+            public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) { return false; }
+            public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) { return false; }
+            public void onDestroyActionMode(final ActionMode mode) { }
+        });
+
+        assertTrue(controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK)));
+        verifyZeroInteractions(mainChatInput); // Not delegating, and not requesting focus
+    }
+
+    @Test
+    @Config(qualifiers = "v10")
+    public void dispatchKeyEventShouldDelegateToMainChatInputSecond() {
+        activityController.create();
+        mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
+
+        final KeyEvent event1 = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A);
+        when(mainChatInput.dispatchKeyEvent(event1)).thenReturn(false);
+        assertFalse(controller.dispatchKeyEvent(event1));
+        verify(mainChatInput).dispatchKeyEvent(event1);
+
+        final KeyEvent event2 = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_B);
+        when(mainChatInput.dispatchKeyEvent(event2)).thenReturn(true);
+        assertTrue(controller.dispatchKeyEvent(event2));
+        verify(mainChatInput).dispatchKeyEvent(event2);
+    }
+
+    @Test
+    @Config(qualifiers = "v10")
+    public void dispatchKeyEventShouldRequestFocusIfFocusIsMissingIfDelegatingToMainChatInput() {
+        activityController.create();
+        mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
+
+        when(mainChatInput.hasFocus()).thenReturn(true);
+        controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A));
+        verify(mainChatInput, never()).requestFocus();
+
+        when(mainChatInput.hasFocus()).thenReturn(false);
+        controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A));
+        verify(mainChatInput).requestFocus();
     }
 
     private ActionMenuItem createMenuItem(final int menuItemId) {
