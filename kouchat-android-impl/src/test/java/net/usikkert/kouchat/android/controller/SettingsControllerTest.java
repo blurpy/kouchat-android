@@ -29,10 +29,12 @@ import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.component.HoloColorPickerPreference;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.android.util.RobolectricTestUtils;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -43,12 +45,14 @@ import org.robolectric.shadows.ShadowPreferenceManager;
 import org.robolectric.tester.android.content.TestSharedPreferences;
 import org.robolectric.util.ActivityController;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.internal.view.menu.ActionMenuItem;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
+import android.preference.Preference;
 
 /**
  * Test of {@link SettingsController}.
@@ -99,6 +103,36 @@ public class SettingsControllerTest {
         final ShadowIntent startedServiceIntent =
                 Robolectric.shadowOf(Robolectric.getShadowApplication().getNextStartedService());
         assertEquals(ChatService.class, startedServiceIntent.getIntentClass());
+    }
+
+    @Test
+    public void onCreateShouldSetControllerAsOnPreferenceChangeListenerOnNickName() {
+        final Preference.OnPreferenceChangeListener listener = nickNamePreference.getOnPreferenceChangeListener();
+
+        assertSame(controller, listener);
+    }
+
+    @Test
+    public void onCreateShouldKeepDefaultSummaryInNickNameIfNickNameIsNotSet() {
+        assertEquals("Set your own nick name, so others can identify you in the chat.", nickNamePreference.getSummary());
+    }
+
+    @Test
+    @Ignore("This does not work with Robolectric yet.")
+    public void onCreateShouldSetNickNameAsSummaryIfNickNameIsSet() {
+        // The loaded preferences do not check persisted values anywhere. Should be able to do something like this:
+        RobolectricTestUtils.setNickNameInTheAndroidSettingsTo("SuperKou");
+        activityController.create();
+
+        assertEquals("SuperKou", nickNamePreference.getSummary());
+    }
+
+    @Test
+    public void onCreateShouldEnableUpInActionBar() {
+        final ActionBar actionBar = controller.getSupportActionBar();
+        final int displayOptions = actionBar.getDisplayOptions();
+
+        assertTrue((displayOptions & ActionBar.DISPLAY_HOME_AS_UP) != 0);
     }
 
     @Test
