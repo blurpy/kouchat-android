@@ -28,11 +28,11 @@ import static org.mockito.Mockito.*;
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.android.userlist.UserListAdapter;
 import net.usikkert.kouchat.misc.SortedUserList;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
@@ -60,6 +60,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -78,7 +79,7 @@ public class MainChatControllerTest {
     private MainChatController controller;
 
     private AndroidUserInterface ui;
-    private UserList userList;
+    private SortedUserList userList;
     private TextView mainChatView;
     private EditText mainChatInput;
     private ScrollView mainChatScroll;
@@ -201,6 +202,73 @@ public class MainChatControllerTest {
         listener.onItemClick(mainChatUserList, null, 0, 100);
 
         assertNull(Robolectric.getShadowApplication().getNextStartedActivity());
+    }
+
+    @Test
+    public void onCreateShouldMakeLinksClickable() {
+        activityController.create();
+
+        final TextView mainChatView = (TextView) controller.findViewById(R.id.mainChatView);
+
+        verify(controllerUtils).makeLinksClickable(mainChatView);
+    }
+
+    @Test
+    public void onCreateShouldRequestFocusOnInputToOpenKeyboard() {
+        activityController.create();
+
+        final EditText mainChatInput = (EditText) controller.findViewById(R.id.mainChatInput);
+
+        assertTrue(mainChatInput.hasFocus());
+    }
+
+    @Test
+    public void onCreateShouldStartService() {
+        activityController.create();
+
+        final ShadowIntent startedServiceIntent =
+                Robolectric.shadowOf(Robolectric.getShadowApplication().getNextStartedService());
+
+        assertEquals(ChatService.class, startedServiceIntent.getIntentClass());
+    }
+
+    @Test
+    public void onCreateShouldRegisterWithAndroidUserInterfaceAndShowTopic() {
+        activityController.create();
+
+        verify(ui).registerMainChatController(controller);
+        verify(ui).showTopic();
+    }
+
+    @Test
+    public void onCreateShouldRegisterControllerAsUserListListener() {
+        assertEquals(0, userList.getListeners().size());
+
+        activityController.create();
+
+        assertEquals(1, userList.getListeners().size());
+        assertTrue(userList.getListeners().contains(controller));
+    }
+
+    @Test
+    public void onCreateShouldAddSortedUsers() {
+        final User penny = new User("Penny", 126);
+        final User xing = new User("Xing", 127);
+        final User cecilia = new User("Cecilia", 128);
+
+        userList.add(penny);
+        userList.add(xing);
+        userList.add(cecilia);
+
+        activityController.create();
+
+        final ListView userListView = (ListView) controller.findViewById(R.id.mainChatUserList);
+        final ListAdapter adapter = userListView.getAdapter();
+
+        assertEquals(3, adapter.getCount());
+        assertSame(cecilia, adapter.getItem(0));
+        assertSame(penny, adapter.getItem(1));
+        assertSame(xing, adapter.getItem(2));
     }
 
     @Test
