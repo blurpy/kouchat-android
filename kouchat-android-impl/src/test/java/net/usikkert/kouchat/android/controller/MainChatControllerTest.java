@@ -88,7 +88,6 @@ public class MainChatControllerTest {
     private TextWatcher textWatcher;
     private UserListAdapter userListAdapter;
     private ActionBar actionBar;
-    private Intent chatServiceIntent;
 
     @Before
     public void setUp() {
@@ -112,7 +111,6 @@ public class MainChatControllerTest {
         textWatcher = TestUtils.setFieldValueWithMock(controller, "textWatcher", TextWatcher.class);
         userListAdapter = TestUtils.setFieldValueWithMock(controller, "userListAdapter", UserListAdapter.class);
         actionBar = TestUtils.setFieldValueWithMock(controller, "actionBar", ActionBar.class);
-        chatServiceIntent = TestUtils.setFieldValueWithMock(controller, "chatServiceIntent", Intent.class);
 
         TestUtils.setFieldValueWithMock(controller, "serviceConnection", ServiceConnection.class);
     }
@@ -357,31 +355,52 @@ public class MainChatControllerTest {
 
     @Test
     public void appendToChatShouldAppendAndScrollToBottomIfInputHasFocus() {
-        when(mainChatInput.hasFocus()).thenReturn(true);
+        activityController.create();
 
-        controller.appendToChat("Some text");
+        final EditText mainChatInput = (EditText) controller.findViewById(R.id.mainChatInput);
+        final TextView mainChatView = (TextView) controller.findViewById(R.id.mainChatView);
+        final ScrollView mainChatScroll = (ScrollView) controller.findViewById(R.id.mainChatScroll);
 
-        verify(mainChatView).append("Some text");
+        mainChatView.setText("Original text");
+        mainChatInput.requestFocus();
+        assertTrue(mainChatInput.hasFocus());
+
+        controller.appendToChat("\nSome text");
+
+        assertEquals("Original text\nSome text", mainChatView.getText().toString());
         verify(controllerUtils).scrollTextViewToBottom(mainChatView, mainChatScroll);
     }
 
     @Test
     public void appendToChatShouldOnlyAppendIfInputLacksFocus() {
-        when(mainChatInput.hasFocus()).thenReturn(false);
+        activityController.create();
 
-        controller.appendToChat("Some other text");
+        final EditText mainChatInput = (EditText) controller.findViewById(R.id.mainChatInput);
+        final TextView mainChatView = (TextView) controller.findViewById(R.id.mainChatView);
 
-        verify(mainChatView).append("Some other text");
-        verifyZeroInteractions(controllerUtils);
+        mainChatView.setText("Original text");
+        mainChatView.requestFocus();
+        assertFalse(mainChatInput.hasFocus());
+
+        controller.appendToChat("\nSome other text");
+
+        assertEquals("Original text\nSome other text", mainChatView.getText().toString());
+        verify(controllerUtils, never()).scrollTextViewToBottom(any(TextView.class), any(ScrollView.class));
     }
 
     @Test
     public void appendToChatShouldDoNothingIfDestroyed() {
-        TestUtils.setFieldValue(controller, "destroyed", true);
+        activityController.create();
 
-        controller.appendToChat("Don't append");
+        final TextView mainChatView = (TextView) controller.findViewById(R.id.mainChatView);
+        mainChatView.setText("Original text");
 
-        verifyZeroInteractions(controllerUtils, mainChatView);
+        activityController.destroy();
+
+        controller.appendToChat("\nDon't append");
+
+        assertEquals("Original text", mainChatView.getText().toString());
+        verify(controllerUtils, never()).scrollTextViewToBottom(any(TextView.class), any(ScrollView.class));
     }
 
     @Test
@@ -493,13 +512,16 @@ public class MainChatControllerTest {
 
     @Test
     public void onOptionsItemSelectedWithQuitShouldFinishAndStopService() {
+        activityController.create();
+
         final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuQuit));
 
         assertTrue(selected);
         assertTrue(controller.isFinishing());
 
-        final Intent stoppedService = Robolectric.getShadowApplication().getNextStoppedService();
-        assertSame(chatServiceIntent, stoppedService);
+        final Intent stoppedServiceIntent = Robolectric.getShadowApplication().getNextStoppedService();
+        final ShadowIntent stoppedServiceShadowIntent = Robolectric.shadowOf(stoppedServiceIntent);
+        assertEquals(ChatService.class, stoppedServiceShadowIntent.getIntentClass());
     }
 
     @Test
