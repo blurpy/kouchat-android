@@ -82,12 +82,10 @@ public class MainChatControllerTest {
     private SortedUserList userList;
     private TextView mainChatView;
     private EditText mainChatInput;
-    private ScrollView mainChatScroll;
     private ControllerUtils controllerUtils;
     private ListView mainChatUserList;
     private TextWatcher textWatcher;
     private UserListAdapter userListAdapter;
-    private ActionBar actionBar;
 
     @Before
     public void setUp() {
@@ -105,12 +103,10 @@ public class MainChatControllerTest {
 
         mainChatView = TestUtils.setFieldValueWithMock(controller, "mainChatView", TextView.class);
         mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
-        mainChatScroll = TestUtils.setFieldValueWithMock(controller, "mainChatScroll", ScrollView.class);
         controllerUtils = TestUtils.setFieldValueWithMock(controller, "controllerUtils", ControllerUtils.class);
         mainChatUserList = TestUtils.setFieldValueWithMock(controller, "mainChatUserList", ListView.class);
         textWatcher = TestUtils.setFieldValueWithMock(controller, "textWatcher", TextWatcher.class);
         userListAdapter = TestUtils.setFieldValueWithMock(controller, "userListAdapter", UserListAdapter.class);
-        actionBar = TestUtils.setFieldValueWithMock(controller, "actionBar", ActionBar.class);
 
         TestUtils.setFieldValueWithMock(controller, "serviceConnection", ServiceConnection.class);
     }
@@ -405,78 +401,173 @@ public class MainChatControllerTest {
 
     @Test
     public void updateChatShouldSetTextAndScrollToBottomIfNotDestroyed() {
+        activityController.create();
+
+        final TextView mainChatView = (TextView) controller.findViewById(R.id.mainChatView);
+        final ScrollView mainChatScroll = (ScrollView) controller.findViewById(R.id.mainChatScroll);
+        mainChatView.setText("Original text");
+
         controller.updateChat("Set this text");
 
         ShadowHandler.runMainLooperOneTask();
 
-        verify(mainChatView).setText("Set this text");
+        assertEquals("Set this text", mainChatView.getText().toString());
         verify(controllerUtils).scrollTextViewToBottom(mainChatView, mainChatScroll);
     }
 
     @Test
     public void updateChatShouldSetTextAndNotScrollToBottomIfDestroyed() {
-        TestUtils.setFieldValue(controller, "destroyed", true);
+        activityController.create();
+
+        final TextView mainChatView = (TextView) controller.findViewById(R.id.mainChatView);
+        mainChatView.setText("Original text");
 
         controller.updateChat("Set this text");
 
+        activityController.destroy(); // onDestroy() runs between setting the text and the delayed handler that scrolls
         ShadowHandler.runMainLooperOneTask();
 
-        verify(mainChatView).setText("Set this text");
-        verifyZeroInteractions(controllerUtils);
+        assertEquals("Set this text", mainChatView.getText().toString());
+        verify(controllerUtils, never()).scrollTextViewToBottom(any(TextView.class), any(ScrollView.class));
     }
 
     @Test
-    public void userAddedShouldAddUserWithUserListAdapter() {
-        final User user = new User("User", 1234);
+    public void userAddedShouldAddUserToAdapter() {
+        activityController.create();
 
-        controller.userAdded(0, user);
+        final ListView mainChatUserList = (ListView) controller.findViewById(R.id.mainChatUserList);
+        final ListAdapter adapter = mainChatUserList.getAdapter();
 
-        verify(userListAdapter).add(user);
+        assertEquals(0, adapter.getCount());
+
+        controller.userAdded(0, new User("Lilly", 125));
+
+        assertEquals(1, adapter.getCount());
     }
 
     @Test
     public void userAddedShouldNotAddUserIfDestroyed() {
-        TestUtils.setFieldValue(controller, "destroyed", true);
+        activityController.create();
 
-        controller.userAdded(0, new User("User", 1234));
+        final ListView mainChatUserList = (ListView) controller.findViewById(R.id.mainChatUserList);
+        final ListAdapter adapter = mainChatUserList.getAdapter();
 
-        verifyZeroInteractions(userListAdapter);
+        activityController.destroy();
+
+        assertEquals(0, adapter.getCount());
+
+        controller.userAdded(0, new User("Lilly", 125));
+
+        assertEquals(0, adapter.getCount());
     }
 
     @Test
-    public void userRemovedShouldRemoveUserWithUserListAdapter() {
-        final User user = new User("User", 1234);
+    public void userAddedShouldSortUsers() {
+        final User xing = new User("Xing", 127);
+        final User cecilia = new User("Cecilia", 128);
 
-        controller.userRemoved(0, user);
+        userList.add(xing);
+        userList.add(cecilia);
 
-        verify(userListAdapter).remove(user);
+        activityController.create();
+
+        final ListView mainChatUserList = (ListView) controller.findViewById(R.id.mainChatUserList);
+        final ListAdapter adapter = mainChatUserList.getAdapter();
+
+        assertEquals(2, adapter.getCount());
+        assertSame(cecilia, adapter.getItem(0));
+        assertSame(xing, adapter.getItem(1));
+
+        final User penny = new User("Penny", 126);
+
+        controller.userAdded(0, penny);
+
+        assertEquals(3, adapter.getCount());
+        assertSame(cecilia, adapter.getItem(0));
+        assertSame(penny, adapter.getItem(1));
+        assertSame(xing, adapter.getItem(2));
     }
 
     @Test
-    public void userRemovedShouldNotRemoveUserIfDestroyed() {
-        TestUtils.setFieldValue(controller, "destroyed", true);
+    public void userRemovedShouldRemoveUserFromUserListAdapter() {
+        final User lilly = new User("Lilly", 125);
+        userList.add(lilly);
 
-        controller.userRemoved(0, new User("User", 1234));
+        activityController.create();
 
-        verifyZeroInteractions(userListAdapter);
+        final ListView mainChatUserList = (ListView) controller.findViewById(R.id.mainChatUserList);
+        final ListAdapter adapter = mainChatUserList.getAdapter();
+
+        assertEquals(1, adapter.getCount());
+
+        controller.userRemoved(0, lilly);
+
+        assertEquals(0, adapter.getCount());
     }
 
     @Test
-    public void userChangedShouldSortWithUserListAdapter() {
-        final User user = new User("User", 1234);
+    public void userRemovedShouldNotFailIfDestroyed() {
+        final User lilly = new User("Lilly", 125);
+        userList.add(lilly);
 
-        controller.userChanged(0, user);
+        activityController.create();
 
-        verify(userListAdapter).sort();
+        final ListView mainChatUserList = (ListView) controller.findViewById(R.id.mainChatUserList);
+        final ListAdapter adapter = mainChatUserList.getAdapter();
+
+        assertEquals(1, adapter.getCount());
+        activityController.destroy();
+        assertEquals(0, adapter.getCount());
+
+        controller.userRemoved(0, lilly);
+
+        assertEquals(0, adapter.getCount());
     }
 
     @Test
-    public void userChangedShouldNotSortIfDestroyed() {
-        TestUtils.setFieldValue(controller, "destroyed", true);
+    public void userChangedShouldSortUserListAdapter() {
+        final User penny = new User("Penny", 126);
+        final User xing = new User("Xing", 127);
+        final User cecilia = new User("Cecilia", 128);
 
-        controller.userChanged(0, new User("User", 1234));
+        userList.add(penny);
+        userList.add(xing);
+        userList.add(cecilia);
 
-        verifyZeroInteractions(userListAdapter);
+        activityController.create();
+
+        final ListView mainChatUserList = (ListView) controller.findViewById(R.id.mainChatUserList);
+        final ListAdapter adapter = mainChatUserList.getAdapter();
+
+        assertEquals(3, adapter.getCount());
+        assertSame(cecilia, adapter.getItem(0));
+        assertSame(penny, adapter.getItem(1));
+        assertSame(xing, adapter.getItem(2));
+
+        penny.setNick("Amy");
+
+        controller.userChanged(0, null); // Doesn't use any of the parameters
+
+        assertEquals(3, adapter.getCount());
+        assertSame(penny, adapter.getItem(0)); // Now Amy
+        assertSame(cecilia, adapter.getItem(1));
+        assertSame(xing, adapter.getItem(2));
+    }
+
+    @Test
+    public void userChangedShouldNotFailIfDestroyed() {
+        final User penny = new User("Penny", 126);
+        final User xing = new User("Xing", 127);
+        final User cecilia = new User("Cecilia", 128);
+
+        userList.add(penny);
+        userList.add(xing);
+        userList.add(cecilia);
+
+        activityController.create();
+        activityController.destroy();
+
+        controller.userChanged(0, null);
     }
 
     @Test
@@ -502,7 +593,7 @@ public class MainChatControllerTest {
 
     @Test
     public void updateTitleAndTopicShouldSetTitleAsTitleAndTopicAsSubtitle() {
-        assertNull(controller.getTitle());
+        final ActionBar actionBar = TestUtils.setFieldValueWithMock(controller, "actionBar", ActionBar.class);
 
         controller.updateTitleAndTopic("The title", "The topic");
 
