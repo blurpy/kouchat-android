@@ -30,7 +30,6 @@ import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
-import net.usikkert.kouchat.android.userlist.UserListAdapter;
 import net.usikkert.kouchat.misc.SortedUserList;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestUtils;
@@ -55,8 +54,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -75,17 +72,11 @@ import android.widget.TextView;
 public class MainChatControllerTest {
 
     private ActivityController<MainChatController> activityController;
-
     private MainChatController controller;
 
     private AndroidUserInterface ui;
     private SortedUserList userList;
-    private TextView mainChatView;
-    private EditText mainChatInput;
     private ControllerUtils controllerUtils;
-    private ListView mainChatUserList;
-    private TextWatcher textWatcher;
-    private UserListAdapter userListAdapter;
 
     @Before
     public void setUp() {
@@ -95,20 +86,13 @@ public class MainChatControllerTest {
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
 
-        ui = TestUtils.setFieldValueWithMock(controller, "androidUserInterface", AndroidUserInterface.class);
+        ui = mock(AndroidUserInterface.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
 
         userList = new SortedUserList();
         when(ui.getUserList()).thenReturn(userList);
 
-        mainChatView = TestUtils.setFieldValueWithMock(controller, "mainChatView", TextView.class);
-        mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
         controllerUtils = TestUtils.setFieldValueWithMock(controller, "controllerUtils", ControllerUtils.class);
-        mainChatUserList = TestUtils.setFieldValueWithMock(controller, "mainChatUserList", ListView.class);
-        textWatcher = TestUtils.setFieldValueWithMock(controller, "textWatcher", TextWatcher.class);
-        userListAdapter = TestUtils.setFieldValueWithMock(controller, "userListAdapter", UserListAdapter.class);
-
-        TestUtils.setFieldValueWithMock(controller, "serviceConnection", ServiceConnection.class);
     }
 
     @Test
@@ -284,32 +268,36 @@ public class MainChatControllerTest {
 
     @Test
     public void onResumeShouldResetAllNotifications() {
-        controller.onResume();
+        activityController.create();
+
+        activityController.resume();
 
         verify(ui).resetAllNotifications();
     }
 
     @Test
     public void onResumeShouldHandleIfAndroidUserInterfaceIsNotInitializedYet() {
-        TestUtils.setFieldValue(controller, "androidUserInterface", null);
+        assertTrue(TestUtils.fieldValueIsNull(controller, "androidUserInterface"));
 
         controller.onResume();
+
+        verify(ui, never()).resetAllNotifications();
     }
 
     @Test
-    @Ignore("TODO")
+    @Ignore("TODO") // TODO
     public void onDestroyShouldUnregister() {
         controller.onDestroy();
 
         verify(userList).removeUserListListener(controller);
         verify(ui).unregisterMainChatController();
-        verify(mainChatInput).removeTextChangedListener(textWatcher);
-        verify(mainChatInput).setOnKeyListener(null);
-        verify(mainChatUserList).setOnItemClickListener(null);
-        verify(mainChatUserList).setAdapter(null);
-        verify(userListAdapter).onDestroy();
-        verify(controllerUtils).removeReferencesToTextViewFromText(mainChatView);
-        verify(controllerUtils).removeReferencesToTextViewFromText(mainChatInput);
+//        verify(mainChatInput).removeTextChangedListener(textWatcher);
+//        verify(mainChatInput).setOnKeyListener(null);
+//        verify(mainChatUserList).setOnItemClickListener(null);
+//        verify(mainChatUserList).setAdapter(null);
+//        verify(userListAdapter).onDestroy();
+//        verify(controllerUtils).removeReferencesToTextViewFromText(mainChatView);
+//        verify(controllerUtils).removeReferencesToTextViewFromText(mainChatInput);
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
 
@@ -572,6 +560,8 @@ public class MainChatControllerTest {
 
     @Test
     public void sendMessageShouldSendUsingAndroidUserInterface() {
+        activityController.create();
+
         controller.sendMessage("A message");
 
         verify(ui).sendMessage("A message");
@@ -579,16 +569,20 @@ public class MainChatControllerTest {
 
     @Test
     public void sendMessageShouldNotSendIfMessageIsNull() {
+        activityController.create();
+
         controller.sendMessage(null);
 
-        verifyZeroInteractions(ui);
+        verify(ui, never()).sendMessage(anyString());
     }
 
     @Test
     public void sendMessageShouldNotSendIfMessageIsWhitespace() {
+        activityController.create();
+
         controller.sendMessage(" ");
 
-        verifyZeroInteractions(ui);
+        verify(ui, never()).sendMessage(anyString());
     }
 
     @Test
@@ -662,7 +656,7 @@ public class MainChatControllerTest {
     @Test
     public void dispatchKeyEventShouldDelegateToSuperClassFirst() {
         activityController.create();
-        mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
+        final EditText mainChatInputMock = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
 
         // Force ActionBarSherlock to respond to the back event
         controller.startActionMode(new ActionMode.Callback() {
@@ -673,37 +667,37 @@ public class MainChatControllerTest {
         });
 
         assertTrue(controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK)));
-        verifyZeroInteractions(mainChatInput); // Not delegating, and not requesting focus
+        verifyZeroInteractions(mainChatInputMock); // Not delegating, and not requesting focus
     }
 
     @Test
     public void dispatchKeyEventShouldDelegateToMainChatInputSecond() {
         activityController.create();
-        mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
+        final EditText mainChatInputMock = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
 
         final KeyEvent event1 = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A);
-        when(mainChatInput.dispatchKeyEvent(event1)).thenReturn(false);
+        when(mainChatInputMock.dispatchKeyEvent(event1)).thenReturn(false);
         assertFalse(controller.dispatchKeyEvent(event1));
-        verify(mainChatInput).dispatchKeyEvent(event1);
+        verify(mainChatInputMock).dispatchKeyEvent(event1);
 
         final KeyEvent event2 = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_B);
-        when(mainChatInput.dispatchKeyEvent(event2)).thenReturn(true);
+        when(mainChatInputMock.dispatchKeyEvent(event2)).thenReturn(true);
         assertTrue(controller.dispatchKeyEvent(event2));
-        verify(mainChatInput).dispatchKeyEvent(event2);
+        verify(mainChatInputMock).dispatchKeyEvent(event2);
     }
 
     @Test
     public void dispatchKeyEventShouldRequestFocusIfFocusIsMissingIfDelegatingToMainChatInput() {
         activityController.create();
-        mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
+        final EditText mainChatInputMock = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
 
-        when(mainChatInput.hasFocus()).thenReturn(true);
+        when(mainChatInputMock.hasFocus()).thenReturn(true);
         controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A));
-        verify(mainChatInput, never()).requestFocus();
+        verify(mainChatInputMock, never()).requestFocus();
 
-        when(mainChatInput.hasFocus()).thenReturn(false);
+        when(mainChatInputMock.hasFocus()).thenReturn(false);
         controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A));
-        verify(mainChatInput).requestFocus();
+        verify(mainChatInputMock).requestFocus();
     }
 
     @Test
