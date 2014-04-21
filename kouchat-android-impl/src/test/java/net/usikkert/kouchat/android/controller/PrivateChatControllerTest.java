@@ -198,6 +198,29 @@ public class PrivateChatControllerTest {
         assertEquals("Hello", privateChatInput.getText().toString());
     }
 
+    @Test
+    public void onCreateShouldSetupUserAndRegisterControllerWithChatWindow() {
+        assertNull(vivi.getPrivchat());
+
+        activityController.create();
+
+        verify(ui).getUser(1234);
+        verify(ui).createPrivChat(vivi);
+        final AndroidPrivateChatWindow chatWindow = (AndroidPrivateChatWindow) vivi.getPrivchat();
+        verify(chatWindow).registerPrivateChatController(controller);
+    }
+
+    @Test
+    public void onCreateShouldNotSetupUserAndRegisterControllerWithChatWindowWhenUnknownUser() {
+        activityController.withIntent(null);
+
+        activityController.create();
+
+        verify(ui).getUser(-1);
+        verify(ui, never()).createPrivChat(any(User.class));
+        assertNull(vivi.getPrivchat());
+    }
+
     // TODO more tests with and without user
 
     @Test
