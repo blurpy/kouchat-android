@@ -96,6 +96,10 @@ public class PrivateChatControllerTest {
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
 
+        final Intent intent = new Intent(Robolectric.application, PrivateChatController.class);
+        intent.putExtra("userCode", 1234);
+        activityController.withIntent(intent);
+
         privateChatView = mock(TextView.class);
         privateChatInput = mock(EditText.class);
         privateChatScroll = mock(ScrollView.class);
@@ -105,7 +109,6 @@ public class PrivateChatControllerTest {
     }
 
     private void setMocks() {
-        TestUtils.setFieldValue(controller, "user", vivi);
         TestUtils.setFieldValue(controller, "androidUserInterface", ui);
         TestUtils.setFieldValue(controller, "privateChatView", privateChatView);
         TestUtils.setFieldValue(controller, "privateChatInput", privateChatInput);
@@ -153,6 +156,24 @@ public class PrivateChatControllerTest {
     }
 
     @Test
+    public void onCreateWithNoUserShouldSetDefaultTitle() {
+        activityController.withIntent(null);
+
+        activityController.create();
+
+        assertEquals("User not found - KouChat", controller.getTitle());
+    }
+
+    @Test
+    public void onCreateWithUserShouldSetNickNameInTitle() {
+        activityController.create();
+
+        assertEquals("Vivi - KouChat", controller.getTitle());
+    }
+
+    // TODO more tests with and without user
+
+    @Test
     public void isVisibleShouldBeTrueOnlyBetweenOnResumeAndOnPause() {
         assertFalse(controller.isVisible());
 
@@ -190,10 +211,6 @@ public class PrivateChatControllerTest {
 
     @Test
     public void onDestroyShouldSetAllFieldsToNull() {
-        final Intent intent = new Intent(Robolectric.application, PrivateChatController.class);
-        intent.putExtra("userCode", 1234);
-
-        activityController.withIntent(intent);
         activityController.create();
 
         assertTrue(TestUtils.allFieldsHaveValue(controller));
@@ -280,15 +297,19 @@ public class PrivateChatControllerTest {
 
     @Test
     public void updateTitleShouldSetNickNameAndAppName() {
-        assertNull(controller.getTitle());
+        activityController.create();
+
+        vivi.setNick("Marge");
 
         controller.updateTitle();
 
-        assertEquals("Vivi - KouChat", controller.getTitle());
+        assertEquals("Marge - KouChat", controller.getTitle());
     }
 
     @Test
     public void updateTitleShouldIncludeOfflineInTheTitleIfUserIsOffline() {
+        activityController.create();
+
         vivi.setOnline(false);
 
         controller.updateTitle();
@@ -298,6 +319,8 @@ public class PrivateChatControllerTest {
 
     @Test
     public void updateTitleShouldIncludeAwayAndAwayMessageInTheTitleIfUserIsAway() {
+        activityController.create();
+
         vivi.setAway(true);
         vivi.setAwayMsg("on the road again");
 
@@ -308,6 +331,8 @@ public class PrivateChatControllerTest {
 
     @Test
     public void updateTitleShouldOnlyIncludeOfflineInTheTitleIfUserIsBothOfflineAndAway() {
+        activityController.create();
+
         vivi.setOnline(false);
         vivi.setAway(true);
         vivi.setAwayMsg("I left");
