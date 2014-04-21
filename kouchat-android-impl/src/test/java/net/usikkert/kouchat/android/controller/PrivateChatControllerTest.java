@@ -264,7 +264,7 @@ public class PrivateChatControllerTest {
     @Test
     public void dispatchKeyEventShouldDelegateToSuperClassFirst() {
         activityController.create();
-        setMocks();
+        final EditText privateChatInput = TestUtils.setFieldValueWithMock(controller, "privateChatInput", EditText.class);
 
         // Force ActionBarSherlock to respond to the back event
         controller.startActionMode(new ActionMode.Callback() {
@@ -281,7 +281,7 @@ public class PrivateChatControllerTest {
     @Test
     public void dispatchKeyEventShouldDelegateToPrivateChatInputSecond() {
         activityController.create();
-        setMocks();
+        final EditText privateChatInput = TestUtils.setFieldValueWithMock(controller, "privateChatInput", EditText.class);
 
         final KeyEvent event1 = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A);
         when(privateChatInput.dispatchKeyEvent(event1)).thenReturn(false);
@@ -297,7 +297,7 @@ public class PrivateChatControllerTest {
     @Test
     public void dispatchKeyEventShouldRequestFocusIfFocusIsMissingIfDelegatingToPrivateChatInput() {
         activityController.create();
-        setMocks();
+        final EditText privateChatInput = TestUtils.setFieldValueWithMock(controller, "privateChatInput", EditText.class);
 
         when(privateChatInput.hasFocus()).thenReturn(true);
         controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A));
