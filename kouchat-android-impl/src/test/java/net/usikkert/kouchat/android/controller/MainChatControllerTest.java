@@ -156,6 +156,7 @@ public class MainChatControllerTest {
         userList.add(new User("Ally", 1234));
         userList.add(new User("Molly", 2345));
         userList.add(new User("Wanda", 3456));
+
         activityController.create();
 
         final ListView mainChatUserList = (ListView) controller.findViewById(R.id.mainChatUserList);
@@ -175,6 +176,7 @@ public class MainChatControllerTest {
         final User me = new User("Me", 1234);
         me.setMe(true);
         userList.add(me);
+
         activityController.create();
 
         final ListView mainChatUserList = (ListView) controller.findViewById(R.id.mainChatUserList);
@@ -683,6 +685,7 @@ public class MainChatControllerTest {
         });
 
         assertTrue(controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK)));
+
         verifyZeroInteractions(mainChatInput); // Not delegating, and not requesting focus
     }
 
