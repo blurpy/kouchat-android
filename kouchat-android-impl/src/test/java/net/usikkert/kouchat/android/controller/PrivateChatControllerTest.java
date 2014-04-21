@@ -95,10 +95,6 @@ public class PrivateChatControllerTest {
 
         serviceConnection = mock(ServiceConnection.class);
 
-        final Intent intent = new Intent();
-        intent.putExtra("userCode", 1234);
-        controller.setIntent(intent);
-
         privateChatView = mock(TextView.class);
         privateChatInput = mock(EditText.class);
         privateChatScroll = mock(ScrollView.class);
@@ -176,7 +172,15 @@ public class PrivateChatControllerTest {
 
     @Test
     public void onDestroyShouldUnregister() {
-        controller.onDestroy();
+        activityController.create();
+
+        // Replacing with mocks for easier verification
+        final AndroidPrivateChatWindow privateChatWindow =
+                TestUtils.setFieldValueWithMock(controller, "privateChatWindow", AndroidPrivateChatWindow.class);
+        final EditText privateChatInput = TestUtils.setFieldValueWithMock(controller, "privateChatInput", EditText.class);
+        final TextView privateChatView = TestUtils.setFieldValueWithMock(controller, "privateChatView", TextView.class);
+
+        activityController.destroy();
 
         verify(privateChatWindow).unregisterPrivateChatController();
         verify(privateChatInput).setOnKeyListener(null);
@@ -187,29 +191,39 @@ public class PrivateChatControllerTest {
 
     @Test
     public void onDestroyShouldSetAllFieldsToNull() {
+        final Intent intent = new Intent(Robolectric.application, PrivateChatController.class);
+        intent.putExtra("userCode", 1234);
+
+        activityController.withIntent(intent);
+        activityController.create();
+
         assertTrue(TestUtils.allFieldsHaveValue(controller));
 
-        controller.onDestroy();
+        activityController.destroy();
 
         assertTrue(TestUtils.allFieldsAreNull(controller));
     }
 
     @Test
     public void onDestroyShouldSetDestroyedToTrue() {
+        activityController.create();
+
         assertFalse(TestUtils.getFieldValue(controller, Boolean.class, "destroyed"));
 
-        controller.onDestroy();
+        activityController.destroy();
 
         assertTrue(TestUtils.getFieldValue(controller, Boolean.class, "destroyed"));
     }
 
     @Test
     public void onDestroyShouldNotFailIfServiceHasNotBeenBound() {
+        activityController.create();
+
         TestUtils.setFieldValue(controller, "privateChatWindow", null);
         TestUtils.setFieldValue(controller, "user", null);
         TestUtils.setFieldValue(controller, "androidUserInterface", null);
 
-        controller.onDestroy();
+        activityController.destroy();
 
         assertEquals(0, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
