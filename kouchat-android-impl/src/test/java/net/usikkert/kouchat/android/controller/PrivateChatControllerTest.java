@@ -36,6 +36,8 @@ import net.usikkert.kouchat.util.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -49,7 +51,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -65,17 +66,14 @@ import android.widget.TextView;
 public class PrivateChatControllerTest {
 
     private ActivityController<PrivateChatController> activityController;
-
     private PrivateChatController controller;
 
-    private AndroidPrivateChatWindow privateChatWindow;
     private TextView privateChatView;
     private EditText privateChatInput;
     private ScrollView privateChatScroll;
     private ControllerUtils controllerUtils;
     private User vivi;
     private AndroidUserInterface ui;
-    private ServiceConnection serviceConnection;
 
     @Before
     public void setUp() {
@@ -83,17 +81,20 @@ public class PrivateChatControllerTest {
         controller = activityController.get();
 
         vivi = new User("Vivi", 1234);
-        privateChatWindow = mock(AndroidPrivateChatWindow.class);
-        vivi.setPrivchat(privateChatWindow);
-
         ui = mock(AndroidUserInterface.class);
         when(ui.getUser(1234)).thenReturn(vivi);
+
+        doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(final InvocationOnMock invocation) {
+                vivi.setPrivchat(mock(AndroidPrivateChatWindow.class));
+                return null;
+            }
+        }).when(ui).createPrivChat(vivi);
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
         Robolectric.getShadowApplication().setComponentNameAndServiceForBindService(null, serviceBinder);
-
-        serviceConnection = mock(ServiceConnection.class);
 
         privateChatView = mock(TextView.class);
         privateChatInput = mock(EditText.class);
@@ -104,10 +105,8 @@ public class PrivateChatControllerTest {
     }
 
     private void setMocks() {
-        TestUtils.setFieldValue(controller, "privateChatWindow", privateChatWindow);
         TestUtils.setFieldValue(controller, "user", vivi);
         TestUtils.setFieldValue(controller, "androidUserInterface", ui);
-        TestUtils.setFieldValue(controller, "serviceConnection", serviceConnection);
         TestUtils.setFieldValue(controller, "privateChatView", privateChatView);
         TestUtils.setFieldValue(controller, "privateChatInput", privateChatInput);
         TestUtils.setFieldValue(controller, "privateChatScroll", privateChatScroll);
