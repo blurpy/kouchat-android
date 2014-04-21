@@ -81,14 +81,7 @@ public class PrivateChatControllerTest {
         vivi = new User("Vivi", 1234);
         ui = mock(AndroidUserInterface.class);
         when(ui.getUser(1234)).thenReturn(vivi);
-
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(final InvocationOnMock invocation) {
-                vivi.setPrivchat(mock(AndroidPrivateChatWindow.class));
-                return null;
-            }
-        }).when(ui).createPrivChat(vivi);
+        doAnswer(withChatWindowMockForVivi()).when(ui).createPrivChat(vivi);
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
@@ -562,5 +555,15 @@ public class PrivateChatControllerTest {
 
     private ActionMenuItem createMenuItem(final int menuItemId) {
         return new ActionMenuItem(null, 0, menuItemId, 0, 0, "");
+    }
+
+    private Answer<Void> withChatWindowMockForVivi() {
+        return new Answer<Void>() {
+            @Override
+            public Void answer(final InvocationOnMock invocation) {
+                vivi.setPrivchat(mock(AndroidPrivateChatWindow.class));
+                return null;
+            }
+        };
     }
 }
