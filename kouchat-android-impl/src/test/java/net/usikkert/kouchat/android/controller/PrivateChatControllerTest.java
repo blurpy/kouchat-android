@@ -156,6 +156,48 @@ public class PrivateChatControllerTest {
         assertEquals("Vivi - KouChat", controller.getTitle());
     }
 
+    @Test
+    public void onCreateShouldRegisterKeyListenerThatSendsMessageAndClearsInputOnEnter() {
+        activityController.create();
+
+        final EditText privateChatInput = (EditText) controller.findViewById(R.id.privateChatInput);
+        privateChatInput.setText("Hello");
+
+        privateChatInput.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
+
+        verify(ui).sendPrivateMessage("Hello", vivi);
+        assertEquals("", privateChatInput.getText().toString());
+    }
+
+    @Test
+    public void onCreateShouldRegisterKeyListenerThatIgnoresOtherEvents() {
+        activityController.create();
+
+        final EditText privateChatInput = (EditText) controller.findViewById(R.id.privateChatInput);
+        privateChatInput.setText("Hello");
+
+        privateChatInput.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
+        privateChatInput.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_SPACE));
+
+        verify(ui, never()).sendPrivateMessage(anyString(), any(User.class));
+        assertEquals("Hello", privateChatInput.getText().toString());
+    }
+
+    @Test
+    public void onCreateShouldNotRegisterKeyListenerWhenUnknownUser() {
+        activityController.withIntent(null);
+
+        activityController.create();
+
+        final EditText privateChatInput = (EditText) controller.findViewById(R.id.privateChatInput);
+        privateChatInput.setText("Hello");
+
+        privateChatInput.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
+
+        verify(ui, never()).sendPrivateMessage(anyString(), any(User.class));
+        assertEquals("Hello", privateChatInput.getText().toString());
+    }
+
     // TODO more tests with and without user
 
     @Test
@@ -452,6 +494,33 @@ public class PrivateChatControllerTest {
         final boolean selected = controller.onOptionsItemSelected(createMenuItem(0));
 
         assertFalse(selected);
+    }
+
+    @Test
+    public void sendPrivateMessageShouldSendToUserUsingAndroidUserInterface() {
+        activityController.create();
+
+        controller.sendPrivateMessage("A private message");
+
+        verify(ui).sendPrivateMessage("A private message", vivi);
+    }
+
+    @Test
+    public void sendPrivateMessageShouldNotSendIfMessageIsNull() {
+        activityController.create();
+
+        controller.sendPrivateMessage(null);
+
+        verify(ui, never()).sendPrivateMessage(anyString(), any(User.class));
+    }
+
+    @Test
+    public void sendPrivateMessageShouldNotSendIfMessageIsWhitespace() {
+        activityController.create();
+
+        controller.sendPrivateMessage(" ");
+
+        verify(ui, never()).sendPrivateMessage(anyString(), any(User.class));
     }
 
     private ActionMenuItem createMenuItem(final int menuItemId) {
