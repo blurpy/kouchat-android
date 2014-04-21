@@ -365,7 +365,7 @@ public class MainChatController extends SherlockActivity implements UserListList
         });
     }
 
-    public void sendMessage(final String message) {
+    protected void sendMessage(final String message) {
         if (message != null && message.trim().length() > 0) {
             androidUserInterface.sendMessage(message);
         }

@@ -207,7 +207,7 @@ public class PrivateChatController extends SherlockActivity {
         });
     }
 
-    private void sendPrivateMessage(final String privateMessage) {
+    protected void sendPrivateMessage(final String privateMessage) {
         if (privateMessage != null && privateMessage.trim().length() > 0) {
             androidUserInterface.sendPrivateMessage(privateMessage, user);
         }
