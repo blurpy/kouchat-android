@@ -221,7 +221,21 @@ public class PrivateChatControllerTest {
         assertNull(vivi.getPrivchat());
     }
 
-    // TODO more tests with and without user
+    @Test
+    public void onCreateShouldNotifyAndroidUserInterfaceToResetNewPrivateMessageIcon() {
+        activityController.create();
+
+        verify(ui).activatedPrivChat(vivi);
+    }
+
+    @Test
+    public void onCreateShouldNotNotifyAndroidUserInterfaceWhenUnknownUser() {
+        activityController.withIntent(null);
+
+        activityController.create();
+
+        verify(ui, never()).activatedPrivChat(any(User.class));
+    }
 
     @Test
     public void isVisibleShouldBeTrueOnlyBetweenOnResumeAndOnPause() {
