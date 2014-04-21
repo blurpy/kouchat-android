@@ -68,9 +68,6 @@ public class PrivateChatControllerTest {
     private ActivityController<PrivateChatController> activityController;
     private PrivateChatController controller;
 
-    private TextView privateChatView;
-    private EditText privateChatInput;
-    private ScrollView privateChatScroll;
     private ControllerUtils controllerUtils;
     private User vivi;
     private AndroidUserInterface ui;
@@ -100,20 +97,7 @@ public class PrivateChatControllerTest {
         intent.putExtra("userCode", 1234);
         activityController.withIntent(intent);
 
-        privateChatView = mock(TextView.class);
-        privateChatInput = mock(EditText.class);
-        privateChatScroll = mock(ScrollView.class);
-        controllerUtils = mock(ControllerUtils.class);
-
-        setMocks();
-    }
-
-    private void setMocks() {
-        TestUtils.setFieldValue(controller, "androidUserInterface", ui);
-        TestUtils.setFieldValue(controller, "privateChatView", privateChatView);
-        TestUtils.setFieldValue(controller, "privateChatInput", privateChatInput);
-        TestUtils.setFieldValue(controller, "privateChatScroll", privateChatScroll);
-        TestUtils.setFieldValue(controller, "controllerUtils", controllerUtils);
+        controllerUtils = TestUtils.setFieldValueWithMock(controller, "controllerUtils", ControllerUtils.class);
     }
 
     @Test
@@ -246,53 +230,84 @@ public class PrivateChatControllerTest {
 
     @Test
     public void appendToPrivateChatShouldAppendAndScrollToBottomIfInputHasFocus() {
-        when(privateChatInput.hasFocus()).thenReturn(true);
+        activityController.create();
 
-        controller.appendToPrivateChat("Some text");
+        final EditText privateChatInput = (EditText) controller.findViewById(R.id.privateChatInput);
+        final TextView privateChatView = (TextView) controller.findViewById(R.id.privateChatView);
+        final ScrollView privateChatScroll = (ScrollView) controller.findViewById(R.id.privateChatScroll);
 
-        verify(privateChatView).append("Some text");
+        privateChatView.setText("Original text");
+        privateChatInput.requestFocus();
+        assertTrue(privateChatInput.hasFocus());
+
+        controller.appendToPrivateChat("\nSome text");
+
+        assertEquals("Original text\nSome text", privateChatView.getText().toString());
         verify(controllerUtils).scrollTextViewToBottom(privateChatView, privateChatScroll);
     }
 
     @Test
     public void appendToPrivateChatShouldOnlyAppendIfInputLacksFocus() {
-        when(privateChatInput.hasFocus()).thenReturn(false);
+        activityController.create();
 
-        controller.appendToPrivateChat("Some other text");
+        final EditText privateChatInput = (EditText) controller.findViewById(R.id.privateChatInput);
+        final TextView privateChatView = (TextView) controller.findViewById(R.id.privateChatView);
 
-        verify(privateChatView).append("Some other text");
-        verifyZeroInteractions(controllerUtils);
+        privateChatView.setText("Original text");
+        privateChatView.requestFocus();
+        assertFalse(privateChatInput.hasFocus());
+
+        controller.appendToPrivateChat("\nSome other text");
+
+        assertEquals("Original text\nSome other text", privateChatView.getText().toString());
+        verify(controllerUtils, never()).scrollTextViewToBottom(any(TextView.class), any(ScrollView.class));
     }
 
     @Test
     public void appendToPrivateChatShouldDoNothingIfDestroyed() {
-        TestUtils.setFieldValue(controller, "destroyed", true);
+        activityController.create();
 
-        controller.appendToPrivateChat("Don't append");
+        final TextView privateChatView = (TextView) controller.findViewById(R.id.privateChatView);
+        privateChatView.setText("Original text");
 
-        verifyZeroInteractions(controllerUtils, privateChatView);
+        activityController.destroy();
+
+        controller.appendToPrivateChat("\nDon't append");
+
+        assertEquals("Original text", privateChatView.getText().toString());
+        verify(controllerUtils, never()).scrollTextViewToBottom(any(TextView.class), any(ScrollView.class));
     }
 
     @Test
     public void updatePrivateChatShouldSetTextAndScrollToBottomIfNotDestroyed() {
+        activityController.create();
+
+        final TextView privateChatView = (TextView) controller.findViewById(R.id.privateChatView);
+        final ScrollView privateChatScroll = (ScrollView) controller.findViewById(R.id.privateChatScroll);
+        privateChatView.setText("Original text");
+
         controller.updatePrivateChat("Set this text");
 
         ShadowHandler.runMainLooperOneTask();
 
-        verify(privateChatView).setText("Set this text");
+        assertEquals("Set this text", privateChatView.getText().toString());
         verify(controllerUtils).scrollTextViewToBottom(privateChatView, privateChatScroll);
     }
 
     @Test
     public void updatePrivateChatShouldSetTextAndNotScrollToBottomIfDestroyed() {
-        TestUtils.setFieldValue(controller, "destroyed", true);
+        activityController.create();
+
+        final TextView privateChatView = (TextView) controller.findViewById(R.id.privateChatView);
+        privateChatView.setText("Original text");
 
         controller.updatePrivateChat("Set this text");
 
+        activityController.destroy(); // onDestroy() runs between setting the text and the delayed handler that scrolls
         ShadowHandler.runMainLooperOneTask();
 
-        verify(privateChatView).setText("Set this text");
-        verifyZeroInteractions(controllerUtils);
+        assertEquals("Set this text", privateChatView.getText().toString());
+        verify(controllerUtils, never()).scrollTextViewToBottom(any(TextView.class), any(ScrollView.class));
     }
 
     @Test
