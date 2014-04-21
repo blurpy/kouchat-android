@@ -25,8 +25,10 @@ package net.usikkert.kouchat.android.controller;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidPrivateChatWindow;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestUtils;
@@ -38,8 +40,10 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowHandler;
+import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.util.ActivityController;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -112,6 +116,45 @@ public class PrivateChatControllerTest {
         TestUtils.setFieldValue(controller, "privateChatInput", privateChatInput);
         TestUtils.setFieldValue(controller, "privateChatScroll", privateChatScroll);
         TestUtils.setFieldValue(controller, "controllerUtils", controllerUtils);
+    }
+
+    @Test
+    public void onCreateShouldBindChatServiceToSetAndroidUserInterface() {
+        activityController.create();
+
+        assertSame(ui, TestUtils.getFieldValue(controller, AndroidUserInterface.class, "androidUserInterface"));
+
+        final ShadowIntent startedServiceIntent =
+                Robolectric.shadowOf(Robolectric.getShadowApplication().getNextStartedService());
+        assertEquals(ChatService.class, startedServiceIntent.getIntentClass());
+    }
+
+    @Test
+    public void onCreateShouldEnableUpInActionBar() {
+        activityController.create();
+
+        final ActionBar actionBar = controller.getSupportActionBar();
+        final int displayOptions = actionBar.getDisplayOptions();
+
+        assertTrue((displayOptions & ActionBar.DISPLAY_HOME_AS_UP) != 0);
+    }
+
+    @Test
+    public void onCreateShouldMakeLinksClickable() {
+        activityController.create();
+
+        final TextView privateChatView = (TextView) controller.findViewById(R.id.privateChatView);
+
+        verify(controllerUtils).makeLinksClickable(privateChatView);
+    }
+
+    @Test
+    public void onCreateShouldRequestFocusOnInputToOpenKeyboard() {
+        activityController.create();
+
+        final EditText privateChatInput = (EditText) controller.findViewById(R.id.privateChatInput);
+
+        assertTrue(privateChatInput.hasFocus());
     }
 
     @Test
