@@ -56,6 +56,7 @@ import android.widget.TextView;
  *
  * @author Christian Ihle
  */
+@Config(reportSdk = 10)
 @RunWith(RobolectricTestRunner.class)
 public class PrivateChatControllerTest {
 
@@ -114,7 +115,6 @@ public class PrivateChatControllerTest {
     }
 
     @Test
-    @Config(reportSdk = 10) // To avoid getSupportActionBar returning null
     public void isVisibleShouldBeTrueOnlyBetweenOnResumeAndOnPause() {
         assertFalse(controller.isVisible());
 
@@ -262,7 +262,6 @@ public class PrivateChatControllerTest {
     }
 
     @Test
-    @Config(reportSdk = 10)
     public void dispatchKeyEventShouldDelegateToSuperClassFirst() {
         activityController.create();
         setMocks();
@@ -280,7 +279,6 @@ public class PrivateChatControllerTest {
     }
 
     @Test
-    @Config(reportSdk = 10)
     public void dispatchKeyEventShouldDelegateToPrivateChatInputSecond() {
         activityController.create();
         setMocks();
@@ -297,7 +295,6 @@ public class PrivateChatControllerTest {
     }
 
     @Test
-    @Config(reportSdk = 10)
     public void dispatchKeyEventShouldRequestFocusIfFocusIsMissingIfDelegatingToPrivateChatInput() {
         activityController.create();
         setMocks();
