@@ -46,6 +46,7 @@ import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.util.ActivityController;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.internal.view.menu.ActionMenuItem;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -429,5 +430,31 @@ public class PrivateChatControllerTest {
         when(privateChatInput.hasFocus()).thenReturn(false);
         controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A));
         verify(privateChatInput).requestFocus();
+    }
+
+    @Test
+    public void onOptionsItemSelectedWithUpShouldGoBackToMainChat() {
+        activityController.create();
+
+        final boolean selected = controller.onOptionsItemSelected(createMenuItem(android.R.id.home));
+
+        assertTrue(selected);
+
+        final Intent startedActivityIntent = Robolectric.getShadowApplication().getNextStartedActivity();
+        final ShadowIntent startedActivityShadowIntent = Robolectric.shadowOf(startedActivityIntent);
+        assertEquals(MainChatController.class, startedActivityShadowIntent.getIntentClass());
+    }
+
+    @Test
+    public void onOptionsItemSelectedWithUnknownMenuItemShouldReturnFalse() {
+        activityController.create();
+
+        final boolean selected = controller.onOptionsItemSelected(createMenuItem(0));
+
+        assertFalse(selected);
+    }
+
+    private ActionMenuItem createMenuItem(final int menuItemId) {
+        return new ActionMenuItem(null, 0, menuItemId, 0, 0, "");
     }
 }
