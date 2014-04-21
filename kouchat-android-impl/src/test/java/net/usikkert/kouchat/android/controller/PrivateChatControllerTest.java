@@ -175,6 +175,33 @@ public class PrivateChatControllerTest {
     }
 
     @Test
+    public void onResumeShouldNotifyAndroidUserInterfaceToResetNewPrivateMessageIcon() {
+        activityController.create();
+        reset(ui); // Also happens during onCreate()
+
+        activityController.resume();
+
+        verify(ui).activatedPrivChat(vivi);
+    }
+
+    @Test
+    public void onResumeShouldNotNotifyAndroidUserInterfaceWhenUnknownUser() {
+        activityController.withIntent(null);
+        activityController.create();
+
+        activityController.resume();
+
+        verify(ui, never()).activatedPrivChat(any(User.class));
+    }
+
+    @Test
+    public void onResumeShouldNotFailIfServiceHasNotBeenBoundYet() {
+        controller.onResume();
+
+        verify(ui, never()).activatedPrivChat(any(User.class));
+    }
+
+    @Test
     public void onDestroyShouldUnregister() {
         activityController.create();
 
