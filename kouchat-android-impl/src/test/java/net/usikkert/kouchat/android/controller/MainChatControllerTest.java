@@ -30,8 +30,10 @@ import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.android.userlist.UserListAdapter;
 import net.usikkert.kouchat.misc.SortedUserList;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
@@ -54,6 +56,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -285,19 +288,28 @@ public class MainChatControllerTest {
     }
 
     @Test
-    @Ignore("TODO") // TODO
     public void onDestroyShouldUnregister() {
-        controller.onDestroy();
+        activityController.create();
 
-        verify(userList).removeUserListListener(controller);
+        // Replacing with mocks for easier verification
+        final TextView mainChatView = TestUtils.setFieldValueWithMock(controller, "mainChatView", TextView.class);
+        final EditText mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
+        final ListView mainChatUserList = TestUtils.setFieldValueWithMock(controller, "mainChatUserList", ListView.class);
+        final TextWatcher textWatcher = TestUtils.setFieldValueWithMock(controller, "textWatcher", TextWatcher.class);
+        final UserListAdapter userListAdapter = TestUtils.setFieldValueWithMock(controller, "userListAdapter", UserListAdapter.class);
+        final UserList userListMock = TestUtils.setFieldValueWithMock(controller, "userList", UserList.class);
+
+        activityController.destroy();
+
+        verify(userListMock).removeUserListListener(controller);
         verify(ui).unregisterMainChatController();
-//        verify(mainChatInput).removeTextChangedListener(textWatcher);
-//        verify(mainChatInput).setOnKeyListener(null);
-//        verify(mainChatUserList).setOnItemClickListener(null);
-//        verify(mainChatUserList).setAdapter(null);
-//        verify(userListAdapter).onDestroy();
-//        verify(controllerUtils).removeReferencesToTextViewFromText(mainChatView);
-//        verify(controllerUtils).removeReferencesToTextViewFromText(mainChatInput);
+        verify(mainChatInput).removeTextChangedListener(textWatcher);
+        verify(mainChatInput).setOnKeyListener(null);
+        verify(mainChatUserList).setOnItemClickListener(null);
+        verify(mainChatUserList).setAdapter(null);
+        verify(userListAdapter).onDestroy();
+        verify(controllerUtils).removeReferencesToTextViewFromText(mainChatView);
+        verify(controllerUtils).removeReferencesToTextViewFromText(mainChatInput);
         assertEquals(1, Robolectric.getShadowApplication().getUnboundServiceConnections().size());
     }
 
@@ -587,6 +599,8 @@ public class MainChatControllerTest {
 
     @Test
     public void updateTitleAndTopicShouldSetTitleAsTitleAndTopicAsSubtitle() {
+        activityController.create();
+
         final ActionBar actionBar = TestUtils.setFieldValueWithMock(controller, "actionBar", ActionBar.class);
 
         controller.updateTitleAndTopic("The title", "The topic");
@@ -611,6 +625,8 @@ public class MainChatControllerTest {
 
     @Test
     public void onOptionsItemSelectedWithSettingsShouldOpenSettingsController() {
+        activityController.create();
+
         final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuSettings));
 
         assertTrue(selected);
@@ -656,7 +672,7 @@ public class MainChatControllerTest {
     @Test
     public void dispatchKeyEventShouldDelegateToSuperClassFirst() {
         activityController.create();
-        final EditText mainChatInputMock = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
+        final EditText mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
 
         // Force ActionBarSherlock to respond to the back event
         controller.startActionMode(new ActionMode.Callback() {
@@ -667,44 +683,44 @@ public class MainChatControllerTest {
         });
 
         assertTrue(controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK)));
-        verifyZeroInteractions(mainChatInputMock); // Not delegating, and not requesting focus
+        verifyZeroInteractions(mainChatInput); // Not delegating, and not requesting focus
     }
 
     @Test
     public void dispatchKeyEventShouldDelegateToMainChatInputSecond() {
         activityController.create();
-        final EditText mainChatInputMock = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
+        final EditText mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
 
         final KeyEvent event1 = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A);
-        when(mainChatInputMock.dispatchKeyEvent(event1)).thenReturn(false);
+        when(mainChatInput.dispatchKeyEvent(event1)).thenReturn(false);
         assertFalse(controller.dispatchKeyEvent(event1));
-        verify(mainChatInputMock).dispatchKeyEvent(event1);
+        verify(mainChatInput).dispatchKeyEvent(event1);
 
         final KeyEvent event2 = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_B);
-        when(mainChatInputMock.dispatchKeyEvent(event2)).thenReturn(true);
+        when(mainChatInput.dispatchKeyEvent(event2)).thenReturn(true);
         assertTrue(controller.dispatchKeyEvent(event2));
-        verify(mainChatInputMock).dispatchKeyEvent(event2);
+        verify(mainChatInput).dispatchKeyEvent(event2);
     }
 
     @Test
     public void dispatchKeyEventShouldRequestFocusIfFocusIsMissingIfDelegatingToMainChatInput() {
         activityController.create();
-        final EditText mainChatInputMock = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
+        final EditText mainChatInput = TestUtils.setFieldValueWithMock(controller, "mainChatInput", EditText.class);
 
-        when(mainChatInputMock.hasFocus()).thenReturn(true);
+        when(mainChatInput.hasFocus()).thenReturn(true);
         controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A));
-        verify(mainChatInputMock, never()).requestFocus();
+        verify(mainChatInput, never()).requestFocus();
 
-        when(mainChatInputMock.hasFocus()).thenReturn(false);
+        when(mainChatInput.hasFocus()).thenReturn(false);
         controller.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A));
-        verify(mainChatInputMock).requestFocus();
+        verify(mainChatInput).requestFocus();
     }
 
     @Test
     @Ignore("This does not work with Robolectric yet.")
     public void onCreateOptionsMenuShouldLoadTheMainChatMenu() {
-        final ActionMenu menu = new ActionMenu(controller);
         activityController.create();
+        final ActionMenu menu = new ActionMenu(controller);
 
         // Fails with: android.content.res.Resources$NotFoundException: Resource ID #0x7f0c0000
         controller.onCreateOptionsMenu(menu);
