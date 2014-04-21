@@ -64,7 +64,7 @@ public class UserListAdapterWithChatStateTest {
 
     @Before
     public void setUp() throws Exception {
-        final Context context = Robolectric.application.getApplicationContext();
+        final Context context = Robolectric.application;
 
         userListAdapter = new UserListAdapterWithChatState(context);
 

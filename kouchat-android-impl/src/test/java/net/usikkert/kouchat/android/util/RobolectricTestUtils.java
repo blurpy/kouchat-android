@@ -83,6 +83,6 @@ public final class RobolectricTestUtils {
     }
 
     private static SharedPreferences getSharedPreferences() {
-        return ShadowPreferenceManager.getDefaultSharedPreferences(Robolectric.application.getApplicationContext());
+        return ShadowPreferenceManager.getDefaultSharedPreferences(Robolectric.application);
     }
 }

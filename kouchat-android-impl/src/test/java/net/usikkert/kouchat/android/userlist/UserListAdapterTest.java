@@ -57,7 +57,7 @@ public class UserListAdapterTest {
 
     @Before
     public void setUp() {
-        adapter = new UserListAdapter(Robolectric.application.getApplicationContext());
+        adapter = new UserListAdapter(Robolectric.application);
 
         userList = mock(UserList.class);
 

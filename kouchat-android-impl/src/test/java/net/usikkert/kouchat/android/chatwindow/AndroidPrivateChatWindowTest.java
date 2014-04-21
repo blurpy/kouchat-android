@@ -57,7 +57,7 @@ public class AndroidPrivateChatWindowTest {
     @Before
     public void setUp() {
         user = new User("Test", 1234);
-        chatWindow = new AndroidPrivateChatWindow(Robolectric.application.getApplicationContext(), user);
+        chatWindow = new AndroidPrivateChatWindow(Robolectric.application, user);
 
         messageStyler = mock(MessageStylerWithHistory.class);
         TestUtils.setFieldValue(chatWindow, "messageStyler", messageStyler);
@@ -78,7 +78,7 @@ public class AndroidPrivateChatWindowTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("User can not be null");
 
-        new AndroidPrivateChatWindow(Robolectric.application.getApplicationContext(), null);
+        new AndroidPrivateChatWindow(Robolectric.application, null);
     }
 
     @Test

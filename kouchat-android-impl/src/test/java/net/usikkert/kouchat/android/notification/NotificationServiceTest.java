@@ -70,7 +70,7 @@ public class NotificationServiceTest {
 
     @Before
     public void setUp() {
-        notificationService = new NotificationService(Robolectric.application.getApplicationContext());
+        notificationService = new NotificationService(Robolectric.application);
 
         notificationManager =
                 TestUtils.setFieldValueWithMock(notificationService, "notificationManager", NotificationManager.class);

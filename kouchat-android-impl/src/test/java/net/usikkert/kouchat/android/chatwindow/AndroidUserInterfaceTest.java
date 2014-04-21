@@ -95,7 +95,7 @@ public class AndroidUserInterfaceTest {
         when(settings.getMe()).thenReturn(me);
         testUser = new User("TestUser", 1235);
 
-        final Context context = Robolectric.application.getApplicationContext();
+        final Context context = Robolectric.application;
         notificationService = mock(NotificationService.class);
 
         androidUserInterface = new AndroidUserInterface(context, settings, notificationService);

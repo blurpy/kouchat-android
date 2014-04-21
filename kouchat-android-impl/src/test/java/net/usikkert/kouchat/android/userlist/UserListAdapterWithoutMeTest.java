@@ -57,7 +57,7 @@ public class UserListAdapterWithoutMeTest {
     public void setUp() {
         me = new User("Me", 123);
 
-        adapter = new UserListAdapterWithoutMe(Robolectric.application.getApplicationContext(), me);
+        adapter = new UserListAdapterWithoutMe(Robolectric.application, me);
     }
 
     @Test

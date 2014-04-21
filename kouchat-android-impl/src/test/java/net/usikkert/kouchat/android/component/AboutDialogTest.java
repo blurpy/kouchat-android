@@ -56,7 +56,7 @@ public class AboutDialogTest {
 
     @Before
     public void setUp() {
-        new AboutDialog(Robolectric.application.getApplicationContext()); // Dialog would be shown after this
+        new AboutDialog(Robolectric.application); // Dialog would be shown after this
 
         shadowDialog = Robolectric.shadowOf(ShadowAlertDialog.getLatestAlertDialog());
     }
