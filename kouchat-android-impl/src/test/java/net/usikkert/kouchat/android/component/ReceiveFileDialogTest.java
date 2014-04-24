@@ -32,7 +32,6 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.FileReceiver;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -114,12 +113,11 @@ public class ReceiveFileDialogTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void showReceiveFileDialogShouldSetIcon() {
         receiveFileDialog.showReceiveFileDialog(activity, fileReceiver);
 
         final ShadowAlertDialog shadowDialog = getShadowDialog();
-//        assertEquals(R.drawable.ic_dialog, shadowDialog.getShadowAlertController().getIconId()); // Does not compile
+        assertEquals(R.drawable.ic_dialog, shadowDialog.getShadowAlertController().getIconId());
     }
 
     @Test
@@ -146,14 +144,13 @@ public class ReceiveFileDialogTest {
 
     @Test
     @Config(qualifiers = "sw720dp")
-    @Ignore("This does not work with Robolectric yet.")
     public void showReceiveFileDialogShouldHaveMessageOfTheCorrectSize() {
         receiveFileDialog.showReceiveFileDialog(activity, fileReceiver);
 
         final AlertDialog dialog = getDialog();
         final TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
 
-        assertEquals(16, messageView.getTextSize(), 0); // getTextSize returns 0
+        assertEquals(16, messageView.getTextSize(), 0);
     }
 
     @Test
@@ -268,14 +265,13 @@ public class ReceiveFileDialogTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void showMissingFileDialogShouldHaveMessageOfTheCorrectSize() {
         receiveFileDialog.showMissingFileDialog(activity);
 
         final AlertDialog dialog = getDialog();
         final TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
 
-        assertEquals(14, messageView.getTextSize(), 0); // getTextSize returns 0
+        assertEquals(14, messageView.getTextSize(), 0);
     }
 
     @Test

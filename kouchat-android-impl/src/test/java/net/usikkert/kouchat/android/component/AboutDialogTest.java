@@ -28,7 +28,6 @@ import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.R;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -81,9 +80,8 @@ public class AboutDialogTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void dialogIconShouldBeSet() {
-//        assertEquals(R.drawable.ic_dialog, shadowDialog.getShadowAlertController().getIconId()); // Does not compile
+        assertEquals(R.drawable.ic_dialog, shadowDialog.getShadowAlertController().getIconId());
     }
 
     @Test
@@ -110,11 +108,10 @@ public class AboutDialogTest {
 
     @Test
     @Config(qualifiers = "sw600dp")
-    @Ignore("This does not work with Robolectric yet.")
     public void dialogShouldHaveMessageOfTheCorrectSize() {
         final TextView messageView = (TextView) shadowDialog.getView();
 
-        assertEquals(15, messageView.getTextSize(), 0); // getTextSize returns 0
+        assertEquals(15, messageView.getTextSize(), 0);
     }
 
     @Test

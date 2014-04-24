@@ -32,7 +32,6 @@ import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -108,9 +107,8 @@ public class TopicDialogTest {
     }
 
     @Test
-    @Ignore("This does not work with Robolectric yet.")
     public void dialogIconShouldBeSet() {
-//        assertEquals(R.drawable.ic_dialog, shadowDialog.getShadowAlertController().getIconId()); // Does not compile
+        assertEquals(R.drawable.ic_dialog, shadowDialog.getShadowAlertController().getIconId());
     }
 
     @Test
