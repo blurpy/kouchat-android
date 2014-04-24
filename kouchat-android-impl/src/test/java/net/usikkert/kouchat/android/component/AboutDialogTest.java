@@ -25,6 +25,7 @@ package net.usikkert.kouchat.android.component;
 import static org.junit.Assert.*;
 
 import net.usikkert.kouchat.Constants;
+import net.usikkert.kouchat.android.R;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -36,9 +37,12 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowAlertDialog;
+import org.robolectric.shadows.ShadowContextThemeWrapper;
 
+import android.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.style.URLSpan;
+import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 
 /**
@@ -52,13 +56,15 @@ public class AboutDialogTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
+    private AlertDialog dialog;
     private ShadowAlertDialog shadowDialog;
 
     @Before
     public void setUp() {
         new AboutDialog(Robolectric.application); // Dialog would be shown after this
 
-        shadowDialog = Robolectric.shadowOf(ShadowAlertDialog.getLatestAlertDialog());
+        dialog = ShadowAlertDialog.getLatestAlertDialog();
+        shadowDialog = Robolectric.shadowOf(dialog);
     }
 
     @Test
@@ -78,6 +84,16 @@ public class AboutDialogTest {
     @Ignore("This does not work with Robolectric yet.")
     public void dialogIconShouldBeSet() {
 //        assertEquals(R.drawable.ic_dialog, shadowDialog.getShadowAlertController().getIconId()); // Does not compile
+    }
+
+    @Test
+    public void dialogThemeShouldBeSet() {
+        final ContextThemeWrapper context = (ContextThemeWrapper) dialog.getContext();
+        final ContextThemeWrapper baseContext = (ContextThemeWrapper) context.getBaseContext();
+        final ShadowContextThemeWrapper shadowBaseContext = (ShadowContextThemeWrapper) Robolectric.shadowOf(baseContext);
+        final int themeResId = shadowBaseContext.callGetThemeResId();
+
+        assertEquals(R.style.Theme_Default_Dialog, themeResId);
     }
 
     @Test
