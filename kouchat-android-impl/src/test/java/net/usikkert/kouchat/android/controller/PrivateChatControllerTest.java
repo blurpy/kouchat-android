@@ -142,7 +142,9 @@ public class PrivateChatControllerTest {
 
         activityController.create();
 
-        assertEquals("User not found - KouChat", controller.getTitle());
+        final ActionBar actionBar = controller.getSupportActionBar();
+
+        assertEquals("User not found - KouChat", actionBar.getTitle());
         verifyZeroInteractions(chatWindow);
     }
 
@@ -152,7 +154,9 @@ public class PrivateChatControllerTest {
 
         activityController.create();
 
-        assertEquals("Title from chat window", controller.getTitle());
+        final ActionBar actionBar = controller.getSupportActionBar();
+
+        assertEquals("Title from chat window", actionBar.getTitle());
         verify(chatWindow).updateTitle();
     }
 
@@ -422,10 +426,11 @@ public class PrivateChatControllerTest {
     @Test
     public void updateTitleShouldSetTheSpecifiedTitle() {
         activityController.create();
+        final ActionBar actionBar = controller.getSupportActionBar();
 
         controller.updateTitleAndAwayMessage("This is the title", null);
 
-        assertEquals("This is the title", controller.getTitle());
+        assertEquals("This is the title", actionBar.getTitle());
     }
 
     @Test

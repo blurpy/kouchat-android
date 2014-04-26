@@ -58,6 +58,7 @@ public class PrivateChatController extends SherlockActivity {
     private TextView privateChatView;
     private EditText privateChatInput;
     private ScrollView privateChatScroll;
+    private ActionBar actionBar;
     private ServiceConnection serviceConnection;
 
     private AndroidUserInterface androidUserInterface;
@@ -84,7 +85,7 @@ public class PrivateChatController extends SherlockActivity {
         serviceConnection = createServiceConnection();
         bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
 
-        final ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         controllerUtils.makeLinksClickable(privateChatView);
@@ -112,6 +113,7 @@ public class PrivateChatController extends SherlockActivity {
         privateChatView = null;
         privateChatInput = null;
         privateChatScroll = null;
+        actionBar = null;
         serviceConnection = null;
 
         super.onDestroy();
@@ -298,7 +300,7 @@ public class PrivateChatController extends SherlockActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                setTitle(title);
+                actionBar.setTitle(title);
             }
         });
     }
