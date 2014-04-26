@@ -426,11 +426,11 @@ public class PrivateChatControllerTest {
     }
 
     @Test
-    public void updateTitleShouldSetTheSpecifiedTitleAndSubtitle() {
+    public void updateTitleAndSubtitleShouldSetTheSpecifiedTitleAndSubtitle() {
         activityController.create();
         final ActionBar actionBar = controller.getSupportActionBar();
 
-        controller.updateTitleAndAwayMessage("This is the title", "This is the subtitle");
+        controller.updateTitleAndSubtitle("This is the title", "This is the subtitle");
 
         assertEquals("This is the title", actionBar.getTitle());
         assertEquals("This is the subtitle", actionBar.getSubtitle());
@@ -546,11 +546,11 @@ public class PrivateChatControllerTest {
         };
     }
 
-    private Answer withTitle(final String title, final String awayMessage) {
+    private Answer withTitle(final String title, final String subtitle) {
         return new Answer<Void>() {
             @Override
             public Void answer(final InvocationOnMock invocation) {
-                controller.updateTitleAndAwayMessage(title, awayMessage);
+                controller.updateTitleAndSubtitle(title, subtitle);
                 return null;
             }
         };

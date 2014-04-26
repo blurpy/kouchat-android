@@ -132,7 +132,7 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
         if (privateChatController != null) {
             final String title = createTitle();
 
-            privateChatController.updateTitleAndAwayMessage(title, null);
+            privateChatController.updateTitleAndSubtitle(title, null);
         }
     }
 
