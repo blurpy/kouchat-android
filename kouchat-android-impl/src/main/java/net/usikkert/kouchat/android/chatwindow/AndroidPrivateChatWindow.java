@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android.chatwindow;
 
+import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.ui.PrivateChatWindow;
@@ -119,5 +120,36 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
     @Override
     public boolean isFocused() {
         return isVisible();
+    }
+
+    /**
+     * Updates the title of the private chat based on the state of the user.
+     *
+     * <p>Examples:</p>
+     * <ul>
+     *   <li>Normal: <code>Vivi - KouChat</code></li>
+     *   <li>Away: <code>Vivi (away: shopping) - KouChat</code></li>
+     *   <li>Offline: <code>Vivi (offline) - KouChat</code></li>
+     * </ul>
+     */
+    public void updateTitle() {
+        final StringBuilder title = new StringBuilder();
+
+        title.append(user.getNick());
+
+        if (!user.isOnline()) {
+            title.append(" (offline)");
+        }
+
+        else if (user.isAway()) {
+            title.append(" (away: ");
+            title.append(user.getAwayMsg());
+            title.append(")");
+        }
+
+        title.append(" - ");
+        title.append(Constants.APP_NAME);
+
+        privateChatController.updateTitle(title.toString());
     }
 }

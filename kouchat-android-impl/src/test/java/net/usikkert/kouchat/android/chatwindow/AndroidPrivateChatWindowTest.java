@@ -56,7 +56,7 @@ public class AndroidPrivateChatWindowTest {
 
     @Before
     public void setUp() {
-        user = new User("Test", 1234);
+        user = new User("Vivi", 1234);
         chatWindow = new AndroidPrivateChatWindow(Robolectric.application, user);
 
         messageStyler = mock(MessageStylerWithHistory.class);
@@ -244,6 +244,53 @@ public class AndroidPrivateChatWindowTest {
     public void updateUserInformationShouldDoNothing() {
         chatWindow.updateUserInformation();
         verifyZeroInteractions(controller);
+    }
+
+    @Test
+    public void updateTitleShouldSetNickNameAndAppName() {
+        TestUtils.setFieldValue(chatWindow, "privateChatController", controller);
+
+        user.setNick("Marge");
+
+        chatWindow.updateTitle();
+
+        verify(controller).updateTitle("Marge - KouChat");
+    }
+
+    @Test
+    public void updateTitleShouldIncludeOfflineInTheTitleIfUserIsOffline() {
+        TestUtils.setFieldValue(chatWindow, "privateChatController", controller);
+
+        user.setOnline(false);
+
+        chatWindow.updateTitle();
+
+        verify(controller).updateTitle("Vivi (offline) - KouChat");
+    }
+
+    @Test
+    public void updateTitleShouldIncludeAwayAndAwayMessageInTheTitleIfUserIsAway() {
+        TestUtils.setFieldValue(chatWindow, "privateChatController", controller);
+
+        user.setAway(true);
+        user.setAwayMsg("on the road again");
+
+        chatWindow.updateTitle();
+
+        verify(controller).updateTitle("Vivi (away: on the road again) - KouChat");
+    }
+
+    @Test
+    public void updateTitleShouldOnlyIncludeOfflineInTheTitleIfUserIsBothOfflineAndAway() {
+        TestUtils.setFieldValue(chatWindow, "privateChatController", controller);
+
+        user.setOnline(false);
+        user.setAway(true);
+        user.setAwayMsg("I left");
+
+        chatWindow.updateTitle();
+
+        verify(controller).updateTitle("Vivi (offline) - KouChat");
     }
 
     private PrivateChatController getControllerFromChatWindow() {
