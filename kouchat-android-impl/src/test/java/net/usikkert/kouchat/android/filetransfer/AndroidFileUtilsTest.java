@@ -38,6 +38,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowContentResolver;
 import org.robolectric.tester.android.database.SimpleTestCursor;
 import org.robolectric.tester.android.database.TestCursor;
@@ -55,6 +56,7 @@ import android.os.Environment;
  *
  * @author Christian Ihle
  */
+@Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner.class)
 public class AndroidFileUtilsTest {
 

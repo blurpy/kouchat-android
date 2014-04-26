@@ -35,6 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import android.content.Context;
 import android.text.TextWatcher;
@@ -46,6 +47,7 @@ import android.view.ContextThemeWrapper;
  *
  * @author Christian Ihle
  */
+@Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner.class)
 public class ThemedEditTextPreferenceTest {
 

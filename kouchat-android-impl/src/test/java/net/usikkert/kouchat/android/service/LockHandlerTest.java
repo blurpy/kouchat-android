@@ -48,8 +48,8 @@ import android.os.PowerManager;
  *
  * @author Christian Ihle
  */
-@RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@RunWith(RobolectricTestRunner.class)
 public class LockHandlerTest {
 
     @Rule

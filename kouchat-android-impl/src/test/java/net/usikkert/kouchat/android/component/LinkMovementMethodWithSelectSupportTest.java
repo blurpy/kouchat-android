@@ -37,6 +37,7 @@ import android.text.method.MovementMethod;
  *
  * @author Christian Ihle
  */
+@Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner.class)
 public class LinkMovementMethodWithSelectSupportTest {
 

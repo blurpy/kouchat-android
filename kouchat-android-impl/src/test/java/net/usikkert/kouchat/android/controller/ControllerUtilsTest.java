@@ -32,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import android.graphics.drawable.Drawable;
 import android.text.NoCopySpan;
@@ -51,6 +52,7 @@ import android.widget.TextView;
  *
  * @author Christian Ihle
  */
+@Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner.class)
 public class ControllerUtilsTest {
 
