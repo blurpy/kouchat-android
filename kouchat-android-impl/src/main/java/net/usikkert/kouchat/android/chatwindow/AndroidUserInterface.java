@@ -187,7 +187,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
             final String title = formatTitle();
             final String topic = formatTopic();
 
-            mainChatController.updateTitleAndTopic(title, topic);
+            mainChatController.updateTitleAndSubtitle(title, topic);
         }
     }
 

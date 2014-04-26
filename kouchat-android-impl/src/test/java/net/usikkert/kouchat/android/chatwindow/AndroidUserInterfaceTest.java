@@ -139,12 +139,12 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void showTopicShouldNotSetTitleOfMainChatIfMainChatIsMissing() {
+    public void showTopicShouldNotSetTitleAndSubtitleOfMainChatIfMainChatIsMissing() {
         androidUserInterface.unregisterMainChatController();
 
         androidUserInterface.showTopic();
 
-        verify(mainChatController, never()).updateTitleAndTopic(anyString(), anyString());
+        verify(mainChatController, never()).updateTitleAndSubtitle(anyString(), anyString());
     }
 
     @Test
@@ -153,16 +153,16 @@ public class AndroidUserInterfaceTest {
 
         androidUserInterface.showTopic();
 
-        verify(mainChatController).updateTitleAndTopic("Me - KouChat", null);
+        verify(mainChatController).updateTitleAndSubtitle("Me - KouChat", null);
     }
 
     @Test
-    public void showTopicShouldUpdateBothTitleAndTopicWhenATopicIsSet() {
+    public void showTopicShouldUpdateBothTitleAndSubtitleWhenATopicIsSet() {
         when(controller.getTopic()).thenReturn(new Topic("This rocks!", "OtherGuy", System.currentTimeMillis()));
 
         androidUserInterface.showTopic();
 
-        verify(mainChatController).updateTitleAndTopic("Me - KouChat", "This rocks! - OtherGuy");
+        verify(mainChatController).updateTitleAndSubtitle("Me - KouChat", "This rocks! - OtherGuy");
     }
 
     @Test
@@ -576,7 +576,7 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void changeNickNameShouldReturnTrueAndShowSystemMessageAndUpdateTitleAndTopicIfEverythingOK() throws CommandException {
+    public void changeNickNameShouldReturnTrueAndShowSystemMessageAndUpdateTitleAndSubtitleIfEverythingOK() throws CommandException {
         when(controller.getTopic()).thenReturn(new Topic());
 
         // Makes sure the mocked controller changes the nick name like the real implementation would,
@@ -597,7 +597,7 @@ public class AndroidUserInterfaceTest {
         verifyNoMoreInteractions(controller);
 
         verify(msgController).showSystemMessage("You changed nick to Kou");
-        verify(mainChatController).updateTitleAndTopic("Kou - KouChat", null);
+        verify(mainChatController).updateTitleAndSubtitle("Kou - KouChat", null);
     }
 
     @Test

@@ -600,12 +600,12 @@ public class MainChatControllerTest {
     }
 
     @Test
-    public void updateTitleAndTopicShouldSetTitleAsTitleAndTopicAsSubtitle() {
+    public void updateTitleAndSubtitleShouldSetTitleAsTitleAndTopicAsSubtitle() {
         activityController.create();
 
         final ActionBar actionBar = TestUtils.setFieldValueWithMock(controller, "actionBar", ActionBar.class);
 
-        controller.updateTitleAndTopic("The title", "The topic");
+        controller.updateTitleAndSubtitle("The title", "The topic");
 
         verify(actionBar).setTitle("The title");
         verify(actionBar).setSubtitle("The topic");
