@@ -257,6 +257,27 @@ public class ReceiveFileDialogTest {
     }
 
     @Test
+    public void showMissingFileDialogShouldSetIcon() {
+        receiveFileDialog.showMissingFileDialog(activity);
+
+        final ShadowAlertDialog shadowDialog = getShadowDialog();
+        assertEquals(R.drawable.ic_dialog, shadowDialog.getShadowAlertController().getIconId());
+    }
+
+    @Test
+    public void showMissingFileDialogShouldSetTheme() {
+        receiveFileDialog.showMissingFileDialog(activity);
+
+        final AlertDialog dialog = getDialog();
+        final ContextThemeWrapper context = (ContextThemeWrapper) dialog.getContext();
+        final ContextThemeWrapper baseContext = (ContextThemeWrapper) context.getBaseContext();
+        final ShadowContextThemeWrapper shadowBaseContext = (ShadowContextThemeWrapper) Robolectric.shadowOf(baseContext);
+        final int themeResId = shadowBaseContext.callGetThemeResId();
+
+        assertEquals(R.style.Theme_Default_Dialog, themeResId);
+    }
+
+    @Test
     public void showMissingFileDialogShouldSetMessage() {
         receiveFileDialog.showMissingFileDialog(activity);
 

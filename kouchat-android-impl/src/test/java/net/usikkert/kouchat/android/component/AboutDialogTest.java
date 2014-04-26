@@ -39,9 +39,12 @@ import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowContextThemeWrapper;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.text.SpannableString;
 import android.text.style.URLSpan;
 import android.view.ContextThemeWrapper;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -97,6 +100,30 @@ public class AboutDialogTest {
     @Test
     public void dialogShouldBeCancelable() {
         assertTrue(shadowDialog.isCancelable());
+    }
+
+    @Test
+    public void dialogShouldShowPositiveButtonThatClosesDialog() {
+        final Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
+
+        assertNotNull(positiveButton);
+        assertEquals("OK", positiveButton.getText());
+        assertEquals(View.VISIBLE, positiveButton.getVisibility());
+
+        assertTrue(dialog.isShowing());
+
+        positiveButton.performClick();
+
+        assertFalse(dialog.isShowing());
+    }
+
+    @Test
+    public void dialogShouldNotShowNegativeButton() {
+        final Button negativeButton = dialog.getButton(Dialog.BUTTON_NEGATIVE);
+
+        assertNotNull(negativeButton);
+        assertEquals("", negativeButton.getText());
+        assertEquals(View.GONE, negativeButton.getVisibility());
     }
 
     @Test
