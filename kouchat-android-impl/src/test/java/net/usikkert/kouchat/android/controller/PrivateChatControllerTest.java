@@ -137,7 +137,7 @@ public class PrivateChatControllerTest {
     }
 
     @Test
-    public void onCreateWithNoUserShouldSetDefaultTitle() {
+    public void onCreateWithNoUserShouldSetDefaultTitleAndNoSubtitle() {
         activityController.withIntent(null);
 
         activityController.create();
@@ -145,18 +145,20 @@ public class PrivateChatControllerTest {
         final ActionBar actionBar = controller.getSupportActionBar();
 
         assertEquals("User not found - KouChat", actionBar.getTitle());
+        assertNull(actionBar.getSubtitle());
         verifyZeroInteractions(chatWindow);
     }
 
     @Test
-    public void onCreateWithUserShouldSetTitleFromChatWindow() {
-        doAnswer(withTitle("Title from chat window")).when(chatWindow).updateTitle();
+    public void onCreateWithUserShouldSetTitleAndSubtitleFromChatWindow() {
+        doAnswer(withTitle("Title from chat window", "Subtitle from chat window")).when(chatWindow).updateTitle();
 
         activityController.create();
 
         final ActionBar actionBar = controller.getSupportActionBar();
 
         assertEquals("Title from chat window", actionBar.getTitle());
+        assertEquals("Subtitle from chat window", actionBar.getSubtitle());
         verify(chatWindow).updateTitle();
     }
 
@@ -424,13 +426,14 @@ public class PrivateChatControllerTest {
     }
 
     @Test
-    public void updateTitleShouldSetTheSpecifiedTitle() {
+    public void updateTitleShouldSetTheSpecifiedTitleAndSubtitle() {
         activityController.create();
         final ActionBar actionBar = controller.getSupportActionBar();
 
-        controller.updateTitleAndAwayMessage("This is the title", null);
+        controller.updateTitleAndAwayMessage("This is the title", "This is the subtitle");
 
         assertEquals("This is the title", actionBar.getTitle());
+        assertEquals("This is the subtitle", actionBar.getSubtitle());
     }
 
     @Test
@@ -543,11 +546,11 @@ public class PrivateChatControllerTest {
         };
     }
 
-    private Answer withTitle(final String title) {
+    private Answer withTitle(final String title, final String awayMessage) {
         return new Answer<Void>() {
             @Override
             public Void answer(final InvocationOnMock invocation) {
-                controller.updateTitleAndAwayMessage(title, null);
+                controller.updateTitleAndAwayMessage(title, awayMessage);
                 return null;
             }
         };

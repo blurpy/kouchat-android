@@ -301,6 +301,7 @@ public class PrivateChatController extends SherlockActivity {
             @Override
             public void run() {
                 actionBar.setTitle(title);
+                actionBar.setSubtitle(awayMessage);
             }
         });
     }
