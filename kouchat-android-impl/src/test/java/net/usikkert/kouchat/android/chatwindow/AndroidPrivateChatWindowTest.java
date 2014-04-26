@@ -195,7 +195,7 @@ public class AndroidPrivateChatWindowTest {
     }
 
     @Test
-    public void setAwayShouldUpdateTitle() {
+    public void setAwayShouldUpdateTitleAndSubtitle() {
         TestUtils.setFieldValue(chatWindow, "privateChatController", controller);
 
         chatWindow.setAway(true);
@@ -213,7 +213,7 @@ public class AndroidPrivateChatWindowTest {
     }
 
     @Test
-    public void setLoggedOffShouldUpdateTitle() {
+    public void setLoggedOffShouldUpdateTitleAndSubtitle() {
         TestUtils.setFieldValue(chatWindow, "privateChatController", controller);
 
         chatWindow.setLoggedOff();
@@ -247,7 +247,7 @@ public class AndroidPrivateChatWindowTest {
     }
 
     @Test
-    public void updateTitleShouldSetNickNameAndAppName() {
+    public void updateTitleShouldSetNickNameAndAppNameInTheTitleAndNullInTheSubtitle() {
         TestUtils.setFieldValue(chatWindow, "privateChatController", controller);
 
         user.setNick("Marge");
@@ -258,7 +258,7 @@ public class AndroidPrivateChatWindowTest {
     }
 
     @Test
-    public void updateTitleShouldIncludeOfflineInTheTitleIfUserIsOffline() {
+    public void updateTitleShouldIncludeOfflineInTheTitleAndNullInTheSubtitleIfUserIsOffline() {
         TestUtils.setFieldValue(chatWindow, "privateChatController", controller);
 
         user.setOnline(false);
@@ -269,19 +269,19 @@ public class AndroidPrivateChatWindowTest {
     }
 
     @Test
-    public void updateTitleShouldIncludeAwayAndAwayMessageInTheTitleIfUserIsAway() {
+    public void updateTitleShouldIncludeAwayInTheTitleAndAwayMessageInTheSubtitleIfUserIsAway() {
         TestUtils.setFieldValue(chatWindow, "privateChatController", controller);
 
         user.setAway(true);
-        user.setAwayMsg("on the road again");
+        user.setAwayMsg("On the road again");
 
         chatWindow.updateTitle();
 
-        verify(controller).updateTitleAndSubtitle("Vivi (away: on the road again) - KouChat", null);
+        verify(controller).updateTitleAndSubtitle("Vivi (away) - KouChat", "On the road again");
     }
 
     @Test
-    public void updateTitleShouldOnlyIncludeOfflineInTheTitleIfUserIsBothOfflineAndAway() {
+    public void updateTitleShouldOnlyIncludeOfflineInTheTitleAndNullInTheSubtitleIfUserIsBothOfflineAndAway() {
         TestUtils.setFieldValue(chatWindow, "privateChatController", controller);
 
         user.setOnline(false);

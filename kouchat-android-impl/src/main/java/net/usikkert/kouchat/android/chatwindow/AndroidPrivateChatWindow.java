@@ -119,20 +119,32 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
     }
 
     /**
-     * Updates the title of the private chat based on the state of the user.
+     * Updates the title and subtitle of the private chat based on the state of the user.
      *
-     * <p>Examples:</p>
+     * <p>The subtitle is only visible when away, showing the away message.</p>
+     *
+     * <p>Normal:</p>
      * <ul>
-     *   <li>Normal: <code>Vivi - KouChat</code></li>
-     *   <li>Away: <code>Vivi (away: shopping) - KouChat</code></li>
-     *   <li>Offline: <code>Vivi (offline) - KouChat</code></li>
+     *   <li><code>Vivi - KouChat</code></li>
+     * </ul>
+     *
+     * <p>Away:</p>
+     * <ul>
+     *   <li><code>Vivi (away) - KouChat</code></li>
+     *   <li><code>Out shopping</code></li>
+     * </ul>
+     *
+     * <p>Offline:</p>
+     * <ul>
+     *   <li><code>Vivi (offline) - KouChat</code></li>
      * </ul>
      */
     public void updateTitle() {
         if (privateChatController != null) {
             final String title = createTitle();
+            final String subtitle = createSubtitle();
 
-            privateChatController.updateTitleAndSubtitle(title, null);
+            privateChatController.updateTitleAndSubtitle(title, subtitle);
         }
     }
 
@@ -146,14 +158,20 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
         }
 
         else if (user.isAway()) {
-            title.append(" (away: ");
-            title.append(user.getAwayMsg());
-            title.append(")");
+            title.append(" (away)");
         }
 
         title.append(" - ");
         title.append(Constants.APP_NAME);
 
         return title.toString();
+    }
+
+    private String createSubtitle() {
+        if (user.isOnline() && user.isAway()) {
+            return user.getAwayMsg();
+        }
+
+        return null;
     }
 }
