@@ -48,6 +48,8 @@ import android.preference.PreferenceManager;
  */
 public class AndroidSettingsLoader {
 
+    private static final String DEFAULT_NICK_NAME = "NewUser";
+
     public void loadStoredSettings(final Context context, final Settings settings) {
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(settings, "Settings can not be null");
@@ -62,21 +64,19 @@ public class AndroidSettingsLoader {
 
     private void loadNickName(final Context context, final SharedPreferences preferences, final User me) {
         final String nickNameKey = context.getString(R.string.settings_key_nick_name);
-        final String nickName = getNickNameFromPreferences(preferences, nickNameKey, me);
+        final String nickName = getNickNameFromPreferences(preferences, nickNameKey);
 
         me.setNick(nickName);
     }
 
-    private String getNickNameFromPreferences(final SharedPreferences preferences,
-                                              final String nickNameKey,
-                                              final User me) {
+    private String getNickNameFromPreferences(final SharedPreferences preferences, final String nickNameKey) {
         final String nickNameFromPreferences = preferences.getString(nickNameKey, null);
 
         if (Tools.isValidNick(nickNameFromPreferences)) {
             return nickNameFromPreferences;
         }
 
-        return Integer.toString(me.getCode());
+        return DEFAULT_NICK_NAME;
     }
 
     private void loadOwnColor(final Context context, final SharedPreferences preferences, final Settings settings) {

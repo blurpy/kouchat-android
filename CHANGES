@@ -3,7 +3,7 @@
 
 
 * version 0.15.0 (xx.xx.2014)
-  - Nothing yet.
+  - Changed default nick name to be "NewUser" instead of a numerical id.
 
 
 * version 0.14.0 (15.04.2014)

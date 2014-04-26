@@ -98,22 +98,22 @@ public class AndroidSettingsLoaderTest {
     }
 
     @Test
-    public void loadStoredSettingsShouldSetInvalidNickToUserCode() {
+    public void loadStoredSettingsShouldSetInvalidNickToNewUser() {
         RobolectricTestUtils.setNickNameInTheAndroidSettingsTo("123456789012345");
         assertEquals("Me", me.getNick());
 
         settingsLoader.loadStoredSettings(context, settings);
 
-        assertEquals("1234", me.getNick());
+        assertEquals("NewUser", me.getNick());
     }
 
     @Test
-    public void loadStoredSettingsShouldSetNickToUserCodeIfNotSet() {
+    public void loadStoredSettingsShouldSetNickToNewUserIfNotSet() {
         assertEquals("Me", me.getNick());
 
         settingsLoader.loadStoredSettings(context, settings);
 
-        assertEquals("1234", me.getNick());
+        assertEquals("NewUser", me.getNick());
     }
 
     @Test
