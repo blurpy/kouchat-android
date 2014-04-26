@@ -293,6 +293,15 @@ public class AndroidPrivateChatWindowTest {
         verify(controller).updateTitle("Vivi (offline) - KouChat");
     }
 
+    @Test
+    public void updateTitleShouldHandleMissingController() {
+        assertTrue(TestUtils.fieldValueIsNull(chatWindow, "privateChatController"));
+
+        chatWindow.updateTitle();
+
+        verifyZeroInteractions(controller);
+    }
+
     private PrivateChatController getControllerFromChatWindow() {
         return TestUtils.getFieldValue(chatWindow, PrivateChatController.class, "privateChatController");
     }

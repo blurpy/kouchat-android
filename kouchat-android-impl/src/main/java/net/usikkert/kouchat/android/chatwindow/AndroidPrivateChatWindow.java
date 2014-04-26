@@ -133,6 +133,14 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
      * </ul>
      */
     public void updateTitle() {
+        if (privateChatController != null) {
+            final String title = createTitle();
+
+            privateChatController.updateTitle(title);
+        }
+    }
+
+    private String createTitle() {
         final StringBuilder title = new StringBuilder();
 
         title.append(user.getNick());
@@ -150,6 +158,6 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
         title.append(" - ");
         title.append(Constants.APP_NAME);
 
-        privateChatController.updateTitle(title.toString());
+        return title.toString();
     }
 }
