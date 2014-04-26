@@ -423,7 +423,7 @@ public class PrivateChatControllerTest {
     public void updateTitleShouldSetTheSpecifiedTitle() {
         activityController.create();
 
-        controller.updateTitle("This is the title");
+        controller.updateTitleAndAwayMessage("This is the title", null);
 
         assertEquals("This is the title", controller.getTitle());
     }
@@ -542,7 +542,7 @@ public class PrivateChatControllerTest {
         return new Answer<Void>() {
             @Override
             public Void answer(final InvocationOnMock invocation) {
-                controller.updateTitle(title);
+                controller.updateTitleAndAwayMessage(title, null);
                 return null;
             }
         };

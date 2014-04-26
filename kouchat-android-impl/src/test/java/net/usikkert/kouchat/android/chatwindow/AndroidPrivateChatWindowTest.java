@@ -200,7 +200,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.setAway(true);
 
-        verify(controller).updateTitle("Vivi - KouChat"); // Tested in more detail in updateTitle() tests
+        verify(controller).updateTitleAndAwayMessage("Vivi - KouChat", null); // Tested in more detail in updateTitle() tests
     }
 
     @Test
@@ -218,7 +218,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.setLoggedOff();
 
-        verify(controller).updateTitle("Vivi - KouChat");  // Tested in more detail in updateTitle() tests
+        verify(controller).updateTitleAndAwayMessage("Vivi - KouChat", null);  // Tested in more detail in updateTitle() tests
     }
 
     @Test
@@ -254,7 +254,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.updateTitle();
 
-        verify(controller).updateTitle("Marge - KouChat");
+        verify(controller).updateTitleAndAwayMessage("Marge - KouChat", null);
     }
 
     @Test
@@ -265,7 +265,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.updateTitle();
 
-        verify(controller).updateTitle("Vivi (offline) - KouChat");
+        verify(controller).updateTitleAndAwayMessage("Vivi (offline) - KouChat", null);
     }
 
     @Test
@@ -277,7 +277,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.updateTitle();
 
-        verify(controller).updateTitle("Vivi (away: on the road again) - KouChat");
+        verify(controller).updateTitleAndAwayMessage("Vivi (away: on the road again) - KouChat", null);
     }
 
     @Test
@@ -290,7 +290,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.updateTitle();
 
-        verify(controller).updateTitle("Vivi (offline) - KouChat");
+        verify(controller).updateTitleAndAwayMessage("Vivi (offline) - KouChat", null);
     }
 
     @Test

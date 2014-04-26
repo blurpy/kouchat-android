@@ -289,11 +289,12 @@ public class PrivateChatController extends SherlockActivity {
     }
 
     /**
-     * Updates the title of the activity with the specified value.
+     * Updates the title and subtitle of the activity with the specified values.
      *
      * @param title The title to set.
+     * @param awayMessage The away message to set as the subtitle.
      */
-    public void updateTitle(final String title) {
+    public void updateTitleAndAwayMessage(final String title, final String awayMessage) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
