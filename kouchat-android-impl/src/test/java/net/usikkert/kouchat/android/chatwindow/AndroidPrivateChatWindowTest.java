@@ -200,7 +200,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.setAway(true);
 
-        verify(controller).updateTitle(null);
+        verify(controller).updateTitle("Vivi - KouChat"); // Tested in more detail in updateTitle() tests
     }
 
     @Test
@@ -218,7 +218,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.setLoggedOff();
 
-        verify(controller).updateTitle(null);
+        verify(controller).updateTitle("Vivi - KouChat");  // Tested in more detail in updateTitle() tests
     }
 
     @Test

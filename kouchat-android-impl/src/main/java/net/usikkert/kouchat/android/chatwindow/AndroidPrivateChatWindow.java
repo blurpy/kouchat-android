@@ -100,16 +100,12 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
 
     @Override
     public void setAway(final boolean away) {
-        if (privateChatController != null) {
-            privateChatController.updateTitle(null);
-        }
+        updateTitle();
     }
 
     @Override
     public void setLoggedOff() {
-        if (privateChatController != null) {
-            privateChatController.updateTitle(null);
-        }
+        updateTitle();
     }
 
     @Override
