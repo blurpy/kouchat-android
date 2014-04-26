@@ -72,6 +72,7 @@ public class PrivateChatControllerTest {
     private ControllerUtils controllerUtils;
     private User vivi;
     private AndroidUserInterface ui;
+    private AndroidPrivateChatWindow chatWindow;
 
     @Before
     public void setUp() {
@@ -80,8 +81,10 @@ public class PrivateChatControllerTest {
 
         vivi = new User("Vivi", 1234);
         ui = mock(AndroidUserInterface.class);
+        chatWindow = mock(AndroidPrivateChatWindow.class);
+
         when(ui.getUser(1234)).thenReturn(vivi);
-        doAnswer(withChatWindowMockForVivi()).when(ui).createPrivChat(vivi);
+        doAnswer(withChatWindowForVivi(chatWindow)).when(ui).createPrivChat(vivi);
 
         final ChatServiceBinder serviceBinder = mock(ChatServiceBinder.class);
         when(serviceBinder.getAndroidUserInterface()).thenReturn(ui);
@@ -140,13 +143,17 @@ public class PrivateChatControllerTest {
         activityController.create();
 
         assertEquals("User not found - KouChat", controller.getTitle());
+        verifyZeroInteractions(chatWindow);
     }
 
     @Test
-    public void onCreateWithUserShouldSetNickNameInTitle() {
+    public void onCreateWithUserShouldSetTitleFromChatWindow() {
+        doAnswer(withTitle("Title from chat window")).when(chatWindow).updateTitle();
+
         activityController.create();
 
-        assertEquals("Vivi - KouChat", controller.getTitle());
+        assertEquals("Title from chat window", controller.getTitle());
+        verify(chatWindow).updateTitle();
     }
 
     @Test
@@ -199,8 +206,10 @@ public class PrivateChatControllerTest {
 
         verify(ui).getUser(1234);
         verify(ui).createPrivChat(vivi);
-        final AndroidPrivateChatWindow chatWindow = (AndroidPrivateChatWindow) vivi.getPrivchat();
-        verify(chatWindow).registerPrivateChatController(controller);
+
+        final AndroidPrivateChatWindow viviChatWindow = (AndroidPrivateChatWindow) vivi.getPrivchat();
+        verify(viviChatWindow).registerPrivateChatController(controller);
+        assertSame(chatWindow, viviChatWindow);
     }
 
     @Test
@@ -411,50 +420,12 @@ public class PrivateChatControllerTest {
     }
 
     @Test
-    public void updateTitleShouldSetNickNameAndAppName() {
+    public void updateTitleShouldSetTheSpecifiedTitle() {
         activityController.create();
 
-        vivi.setNick("Marge");
+        controller.updateTitle("This is the title");
 
-        controller.updateTitle(null);
-
-        assertEquals("Marge - KouChat", controller.getTitle());
-    }
-
-    @Test
-    public void updateTitleShouldIncludeOfflineInTheTitleIfUserIsOffline() {
-        activityController.create();
-
-        vivi.setOnline(false);
-
-        controller.updateTitle(null);
-
-        assertEquals("Vivi (offline) - KouChat", controller.getTitle());
-    }
-
-    @Test
-    public void updateTitleShouldIncludeAwayAndAwayMessageInTheTitleIfUserIsAway() {
-        activityController.create();
-
-        vivi.setAway(true);
-        vivi.setAwayMsg("on the road again");
-
-        controller.updateTitle(null);
-
-        assertEquals("Vivi (away: on the road again) - KouChat", controller.getTitle());
-    }
-
-    @Test
-    public void updateTitleShouldOnlyIncludeOfflineInTheTitleIfUserIsBothOfflineAndAway() {
-        activityController.create();
-
-        vivi.setOnline(false);
-        vivi.setAway(true);
-        vivi.setAwayMsg("I left");
-
-        controller.updateTitle(null);
-
-        assertEquals("Vivi (offline) - KouChat", controller.getTitle());
+        assertEquals("This is the title", controller.getTitle());
     }
 
     @Test
@@ -557,11 +528,21 @@ public class PrivateChatControllerTest {
         return new ActionMenuItem(null, 0, menuItemId, 0, 0, "");
     }
 
-    private Answer<Void> withChatWindowMockForVivi() {
+    private Answer<Void> withChatWindowForVivi(final AndroidPrivateChatWindow privateChatWindow) {
         return new Answer<Void>() {
             @Override
             public Void answer(final InvocationOnMock invocation) {
-                vivi.setPrivchat(mock(AndroidPrivateChatWindow.class));
+                vivi.setPrivchat(privateChatWindow);
+                return null;
+            }
+        };
+    }
+
+    private Answer withTitle(final String title) {
+        return new Answer<Void>() {
+            @Override
+            public Void answer(final InvocationOnMock invocation) {
+                controller.updateTitle(title);
                 return null;
             }
         };

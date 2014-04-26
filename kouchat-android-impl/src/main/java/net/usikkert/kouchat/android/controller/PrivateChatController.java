@@ -22,7 +22,6 @@
 
 package net.usikkert.kouchat.android.controller;
 
-import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidPrivateChatWindow;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
@@ -217,32 +216,15 @@ public class PrivateChatController extends SherlockActivity {
         setUser();
 
         if (user != null) {
-            setTitle();
             setPrivateChatWindow();
+            setTitle();
             resetNewPrivateMessageIcon();
             registerPrivateChatInputListener();
         }
     }
 
     private void setTitle() {
-        final StringBuilder title = new StringBuilder();
-
-        title.append(user.getNick());
-
-        if (!user.isOnline()) {
-            title.append(" (offline)");
-        }
-
-        else if (user.isAway()) {
-            title.append(" (away: ");
-            title.append(user.getAwayMsg());
-            title.append(")");
-        }
-
-        title.append(" - ");
-        title.append(Constants.APP_NAME);
-
-        setTitle(title.toString());
+        privateChatWindow.updateTitle();
     }
 
     private void setUser() {
@@ -306,11 +288,16 @@ public class PrivateChatController extends SherlockActivity {
         return visible;
     }
 
+    /**
+     * Updates the title of the activity with the specified value.
+     *
+     * @param title The title to set.
+     */
     public void updateTitle(final String title) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                setTitle();
+                setTitle(title);
             }
         });
     }
