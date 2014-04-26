@@ -416,7 +416,7 @@ public class PrivateChatControllerTest {
 
         vivi.setNick("Marge");
 
-        controller.updateTitle();
+        controller.updateTitle(null);
 
         assertEquals("Marge - KouChat", controller.getTitle());
     }
@@ -427,7 +427,7 @@ public class PrivateChatControllerTest {
 
         vivi.setOnline(false);
 
-        controller.updateTitle();
+        controller.updateTitle(null);
 
         assertEquals("Vivi (offline) - KouChat", controller.getTitle());
     }
@@ -439,7 +439,7 @@ public class PrivateChatControllerTest {
         vivi.setAway(true);
         vivi.setAwayMsg("on the road again");
 
-        controller.updateTitle();
+        controller.updateTitle(null);
 
         assertEquals("Vivi (away: on the road again) - KouChat", controller.getTitle());
     }
@@ -452,7 +452,7 @@ public class PrivateChatControllerTest {
         vivi.setAway(true);
         vivi.setAwayMsg("I left");
 
-        controller.updateTitle();
+        controller.updateTitle(null);
 
         assertEquals("Vivi (offline) - KouChat", controller.getTitle());
     }

@@ -200,7 +200,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.setAway(true);
 
-        verify(controller).updateTitle();
+        verify(controller).updateTitle(null);
     }
 
     @Test
@@ -218,7 +218,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.setLoggedOff();
 
-        verify(controller).updateTitle();
+        verify(controller).updateTitle(null);
     }
 
     @Test

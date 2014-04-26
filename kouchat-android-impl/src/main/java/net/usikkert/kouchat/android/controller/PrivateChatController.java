@@ -306,7 +306,7 @@ public class PrivateChatController extends SherlockActivity {
         return visible;
     }
 
-    public void updateTitle() {
+    public void updateTitle(final String title) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
