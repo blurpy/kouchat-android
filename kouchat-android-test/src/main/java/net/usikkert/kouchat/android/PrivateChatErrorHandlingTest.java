@@ -28,6 +28,7 @@ import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.testclient.TestClient;
 import net.usikkert.kouchat.testclient.TestUtils;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.robotium.solo.Solo;
 
 import android.content.Intent;
@@ -53,7 +54,7 @@ public class PrivateChatErrorHandlingTest extends ActivityInstrumentationTestCas
         solo = new Solo(getInstrumentation(), activity);
         solo.sleep(1000);
 
-        assertEquals("User not found - KouChat", activity.getTitle());
+        checkTitle(activity, "User not found - KouChat");
         RobotiumTestUtils.writeLine(solo, "Should not be able to send this");
         solo.sleep(500);
         assertFalse(RobotiumTestUtils.searchText(solo, "Should not be able to send this"));
@@ -71,7 +72,7 @@ public class PrivateChatErrorHandlingTest extends ActivityInstrumentationTestCas
         solo = new Solo(getInstrumentation(), activity);
         solo.sleep(1000);
 
-        assertEquals("User not found - KouChat", activity.getTitle());
+        checkTitle(activity, "User not found - KouChat");
         RobotiumTestUtils.writeLine(solo, "Should not be able to send this");
         solo.sleep(500);
         assertFalse(RobotiumTestUtils.searchText(solo, "Should not be able to send this"));
@@ -95,7 +96,7 @@ public class PrivateChatErrorHandlingTest extends ActivityInstrumentationTestCas
         solo = new Solo(getInstrumentation(), activity);
         solo.sleep(1000);
 
-        assertEquals("Kou - KouChat", activity.getTitle());
+        checkTitle(activity, "Kou - KouChat");
         RobotiumTestUtils.writeLine(solo, "Should be able to send this");
         solo.sleep(500);
         assertTrue(RobotiumTestUtils.searchText(solo, "Should be able to send this"));
@@ -129,5 +130,12 @@ public class PrivateChatErrorHandlingTest extends ActivityInstrumentationTestCas
         setActivity(null);
 
         System.gc();
+    }
+
+    private void checkTitle(final PrivateChatController activity, final String title) {
+        final ActionBar actionBar = activity.getSupportActionBar();
+
+        assertEquals(title, actionBar.getTitle());
+        assertNull(actionBar.getSubtitle());
     }
 }

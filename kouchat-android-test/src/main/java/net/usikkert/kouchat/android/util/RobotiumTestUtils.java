@@ -37,6 +37,8 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestUtils;
 import net.usikkert.kouchat.util.Tools;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.robotium.solo.Solo;
 
 import android.app.Activity;
@@ -421,21 +423,43 @@ public final class RobotiumTestUtils {
     /**
      * Opens a private chat with the specified user.
      *
+     * <p>Expects that the user is not away.</p>
+     *
      * @param solo The solo tester.
      * @param numberOfUsers Number of users to expect in the main chat.
      * @param userNumber The number to expect the specified user to be in the list.
-     * @param userName User name of the user to open the private chat with.
+     * @param userName Expected user name of the user to open the private chat with.
      */
     public static void openPrivateChat(final Solo solo, final int numberOfUsers, final int userNumber,
                                        final String userName) {
+        openPrivateChat(solo, numberOfUsers, userNumber, userName, null);
+    }
+
+    /**
+     * Opens a private chat with the specified user.
+     *
+     * <p>Supports a user that is away.</p>
+     *
+     * @param solo The solo tester.
+     * @param numberOfUsers Number of users to expect in the main chat.
+     * @param userNumber The number to expect the specified user to be in the list.
+     * @param userName Expected user name of the user to open the private chat with.
+     * @param awayMessage Expected away message of the user to open the private chat with.
+     */
+    public static void openPrivateChat(final Solo solo, final int numberOfUsers, final int userNumber,
+                                       final String userName, final String awayMessage) {
         solo.sleep(500);
         assertEquals(numberOfUsers, solo.getCurrentViews(ListView.class).get(0).getCount());
         solo.clickInList(userNumber);
         solo.sleep(500);
 
         solo.assertCurrentActivity("Should have opened the private chat", PrivateChatController.class);
+
         // To be sure we are chatting with the right user
-        assertEquals(userName + " - KouChat", solo.getCurrentActivity().getTitle());
+        final SherlockActivity currentActivity = (SherlockActivity) solo.getCurrentActivity();
+        final ActionBar actionBar = currentActivity.getSupportActionBar();
+        assertEquals(userName + " - KouChat", actionBar.getTitle());
+        assertEquals(awayMessage, actionBar.getSubtitle());
     }
 
     /**

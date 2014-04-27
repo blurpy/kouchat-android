@@ -27,6 +27,8 @@ import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestClient;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.robotium.solo.Solo;
 
 import android.graphics.Bitmap;
@@ -274,7 +276,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         client.goAway("Going away now");
         solo.sleep(500);
 
-        assertEquals("Test (away: Going away now) - KouChat", solo.getCurrentActivity().getTitle());
+        checkTitle("Test (away) - KouChat", "Going away now");
 
         RobotiumTestUtils.writeLine(solo, "Don't leave me!");
         solo.sleep(500);
@@ -286,7 +288,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         client.comeBack();
         solo.sleep(500);
 
-        assertEquals("Test - KouChat", solo.getCurrentActivity().getTitle());
+        checkTitle("Test - KouChat", null);
 
         RobotiumTestUtils.writeLine(solo, "You are back!");
         solo.sleep(500);
@@ -295,10 +297,10 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
 
     public void test09ShouldNotBeAbleToSendPrivateMessageToUserThatIsAway() {
         solo.sleep(500);
-        client.goAway("Going away now");
+        client.goAway("Going away again");
         solo.sleep(500);
 
-        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test (away: Going away now)");
+        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test (away)", "Going away again");
 
         RobotiumTestUtils.writeLine(solo, "Don't leave me!");
         solo.sleep(500);
@@ -317,7 +319,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         client.logoff();
         solo.sleep(500);
 
-        assertEquals("Test (offline) - KouChat", solo.getCurrentActivity().getTitle());
+        checkTitle("Test (offline) - KouChat", null);
 
         RobotiumTestUtils.writeLine(solo, "Don't leave me!");
         solo.sleep(500);
@@ -373,5 +375,13 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         final BitmapDrawable drawable = (BitmapDrawable) solo.getCurrentActivity().getResources().getDrawable(resourceId);
 
         return drawable.getBitmap();
+    }
+
+    private void checkTitle(final String title, final String subtitle) {
+        final SherlockActivity currentActivity = (SherlockActivity) solo.getCurrentActivity();
+        final ActionBar actionBar = currentActivity.getSupportActionBar();
+
+        assertEquals(title, actionBar.getTitle());
+        assertEquals(subtitle, actionBar.getSubtitle());
     }
 }
