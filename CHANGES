@@ -4,10 +4,11 @@
 
 * version 0.15.0 (xx.xx.2014)
   - Changed default nick name to be "NewUser" instead of a numerical id.
+  - The away message of another user, if set, is shown as a subtitle in the ActionBar of the private chat.
 
 
 * version 0.14.0 (15.04.2014)
-  - The topic, if set, is shown as subtitle in the ActionBar.
+  - The topic, if set, is shown as a subtitle in the ActionBar of the main chat.
   - Fixed bug where it was possible to get new lines in the nick name settings dialog.
   - Added support for setting the topic.
   - Added high performance wifi lock.
