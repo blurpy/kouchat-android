@@ -363,7 +363,7 @@ public final class Tools {
         final StringBuilder paddedString = new StringBuilder(stringToPad);
 
         for (int i = 0; i < missingPadding; i++) {
-             paddedString.append(" ");
+            paddedString.append(" ");
         }
 
         return paddedString.toString();
