@@ -15,6 +15,10 @@
             android:title="@string/settings"
             android:showAsAction="never|withText"/>
 
+      <item android:id="@+id/mainChatMenuAway"
+            android:title="@string/away"
+            android:showAsAction="never|withText"/>
+
       <item android:id="@+id/mainChatMenuTopic"
             android:title="@string/topic"
             android:showAsAction="never|withText"/>

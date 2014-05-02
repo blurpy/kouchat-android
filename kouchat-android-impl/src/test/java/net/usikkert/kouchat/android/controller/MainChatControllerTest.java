@@ -663,6 +663,16 @@ public class MainChatControllerTest {
     }
 
     @Test
+    public void onOptionsItemSelectedWithAwayMenuItemShouldTODO() {
+        activityController.create();
+
+        // TODO fix when implemented
+        final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuAway));
+
+        assertFalse(selected);
+    }
+
+    @Test
     public void onOptionsItemSelectedWithUnknownMenuItemShouldReturnFalse() {
         activityController.create();
 
