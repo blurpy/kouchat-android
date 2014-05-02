@@ -36,6 +36,8 @@ import net.usikkert.kouchat.ui.UserInterface;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
  * Test of {@link CommandParser}.
@@ -45,9 +47,12 @@ import org.mockito.ArgumentCaptor;
 public class CommandParserTest {
 
     private CommandParser parser;
+
     private MessageController messageController;
     private Controller controller;
     private TransferList transferList;
+    private UserInterface userInterface;
+
     private User me;
 
     @Before
@@ -57,7 +62,7 @@ public class CommandParserTest {
         transferList = mock(TransferList.class);
         when(controller.getTransferList()).thenReturn(transferList);
 
-        final UserInterface userInterface = mock(UserInterface.class);
+        userInterface = mock(UserInterface.class);
 
         messageController = mock(MessageController.class);
         when(userInterface.getMessageController()).thenReturn(messageController);
@@ -68,6 +73,9 @@ public class CommandParserTest {
         when(settings.getMe()).thenReturn(me);
 
         parser = new CommandParser(controller, userInterface, settings);
+
+        reset(controller); // controller.getTransferList()
+        reset(userInterface); // ui.getMessageController();
     }
 
     /*
@@ -285,7 +293,7 @@ public class CommandParserTest {
         assertEquals("doc_1.pdf", newFileCaptor.getValue().getName());
     }
 
-    /*
+   /*
     * cancel
     */
 
@@ -397,6 +405,96 @@ public class CommandParserTest {
         verify(messageController).showSystemMessage("You cancelled sending of doc.pdf to SomeOne");
         verify(controller).sendFileAbort(someOne, file.hashCode(), "doc.pdf");
         verify(fileSender).cancel();
+    }
+
+   /*
+    * away
+    */
+
+    @Test
+    public void awayShouldReturnIfNoArguments() {
+        parser.parse("/away");
+
+        verify(messageController).showSystemMessage("/away - missing argument <away message>");
+        verifyZeroInteractions(controller);
+    }
+
+    @Test
+    public void awayShouldReturnIfAlreadyAway() {
+        me.setAway(true);
+        me.setAwayMsg("Gone with the wind");
+
+        parser.parse("/away again");
+
+        verify(messageController).showSystemMessage("/away - you are already away: 'Gone with the wind'");
+        verifyZeroInteractions(controller);
+    }
+
+    @Test
+    public void awayShouldSetAsAway() throws CommandException {
+        doAnswer(new Answer<Void>() {
+            public Void answer(final InvocationOnMock invocation) throws Throwable {
+                me.setAwayMsg((String) invocation.getArguments()[2]); // Third argument is the away message
+                return null;
+            }
+        }).when(controller).changeAwayStatus(anyInt(), anyBoolean(), anyString());
+
+        parser.parse("/away Out shopping");
+
+        verify(controller).changeAwayStatus(123, true, "Out shopping");
+        verify(userInterface).changeAway(true);
+        verify(messageController).showSystemMessage("You went away: Out shopping");
+    }
+
+    @Test
+    public void awayShouldShowSystemMessageIfChangeFails() throws CommandException {
+        doThrow(new CommandException("Don't go away"))
+                .when(controller).changeAwayStatus(anyInt(), anyBoolean(), anyString());
+
+        parser.parse("/away Leaving for good");
+
+        verify(controller).changeAwayStatus(123, true, "Leaving for good");
+        verifyZeroInteractions(userInterface);
+        verify(messageController).showSystemMessage("Don't go away");
+    }
+
+    /*
+     * back
+     */
+
+    @Test
+    public void backShouldReturnIfNotAway() {
+        parser.parse("/back");
+
+        verify(messageController).showSystemMessage("/back - you are not away");
+        verifyZeroInteractions(controller);
+    }
+
+    @Test
+    public void backShouldSetAsBack() throws CommandException {
+        me.setAway(true);
+        me.setAwayMsg("Just away");
+
+        parser.parse("/back");
+
+        verify(controller).changeAwayStatus(123, false, "");
+        verify(userInterface).changeAway(false);
+        verify(messageController).showSystemMessage("You came back");
+    }
+
+    @Test
+    public void backShouldShowSystemMessageIfChangeFails() throws CommandException {
+        doThrow(new CommandException("Don't come back"))
+                .when(controller).changeAwayStatus(anyInt(), anyBoolean(), anyString());
+
+        me.setAway(true);
+        me.setAwayMsg("Just away");
+
+        parser.parse("/back");
+
+        verify(controller).changeAwayStatus(123, false, "");
+        verifyZeroInteractions(userInterface);
+        verify(messageController).showSystemMessage("Don't come back");
     }
 
     /*
