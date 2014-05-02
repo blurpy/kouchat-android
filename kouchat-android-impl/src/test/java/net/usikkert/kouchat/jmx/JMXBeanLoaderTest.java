@@ -84,7 +84,7 @@ public class JMXBeanLoaderTest {
     }
 
     private boolean containsBeanOfType(final List<JMXBean> jmxBeans, final Class<?> theClass) {
-        for (JMXBean jmxBean : jmxBeans) {
+        for (final JMXBean jmxBean : jmxBeans) {
             if (jmxBean.getClass().equals(theClass)) {
                 return true;
             }

@@ -89,7 +89,7 @@ public final class TestUtils {
             field.set(object, value);
         }
 
-        catch (IllegalAccessException e) {
+        catch (final IllegalAccessException e) {
             throw new RuntimeException(e);
         }
 
@@ -103,7 +103,7 @@ public final class TestUtils {
             return object.getClass().getDeclaredField(fieldName);
         }
 
-        catch (NoSuchFieldException e) {
+        catch (final NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
     }
@@ -116,7 +116,7 @@ public final class TestUtils {
             return fieldClass.cast(field.get(object));
         }
 
-        catch (IllegalAccessException e) {
+        catch (final IllegalAccessException e) {
             throw new RuntimeException(e);
         }
 

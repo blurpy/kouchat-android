@@ -374,7 +374,7 @@ public final class NetworkUtils {
             return NetworkInterface.getByName(name);
         }
 
-        catch (SocketException e) {
+        catch (final SocketException e) {
             LOG.log(Level.WARNING, e.toString());
             return null;
         }

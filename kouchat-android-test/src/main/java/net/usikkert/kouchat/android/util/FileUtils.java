@@ -211,14 +211,14 @@ public final class FileUtils {
             assertTrue("Should exist: " + fileToStore, fileToStore.exists());
         }
 
-        catch (IOException e) {
+        catch (final IOException e) {
             throw new RuntimeException(e);
         }
 
         finally {
             try {
                 closer.close();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
         }
