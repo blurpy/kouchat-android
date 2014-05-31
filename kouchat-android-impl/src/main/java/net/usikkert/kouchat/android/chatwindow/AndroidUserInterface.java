@@ -325,6 +325,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     }
 
     public void logOn() {
+        controller.start();
         controller.logOn();
     }
 

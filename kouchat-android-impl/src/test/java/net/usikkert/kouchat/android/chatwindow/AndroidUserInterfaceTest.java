@@ -354,8 +354,10 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void logOnShouldUseTheController() {
+    public void logOnShouldStartAndLogOnUsingTheController() {
         androidUserInterface.logOn();
+
+        verify(controller).start();
         verify(controller).logOn();
     }
 
