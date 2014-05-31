@@ -255,7 +255,18 @@ public class ToolsTest {
         assertEquals("this.is.a.song_2.ogg", file.getName());
     }
 
-    private File createTemporaryFile(final String fileName) throws IOException {
+    /**
+     * Creates a file that will be deleted when the jvm exists.
+     *
+     * @param file The file to create.
+     * @return The created file.
+     * @throws IOException If something goes wrong.
+     */
+    public static File createTemporaryFile(final File file) throws IOException {
+        return createTemporaryFile(file.getAbsolutePath());
+    }
+
+    private static File createTemporaryFile(final String fileName) throws IOException {
         final File file = new File(fileName);
 
         if (!file.exists()) {
