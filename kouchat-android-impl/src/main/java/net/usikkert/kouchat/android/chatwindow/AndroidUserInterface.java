@@ -46,6 +46,7 @@ import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.ui.ChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
+import net.usikkert.kouchat.util.Sleeper;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
@@ -71,6 +72,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     private final CommandParser commandParser;
     private final TransferList transferList;
     private final AndroidFileUtils androidFileUtils;
+    private final Sleeper sleeper;
 
     private MainChatController mainChatController;
 
@@ -89,6 +91,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         controller = new Controller(this, settings);
         commandParser = new CommandParser(controller, this, settings);
         androidFileUtils = new AndroidFileUtils();
+        sleeper = new Sleeper();
 
         userList = controller.getUserList();
         transferList = controller.getTransferList();
@@ -118,7 +121,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         notificationService.notifyNewFileTransfer(fileReceiver);
 
         while (!fileReceiver.isAccepted() && !fileReceiver.isRejected() && !fileReceiver.isCanceled()) {
-            Tools.sleep(500);
+            sleeper.sleep(500);
         }
 
         notificationService.cancelFileTransferNotification(fileReceiver);
