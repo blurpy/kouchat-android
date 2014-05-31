@@ -60,6 +60,7 @@ public class TestClient {
 
     public TestClient(final String nickName, final int userCode, final int ownColor) {
         final Settings settings = new Settings();
+        settings.setClient("Test");
 
         if (ownColor != 0) {
             settings.setOwnColor(ownColor);
@@ -90,6 +91,7 @@ public class TestClient {
     }
 
     public void logon() {
+        controller.start();
         controller.logOn();
 
         waitForConnection();
