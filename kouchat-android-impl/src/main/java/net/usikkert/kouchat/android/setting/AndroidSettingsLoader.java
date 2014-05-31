@@ -44,11 +44,14 @@ import android.preference.PreferenceManager;
  *   <li>Wake lock</li>
  * </ul>
  *
+ * <p>Also sets the client, but not from any stored setting.</p>
+ *
  * @author Christian Ihle
  */
 public class AndroidSettingsLoader {
 
     private static final String DEFAULT_NICK_NAME = "NewUser";
+    private static final String CLIENT = "Android";
 
     public void loadStoredSettings(final Context context, final Settings settings) {
         Validate.notNull(context, "Context can not be null");
@@ -56,10 +59,15 @@ public class AndroidSettingsLoader {
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
+        loadClient(settings);
         loadNickName(context, preferences, settings.getMe());
         loadOwnColor(context, preferences, settings);
         loadSystemColor(context, preferences, settings);
         loadWakeLock(context, preferences, settings);
+    }
+
+    private void loadClient(final Settings settings) {
+        settings.setClient(CLIENT);
     }
 
     private void loadNickName(final Context context, final SharedPreferences preferences, final User me) {

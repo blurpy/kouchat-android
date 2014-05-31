@@ -25,7 +25,6 @@ package net.usikkert.kouchat.android.service;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.android.util.RobolectricTestUtils;
@@ -67,17 +66,6 @@ public class ChatServiceTest {
         notificationService = mock(NotificationService.class);
         lockHandler = mock(LockHandler.class);
         chatServiceBinder = mock(ChatServiceBinder.class);
-
-        System.clearProperty(Constants.PROPERTY_CLIENT_UI);
-    }
-
-    @Test
-    public void onCreateShouldSetClientProperty() {
-        mockSystemServices();
-
-        chatService.onCreate();
-
-        assertEquals("Android", System.getProperty(Constants.PROPERTY_CLIENT_UI));
     }
 
     @Test

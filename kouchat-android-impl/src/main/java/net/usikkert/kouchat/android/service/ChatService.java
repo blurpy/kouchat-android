@@ -52,8 +52,6 @@ public class ChatService extends Service {
 
     @Override
     public void onCreate() {
-        System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
-
         notificationService = new NotificationService(this);
 
         final Settings settings = new Settings();

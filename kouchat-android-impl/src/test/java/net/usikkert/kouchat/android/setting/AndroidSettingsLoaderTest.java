@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android.setting;
 
 import static org.junit.Assert.*;
 
+import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.util.RobolectricTestUtils;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
@@ -171,5 +172,14 @@ public class AndroidSettingsLoaderTest {
         settingsLoader.loadStoredSettings(context, settings);
 
         assertEquals(54321, settings.getSysColor());
+    }
+
+    @Test
+    public void loadStoredSettingsShouldSetAndroidClient() {
+        assertEquals("<unknown>", me.getClient());
+
+        settingsLoader.loadStoredSettings(context, settings);
+
+        assertEquals("KouChat v" + Constants.APP_VERSION + " Android", me.getClient());
     }
 }
