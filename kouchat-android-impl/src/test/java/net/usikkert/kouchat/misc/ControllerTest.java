@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 import java.util.Arrays;
 
+import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
@@ -407,5 +408,16 @@ public class ControllerTest {
 
         verify(transferList).removeFileReceiver(fileReceiver1);
         verify(transferList).removeFileSender(fileSender1);
+    }
+
+    @Test
+    public void startShouldStartThreadsAndShowWelcomeMessages() {
+        controller.start();
+
+        verify(dayTimer).startTimer();
+        verify(idleThread).start();
+
+        verify(messageController).showSystemMessage("Welcome to KouChat v" + Constants.APP_VERSION + "!");
+        verify(messageController).showSystemMessage(startsWith("Today is "));
     }
 }

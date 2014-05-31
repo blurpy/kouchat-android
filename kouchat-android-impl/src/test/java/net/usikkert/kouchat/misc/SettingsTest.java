@@ -180,4 +180,14 @@ public class SettingsTest {
         assertEquals(100, settings.getSysColor());
         assertEquals(Setting.SYS_COLOR, lastChangedSetting);
     }
+
+    @Test
+    public void setClientShouldSetClientOnMeWithAppNameAndVersion() {
+        final User me = settings.getMe();
+        assertEquals("<unknown>", me.getClient());
+
+        settings.setClient("SuperClient");
+
+        assertEquals("KouChat v" + Constants.APP_VERSION + " SuperClient", me.getClient());
+    }
 }

@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.misc.ErrorHandler;
-import net.usikkert.kouchat.util.Tools;
 
 /**
  * This is the class that sends multicast messages over the network.
@@ -157,11 +156,8 @@ public class MessageSender {
 
                 mcSocket.joinGroup(address);
                 mcSocket.setTimeToLive(64);
-
-                if (!Tools.isAndroid()) { // Crashes in Android 2.3.3 emulator
-                    LOG.log(Level.FINE, "Connected to " + mcSocket.getNetworkInterface());
-                }
-
+                // // Crashes in Android 2.3.3 emulator
+                // LOG.log(Level.FINE, "Connected to " + mcSocket.getNetworkInterface());
                 connected = true;
             }
         }

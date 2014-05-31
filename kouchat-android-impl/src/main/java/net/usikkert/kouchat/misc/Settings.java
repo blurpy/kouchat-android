@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.SettingsListener;
+import net.usikkert.kouchat.util.IOTools;
 import net.usikkert.kouchat.util.Tools;
 
 /**
@@ -60,11 +61,12 @@ import net.usikkert.kouchat.util.Tools;
  */
 public class Settings {
 
-    /** The logger. */
     private static final Logger LOG = Logger.getLogger(Settings.class.getName());
 
     /** The path to the file storing the settings. */
     private static final String FILENAME = Constants.APP_FOLDER + "kouchat.ini";
+
+    private final IOTools ioTools = new IOTools();
 
     /** A list of listeners. These listeners are notified when a setting is changed. */
     private final List<SettingsListener> listeners;
@@ -124,9 +126,11 @@ public class Settings {
     private boolean wakeLockEnabled;
 
     /**
-     * Private constructor.
+     * Constructor.
      *
-     * Initializes default settings, and creates <code>me</code>.
+     * <p>Initializes default settings, and creates <code>me</code>.</p>
+     *
+     * <p>Remember to {@link #setClient(String)}.</p>
      */
     public Settings() {
         final int code = 10000000 + (int) (Math.random() * 9999999);
@@ -136,8 +140,6 @@ public class Settings {
         me.setLastIdle(System.currentTimeMillis());
         me.setLogonTime(System.currentTimeMillis());
         me.setOperatingSystem(System.getProperty("os.name"));
-        me.setClient(Constants.APP_NAME + " v" + Constants.APP_VERSION +
-                " " + System.getProperty(Constants.PROPERTY_CLIENT_UI));
 
         listeners = new ArrayList<SettingsListener>();
         errorHandler = ErrorHandler.getErrorHandler();
@@ -150,8 +152,18 @@ public class Settings {
 
         wakeLockEnabled = false;
 
-        loadArgumentSettings();
         loadSettings();
+    }
+
+    /**
+     * Sets the client to report to other users. Like <code>Swing, Android, Console</code>.
+     *
+     * <p>Must be done before logging on to the network.</p>
+     *
+     * @param client The client to set, on <code>me</code>.
+     */
+    public void setClient(final String client) {
+        me.setClient(Constants.APP_NAME + " v" + Constants.APP_VERSION + " " + client);
     }
 
     /**
@@ -179,12 +191,6 @@ public class Settings {
         }
 
         return Integer.toString(code);
-    }
-
-    private void loadArgumentSettings() {
-        noPrivateChat = Boolean.valueOf(System.getProperty(Constants.SETTINGS_NO_PRIVATE_CHAT));
-        alwaysLog = Boolean.valueOf(System.getProperty(Constants.SETTINGS_ALWAYS_LOG));
-        logLocation = System.getProperty(Constants.SETTINGS_LOG_LOCATION);
     }
 
     /**
@@ -234,45 +240,10 @@ public class Settings {
         }
 
         finally {
-            try {
-                if (buffWriter != null) {
-                    buffWriter.flush();
-                }
-            }
-
-            catch (final IOException e) {
-                LOG.log(Level.SEVERE, e.toString(), e);
-            }
-
-            try {
-                if (fileWriter != null) {
-                    fileWriter.flush();
-                }
-            }
-
-            catch (final IOException e) {
-                LOG.log(Level.SEVERE, e.toString(), e);
-            }
-
-            try {
-                if (buffWriter != null) {
-                    buffWriter.close();
-                }
-            }
-
-            catch (final IOException e) {
-                LOG.log(Level.SEVERE, e.toString(), e);
-            }
-
-            try {
-                if (fileWriter != null) {
-                    fileWriter.close();
-                }
-            }
-
-            catch (final IOException e) {
-                LOG.log(Level.SEVERE, e.toString(), e);
-            }
+            ioTools.flush(buffWriter);
+            ioTools.flush(fileWriter);
+            ioTools.close(buffWriter);
+            ioTools.close(fileWriter);
         }
     }
 
@@ -336,15 +307,7 @@ public class Settings {
         }
 
         finally {
-            try {
-                if (fileStream != null) {
-                    fileStream.close();
-                }
-            }
-
-            catch (final IOException e) {
-                LOG.log(Level.SEVERE, e.toString(), e);
-            }
+            ioTools.close(fileStream);
         }
     }
 

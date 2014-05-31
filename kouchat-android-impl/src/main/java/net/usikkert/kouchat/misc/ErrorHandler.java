@@ -33,10 +33,10 @@ import net.usikkert.kouchat.event.ErrorListener;
  *
  * @author Christian Ihle
  */
-public final class ErrorHandler {
+public class ErrorHandler {
 
     /** The single instance of this class. */
-    private static final ErrorHandler INSTANCE = new ErrorHandler();
+    private static final ErrorHandler INSTANCE = new ErrorHandler(); // TODO remove singleton
 
     /** The error listeners. */
     private final List<ErrorListener> listeners;

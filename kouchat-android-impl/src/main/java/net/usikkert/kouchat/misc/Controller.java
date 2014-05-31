@@ -81,8 +81,9 @@ public class Controller implements NetworkConnectionListener {
     private final Thread shutdownHook;
 
     /**
-     * Constructor. Initializes the controller, but does not log on to
-     * the network.
+     * Constructor. Initializes the controller.
+     *
+     * <p>Use {@link #start()} and {@link #logOn()} to connect to the network.</p>
      *
      * @param ui The active user interface object.
      * @param settings The settings to use.
@@ -121,7 +122,12 @@ public class Controller implements NetworkConnectionListener {
         messages = new Messages(networkService, settings);
         networkService.registerNetworkConnectionListener(this);
         msgController = ui.getMessageController();
+    }
 
+    /**
+     * Starts background threads and shows welcome messages in the user interface.
+     */
+    public void start() {
         dayTimer.startTimer();
         idleThread.start();
 

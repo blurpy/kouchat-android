@@ -27,8 +27,6 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 
-import net.usikkert.kouchat.Constants;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -257,46 +255,7 @@ public class ToolsTest {
         assertEquals("this.is.a.song_2.ogg", file.getName());
     }
 
-    @Test
-    public void isAndroidShouldBeFalseByDefault() {
-        System.clearProperty(Constants.PROPERTY_CLIENT_UI); // The test fails on CloudBees Jenkins without this
-
-        assertFalse(Tools.isAndroid());
-    }
-
-    @Test
-    public void isAndroidShouldBeFalseIfSwing() {
-        System.setProperty(Constants.PROPERTY_CLIENT_UI, "Swing");
-
-        assertFalse(Tools.isAndroid());
-    }
-
-    @Test
-    public void isAndroidShouldBeFalseIfConsole() {
-        System.setProperty(Constants.PROPERTY_CLIENT_UI, "Console");
-
-        assertFalse(Tools.isAndroid());
-    }
-
-    @Test
-    public void isAndroidShouldBeTrueIfAndroid() {
-        System.setProperty(Constants.PROPERTY_CLIENT_UI, "Android");
-
-        assertTrue(Tools.isAndroid());
-    }
-
-    /**
-     * Creates a file that will be deleted when the jvm exists.
-     *
-     * @param file The file to create.
-     * @return The created file.
-     * @throws IOException If something goes wrong.
-     */
-    public static File createTemporaryFile(final File file) throws IOException {
-        return createTemporaryFile(file.getAbsolutePath());
-    }
-
-    private static File createTemporaryFile(final String fileName) throws IOException {
+    private File createTemporaryFile(final String fileName) throws IOException {
         final File file = new File(fileName);
 
         if (!file.exists()) {

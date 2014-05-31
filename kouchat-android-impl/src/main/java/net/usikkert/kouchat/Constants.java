@@ -114,12 +114,6 @@ public interface Constants {
     String MESSAGE_CHARSET = "UTF-8";
 
     /**
-     * Name of the property used to save and retrieve
-     * the type of user interface the client is using.
-     */
-    String PROPERTY_CLIENT_UI = "chat.client.ui";
-
-    /**
      * Max number of bytes allowed in a message to send
      * over a udp connection.
      */
@@ -151,19 +145,4 @@ public interface Constants {
      * Which file to find the tips & tricks.
      */
     String FILE_TIPS = "TipsAndTricks.txt";
-
-    /**
-     * Property to access setting for <code>no private chat</code>.
-     */
-    String SETTINGS_NO_PRIVATE_CHAT = "settings.noPrivateChat";
-
-    /**
-     * Property to access setting for <code>always log</code>.
-     */
-    String SETTINGS_ALWAYS_LOG = "settings.alwaysLog";
-
-    /**
-     * Property to access setting for <code>log location</code>.
-     */
-    String SETTINGS_LOG_LOCATION = "settings.logLocation";
 }
