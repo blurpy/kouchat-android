@@ -36,8 +36,6 @@ import net.usikkert.kouchat.ui.UserInterface;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 /**
  * Test of {@link CommandParser}.
@@ -51,7 +49,6 @@ public class CommandParserTest {
     private MessageController messageController;
     private Controller controller;
     private TransferList transferList;
-    private UserInterface userInterface;
 
     private User me;
 
@@ -62,7 +59,7 @@ public class CommandParserTest {
         transferList = mock(TransferList.class);
         when(controller.getTransferList()).thenReturn(transferList);
 
-        userInterface = mock(UserInterface.class);
+        final UserInterface userInterface = mock(UserInterface.class);
 
         messageController = mock(MessageController.class);
         when(userInterface.getMessageController()).thenReturn(messageController);
@@ -432,29 +429,19 @@ public class CommandParserTest {
 
     @Test
     public void awayShouldSetAsAway() throws CommandException {
-        doAnswer(new Answer<Void>() {
-            public Void answer(final InvocationOnMock invocation) throws Throwable {
-                me.setAwayMsg((String) invocation.getArguments()[2]); // Third argument is the away message
-                return null;
-            }
-        }).when(controller).changeAwayStatus(anyInt(), anyBoolean(), anyString());
-
         parser.parse("/away Out shopping");
 
-        verify(controller).changeAwayStatus(123, true, "Out shopping");
-        verify(userInterface).changeAway(true);
-        verify(messageController).showSystemMessage("You went away: Out shopping");
+        verify(controller).goAway("Out shopping");
+        verifyZeroInteractions(messageController);
     }
 
     @Test
     public void awayShouldShowSystemMessageIfChangeFails() throws CommandException {
-        doThrow(new CommandException("Don't go away"))
-                .when(controller).changeAwayStatus(anyInt(), anyBoolean(), anyString());
+        doThrow(new CommandException("Don't go away")).when(controller).goAway(anyString());
 
         parser.parse("/away Leaving for good");
 
-        verify(controller).changeAwayStatus(123, true, "Leaving for good");
-        verifyZeroInteractions(userInterface);
+        verify(controller).goAway("Leaving for good");
         verify(messageController).showSystemMessage("Don't go away");
     }
 
@@ -477,23 +464,20 @@ public class CommandParserTest {
 
         parser.parse("/back");
 
-        verify(controller).changeAwayStatus(123, false, "");
-        verify(userInterface).changeAway(false);
-        verify(messageController).showSystemMessage("You came back");
+        verify(controller).comeBack();
+        verifyZeroInteractions(messageController);
     }
 
     @Test
     public void backShouldShowSystemMessageIfChangeFails() throws CommandException {
-        doThrow(new CommandException("Don't come back"))
-                .when(controller).changeAwayStatus(anyInt(), anyBoolean(), anyString());
+        doThrow(new CommandException("Don't come back")).when(controller).comeBack();
 
         me.setAway(true);
         me.setAwayMsg("Just away");
 
         parser.parse("/back");
 
-        verify(controller).changeAwayStatus(123, false, "");
-        verifyZeroInteractions(userInterface);
+        verify(controller).comeBack();
         verify(messageController).showSystemMessage("Don't come back");
     }
 

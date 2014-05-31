@@ -62,6 +62,7 @@ public class ControllerTest {
     private DayTimer dayTimer;
     private TransferList transferList;
     private MessageController messageController;
+    private UserInterface ui;
 
     private User me;
     private UserList userList;
@@ -73,11 +74,11 @@ public class ControllerTest {
         me = new User("TestUser", 123);
         when(settings.getMe()).thenReturn(me);
 
-        final UserInterface ui = mock(UserInterface.class);
+        ui = mock(UserInterface.class);
         messageController = mock(MessageController.class);
         when(ui.getMessageController()).thenReturn(messageController);
 
-        controller = new Controller(ui, settings);
+        controller = spy(new Controller(ui, settings));
 
         messages = mock(Messages.class);
         TestUtils.setFieldValue(controller, "messages", messages);
@@ -419,5 +420,101 @@ public class ControllerTest {
 
         verify(messageController).showSystemMessage("Welcome to KouChat v" + Constants.APP_VERSION + "!");
         verify(messageController).showSystemMessage(startsWith("Today is "));
+    }
+
+    @Test
+    public void changeAwayStatusShouldThrowExceptionIfMeAndNotLoggedOn() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not change away mode without being connected");
+
+        controller.changeAwayStatus(me.getCode(), true, "something");
+    }
+
+    @Test
+    public void changeAwayStatusShouldThrowExceptionIfMessageIsTooLong() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not set an away message with more than 450 bytes");
+
+        when(controller.isLoggedOn()).thenReturn(true);
+
+        controller.changeAwayStatus(me.getCode(), true, createStringOfSize(451));
+    }
+
+    @Test
+    public void changeAwayStatusToAwayWithMeShouldSendAwayMessageAndChangeStatus() throws CommandException {
+        when(controller.isLoggedOn()).thenReturn(true);
+        final UserListController userListController =
+                TestUtils.setFieldValueWithMock(controller, "userListController", UserListController.class);
+
+        controller.changeAwayStatus(me.getCode(), true, "this is the message");
+
+        verify(messages).sendAwayMessage("this is the message");
+        verify(userListController).changeAwayStatus(me.getCode(), true, "this is the message");
+    }
+
+    @Test
+    public void changeAwayStatusToBackWithMeShouldSendBackMessageAndChangeStatus() throws CommandException {
+        when(controller.isLoggedOn()).thenReturn(true);
+        final UserListController userListController =
+                TestUtils.setFieldValueWithMock(controller, "userListController", UserListController.class);
+
+        controller.changeAwayStatus(me.getCode(), false, "");
+
+        verify(messages).sendBackMessage();
+        verify(userListController).changeAwayStatus(me.getCode(), false, "");
+    }
+
+    @Test
+    public void changeAwayStatusToAwayWithSomeoneElseShouldOnlyChangeStatus() throws CommandException {
+        final UserListController userListController =
+                TestUtils.setFieldValueWithMock(controller, "userListController", UserListController.class);
+
+        controller.changeAwayStatus(654, true, "Away message");
+
+        verifyZeroInteractions(messages);
+        verify(userListController).changeAwayStatus(654, true, "Away message");
+    }
+
+    @Test
+    public void changeAwayStatusToBackWithSomeoneElseShouldOnlyChangeStatus() throws CommandException {
+        final UserListController userListController =
+                TestUtils.setFieldValueWithMock(controller, "userListController", UserListController.class);
+
+        controller.changeAwayStatus(654, false, "");
+
+        verifyZeroInteractions(messages);
+        verify(userListController).changeAwayStatus(654, false, "");
+    }
+
+    @Test
+    public void goAwayShouldChangeAwayStatusAndUpdateUserInterfaceAndShowSystemMessage() throws CommandException {
+        when(controller.isLoggedOn()).thenReturn(true);
+
+        controller.goAway("The away message");
+
+        verify(controller).changeAwayStatus(me.getCode(), true, "The away message");
+        verify(ui).changeAway(true);
+        verify(messageController).showSystemMessage("You went away: The away message");
+    }
+
+    @Test
+    public void comeBackShouldChangeAwayStatusAndUpdateUserInterfaceAndShowSystemMessage() throws CommandException {
+        when(controller.isLoggedOn()).thenReturn(true);
+
+        controller.comeBack();
+
+        verify(controller).changeAwayStatus(me.getCode(), false, "");
+        verify(ui).changeAway(false);
+        verify(messageController).showSystemMessage("You came back");
+    }
+
+    private String createStringOfSize(final int size) {
+        final StringBuilder sb = new StringBuilder(size);
+
+        for (int i = 0; i < size; i++) {
+            sb.append("a");
+        }
+
+        return sb.toString();
     }
 }

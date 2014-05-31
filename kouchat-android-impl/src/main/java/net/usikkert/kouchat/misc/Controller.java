@@ -210,6 +210,31 @@ public class Controller implements NetworkConnectionListener {
     }
 
     /**
+     * Sets the application user as away with the specified away message.
+     *
+     * @param awayMessage The away message to use.
+     * @throws CommandException If the application user could not be set as away.
+     */
+    public void goAway(final String awayMessage) throws CommandException {
+        changeAwayStatus(me.getCode(), true, awayMessage);
+
+        ui.changeAway(true);
+        msgController.showSystemMessage("You went away: " + me.getAwayMsg());
+    }
+
+    /**
+     * Sets the application user as back from away.
+     *
+     * @throws CommandException If the application user could not be set as back from away.
+     */
+    public void comeBack() throws CommandException {
+        changeAwayStatus(me.getCode(), false, "");
+
+        ui.changeAway(false);
+        msgController.showSystemMessage("You came back");
+    }
+
+    /**
      * Updates the away status and the away message for the user.
      *
      * @param code The user code for the user to update.

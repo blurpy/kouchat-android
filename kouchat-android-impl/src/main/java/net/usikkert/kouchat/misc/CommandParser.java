@@ -122,9 +122,7 @@ public class CommandParser {
 
             else {
                 try {
-                    controller.changeAwayStatus(me.getCode(), true, args.trim());
-                    ui.changeAway(true);
-                    msgController.showSystemMessage("You went away: " + me.getAwayMsg());
+                    controller.goAway(args.trim());
                 }
 
                 catch (final CommandException e) {
@@ -141,9 +139,7 @@ public class CommandParser {
     private void cmdBack() {
         if (me.isAway()) {
             try {
-                controller.changeAwayStatus(me.getCode(), false, "");
-                ui.changeAway(false);
-                msgController.showSystemMessage("You came back");
+                controller.comeBack();
             }
 
             catch (final CommandException e) {
