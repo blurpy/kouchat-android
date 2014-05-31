@@ -22,7 +22,6 @@
 
 package net.usikkert.kouchat.android.service;
 
-import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.android.setting.AndroidSettingsLoader;
