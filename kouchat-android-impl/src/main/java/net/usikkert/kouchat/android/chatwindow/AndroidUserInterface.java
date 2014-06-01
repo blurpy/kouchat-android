@@ -27,6 +27,8 @@ import java.util.concurrent.ExecutionException;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.android.component.Command;
+import net.usikkert.kouchat.android.component.CommandWithToastOnExceptionAsyncTask;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.filetransfer.AndroidFileTransferListener;
 import net.usikkert.kouchat.android.filetransfer.AndroidFileUtils;
@@ -223,30 +225,12 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
      * @param topic The new topic to set.
      */
     public void changeTopic(final String topic) {
-        final AsyncTask<Void, Void, Void> changeTopicTask = new AsyncTask<Void, Void, Void>() {
-
-            private CommandException exception;
-
+        new CommandWithToastOnExceptionAsyncTask(context, new Command() {
             @Override
-            public Void doInBackground(final Void... voids) {
-                try {
-                    commandParser.fixTopic(topic);
-                } catch (final CommandException e) {
-                    exception = e;
-                }
-
-                return null;
+            public void runCommand() throws CommandException {
+                commandParser.fixTopic(topic);
             }
-
-            @Override
-            protected void onPostExecute(final Void aVoid) {
-                if (exception != null) { // Toast needs to be on UI thread, like in onPostExecute()
-                    Toast.makeText(context, exception.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-
-        changeTopicTask.execute((Void) null);
+        }).execute();
     }
 
     @Override
@@ -274,60 +258,24 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
      * @param awayMessage The away message to use.
      */
     public void goAway(final String awayMessage) {
-        final AsyncTask<Void, Void, Void> goAwayTask = new AsyncTask<Void, Void, Void>() {
-
-            private CommandException exception;
-
+        new CommandWithToastOnExceptionAsyncTask(context, new Command() {
             @Override
-            public Void doInBackground(final Void... voids) {
-                try {
-                    controller.goAway(awayMessage);
-                } catch (final CommandException e) {
-                    exception = e;
-                }
-
-                return null;
+            public void runCommand() throws CommandException {
+                controller.goAway(awayMessage);
             }
-
-            @Override
-            protected void onPostExecute(final Void aVoid) {
-                if (exception != null) { // Toast needs to be on UI thread, like in onPostExecute()
-                    Toast.makeText(context, exception.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-
-        goAwayTask.execute((Void) null);
+        }).execute();
     }
 
     /**
      * Sets the application user as back from away.
      */
     public void comeBack() {
-        final AsyncTask<Void, Void, Void> comeBackTask = new AsyncTask<Void, Void, Void>() {
-
-            private CommandException exception;
-
+        new CommandWithToastOnExceptionAsyncTask(context, new Command() {
             @Override
-            public Void doInBackground(final Void... voids) {
-                try {
-                    controller.comeBack();
-                } catch (final CommandException e) {
-                    exception = e;
-                }
-
-                return null;
+            public void runCommand() throws CommandException {
+                controller.comeBack();
             }
-
-            @Override
-            protected void onPostExecute(final Void aVoid) {
-                if (exception != null) { // Toast needs to be on UI thread, like in onPostExecute()
-                    Toast.makeText(context, exception.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-
-        comeBackTask.execute((Void) null);
+        }).execute();
     }
 
     /**
@@ -615,30 +563,12 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
      * @param file The file to send.
      */
     public void sendFile(final User user, final File file) {
-        final AsyncTask<Void, Void, Void> sendFileTask = new AsyncTask<Void, Void, Void>() {
-
-            private CommandException exception;
-
+        new CommandWithToastOnExceptionAsyncTask(context, new Command() {
             @Override
-            public Void doInBackground(final Void... voids) {
-                try {
-                    commandParser.sendFile(user, file);
-                } catch (final CommandException e) {
-                    exception = e;
-                }
-
-                return null;
+            public void runCommand() throws CommandException {
+                commandParser.sendFile(user, file);
             }
-
-            @Override
-            protected void onPostExecute(final Void aVoid) {
-                if (exception != null) { // Toast needs to be on UI thread, like in onPostExecute()
-                    Toast.makeText(context, exception.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-
-        sendFileTask.execute((Void) null);
+        }).execute();
     }
 
     public void registerNetworkConnectionListener(final NetworkConnectionListener listener) {
