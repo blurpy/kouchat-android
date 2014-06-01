@@ -361,7 +361,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
             }
         };
 
-        logOffTask.execute((Void) null);
+        logOffTask.execute();
     }
 
     public boolean isLoggedOn() {
@@ -398,7 +398,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
             }
         };
 
-        sendMessageTask.execute((Void) null);
+        sendMessageTask.execute();
     }
 
     public void sendPrivateMessage(final String privateMessage, final User user) {
@@ -421,7 +421,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
             }
         };
 
-        sendMessageTask.execute((Void) null);
+        sendMessageTask.execute();
     }
 
     public boolean changeNickName(final String nick) {
@@ -465,7 +465,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
             }
         };
 
-        changeNickNameTask.execute((Void) null);
+        changeNickNameTask.execute();
 
         try {
             return changeNickNameTask.get();
@@ -519,7 +519,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
             }
         };
 
-        updateMeWritingTask.execute((Void) null);
+        updateMeWritingTask.execute();
     }
 
     /**
