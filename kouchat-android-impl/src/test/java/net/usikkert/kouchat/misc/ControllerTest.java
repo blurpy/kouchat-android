@@ -498,6 +498,22 @@ public class ControllerTest {
     }
 
     @Test
+    public void goAwayShouldThrowExceptionIfAwayMessageIsNull() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not go away without an away message");
+
+        controller.goAway(null);
+    }
+
+    @Test
+    public void goAwayShouldThrowExceptionIfAwayMessageIsEmpty() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not go away without an away message");
+
+        controller.goAway(" ");
+    }
+
+    @Test
     public void comeBackShouldChangeAwayStatusAndUpdateUserInterfaceAndShowSystemMessage() throws CommandException {
         when(controller.isLoggedOn()).thenReturn(true);
 

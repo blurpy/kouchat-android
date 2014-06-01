@@ -212,10 +212,14 @@ public class Controller implements NetworkConnectionListener {
     /**
      * Sets the application user as away with the specified away message.
      *
-     * @param awayMessage The away message to use.
-     * @throws CommandException If the application user could not be set as away.
+     * @param awayMessage The away message to use. Can not be empty.
+     * @throws CommandException If the away message is empty, or the application user could not be set as away.
      */
     public void goAway(final String awayMessage) throws CommandException {
+        if (Tools.isEmpty(awayMessage)) {
+            throw new CommandException("You can not go away without an away message");
+        }
+
         changeAwayStatus(me.getCode(), true, awayMessage);
 
         ui.changeAway(true);
