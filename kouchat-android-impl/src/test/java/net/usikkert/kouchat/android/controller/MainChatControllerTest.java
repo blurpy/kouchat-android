@@ -663,13 +663,32 @@ public class MainChatControllerTest {
     }
 
     @Test
-    public void onOptionsItemSelectedWithAwayMenuItemShouldTODO() {
+    public void onOptionsItemSelectedWithAwayMenuItemWhenNotAwayShouldShowGoAwayDialog() {
         activityController.create();
 
-        // TODO fix when implemented
+        when(ui.isAway()).thenReturn(false);
+
         final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuAway));
 
-        assertFalse(selected);
+        assertTrue(selected);
+
+        final ShadowAlertDialog latestDialog = Robolectric.getShadowApplication().getLatestAlertDialog();
+        assertNotNull(latestDialog.getView().findViewById(R.id.goAwayDialogMessage));
+    }
+
+    @Test
+    public void onOptionsItemSelectedWithAwayMenuItemWhenAwayShouldShowComeBackDialog() {
+        activityController.create();
+
+        when(ui.isAway()).thenReturn(true);
+        when(ui.getMe()).thenReturn(new User("Me", 123));
+
+        final boolean selected = controller.onOptionsItemSelected(createMenuItem(R.id.mainChatMenuAway));
+
+        assertTrue(selected);
+
+        final ShadowAlertDialog latestDialog = Robolectric.getShadowApplication().getLatestAlertDialog();
+        assertNotNull(latestDialog.getView().findViewById(R.id.comeBackDialogMessage));
     }
 
     @Test

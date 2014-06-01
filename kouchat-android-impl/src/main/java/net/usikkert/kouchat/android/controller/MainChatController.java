@@ -25,6 +25,8 @@ package net.usikkert.kouchat.android.controller;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.component.AboutDialog;
+import net.usikkert.kouchat.android.component.ComeBackDialog;
+import net.usikkert.kouchat.android.component.GoAwayDialog;
 import net.usikkert.kouchat.android.component.TopicDialog;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
@@ -323,7 +325,13 @@ public class MainChatController extends SherlockActivity implements UserListList
     }
 
     private boolean showAwayDialog() {
-        return false;
+        if (androidUserInterface.isAway()) {
+            new ComeBackDialog(this, androidUserInterface);
+        } else {
+            new GoAwayDialog(this, androidUserInterface);
+        }
+
+        return true;
     }
 
     private boolean showTopicDialog() {
