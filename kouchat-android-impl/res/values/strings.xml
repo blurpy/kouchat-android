@@ -51,11 +51,11 @@
   <string name="accept">Accept</string>
   <string name="reject">Reject</string>
   <string name="topic">Topic</string>
-  <string name="topic_dialog_set_topic">Set or change the current topic.</string>
-  <string name="topic_dialog_enter_topic">Enter topic</string>
+  <string name="topic_dialog_message">Set or change the current topic.</string>
+  <string name="topic_dialog_enter_topic_hint">Enter topic</string>
   <string name="away">Away</string>
-  <string name="go_away_dialog_set_away">Go away?</string>
-  <string name="go_away_dialog_enter_away_message">Enter away message</string>
+  <string name="go_away_dialog_message">Go away?</string>
+  <string name="go_away_dialog_enter_away_message_hint">Enter away message</string>
   <string name="come_back_dialog_message">Come back from \'%1$s\'?</string>
 
 </resources>

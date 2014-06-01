@@ -9,7 +9,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size"
-            android:text="@string/topic_dialog_set_topic"
+            android:text="@string/topic_dialog_message"
             android:padding="8dp"/>
 
   <EditText android:id="@+id/topicDialogInput"
@@ -17,6 +17,6 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size"
             android:layout_margin="4dp"
-            android:hint="@string/topic_dialog_enter_topic"/>
+            android:hint="@string/topic_dialog_enter_topic_hint"/>
 
 </LinearLayout>

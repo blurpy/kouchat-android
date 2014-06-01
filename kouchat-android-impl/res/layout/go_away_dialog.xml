@@ -9,7 +9,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size"
-            android:text="@string/go_away_dialog_set_away"
+            android:text="@string/go_away_dialog_message"
             android:padding="8dp"/>
 
   <EditText android:id="@+id/goAwayDialogInput"
@@ -17,6 +17,6 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size"
             android:layout_margin="4dp"
-            android:hint="@string/go_away_dialog_enter_away_message"/>
+            android:hint="@string/go_away_dialog_enter_away_message_hint"/>
 
 </LinearLayout>
