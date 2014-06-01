@@ -56,5 +56,6 @@
   <string name="away">Away</string>
   <string name="go_away_dialog_set_away">Go away?</string>
   <string name="go_away_dialog_enter_away_message">Enter away message</string>
+  <string name="come_back_dialog_message">Come back from \'%1$s\'?</string>
 
 </resources>
