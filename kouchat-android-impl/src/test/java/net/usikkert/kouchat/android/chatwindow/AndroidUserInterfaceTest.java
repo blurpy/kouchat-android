@@ -812,4 +812,49 @@ public class AndroidUserInterfaceTest {
         verify(commandParser).fixTopic("Don't set this topic");
         assertEquals("Can't set topic", ShadowToast.getTextOfLatestToast());
     }
+
+    @Test
+    public void isAwayShouldBeSameAsMe() {
+        me.setAway(true);
+        assertTrue(androidUserInterface.isAway());
+
+        me.setAway(false);
+        assertFalse(androidUserInterface.isAway());
+    }
+
+    @Test
+    public void goAwayShouldUseTheController() throws CommandException {
+        androidUserInterface.goAway("the message");
+
+        verify(controller).goAway("the message");
+        assertEquals(0, ShadowToast.shownToastCount());
+    }
+
+    @Test
+    public void goAwayShouldShowToastOnException() throws CommandException {
+        doThrow(new CommandException("Can't go away")).when(controller).goAway(anyString());
+
+        androidUserInterface.goAway("Don't go away");
+
+        verify(controller).goAway("Don't go away");
+        assertEquals("Can't go away", ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    public void comeBackShouldUseTheController() throws CommandException {
+        androidUserInterface.comeBack();
+
+        verify(controller).comeBack();
+        assertEquals(0, ShadowToast.shownToastCount());
+    }
+
+    @Test
+    public void comeBackShouldShowToastOnException() throws CommandException {
+        doThrow(new CommandException("Can't come back")).when(controller).comeBack();
+
+        androidUserInterface.comeBack();
+
+        verify(controller).comeBack();
+        assertEquals("Can't come back", ShadowToast.getTextOfLatestToast());
+    }
 }

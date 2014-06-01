@@ -260,6 +260,77 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     }
 
     /**
+     * Checks if the application user is currently away.
+     *
+     * @return If away.
+     */
+    public boolean isAway() {
+        return me.isAway();
+    }
+
+    /**
+     * Sets the application user as away, with the specified away message.
+     *
+     * @param awayMessage The away message to use.
+     */
+    public void goAway(final String awayMessage) {
+        final AsyncTask<Void, Void, Void> goAwayTask = new AsyncTask<Void, Void, Void>() {
+
+            private CommandException exception;
+
+            @Override
+            public Void doInBackground(final Void... voids) {
+                try {
+                    controller.goAway(awayMessage);
+                } catch (final CommandException e) {
+                    exception = e;
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(final Void aVoid) {
+                if (exception != null) { // Toast needs to be on UI thread, like in onPostExecute()
+                    Toast.makeText(context, exception.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        goAwayTask.execute((Void) null);
+    }
+
+    /**
+     * Sets the application user as back from away.
+     */
+    public void comeBack() {
+        final AsyncTask<Void, Void, Void> comeBackTask = new AsyncTask<Void, Void, Void>() {
+
+            private CommandException exception;
+
+            @Override
+            public Void doInBackground(final Void... voids) {
+                try {
+                    controller.comeBack();
+                } catch (final CommandException e) {
+                    exception = e;
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(final Void aVoid) {
+                if (exception != null) { // Toast needs to be on UI thread, like in onPostExecute()
+                    Toast.makeText(context, exception.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        comeBackTask.execute((Void) null);
+    }
+
+    /**
      * Notifies about a new message if the main chat is not visible.
      */
     @Override
