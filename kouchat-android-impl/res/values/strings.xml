@@ -54,5 +54,7 @@
   <string name="topic_dialog_set_topic">Set or change the current topic.</string>
   <string name="topic_dialog_enter_topic">Enter topic</string>
   <string name="away">Away</string>
+  <string name="go_away_dialog_set_away">Go away?</string>
+  <string name="go_away_dialog_enter_away_message">Enter away message</string>
 
 </resources>
