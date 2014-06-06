@@ -354,7 +354,7 @@ public class DefaultMessageResponder implements MessageResponder {
                 controller.changeAwayStatus(userCode, away, awayMsg);
 
                 if (away) {
-                    msgController.showSystemMessage(user.getNick() + " went away: " + awayMsg);
+                    msgController.showSystemMessage(user.getNick() + " went away: " + user.getAwayMsg());
                 } else {
                     msgController.showSystemMessage(user.getNick() + " came back");
                 }
