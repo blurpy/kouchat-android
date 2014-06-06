@@ -194,6 +194,11 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
     }
 
     public void test04RestoreNickNameAndQuit() {
+        // In case any of the tests here fail, log off to avoid the tests in the next classes from failing as well.
+        arthur.logoff();
+        ford.logoff();
+        trillian.logoff();
+
         assertNotNull(originalNickName);
 
         RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
