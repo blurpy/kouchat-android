@@ -453,6 +453,18 @@ public class ControllerTest {
     }
 
     @Test
+    public void changeAwayStatusToAwayShouldTrimAwayMessage() throws CommandException {
+        when(controller.isLoggedOn()).thenReturn(true);
+        final UserListController userListController =
+                TestUtils.setFieldValueWithMock(controller, "userListController", UserListController.class);
+
+        controller.changeAwayStatus(me.getCode(), true, "    trim me    ");
+
+        verify(messages).sendAwayMessage("trim me");
+        verify(userListController).changeAwayStatus(me.getCode(), true, "trim me");
+    }
+
+    @Test
     public void changeAwayStatusToBackWithMeShouldSendBackMessageAndChangeStatus() throws CommandException {
         when(controller.isLoggedOn()).thenReturn(true);
         final UserListController userListController =

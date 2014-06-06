@@ -243,7 +243,7 @@ public class Controller implements NetworkConnectionListener {
      *
      * @param code The user code for the user to update.
      * @param away If the user is away or not.
-     * @param awaymsg The away message for that user.
+     * @param awaymsg The away message for that user. Will be trimmed.
      * @throws CommandException If there is no connection to the network,
      *         or the user tries to set an away message that is to long.
      */
@@ -254,15 +254,17 @@ public class Controller implements NetworkConnectionListener {
             throw new CommandException("You can not set an away message with more than " + Constants.MESSAGE_MAX_BYTES + " bytes");
         }
 
+        final String trimmedAwayMessage = awaymsg.trim();
+
         if (code == me.getCode()) {
             if (away) {
-                messages.sendAwayMessage(awaymsg);
+                messages.sendAwayMessage(trimmedAwayMessage);
             } else {
                 messages.sendBackMessage();
             }
         }
 
-        userListController.changeAwayStatus(code, away, awaymsg);
+        userListController.changeAwayStatus(code, away, trimmedAwayMessage);
     }
 
     /**
