@@ -25,6 +25,8 @@ package net.usikkert.kouchat.android.component;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.concurrent.ExecutionException;
+
 import net.usikkert.kouchat.misc.CommandException;
 
 import org.junit.Before;
@@ -90,5 +92,21 @@ public class CommandWithToastOnExceptionAsyncTaskTest {
 
         verify(command).runCommand();
         assertEquals("Don't run", ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    public void getShouldReturnTrueAfterSuccessfulCommand() throws ExecutionException, InterruptedException {
+        asyncTask.execute();
+
+        assertTrue(asyncTask.get());
+    }
+
+    @Test
+    public void getShouldReturnFalseOnException() throws CommandException, ExecutionException, InterruptedException {
+        doThrow(new CommandException("Don't run")).when(command).runCommand();
+
+        asyncTask.execute();
+
+        assertFalse(asyncTask.get());
     }
 }

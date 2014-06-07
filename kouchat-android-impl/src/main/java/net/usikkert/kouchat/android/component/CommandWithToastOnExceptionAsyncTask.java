@@ -32,9 +32,12 @@ import android.widget.Toast;
 /**
  * An {@link AsyncTask} that runs a {@link Command}, and shows a toast with the exception if it occurs.
  *
+ * <p>{@link #get()} returns <code>true</code> if the command succeeded, and <code>false</code>
+ * if it failed with an exception.</p>
+ *
  * @author Christian Ihle
  */
-public class CommandWithToastOnExceptionAsyncTask extends AsyncTask<Void, Void, Void> {
+public class CommandWithToastOnExceptionAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     private final Context context;
     private final Command command;
@@ -56,18 +59,18 @@ public class CommandWithToastOnExceptionAsyncTask extends AsyncTask<Void, Void, 
     }
 
     @Override
-    protected Void doInBackground(final Void... params) {
+    protected Boolean doInBackground(final Void... params) {
         try {
             command.runCommand();
+            return true;
         } catch (final CommandException e) {
             exception = e;
+            return false;
         }
-
-        return null;
     }
 
     @Override
-    protected void onPostExecute(final Void aVoid) {
+    protected void onPostExecute(final Boolean aBoolean) {
         if (exception != null) { // Toast needs to be on UI thread, like in onPostExecute()
             Toast.makeText(context, exception.getMessage(), Toast.LENGTH_LONG).show();
         }
