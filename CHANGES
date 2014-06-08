@@ -5,7 +5,7 @@
 * version 0.15.0 (xx.xx.2014)
   - Changed default nick name to be "NewUser" instead of a numerical id.
   - The away message of another user, if set, is shown as a subtitle in the ActionBar of the private chat.
-  - Added support for away mode (in progress).
+  - Added support for away mode.
 
 
 * version 0.14.0 (15.04.2014)
