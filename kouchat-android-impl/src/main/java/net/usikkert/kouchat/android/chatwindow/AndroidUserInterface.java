@@ -446,11 +446,11 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         return false;
     }
 
-    private boolean doChangeNickName(final String trimNick) {
+    private boolean doChangeNickName(final String nick) {
         final CommandWithToastOnExceptionAsyncTask changeNickNameTask = new CommandWithToastOnExceptionAsyncTask(context, new Command() {
             @Override
             public void runCommand() throws CommandException {
-                controller.changeMyNick(trimNick);
+                controller.changeMyNick(nick);
                 msgController.showSystemMessage(context.getString(R.string.message_your_nick_name_changed, me.getNick()));
                 showTopic();
             }
@@ -462,12 +462,14 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
             return changeNickNameTask.get();
         }
 
+        // Not sure if anything is going to interrupt this thread in practice
         catch (final InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(String.format("Was interrupted while changing nick name to '%s'", nick), e);
         }
 
+        // Happens if the async task throws any exceptions
         catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(String.format("Something went wrong changing nick name to '%s'", nick), e);
         }
     }
 

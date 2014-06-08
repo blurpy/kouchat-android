@@ -50,6 +50,7 @@ import net.usikkert.kouchat.util.Sleeper;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -577,6 +578,18 @@ public class AndroidUserInterfaceTest {
         verifyNoMoreInteractions(controller);
         verifyZeroInteractions(msgController, mainChatController);
         assertEquals("Cant change nick", ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    @Ignore("This does not work with Robolectric yet.")
+    public void changeNickNameShouldThrowRuntimeExceptionOnUnexpectedErrors() throws CommandException {
+        expectedException.expect(RuntimeException.class);
+        expectedException.expectMessage("Something went wrong changing nick name to Kou");
+
+        doThrow(new IllegalArgumentException("Something unexpected")).when(controller).changeMyNick("Kou");
+
+        // In the test it fails on asyncTask.execute(), while in reality it fails on asyncTask.get()
+        androidUserInterface.changeNickName("Kou");
     }
 
     @Test
