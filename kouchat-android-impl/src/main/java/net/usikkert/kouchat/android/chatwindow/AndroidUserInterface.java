@@ -447,23 +447,14 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     }
 
     private boolean doChangeNickName(final String trimNick) {
-        final AsyncTask<Void, Void, Boolean> changeNickNameTask = new AsyncTask<Void, Void, Boolean>() {
+        final CommandWithToastOnExceptionAsyncTask changeNickNameTask = new CommandWithToastOnExceptionAsyncTask(context, new Command() {
             @Override
-            public Boolean doInBackground(final Void... voids) {
-                try {
-                    controller.changeMyNick(trimNick);
-                    msgController.showSystemMessage(context.getString(R.string.message_your_nick_name_changed, me.getNick()));
-                    showTopic();
-
-                    return true;
-                }
-
-                catch (final CommandException e) {
-                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-                    return false;
-                }
+            public void runCommand() throws CommandException {
+                controller.changeMyNick(trimNick);
+                msgController.showSystemMessage(context.getString(R.string.message_your_nick_name_changed, me.getNick()));
+                showTopic();
             }
-        };
+        });
 
         changeNickNameTask.execute();
 
