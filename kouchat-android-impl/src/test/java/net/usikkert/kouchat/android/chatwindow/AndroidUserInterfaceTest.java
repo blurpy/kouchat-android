@@ -169,6 +169,16 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
+    public void showTopicShouldIncludeAwayIfCurrentlyAway() {
+        when(controller.getTopic()).thenReturn(new Topic());
+        me.setAway(true);
+
+        androidUserInterface.showTopic();
+
+        verify(mainChatController).updateTitleAndSubtitle("Me (Away) - KouChat", null);
+    }
+
+    @Test
     public void updateMeWritingShouldPassTrueToController() {
         androidUserInterface.updateMeWriting(true);
 
@@ -741,8 +751,13 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void changeAwayShouldDoNothing() {
+    public void changeAwayShouldUpdateTitleAndSubtitle() {
+        when(controller.getTopic()).thenReturn(new Topic());
+
         androidUserInterface.changeAway(true);
+
+        // Details are tested in the showTopic() tests
+        verify(mainChatController).updateTitleAndSubtitle(anyString(), anyString());
     }
 
     @Test

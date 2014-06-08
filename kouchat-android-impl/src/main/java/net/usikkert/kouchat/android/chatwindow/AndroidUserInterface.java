@@ -173,17 +173,23 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
      * Updates the title and topic of the main chat.
      *
      * <p>If there is no topic, then <code>null</code> is sent as the topic, to hide line number two.</p>
+     * <p>If the user is away, then (Away) is included in the title.</p>
      *
      * <p>Looks like this:</p>
      * <pre>
-     *   <code>Nick name - KouChat</code>
+     *   <code>Nick name (Away) - KouChat</code>
      *   <code>The topic - Nick name of the user that set the topic</code>
      * </pre>
      *
      * <p>Example:</p>
      * <pre>
-     *   <code>Penny - KouChat</code>
+     *   <code>Penny (Away) - KouChat</code>
      *   <code>Knock knock - Sheldon</code>
+     * </pre>
+     *
+     * <p>Or just:</p>
+     * <pre>
+     *   <code>Penny - KouChat</code>
      * </pre>
      */
     @Override
@@ -197,6 +203,10 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     }
 
     private String formatTitle() {
+        if (isAway()) {
+            return me.getNick() + " (Away) - " + Constants.APP_NAME;
+        }
+
         return me.getNick() + " - " + Constants.APP_NAME;
     }
 
@@ -238,9 +248,14 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
     }
 
+    /**
+     * Updates the title and topic when away mode is changed.
+     *
+     * @param away If the user is away.
+     */
     @Override
     public void changeAway(final boolean away) {
-
+        showTopic();
     }
 
     /**
