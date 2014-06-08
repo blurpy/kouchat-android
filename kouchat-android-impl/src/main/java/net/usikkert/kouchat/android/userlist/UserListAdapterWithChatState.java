@@ -27,6 +27,7 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.Validate;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -67,6 +68,7 @@ public class UserListAdapterWithChatState extends UserListAdapter {
      *   <li>Shows when a new message has arrived by changing the icon to an envelope.</li>
      *   <li>Shows who you are in the user list by making "you" appear in bold text.</li>
      *   <li>Shows who is currently writing by appending a <code>*</code> after the nick name.</li>
+     *   <li>Shows who is currently away by making the text gray.</li>
      * </ul>
      *
      * {@inheritDoc}
@@ -81,6 +83,7 @@ public class UserListAdapterWithChatState extends UserListAdapter {
         showIfNewPrivateMessage(imageView, user);
         showIfMe(textView, user);
         showIfCurrentlyWriting(textView, user);
+        showIfAway(textView, user);
 
         return linearLayout;
     }
@@ -118,6 +121,14 @@ public class UserListAdapterWithChatState extends UserListAdapter {
             textView.setText(user.getNick() + " *");
         } else {
             textView.setText(user.getNick());
+        }
+    }
+
+    private void showIfAway(final TextView textView, final User user) {
+        if (user.isAway()) {
+            textView.setTextColor(Color.GRAY);
+        } else {
+            textView.setTextColor(Color.BLACK);
         }
     }
 }

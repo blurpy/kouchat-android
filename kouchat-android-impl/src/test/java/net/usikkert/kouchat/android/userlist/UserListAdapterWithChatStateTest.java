@@ -37,6 +37,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
@@ -140,6 +141,28 @@ public class UserListAdapterWithChatStateTest {
     }
 
     @Test
+    public void userThatIsAwayShouldBeGray() {
+        assertEquals(Color.BLACK, getColorForUser(0));
+        assertEquals(Color.BLACK, getColorForUser(1));
+
+        user1.setAway(true);
+
+        assertEquals(Color.GRAY, getColorForUser(0));
+        assertEquals(Color.BLACK, getColorForUser(1));
+
+        user2.setAway(true);
+
+        assertEquals(Color.GRAY, getColorForUser(0));
+        assertEquals(Color.GRAY, getColorForUser(1));
+
+        user1.setAway(false);
+        user2.setAway(false);
+
+        assertEquals(Color.BLACK, getColorForUser(0));
+        assertEquals(Color.BLACK, getColorForUser(1));
+    }
+
+    @Test
     public void onDestroyShouldClearTheList() {
         assertEquals(2, userListAdapter.getCount());
 
@@ -158,8 +181,7 @@ public class UserListAdapterWithChatStateTest {
     }
 
     private boolean userIsBold(final int userPosition) {
-        final LinearLayout linearLayout = (LinearLayout)  userListAdapter.getView(userPosition, null, null);
-        final TextView textView = (TextView) linearLayout.getChildAt(1);
+        final TextView textView = getTextViewForUser(userPosition);
         final Typeface typeface = textView.getTypeface();
 
         return typeface != null && typeface.isBold();
@@ -172,9 +194,20 @@ public class UserListAdapterWithChatStateTest {
     }
 
     private String getDisplayTextForUser(final int userPosition) {
-        final LinearLayout linearLayout = (LinearLayout)  userListAdapter.getView(userPosition, null, null);
-        final TextView textView = (TextView) linearLayout.getChildAt(1);
+        final TextView textView = getTextViewForUser(userPosition);
 
         return textView.getText().toString();
+    }
+
+    private int getColorForUser(final int userPosition) {
+        final TextView textView = getTextViewForUser(userPosition);
+
+        return textView.getTextColors().getColorForState(new int[0], 0);
+    }
+
+    private TextView getTextViewForUser(final int userPosition) {
+        final LinearLayout linearLayout = (LinearLayout)  userListAdapter.getView(userPosition, null, null);
+
+        return (TextView) linearLayout.getChildAt(1);
     }
 }
