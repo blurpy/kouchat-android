@@ -35,6 +35,7 @@ import com.robotium.solo.Solo;
 
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.KeyEvent;
 
 /**
  * Testing away and back functionality.
@@ -160,7 +161,25 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         checkIfBack();
     }
 
-    public void test06ShouldNotBeAbleToSendMessageWhileAway() {
+    public void test06PressingEnterShouldNotAddANewLine() {
+        solo.sleep(500);
+        checkIfBack();
+
+        RobotiumTestUtils.openMenu(solo);
+        solo.clickOnText("Away");
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("Go away?"));
+
+        RobotiumTestUtils.writeText(getInstrumentation(), "Line1");
+        solo.sendKey(KeyEvent.KEYCODE_ENTER);
+        RobotiumTestUtils.writeText(getInstrumentation(), "Line2");
+
+        solo.sleep(500);
+        assertTrue(solo.searchText("Line1Line2"));
+    }
+
+    public void test07ShouldNotBeAbleToSendMessageWhileAway() {
         solo.sleep(500);
         checkIfBack();
 
@@ -181,7 +200,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         assertTrue(solo.searchText("You can not send a chat message while away"));
     }
 
-    public void test07ShouldNotBeAbleToSendPrivateMessageWhileAway() {
+    public void test08ShouldNotBeAbleToSendPrivateMessageWhileAway() {
         solo.sleep(500);
         checkIfAway();
 
@@ -191,7 +210,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         assertTrue(solo.searchText("You can not send a private chat message while away"));
     }
 
-    public void test08ShouldNotBeAbleToChangeTopicWhileAway() {
+    public void test09ShouldNotBeAbleToChangeTopicWhileAway() {
         solo.sleep(500);
         checkIfAway();
 
@@ -207,7 +226,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         assertTrue(solo.searchText("You can not change the topic while away"));
     }
 
-    public void test09ShouldNotBeAbleToChangeNickNameWhileAway() {
+    public void test10ShouldNotBeAbleToChangeNickNameWhileAway() {
         solo.sleep(500);
         checkIfAway();
 
@@ -218,7 +237,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         assertTrue(solo.searchText("You can not change nick while away"));
     }
 
-    public void test10ShouldNotBeAbleToSendFileWhileAway() {
+    public void test11ShouldNotBeAbleToSendFileWhileAway() {
         solo.sleep(500);
         checkIfAway();
 
@@ -257,7 +276,6 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
 
         assertTrue(me.isAway());
         assertEquals(me.getNick() + " (Away) - KouChat", supportActionBar.getTitle());
-        // TODO check client?
     }
 
     private void checkIfBack() {
