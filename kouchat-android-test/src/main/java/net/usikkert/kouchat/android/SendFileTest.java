@@ -75,8 +75,10 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         solo = new Solo(instrumentation, activity);
         solo.sleep(2000);
 
-        FileUtils.copyKouChatImageFromAssetsToSdCard(instrumentation, activity);
-        image = FileUtils.getKouChatImageFromSdCard(activity);
+        if (image == null) {
+            FileUtils.copyKouChatImageFromAssetsToSdCard(instrumentation, activity);
+            image = FileUtils.getKouChatImageFromSdCard(activity);
+        }
 
         assertTrue(RobotiumTestUtils.searchText(solo, "Unable to locate the file to send."));
     }
@@ -188,6 +190,25 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         solo.sleep(2000);
 
         assertTrue(textIsVisible("Tina aborted reception of " + image.getName()));
+    }
+
+    public void test06ShouldNotBeAbleToSendFileToUserThatIsAway() {
+        setActivityIntent(image.getUri());
+
+        final SendFileController activity = getActivity();
+        solo = new Solo(getInstrumentation(), activity);
+        solo.sleep(1000);
+
+        tina.logon();
+        solo.sleep(100);
+
+        tina.goAway("Don't want your files");
+        solo.sleep(1000);
+
+        solo.clickInList(1); // Click on Tina
+        solo.sleep(1000);
+
+        assertTrue(solo.searchText("You can not send a file to a user that is away"));
     }
 
     public void test99Quit() {
