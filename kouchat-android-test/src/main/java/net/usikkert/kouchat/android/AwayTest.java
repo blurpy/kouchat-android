@@ -77,14 +77,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.sleep(500);
         checkIfBack();
 
-        RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Away");
-        solo.sleep(500);
-
-        assertTrue(solo.searchText("Go away?"));
-
-        RobotiumTestUtils.writeText(getInstrumentation(), "Not going away");
-        solo.sleep(500);
+        openGoAwayDialog("Not going away");
         solo.clickOnText("Cancel");
 
         solo.sleep(500);
@@ -95,14 +88,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.sleep(500);
         checkIfBack();
 
-        RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Away");
-        solo.sleep(500);
-
-        assertTrue(solo.searchText("Go away?"));
-
-        RobotiumTestUtils.writeText(getInstrumentation(), "Going for a walk");
-        solo.sleep(500);
+        openGoAwayDialog("Going for a walk");
         solo.clickOnText("OK");
 
         solo.sleep(500);
@@ -114,11 +100,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.sleep(500);
         checkIfAway();
 
-        RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Away");
-        solo.sleep(500);
-
-        assertTrue(solo.searchText("Come back from 'Going for a walk'?"));
+        openComeBackDialog("Going for a walk");
         solo.clickOnText("Cancel");
 
         solo.sleep(500);
@@ -129,11 +111,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.sleep(500);
         checkIfAway();
 
-        RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Away");
-        solo.sleep(500);
-
-        assertTrue(solo.searchText("Come back from 'Going for a walk'?"));
+        openComeBackDialog("Going for a walk");
         solo.clickOnText("OK");
 
         solo.sleep(500);
@@ -145,14 +123,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.sleep(500);
         checkIfBack();
 
-        RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Away");
-        solo.sleep(500);
-
-        assertTrue(solo.searchText("Go away?"));
-
-        RobotiumTestUtils.writeText(getInstrumentation(), " ");
-        solo.sleep(500);
+        openGoAwayDialog(" ");
         solo.clickOnText("OK");
 
         solo.sleep(500);
@@ -183,14 +154,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.sleep(500);
         checkIfBack();
 
-        RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Away");
-        solo.sleep(500);
-
-        assertTrue(solo.searchText("Go away?"));
-
-        RobotiumTestUtils.writeText(getInstrumentation(), "Leaving");
-        solo.sleep(500);
+        openGoAwayDialog("Leaving");
         solo.clickOnText("OK");
 
         solo.sleep(500);
@@ -241,11 +205,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.sleep(500);
         checkIfAway();
 
-        final MainChatController activity = getActivity();
-        final Intent intent = new Intent(activity, SendFileController.class);
-        intent.putExtra(Intent.EXTRA_STREAM, image.getUri());
-        activity.startActivity(intent);
-        solo.sleep(500);
+        openSendFileDialog();
 
         solo.clickInList(1); // Click on Test
 
@@ -283,5 +243,34 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
 
         assertFalse(me.isAway());
         assertEquals(me.getNick() + " - KouChat", supportActionBar.getTitle());
+    }
+
+    private void openGoAwayDialog(final String awayMessage) {
+        RobotiumTestUtils.openMenu(solo);
+        solo.clickOnText("Away");
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("Go away?"));
+
+        RobotiumTestUtils.writeText(getInstrumentation(), awayMessage);
+        solo.sleep(500);
+    }
+
+    private void openComeBackDialog(final String awayMessage) {
+        RobotiumTestUtils.openMenu(solo);
+        solo.clickOnText("Away");
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("Come back from '" + awayMessage + "'?"));
+    }
+
+    private void openSendFileDialog() {
+        final MainChatController activity = getActivity();
+        final Intent intent = new Intent(activity, SendFileController.class);
+
+        intent.putExtra(Intent.EXTRA_STREAM, image.getUri());
+        activity.startActivity(intent);
+
+        solo.sleep(500);
     }
 }
