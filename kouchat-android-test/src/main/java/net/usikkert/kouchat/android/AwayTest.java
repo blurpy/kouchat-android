@@ -130,6 +130,84 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         checkIfBack();
     }
 
+    public void test05ShouldNotGoAwayWithEmptyAwayMessage() {
+        solo.sleep(500);
+        checkIfBack();
+
+        RobotiumTestUtils.openMenu(solo);
+        solo.clickOnText("Away");
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("Go away?"));
+
+        RobotiumTestUtils.writeText(getInstrumentation(), " ");
+        solo.sleep(500);
+        solo.clickOnText("OK");
+
+        solo.sleep(500);
+        assertTrue(solo.searchText("You can not go away without an away message"));
+
+        checkIfBack();
+    }
+
+    public void test06ShouldNotBeAbleToSendMessageWhileAway() {
+        solo.sleep(500);
+        checkIfBack();
+
+        RobotiumTestUtils.openMenu(solo);
+        solo.clickOnText("Away");
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("Go away?"));
+
+        RobotiumTestUtils.writeText(getInstrumentation(), "Leaving");
+        solo.sleep(500);
+        solo.clickOnText("OK");
+
+        solo.sleep(500);
+        checkIfAway();
+
+        RobotiumTestUtils.writeLine(solo, "Don't send this message");
+        assertTrue(solo.searchText("You can not send a chat message while away"));
+    }
+
+    public void test07ShouldNotBeAbleToSendPrivateMessageWhileAway() {
+        solo.sleep(500);
+        checkIfAway();
+
+        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+
+        RobotiumTestUtils.writeLine(solo, "Don't send this private message");
+        assertTrue(solo.searchText("You can not send a private chat message while away"));
+    }
+
+    public void test08ShouldNotBeAbleToChangeTopicWhileAway() {
+        solo.sleep(500);
+        checkIfAway();
+
+        RobotiumTestUtils.openMenu(solo);
+        solo.clickOnText("Topic");
+        solo.sleep(500);
+
+        RobotiumTestUtils.writeText(getInstrumentation(), "Don't set this topic");
+        solo.sleep(500);
+        solo.clickOnText("OK");
+
+        solo.sleep(500);
+        assertTrue(solo.searchText("You can not change the topic while away"));
+    }
+
+    public void test09ShouldNotBeAbleToChangeNickNameWhileAway() {
+        solo.sleep(500);
+        checkIfAway();
+
+        RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
+        RobotiumTestUtils.changeNickNameTo(solo, "Dont");
+
+        solo.sleep(500);
+        assertTrue(solo.searchText("You can not change nick while away"));
+    }
+
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
