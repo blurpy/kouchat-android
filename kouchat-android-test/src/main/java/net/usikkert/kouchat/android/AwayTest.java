@@ -23,6 +23,9 @@
 package net.usikkert.kouchat.android;
 
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.controller.SendFileController;
+import net.usikkert.kouchat.android.util.AndroidFile;
+import net.usikkert.kouchat.android.util.FileUtils;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestClient;
@@ -30,6 +33,7 @@ import net.usikkert.kouchat.testclient.TestClient;
 import com.actionbarsherlock.app.ActionBar;
 import com.robotium.solo.Solo;
 
+import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 
 /**
@@ -40,6 +44,7 @@ import android.test.ActivityInstrumentationTestCase2;
 public class AwayTest extends ActivityInstrumentationTestCase2<MainChatController> {
 
     private static TestClient client;
+    private static AndroidFile image;
 
     private Solo solo;
     private User me;
@@ -59,6 +64,11 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         if (client == null) {
             client = new TestClient();
             client.logon();
+        }
+
+        if (image == null) {
+            FileUtils.copyKouChatImageFromAssetsToSdCard(getInstrumentation(), activity);
+            image = FileUtils.getKouChatImageFromSdCard(activity);
         }
     }
 
@@ -208,11 +218,28 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         assertTrue(solo.searchText("You can not change nick while away"));
     }
 
+    public void test10ShouldNotBeAbleToSendFileWhileAway() {
+        solo.sleep(500);
+        checkIfAway();
+
+        final MainChatController activity = getActivity();
+        final Intent intent = new Intent(activity, SendFileController.class);
+        intent.putExtra(Intent.EXTRA_STREAM, image.getUri());
+        activity.startActivity(intent);
+        solo.sleep(500);
+
+        solo.clickInList(1); // Click on Test
+
+        solo.sleep(500);
+        assertTrue(solo.searchText("You can not send a file while away"));
+    }
+
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
 
         client = null;
+        image = null;
     }
 
     public void tearDown() {
