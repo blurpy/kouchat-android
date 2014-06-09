@@ -210,6 +210,42 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         assertFalse(userIsWriting("Test", 1));
     }
 
+    public void test08ShouldShowUsersAsDisabledWhileAway() {
+        client.logon();
+
+        assertTrue(userIsEnabled("Kou", 0));
+        assertTrue(userIsEnabled("Test", 1));
+
+        client.goAway("Going away");
+
+        assertTrue(userIsEnabled("Kou", 0));
+        assertFalse(userIsEnabled("Test", 1));
+
+        goAway("Also going away");
+
+        assertFalse(userIsEnabled("Kou", 0));
+        assertFalse(userIsEnabled("Test", 1));
+
+        RobotiumTestUtils.switchOrientation(solo);
+        solo.sleep(500);
+
+        assertFalse(userIsEnabled("Kou", 0));
+        assertFalse(userIsEnabled("Test", 1));
+
+        RobotiumTestUtils.switchOrientation(solo);
+        solo.sleep(500);
+
+        comeBack("Also going away");
+
+        assertTrue(userIsEnabled("Kou", 0));
+        assertFalse(userIsEnabled("Test", 1));
+
+        client.comeBack();
+
+        assertTrue(userIsEnabled("Kou", 0));
+        assertTrue(userIsEnabled("Test", 1));
+    }
+
     public void test99Quit() {
         client.logoff();
         RobotiumTestUtils.quit(solo);
@@ -266,7 +302,38 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
         return false;
     }
 
+    private boolean userIsEnabled(final String nickName, final int userNumber) {
+        solo.sleep(500);
+        assertEquals(nickName, getUserNameAtPosition(userNumber));
+
+        final LinearLayout row = (LinearLayout) getUserList().getChildAt(userNumber);
+        final TextView textView = (TextView) row.getChildAt(1);
+
+        return textView.isEnabled();
+    }
+
     private ListView getUserList() {
         return solo.getCurrentViews(ListView.class).get(0);
+    }
+
+    private void goAway(final String awayMessage) {
+        RobotiumTestUtils.openMenu(solo);
+        solo.clickOnText("Away");
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("Go away?"));
+
+        RobotiumTestUtils.writeText(getInstrumentation(), awayMessage);
+        solo.sleep(500);
+        solo.clickOnText("OK");
+    }
+
+    private void comeBack(final String awayMessage) {
+        RobotiumTestUtils.openMenu(solo);
+        solo.clickOnText("Away");
+        solo.sleep(500);
+
+        assertTrue(solo.searchText("Come back from '" + awayMessage + "'?"));
+        solo.clickOnText("OK");
     }
 }
