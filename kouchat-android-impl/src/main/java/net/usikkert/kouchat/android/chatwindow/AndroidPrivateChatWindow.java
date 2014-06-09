@@ -130,13 +130,13 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
      *
      * <p>Away:</p>
      * <ul>
-     *   <li><code>Vivi (away) - KouChat</code></li>
+     *   <li><code>Vivi (Away) - KouChat</code></li>
      *   <li><code>Out shopping</code></li>
      * </ul>
      *
      * <p>Offline:</p>
      * <ul>
-     *   <li><code>Vivi (offline) - KouChat</code></li>
+     *   <li><code>Vivi (Offline) - KouChat</code></li>
      * </ul>
      */
     public void updateTitle() {
@@ -154,11 +154,11 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
         title.append(user.getNick());
 
         if (!user.isOnline()) {
-            title.append(" (offline)");
+            title.append(" (Offline)");
         }
 
         else if (user.isAway()) {
-            title.append(" (away)");
+            title.append(" (Away)");
         }
 
         title.append(" - ");

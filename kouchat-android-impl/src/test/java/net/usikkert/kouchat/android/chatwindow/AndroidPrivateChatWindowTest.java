@@ -265,7 +265,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.updateTitle();
 
-        verify(controller).updateTitleAndSubtitle("Vivi (offline) - KouChat", null);
+        verify(controller).updateTitleAndSubtitle("Vivi (Offline) - KouChat", null);
     }
 
     @Test
@@ -277,7 +277,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.updateTitle();
 
-        verify(controller).updateTitleAndSubtitle("Vivi (away) - KouChat", "On the road again");
+        verify(controller).updateTitleAndSubtitle("Vivi (Away) - KouChat", "On the road again");
     }
 
     @Test
@@ -290,7 +290,7 @@ public class AndroidPrivateChatWindowTest {
 
         chatWindow.updateTitle();
 
-        verify(controller).updateTitleAndSubtitle("Vivi (offline) - KouChat", null);
+        verify(controller).updateTitleAndSubtitle("Vivi (Offline) - KouChat", null);
     }
 
     @Test

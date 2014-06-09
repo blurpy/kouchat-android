@@ -276,7 +276,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         client.goAway("Going away now");
         solo.sleep(500);
 
-        checkTitle("Test (away) - KouChat", "Going away now");
+        checkTitle("Test (Away) - KouChat", "Going away now");
 
         RobotiumTestUtils.writeLine(solo, "Don't leave me!");
         solo.sleep(500);
@@ -300,7 +300,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         client.goAway("Going away again");
         solo.sleep(500);
 
-        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test (away)", "Going away again");
+        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test (Away)", "Going away again");
 
         RobotiumTestUtils.writeLine(solo, "Don't leave me!");
         solo.sleep(500);
@@ -319,7 +319,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         client.logoff();
         solo.sleep(500);
 
-        checkTitle("Test (offline) - KouChat", null);
+        checkTitle("Test (Offline) - KouChat", null);
 
         RobotiumTestUtils.writeLine(solo, "Don't leave me!");
         solo.sleep(500);
