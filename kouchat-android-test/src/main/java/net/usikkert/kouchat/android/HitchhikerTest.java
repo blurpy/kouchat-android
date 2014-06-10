@@ -140,7 +140,7 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         arthur.sendPrivateChatMessage("Show me the envelope!", me);
 
         // Take screenshot of the main chat
-        sleep(15000);
+        sleep(20000);
 
         ford.sendFile(me, image.getFile());
         sleep(1000);
