@@ -69,7 +69,7 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
             arthur = new TestClient("Arthur", 0, -6750208);
             arthur.logon();
 
-            ford = new TestClient("Ford", 0, -10066432);
+            ford = new TestClient("Ford", 0, -13534789);
             ford.setInitialTopic("DON'T PANIC", getDateInPast());
             ford.logon();
 
