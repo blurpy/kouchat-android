@@ -1,11 +1,8 @@
 
-- KouChat v1.0.0 README
+- KouChat Android v1.1.0 README
 
-KouChat is a simple serverless chat client for local area networks.
+KouChat is an open source, serverless, LAN chat application.
 It's written in Java, and is free software.
-
-This is the Android version of KouChat.
-The goal is to implement the same features as the desktop version.
 
 Requirements: Android v2.3.3 or newer.
 
