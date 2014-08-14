@@ -383,15 +383,6 @@ public class AndroidUserInterfaceTest {
     }
 
     @Test
-    public void isLoggedOnShouldUseTheController() {
-        assertFalse(androidUserInterface.isLoggedOn());
-
-        when(controller.isLoggedOn()).thenReturn(true);
-
-        assertTrue(androidUserInterface.isLoggedOn());
-    }
-
-    @Test
     public void createPrivChatShouldThrowExceptionIfUserIsNull() {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("User can not be null");

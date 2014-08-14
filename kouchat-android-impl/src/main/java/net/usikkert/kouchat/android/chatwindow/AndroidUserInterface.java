@@ -379,10 +379,6 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         logOffTask.execute();
     }
 
-    public boolean isLoggedOn() {
-        return controller.isLoggedOn();
-    }
-
     public void registerMainChatController(final MainChatController theMainChatController) {
         Validate.notNull(theMainChatController, "MainChatController can not be null");
 

@@ -123,14 +123,18 @@ public class ChatServiceTest {
     }
 
     @Test
-    public void onStartShouldNotLogOnInAlreadyLoggedOn() {
+    public void onStartShouldOnlyLogOnOnce() {
+        // Logging on starts the controller, and the controller only supports being started once.
+        // DayTimer throws "java.lang.IllegalStateException: TimerTask is scheduled already" when started twice.
+        // This used to be an issue when starting KouChat without a network connection, since it tried
+        // to log on each time the main chat was hidden and shown again, resulting in the exception.
         setMockedFields();
 
-        when(ui.isLoggedOn()).thenReturn(true);
-
+        chatService.onStart(null, 0);
+        chatService.onStart(null, 0);
         chatService.onStart(null, 0);
 
-        verify(ui, never()).logOn();
+        verify(ui, times(1)).logOn();
     }
 
     @Test

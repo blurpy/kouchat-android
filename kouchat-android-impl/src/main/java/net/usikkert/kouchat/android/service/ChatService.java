@@ -49,6 +49,9 @@ public class ChatService extends Service {
     private LockHandler lockHandler;
     private ChatServiceBinder chatServiceBinder;
 
+    /** To avoid logging on more than once, which will throw an exception. */
+    private boolean started;
+
     @Override
     public void onCreate() {
         notificationService = new NotificationService(this);
@@ -68,9 +71,13 @@ public class ChatService extends Service {
         super.onCreate();
     }
 
+    /**
+     * This method may execute every time the main chat is shown.
+     */
     @Override
     public void onStart(final Intent intent, final int startId) {
-        if (!androidUserInterface.isLoggedOn()) {
+        if (!started) {
+            started = true;
             androidUserInterface.logOn();
         }
 
