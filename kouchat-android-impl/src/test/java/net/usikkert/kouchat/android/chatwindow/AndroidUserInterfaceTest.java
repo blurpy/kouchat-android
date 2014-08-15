@@ -100,7 +100,7 @@ public class AndroidUserInterfaceTest {
         final Context context = Robolectric.application;
         notificationService = mock(NotificationService.class);
 
-        androidUserInterface = new AndroidUserInterface(context, settings, notificationService);
+        androidUserInterface = spy(new AndroidUserInterface(context, settings, notificationService));
 
         controller = TestUtils.setFieldValueWithMock(androidUserInterface, "controller", Controller.class);
         messageStyler = TestUtils.setFieldValueWithMock(androidUserInterface, "messageStyler", MessageStylerWithHistory.class);
@@ -596,6 +596,7 @@ public class AndroidUserInterfaceTest {
     @Test
     public void changeNickNameShouldReturnTrueAndShowSystemMessageAndUpdateTitleAndSubtitleIfEverythingOK() throws CommandException {
         when(controller.getTopic()).thenReturn(new Topic());
+        doNothing().when(androidUserInterface).showTopic();
 
         // Makes sure the mocked controller changes the nick name like the real implementation would,
         // so the topic and system message looks more realistic. Would be "Me" instead of "Kou" if not
@@ -611,11 +612,10 @@ public class AndroidUserInterfaceTest {
 
         verify(controller).isNickInUse("Kou");
         verify(controller).changeMyNick("Kou");
-        verify(controller).getTopic();
         verifyNoMoreInteractions(controller);
 
         verify(msgController).showSystemMessage("You changed nick to Kou");
-        verify(mainChatController).updateTitleAndSubtitle("Kou - KouChat", null);
+        verify(androidUserInterface).showTopic();
     }
 
     @Test
