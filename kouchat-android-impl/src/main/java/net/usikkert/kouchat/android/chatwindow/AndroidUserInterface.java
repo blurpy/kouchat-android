@@ -174,6 +174,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
      *
      * <p>If there is no topic, then <code>null</code> is sent as the topic, to hide line number two.</p>
      * <p>If the user is away, then (Away) is included in the title.</p>
+     * <p>If the network connection is down, connection details are shown instead.</p>
      *
      * <p>Looks like this:</p>
      * <pre>
@@ -191,6 +192,16 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
      * <pre>
      *   <code>Penny - KouChat</code>
      * </pre>
+     *
+     * <p>If never connected:</p>
+     * <pre>
+     *   <code>Not connected - KouChat</code>
+     * </pre>
+     *
+     * <p>If the connection has been lost, after having been connected earlier:</p>
+     * <pre>
+     *   <code>Connection lost - KouChat</code>
+     * </pre>
      */
     @Override
     public void showTopic() {
@@ -203,7 +214,17 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     }
 
     private String formatTitle() {
-        if (isAway()) {
+        if (!controller.isConnected()) {
+            if (controller.isLoggedOn()) {
+                return me.getNick() + " - Connection lost - " + Constants.APP_NAME;
+            }
+
+            else {
+                return me.getNick() + " - Not connected - " + Constants.APP_NAME;
+            }
+        }
+
+        else if (isAway()) {
             return me.getNick() + " (Away) - " + Constants.APP_NAME;
         }
 
@@ -211,6 +232,10 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     }
 
     private String formatTopic() {
+        if (!controller.isConnected()) {
+            return null;
+        }
+
         final Topic topic = controller.getTopic();
 
         if (topic.hasTopic()) {

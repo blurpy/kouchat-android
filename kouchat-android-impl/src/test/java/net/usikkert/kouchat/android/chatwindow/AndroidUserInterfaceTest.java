@@ -115,6 +115,9 @@ public class AndroidUserInterfaceTest {
 
         // Reset mocks used in the constructor, to start clean in the tests
         reset(mainChatController, messageStyler);
+
+        when(controller.isConnected()).thenReturn(true);
+        when(controller.isLoggedOn()).thenReturn(true);
     }
 
     @Test
@@ -176,6 +179,62 @@ public class AndroidUserInterfaceTest {
         androidUserInterface.showTopic();
 
         verify(mainChatController).updateTitleAndSubtitle("Me (Away) - KouChat", null);
+    }
+
+    @Test
+    public void showTopicShouldUpdateBothTitleAndSubtitleWhenATopicIsSetAndAway() {
+        when(controller.getTopic()).thenReturn(new Topic("This rocks!", "OtherGuy", System.currentTimeMillis()));
+        me.setAway(true);
+
+        androidUserInterface.showTopic();
+
+        verify(mainChatController).updateTitleAndSubtitle("Me (Away) - KouChat", "This rocks! - OtherGuy");
+    }
+
+    @Test
+    public void showTopicShouldIncludeNotConnectedIfNotConnectedAndNotLoggedOn() {
+        when(controller.isConnected()).thenReturn(false);
+        when(controller.isLoggedOn()).thenReturn(false);
+
+        androidUserInterface.showTopic();
+
+        verify(mainChatController).updateTitleAndSubtitle("Me - Not connected - KouChat", null);
+    }
+
+    @Test
+    public void showTopicShouldIncludeNotConnectedIfNotConnectedAndNotLoggedOnEvenWhenAwayAndWithTopic() {
+        when(controller.isConnected()).thenReturn(false);
+        when(controller.isLoggedOn()).thenReturn(false);
+
+        when(controller.getTopic()).thenReturn(new Topic("This rocks!", "OtherGuy", System.currentTimeMillis()));
+        me.setAway(true);
+
+        androidUserInterface.showTopic();
+
+        verify(mainChatController).updateTitleAndSubtitle("Me - Not connected - KouChat", null);
+    }
+
+    @Test
+    public void showTopicShouldIncludeConnectionLostIfNotConnectedAndLoggedOn() {
+        when(controller.isConnected()).thenReturn(false);
+        when(controller.isLoggedOn()).thenReturn(true);
+
+        androidUserInterface.showTopic();
+
+        verify(mainChatController).updateTitleAndSubtitle("Me - Connection lost - KouChat", null);
+    }
+
+    @Test
+    public void showTopicShouldIncludeConnectionLostIfNotConnectedAndLoggedOnEvenWhenAwayAndWithTopic() {
+        when(controller.isConnected()).thenReturn(false);
+        when(controller.isLoggedOn()).thenReturn(true);
+
+        when(controller.getTopic()).thenReturn(new Topic("This rocks!", "OtherGuy", System.currentTimeMillis()));
+        me.setAway(true);
+
+        androidUserInterface.showTopic();
+
+        verify(mainChatController).updateTitleAndSubtitle("Me - Connection lost - KouChat", null);
     }
 
     @Test
