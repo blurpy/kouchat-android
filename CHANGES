@@ -2,7 +2,7 @@
 - KouChat Android CHANGES
 
 
-* version 1.1.0 (xx.xx.2014)
+* version 1.0.1 (xx.xx.2014)
   - Fixed crash when hiding and showing the main chat without a network connection.
   - Added details about missing connection (if any) in the ActionBar.
 
