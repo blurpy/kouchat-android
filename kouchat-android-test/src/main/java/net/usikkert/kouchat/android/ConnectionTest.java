@@ -75,52 +75,48 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
 
     public void test01ShouldSetNotConnectedInActionBarWhenNeverConnected() {
         checkTitle(me.getNick() + " - KouChat");
-        solo.sleep(1000);
+        solo.sleep(500);
 
         controller.logOff(true); // Simulate never having connected
-        solo.sleep(1000);
+        solo.sleep(500);
 
         checkTitle(me.getNick() + " - Not connected - KouChat");
         assertTrue(solo.searchText("You logged off"));
-        solo.sleep(1000);
 
         me.setNick(me.getNick() + "A"); // Need to identify the second logon in the next test, so changing nick in memory
     }
 
     public void test02ShouldResetActionBarWhenConnectionEstablished() {
         checkTitle(me.getNick() + " - Not connected - KouChat");
-        solo.sleep(1000);
+        solo.sleep(500);
 
         controller.logOn(); // Simulate getting a connection for the first time
-        solo.sleep(1000);
+        solo.sleep(500);
 
-        solo.sleep(1000);
         checkTitle(me.getNick() + " - KouChat");
         assertTrue(solo.searchText("You logged on as " + me.getNick()));
     }
 
     public void test03ShouldSetConnectionLostInActionBarWhenConnectionLost() {
         checkTitle(me.getNick() + " - KouChat");
-        solo.sleep(1000);
+        solo.sleep(500);
 
         connectionWorker.stop(); // Simulate losing a connection
-        solo.sleep(1000);
+        solo.sleep(500);
 
         checkTitle(me.getNick() + " - Connection lost - KouChat");
         assertTrue(solo.searchText("You lost contact with the network"));
-        solo.sleep(1000);
     }
 
     public void test04ShouldResetActionBarWhenConnectionBack() {
         checkTitle(me.getNick() + " - Connection lost - KouChat");
-        solo.sleep(1000);
+        solo.sleep(500);
 
         connectionWorker.start(); // Simulate getting back a lost connection
-        solo.sleep(1000);
+        solo.sleep(500);
 
         checkTitle(me.getNick() + " - KouChat");
         assertTrue(solo.searchText("You are connected to the network again"));
-        solo.sleep(1000);
     }
 
     public void test99Quit() {
