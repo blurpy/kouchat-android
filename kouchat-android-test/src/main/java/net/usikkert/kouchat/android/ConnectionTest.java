@@ -79,11 +79,12 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
 
         controller.logOff(true); // Simulate never having connected
         solo.sleep(1000);
-        // TODO check system message
 
         checkTitle(me.getNick() + " - Not connected - KouChat");
+        assertTrue(solo.searchText("You logged off"));
         solo.sleep(1000);
-        // TODO check system message
+
+        me.setNick(me.getNick() + "A"); // Need to identify the second logon in the next test, so changing nick in memory
     }
 
     public void test02ShouldResetActionBarWhenConnectionEstablished() {
@@ -92,11 +93,10 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
 
         controller.logOn(); // Simulate getting a connection for the first time
         solo.sleep(1000);
-        // TODO check system message
 
         solo.sleep(1000);
         checkTitle(me.getNick() + " - KouChat");
-        // TODO check system message
+        assertTrue(solo.searchText("You logged on as " + me.getNick()));
     }
 
     public void test03ShouldSetConnectionLostInActionBarWhenConnectionLost() {
@@ -105,11 +105,10 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
 
         connectionWorker.stop(); // Simulate losing a connection
         solo.sleep(1000);
-        // TODO check system message
 
         checkTitle(me.getNick() + " - Connection lost - KouChat");
+        assertTrue(solo.searchText("You lost contact with the network"));
         solo.sleep(1000);
-        // TODO check system message
     }
 
     public void test04ShouldResetActionBarWhenConnectionBack() {
@@ -118,11 +117,10 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
 
         connectionWorker.start(); // Simulate getting back a lost connection
         solo.sleep(1000);
-        // TODO check system message
 
         checkTitle(me.getNick() + " - KouChat");
+        assertTrue(solo.searchText("You are connected to the network again"));
         solo.sleep(1000);
-        // TODO check system message
     }
 
     public void test99Quit() {
