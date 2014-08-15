@@ -74,8 +74,8 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
     }
 
     public void test01ShouldSetNotConnectedInActionBarWhenNeverConnected() {
-        checkTitle(me.getNick() + " - KouChat");
         solo.sleep(500);
+        checkTitle(me.getNick() + " - KouChat");
 
         controller.logOff(true); // Simulate never having connected
         solo.sleep(500);
@@ -87,8 +87,8 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
     }
 
     public void test02ShouldResetActionBarWhenConnectionEstablished() {
-        checkTitle(me.getNick() + " - Not connected - KouChat");
         solo.sleep(500);
+        checkTitle(me.getNick() + " - Not connected - KouChat");
 
         controller.logOn(); // Simulate getting a connection for the first time
         solo.sleep(500);
@@ -98,8 +98,8 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
     }
 
     public void test03ShouldSetConnectionLostInActionBarWhenConnectionLost() {
-        checkTitle(me.getNick() + " - KouChat");
         solo.sleep(500);
+        checkTitle(me.getNick() + " - KouChat");
 
         connectionWorker.stop(); // Simulate losing a connection
         solo.sleep(500);
@@ -109,8 +109,8 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
     }
 
     public void test04ShouldResetActionBarWhenConnectionBack() {
-        checkTitle(me.getNick() + " - Connection lost - KouChat");
         solo.sleep(500);
+        checkTitle(me.getNick() + " - Connection lost - KouChat");
 
         connectionWorker.start(); // Simulate getting back a lost connection
         solo.sleep(500);
@@ -118,6 +118,8 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
         checkTitle(me.getNick() + " - KouChat");
         assertTrue(solo.searchText("You are connected to the network again"));
     }
+
+    // TODO topic/away, send message while no connection, private and main
 
     public void test99Quit() {
         RobotiumTestUtils.quit(solo);
