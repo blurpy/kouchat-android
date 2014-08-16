@@ -169,7 +169,19 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
         checkTitleAndTopic(me.getNick() + " (Away) - KouChat", "Such a nice day - " + me.getNick());
     }
 
-    // TODO quit when connection lost
+    public void test08QuitShouldWorkWhenNeverConnected() {
+        solo.sleep(500);
+        controller.logOff(true);
+
+        RobotiumTestUtils.quit(solo); // Just to test that it doesn't crash
+    }
+
+    public void test09QuitShouldWorkWhenConnectionLost() {
+        solo.sleep(500);
+        connectionWorker.stop();
+
+        RobotiumTestUtils.quit(solo); // Just to test that it doesn't crash
+    }
 
     public void test99Quit() {
         client.logoff();
