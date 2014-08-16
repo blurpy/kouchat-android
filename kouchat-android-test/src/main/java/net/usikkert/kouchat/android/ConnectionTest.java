@@ -29,6 +29,7 @@ import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.ConnectionWorker;
 import net.usikkert.kouchat.net.NetworkService;
+import net.usikkert.kouchat.testclient.TestClient;
 import net.usikkert.kouchat.testclient.TestUtils;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -45,6 +46,8 @@ import android.widget.TextView;
  * @author Christian Ihle
  */
 public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatController> {
+
+    private static TestClient client;
 
     private Solo solo;
     private Instrumentation instrumentation;
@@ -72,6 +75,11 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
         controller = TestUtils.getFieldValue(androidUserInterface, Controller.class, "controller");
         final NetworkService networkService = TestUtils.getFieldValue(controller, NetworkService.class, "networkService");
         connectionWorker = networkService.getConnectionWorker();
+
+        if (client == null) {
+            client = new TestClient();
+            client.logon();
+        }
     }
 
     public void test01ShouldSetNotConnectedInActionBarWhenNeverConnected() {
@@ -85,7 +93,16 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
         assertTrue(solo.searchText("You logged off"));
     }
 
-    public void test02ShouldResetActionBarWhenConnectionEstablished() {
+    public void test02ShouldNotBeAbleToSendMessageWhenNeverConnected() {
+        solo.sleep(500);
+        checkTitle(me.getNick() + " - Not connected - KouChat");
+
+        RobotiumTestUtils.writeLine(solo, "Don't send this");
+        solo.sleep(500);
+        assertTrue(solo.searchText("You can not send a chat message without being connected"));
+    }
+
+    public void test03ShouldResetActionBarWhenConnectionEstablished() {
         solo.sleep(500);
         checkTitle(me.getNick() + " - Not connected - KouChat");
 
@@ -97,7 +114,7 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
         assertTrue(solo.searchText("You logged on as " + me.getNick()));
     }
 
-    public void test03ShouldSetConnectionLostInActionBarWhenConnectionLost() {
+    public void test04ShouldSetConnectionLostInActionBarWhenConnectionLost() {
         solo.sleep(500);
         checkTitle(me.getNick() + " - KouChat");
 
@@ -108,7 +125,23 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
         assertTrue(solo.searchText("You lost contact with the network"));
     }
 
-    public void test04ShouldResetActionBarWhenConnectionBack() {
+    public void test05ShouldNotBeAbleToSendMessageWhenConnectionLost() {
+        solo.sleep(500);
+        checkTitle(me.getNick() + " - Connection lost - KouChat");
+
+        clearMainChat(); // Remove the first "can't send without being connected" message
+        RobotiumTestUtils.writeLine(solo, "Don't send this");
+        solo.sleep(500);
+        assertTrue(solo.searchText("You can not send a chat message without being connected"));
+
+        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+
+        RobotiumTestUtils.writeLine(solo, "Don't send this");
+        solo.sleep(500);
+        assertTrue(solo.searchText("You can not send a private chat message without being connected"));
+    }
+
+    public void test06ShouldResetActionBarWhenConnectionBack() {
         solo.sleep(500);
         checkTitle(me.getNick() + " - Connection lost - KouChat");
 
@@ -119,10 +152,14 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
         assertTrue(solo.searchText("You are connected to the network again"));
     }
 
-    // TODO topic/away, send message while no connection, private and main
+    // TODO topic/away
 
     public void test99Quit() {
+        client.logoff();
+
         RobotiumTestUtils.quit(solo);
+
+        client = null;
     }
 
     public void tearDown() {
