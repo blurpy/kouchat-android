@@ -222,13 +222,11 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
     private void clearMainChat() {
         final TextView mainChatView = (TextView) getActivity().findViewById(R.id.mainChatView);
 
-        mainChatView.post(new Runnable() {
+        getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
                 mainChatView.setText("");
             }
         });
-
-        solo.sleep(500);
     }
 }
