@@ -38,8 +38,6 @@ import android.view.KeyEvent;
 /**
  * Test of topic handling.
  *
- * <p>These tests must run in order to pass.</p>
- *
  * @author Christian Ihle
  */
 public class TopicTest extends ActivityInstrumentationTestCase2<MainChatController> {
