@@ -152,7 +152,24 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
         assertTrue(solo.searchText("You are connected to the network again"));
     }
 
-    // TODO topic/away
+    public void test07ShouldOnlyShowDetailsAboutAwayAndTopicWhenConnected() {
+        solo.sleep(500);
+        checkTitleAndTopic(me.getNick() + " - KouChat", null);
+
+        RobotiumTestUtils.changeTopicTo(solo, getInstrumentation(), "Such a nice day");
+        RobotiumTestUtils.goAway(solo, getInstrumentation(), "Away we go");
+        checkTitleAndTopic(me.getNick() + " (Away) - KouChat", "Such a nice day - " + me.getNick());
+
+        connectionWorker.stop(); // Lost connection
+        solo.sleep(500);
+        checkTitleAndTopic(me.getNick() + " - Connection lost - KouChat", null);
+
+        connectionWorker.start(); // Connection returned
+        solo.sleep(500);
+        checkTitleAndTopic(me.getNick() + " (Away) - KouChat", "Such a nice day - " + me.getNick());
+    }
+
+    // TODO quit when connection lost
 
     public void test99Quit() {
         client.logoff();
@@ -177,12 +194,16 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
     }
 
     private void checkTitle(final String title) {
+        checkTitleAndTopic(title, null);
+    }
+
+    private void checkTitleAndTopic(final String title, final String topic) {
         // getActivity() returns the old activity after rotate
         final SherlockActivity currentActivity = (SherlockActivity) solo.getCurrentActivity();
         final ActionBar supportActionBar = currentActivity.getSupportActionBar();
 
         assertEquals(title, supportActionBar.getTitle());
-        assertNull(supportActionBar.getSubtitle());
+        assertEquals(topic, supportActionBar.getSubtitle());
     }
 
     // This only works temporarily, as the text will be reloaded in the next test from the backend
