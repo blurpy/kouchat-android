@@ -37,6 +37,7 @@ import com.robotium.solo.Solo;
 
 import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.TextView;
 
 /**
  * Test of network connection handling.
@@ -82,14 +83,13 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
 
         checkTitle(me.getNick() + " - Not connected - KouChat");
         assertTrue(solo.searchText("You logged off"));
-
-        me.setNick(me.getNick() + "A"); // Need to identify the second logon in the next test, so changing nick in memory
     }
 
     public void test02ShouldResetActionBarWhenConnectionEstablished() {
         solo.sleep(500);
         checkTitle(me.getNick() + " - Not connected - KouChat");
 
+        clearMainChat(); // Remove the first logon text
         controller.logOn(); // Simulate getting a connection for the first time
         solo.sleep(500);
 
@@ -146,5 +146,19 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
 
         assertEquals(title, supportActionBar.getTitle());
         assertNull(supportActionBar.getSubtitle());
+    }
+
+    // This only works temporarily, as the text will be reloaded in the next test from the backend
+    private void clearMainChat() {
+        final TextView mainChatView = (TextView) getActivity().findViewById(R.id.mainChatView);
+
+        mainChatView.post(new Runnable() {
+            @Override
+            public void run() {
+                mainChatView.setText("");
+            }
+        });
+
+        solo.sleep(500);
     }
 }
