@@ -317,15 +317,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     private void goAway(final String awayMessage) {
-        RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Away");
-        solo.sleep(500);
-
-        assertTrue(solo.searchText("Go away?"));
-
-        RobotiumTestUtils.writeText(getInstrumentation(), awayMessage);
-        solo.sleep(500);
-        solo.clickOnText("OK");
+        RobotiumTestUtils.goAway(solo, getInstrumentation(), awayMessage);
     }
 
     private void comeBack(final String awayMessage) {

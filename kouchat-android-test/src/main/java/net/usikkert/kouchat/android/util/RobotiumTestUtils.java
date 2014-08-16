@@ -394,6 +394,26 @@ public final class RobotiumTestUtils {
     }
 
     /**
+     * Opens the menu, clicks on "Away", sets the specified away message, and clicks OK.
+     *
+     * @param solo The solo tester.
+     * @param instrumentation The test instrumentation.
+     * @param awayMessage The away message to set.
+     */
+    public static void goAway(final Solo solo, final Instrumentation instrumentation, final String awayMessage) {
+        solo.sleep(100);
+        openMenu(solo);
+
+        solo.clickOnText("Away");
+        solo.sleep(400);
+
+        writeText(instrumentation, awayMessage);
+        solo.sleep(200);
+        solo.clickOnText("OK");
+        solo.sleep(200);
+    }
+
+    /**
      * Extracts "me" from the android user interface in an activity.
      *
      * @param activity An activity with an android user interface object.
