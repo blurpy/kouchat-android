@@ -374,16 +374,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     private void setTopic(final String topic) {
-        solo.sleep(100);
-        RobotiumTestUtils.openMenu(solo);
-
-        solo.clickOnText("Topic");
-        solo.sleep(400);
-
-        RobotiumTestUtils.writeText(getInstrumentation(), topic);
-        solo.sleep(200);
-        solo.clickOnText("OK");
-        solo.sleep(200);
+        RobotiumTestUtils.changeTopicTo(solo, getInstrumentation(), topic);
     }
 
     private void goAway(final String awayMessage) {

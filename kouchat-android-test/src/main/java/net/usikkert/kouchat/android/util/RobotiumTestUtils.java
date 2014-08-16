@@ -361,7 +361,7 @@ public final class RobotiumTestUtils {
     /**
      * Changes the nick name, if already in the correct menu.
      *
-     * Use {@link #clickOnChangeNickNameInTheSettings(com.robotium.solo.Solo)} first.
+     * Use {@link #clickOnChangeNickNameInTheSettings(Solo)} first.
      *
      * @param solo The solo tester.
      * @param nickName The nick name to change to.
@@ -371,6 +371,26 @@ public final class RobotiumTestUtils {
         solo.clearEditText(0);
         solo.enterText(0, nickName);
         solo.clickOnButton("OK");
+    }
+
+    /**
+     * Opens the menu, clicks on "Topic", sets the specified topic, and clicks OK.
+     *
+     * @param solo The solo tester.
+     * @param instrumentation The test instrumentation.
+     * @param topic The topic to set.
+     */
+    public static void changeTopicTo(final Solo solo, final Instrumentation instrumentation, final String topic) {
+        solo.sleep(100);
+        openMenu(solo);
+
+        solo.clickOnText("Topic");
+        solo.sleep(400);
+
+        writeText(instrumentation, topic);
+        solo.sleep(200);
+        solo.clickOnText("OK");
+        solo.sleep(200);
     }
 
     /**

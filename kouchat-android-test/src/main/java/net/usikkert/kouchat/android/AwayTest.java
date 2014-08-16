@@ -178,13 +178,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.sleep(500);
         checkIfAway();
 
-        RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Topic");
-        solo.sleep(500);
-
-        RobotiumTestUtils.writeText(getInstrumentation(), "Don't set this topic");
-        solo.sleep(500);
-        solo.clickOnText("OK");
+        RobotiumTestUtils.changeTopicTo(solo, getInstrumentation(), "Don't set this topic");
 
         solo.sleep(500);
         assertTrue(solo.searchText("You can not change the topic while away"));
