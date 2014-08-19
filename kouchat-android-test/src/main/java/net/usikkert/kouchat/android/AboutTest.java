@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android;
 
+import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 
@@ -50,7 +51,7 @@ public class AboutTest extends ActivityInstrumentationTestCase2<MainChatControll
         RobotiumTestUtils.openMenu(solo);
         solo.clickOnText("About");
 
-        assertTrue(solo.searchText("KouChat v"));
+        assertTrue(solo.searchText("KouChat v" + Constants.APP_VERSION));
         assertTrue(solo.searchText("Copyright"));
         assertTrue(solo.searchText("LGPLv3"));
 
