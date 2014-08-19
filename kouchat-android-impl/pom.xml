@@ -82,6 +82,36 @@
       <artifactId>robolectric</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.jayway.android.robotium</groupId>
+      <artifactId>robotium-solo</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.easytesting</groupId>
+      <artifactId>fest-reflect</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>android-test</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 </project>

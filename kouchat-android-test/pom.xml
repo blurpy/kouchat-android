@@ -85,7 +85,7 @@
         <configuration>
           <test>
             <classes>
-              <class>net.usikkert.kouchat.android.testsuite.NoTests</class>
+              <class>net.usikkert.kouchat.android.functional.testsuite.NoTests</class>
             </classes>
           </test>
         </configuration>
