@@ -1,0 +1,50 @@
+subprojects {
+    apply plugin: 'android'
+
+    android {
+        compileSdkVersion 18
+        buildToolsVersion "19.1"
+        compileOptions.encoding = "UTF-8"
+
+
+        packagingOptions {
+            exclude 'LICENSE.txt'
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'META-INF/NOTICE'
+            exclude 'META-INF/NOTICE.txt'
+        }
+
+        sourceSets {
+            main {
+                manifest.srcFile 'AndroidManifest.xml'
+                res.srcDirs = ['res']
+            }
+
+            androidTest {
+                setRoot('src/test')
+            }
+        }
+
+        defaultConfig {
+            minSdkVersion 10
+            targetSdkVersion 18
+        }
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+//        classpath 'com.android.tools.build:gradle:0.11.1'
+        classpath 'com.android.tools.build:gradle:0.10.+'
+//        classpath 'com.android.tools.build:gradle:0.12.1'
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+}
