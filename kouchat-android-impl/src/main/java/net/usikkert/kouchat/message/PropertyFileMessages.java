@@ -27,6 +27,8 @@ import java.util.ResourceBundle;
 
 import net.usikkert.kouchat.util.Validate;
 
+import org.jetbrains.annotations.NonNls;
+
 /**
  * Implementation of {@link Messages} using a {@link ResourceBundle} to load a property file with messages.
  *
@@ -42,7 +44,7 @@ public class PropertyFileMessages implements Messages {
      * @param baseName The base name of the property-file.
      *                 Example: the base name of <code>messages_en.properties</code> is <code>messages</code>.
      */
-    public PropertyFileMessages(final String baseName) {
+    public PropertyFileMessages(@NonNls final String baseName) {
         Validate.notEmpty(baseName, "Base name can not be empty");
 
         bundle = ResourceBundle.getBundle(baseName);

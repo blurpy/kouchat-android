@@ -39,6 +39,8 @@ import net.usikkert.kouchat.event.SettingsListener;
 import net.usikkert.kouchat.util.IOTools;
 import net.usikkert.kouchat.util.Tools;
 
+import org.jetbrains.annotations.NonNls;
+
 /**
  * This is a class that loads and saves the application settings to file.
  *
@@ -162,7 +164,7 @@ public class Settings {
      *
      * @param client The client to set, on <code>me</code>.
      */
-    public void setClient(final String client) {
+    public void setClient(@NonNls final String client) {
         me.setClient(Constants.APP_NAME + " v" + Constants.APP_VERSION + " " + client);
     }
 
