@@ -275,7 +275,7 @@ public class MessageParser implements ReceiverListener {
                     }
 
                     catch (final NumberFormatException e) {
-                        LOG.log(Level.WARNING, e.toString());
+                        LOG.log(Level.WARNING, "Failed to parse private chat port. message=" + message + ", ipAddress=" + ipAddress, e);
                     }
 
                     responder.clientInfo(msgCode, client, timeSinceLogon, operatingSystem, privateChatPort);
@@ -292,12 +292,14 @@ public class MessageParser implements ReceiverListener {
             }
         }
 
+        // Just ignore, someone sent a badly formatted message
         catch (final StringIndexOutOfBoundsException e) {
-            LOG.log(Level.SEVERE, e.toString(), e);
+            LOG.log(Level.SEVERE, "Failed to parse message. message=" + message + ", ipAddress=" + ipAddress, e);
         }
 
+        // Just ignore, someone sent a badly formatted message
         catch (final NumberFormatException e) {
-            LOG.log(Level.SEVERE, e.toString(), e);
+            LOG.log(Level.SEVERE, "Failed to parse message. message=" + message + ", ipAddress=" + ipAddress, e);
         }
     }
 }
