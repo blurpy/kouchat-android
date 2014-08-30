@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  *
  * @author Christian Ihle
  */
-public final class LogInitializer {
+public class LogInitializer {
 
     /** The main package where all the classes belonging to the application are. */
     private static final String MAIN_PACKAGE = "net.usikkert.kouchat";
