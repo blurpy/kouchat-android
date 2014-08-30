@@ -102,12 +102,12 @@ public class PrivateMessageParser implements ReceiverListener {
 
         // Just ignore, someone sent a badly formatted message
         catch (final StringIndexOutOfBoundsException e) {
-            LOG.log(Level.SEVERE, e.toString(), e);
+            LOG.log(Level.SEVERE, "Failed to parse message. message=" + message + ", ipAddress=" + ipAddress, e);
         }
 
         // Just ignore, someone sent a badly formatted message
         catch (final NumberFormatException e) {
-            LOG.log(Level.SEVERE, e.toString(), e);
+            LOG.log(Level.SEVERE, "Failed to parse message. message=" + message + ", ipAddress=" + ipAddress, e);
         }
     }
 }
