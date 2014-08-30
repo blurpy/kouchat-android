@@ -25,7 +25,6 @@ package net.usikkert.kouchat.util;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -102,29 +101,6 @@ public final class Tools {
 
         else {
             date = formatter.format(d);
-        }
-
-        return date;
-    }
-
-    /**
-     * Converts a string into a date, from the format specified.
-     *
-     * @param s The string to convert into a date.
-     * @param format The format of the date.
-     * @return The string as a date.
-     * @see SimpleDateFormat
-     */
-    public static Date stringToDate(final String s, final String format) {
-        Date date = null;
-        final SimpleDateFormat formatter = new SimpleDateFormat(format);
-
-        try {
-            date = formatter.parse(s);
-        }
-
-        catch (final ParseException e) {
-            LOG.log(Level.SEVERE, e.toString(), e);
         }
 
         return date;

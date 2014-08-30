@@ -336,29 +336,6 @@ public final class NetworkUtils {
     }
 
     /**
-     * Gets the host name of the ip address.
-     *
-     * @param ipAddress The ip address to find the host name of.
-     * @return The host name, or <code>null</code> if the host name cannot be determined.
-     */
-    public static String getHostName(final String ipAddress) {
-        try {
-            final InetAddress inetAddress = InetAddress.getByName(ipAddress);
-            final String hostName = inetAddress.getHostName();
-
-            if (!hostName.equals(ipAddress)) {
-                return hostName;
-            }
-        }
-
-        catch (final UnknownHostException e) {
-            LOG.log(Level.WARNING, e.toString());
-        }
-
-        return null;
-    }
-
-    /**
      * Gets the network interfaces with the requested name. Returns <code>null</code> if no
      * interface is found with that name.
      *
