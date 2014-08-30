@@ -38,17 +38,10 @@ import java.util.logging.Logger;
  *
  * @author Christian Ihle
  */
-public final class NetworkUtils {
+public class NetworkUtils {
 
     /** The logger. */
     private static final Logger LOG = Logger.getLogger(NetworkUtils.class.getName());
-
-    /**
-     * Private constructor. Only static methods here.
-     */
-    private NetworkUtils() {
-
-    }
 
     /**
      * Checks if the network interface is up, and usable.
@@ -68,7 +61,7 @@ public final class NetworkUtils {
      * @param netif The network interface to check.
      * @return True if the network interface is usable.
      */
-    public static boolean isUsable(final NetworkInterface netif) {
+    public boolean isUsable(final NetworkInterface netif) {
         if (netif == null) {
             return false;
         }
@@ -93,7 +86,7 @@ public final class NetworkUtils {
      * @param netif The network interface to check.
      * @return If an IPv4-address was found or not.
      */
-    public static boolean hasIPv4Address(final NetworkInterface netif) {
+    public boolean hasIPv4Address(final NetworkInterface netif) {
         if (netif == null) {
             return false;
         }
@@ -116,7 +109,7 @@ public final class NetworkUtils {
      * @param netif The network interface to check.
      * @return A string with information.
      */
-    public static String getNetworkInterfaceInfo(final NetworkInterface netif) {
+    public String getNetworkInterfaceInfo(final NetworkInterface netif) {
         if (netif == null) {
             return "Invalid network interface.";
         }
@@ -145,7 +138,7 @@ public final class NetworkUtils {
      * @param netif The network interface to get the IPv4-addresses from.
      * @return All the IPv4-addresses on the network interface.
      */
-    public static String getIPv4Addresses(final NetworkInterface netif) {
+    public String getIPv4Addresses(final NetworkInterface netif) {
         if (netif == null) {
             return "";
         }
@@ -169,7 +162,7 @@ public final class NetworkUtils {
      * @param netif The network interface to get the MAC-address of.
      * @return The MAC-address in hex, as a string.
      */
-    public static String getMacAddress(final NetworkInterface netif) {
+    public String getMacAddress(final NetworkInterface netif) {
         if (netif == null) {
             return "";
         }
@@ -209,7 +202,7 @@ public final class NetworkUtils {
      * @return An updated version of the same network interface,
      *         or <code>null</code> if not found.
      */
-    public static NetworkInterface getUpdatedNetworkInterface(final NetworkInterface origNetIf) {
+    public NetworkInterface getUpdatedNetworkInterface(final NetworkInterface origNetIf) {
         if (origNetIf == null) {
             return null;
         }
@@ -241,7 +234,7 @@ public final class NetworkUtils {
      * @param netIf2 The second network interface.
      * @return If they are the same or not.
      */
-    public static boolean sameNetworkInterface(final NetworkInterface netIf1, final NetworkInterface netIf2) {
+    public boolean sameNetworkInterface(final NetworkInterface netIf1, final NetworkInterface netIf2) {
         if (netIf1 == null || netIf2 == null) {
             return false;
         }
@@ -257,7 +250,7 @@ public final class NetworkUtils {
      * @return The first usable network interface, or <code>null</code>.
      * @see #isUsable(NetworkInterface)
      */
-    public static NetworkInterface findFirstUsableNetworkInterface() {
+    public NetworkInterface findFirstUsableNetworkInterface() {
         final Enumeration<NetworkInterface> networkInterfaces = getNetworkInterfaces();
 
         if (networkInterfaces == null) {
@@ -280,7 +273,7 @@ public final class NetworkUtils {
      *
      * @return All network interfaces, or <code>null</code>.
      */
-    public static Enumeration<NetworkInterface> getNetworkInterfaces() {
+    public Enumeration<NetworkInterface> getNetworkInterfaces() {
         Enumeration<NetworkInterface> networkInterfaces = null;
 
         try {
@@ -300,7 +293,7 @@ public final class NetworkUtils {
      * @return All the usable network interfaces.
      * @see #isUsable(NetworkInterface)
      */
-    public static List<NetworkInterface> getUsableNetworkInterfaces() {
+    public List<NetworkInterface> getUsableNetworkInterfaces() {
         final ArrayList<NetworkInterface> usableNetworkInterfaces = new ArrayList<NetworkInterface>();
         final Enumeration<NetworkInterface> allNetworkInterfaces = getNetworkInterfaces();
 
@@ -323,7 +316,7 @@ public final class NetworkUtils {
      *
      * @return The host name, or <code>null</code> if the host name cannot be determined.
      */
-    public static String getLocalHostName() {
+    public String getLocalHostName() {
         try {
             return InetAddress.getLocalHost().getHostName();
         }
@@ -342,7 +335,7 @@ public final class NetworkUtils {
      * @param name Name of the network interface to return.
      * @return The requested network interface, or <code>null</code>.
      */
-    public static NetworkInterface getNetworkInterfaceByName(final String name) {
+    public NetworkInterface getNetworkInterfaceByName(final String name) {
         if (name == null) {
             return null;
         }

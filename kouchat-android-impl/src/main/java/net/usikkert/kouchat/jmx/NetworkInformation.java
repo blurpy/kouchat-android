@@ -40,6 +40,8 @@ import net.usikkert.kouchat.util.Validate;
  */
 public class NetworkInformation implements NetworkInformationMBean {
 
+    private final NetworkUtils networkUtils = new NetworkUtils();
+
     /** Information and control of the network. */
     private final ConnectionWorker connectionWorker;
 
@@ -69,7 +71,7 @@ public class NetworkInformation implements NetworkInformationMBean {
         if (networkInterface == null) {
             return "No current network interface.";
         } else {
-            return NetworkUtils.getNetworkInterfaceInfo(networkInterface);
+            return networkUtils.getNetworkInterfaceInfo(networkInterface);
         }
     }
 
@@ -84,7 +86,7 @@ public class NetworkInformation implements NetworkInformationMBean {
         if (osInterface == null) {
             return "No network interface detected.";
         } else {
-            return NetworkUtils.getNetworkInterfaceInfo(osInterface);
+            return networkUtils.getNetworkInterfaceInfo(osInterface);
         }
     }
 
@@ -95,7 +97,7 @@ public class NetworkInformation implements NetworkInformationMBean {
     public String[] showUsableNetworks() {
         final List<String> list = new ArrayList<String>();
 
-        final Enumeration<NetworkInterface> networkInterfaces = NetworkUtils.getNetworkInterfaces();
+        final Enumeration<NetworkInterface> networkInterfaces = networkUtils.getNetworkInterfaces();
 
         if (networkInterfaces == null) {
             return new String[]{"No network interfaces detected."};
@@ -104,8 +106,8 @@ public class NetworkInformation implements NetworkInformationMBean {
         while (networkInterfaces.hasMoreElements()) {
             final NetworkInterface netif = networkInterfaces.nextElement();
 
-            if (NetworkUtils.isUsable(netif)) {
-                list.add(NetworkUtils.getNetworkInterfaceInfo(netif));
+            if (networkUtils.isUsable(netif)) {
+                list.add(networkUtils.getNetworkInterfaceInfo(netif));
             }
         }
 
@@ -123,7 +125,7 @@ public class NetworkInformation implements NetworkInformationMBean {
     public String[] showAllNetworks() {
         final List<String> list = new ArrayList<String>();
 
-        final Enumeration<NetworkInterface> networkInterfaces = NetworkUtils.getNetworkInterfaces();
+        final Enumeration<NetworkInterface> networkInterfaces = networkUtils.getNetworkInterfaces();
 
         if (networkInterfaces == null) {
             return new String[]{"No network interfaces detected."};
@@ -131,7 +133,7 @@ public class NetworkInformation implements NetworkInformationMBean {
 
         while (networkInterfaces.hasMoreElements()) {
             final NetworkInterface netif = networkInterfaces.nextElement();
-            list.add(NetworkUtils.getNetworkInterfaceInfo(netif));
+            list.add(networkUtils.getNetworkInterfaceInfo(netif));
         }
 
         return list.toArray(new String[list.size()]);

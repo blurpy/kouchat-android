@@ -30,6 +30,7 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -40,6 +41,13 @@ import org.junit.Test;
  */
 public class NetworkUtilsTest {
 
+    private NetworkUtils networkUtils;
+
+    @Before
+    public void setUp() {
+        networkUtils = new NetworkUtils();
+    }
+
     /**
      * Tests if 2 network interfaces are the same.
      *
@@ -48,21 +56,21 @@ public class NetworkUtilsTest {
      */
     @Test
     public void testSameNetworkInterface() {
-        assertFalse(NetworkUtils.sameNetworkInterface(null, null));
+        assertFalse(networkUtils.sameNetworkInterface(null, null));
 
-        final Enumeration<NetworkInterface> networkInterfaces = NetworkUtils.getNetworkInterfaces();
+        final Enumeration<NetworkInterface> networkInterfaces = networkUtils.getNetworkInterfaces();
 
         if (networkInterfaces != null) {
             try {
                 final NetworkInterface interface1 = networkInterfaces.nextElement();
                 final NetworkInterface interface2 = networkInterfaces.nextElement();
 
-                assertTrue(NetworkUtils.sameNetworkInterface(interface1, interface1));
-                assertTrue(NetworkUtils.sameNetworkInterface(interface2, interface2));
+                assertTrue(networkUtils.sameNetworkInterface(interface1, interface1));
+                assertTrue(networkUtils.sameNetworkInterface(interface2, interface2));
 
-                assertFalse(NetworkUtils.sameNetworkInterface(interface1, interface2));
-                assertFalse(NetworkUtils.sameNetworkInterface(interface1, null));
-                assertFalse(NetworkUtils.sameNetworkInterface(null, interface2));
+                assertFalse(networkUtils.sameNetworkInterface(interface1, interface2));
+                assertFalse(networkUtils.sameNetworkInterface(interface1, null));
+                assertFalse(networkUtils.sameNetworkInterface(null, interface2));
             }
 
             catch (final NoSuchElementException e) {
@@ -83,7 +91,7 @@ public class NetworkUtilsTest {
         try {
             final InetAddress localHostAddress = InetAddress.getLocalHost(); // Could throw exception
 
-            final String localHostName = NetworkUtils.getLocalHostName();
+            final String localHostName = networkUtils.getLocalHostName();
             assertNotNull("Name of localhost should not be null", localHostName);
             final InetAddress addressByName = InetAddress.getByName(localHostName);
             assertEquals("The addresses should be equal", localHostAddress, addressByName);
@@ -97,7 +105,7 @@ public class NetworkUtilsTest {
     @Test
     @Ignore("Machine specific test")
     public void getNetworkInterfaceByName() {
-        final NetworkInterface eth0 = NetworkUtils.getNetworkInterfaceByName("eth0");
-        System.out.println(NetworkUtils.getNetworkInterfaceInfo(eth0));
+        final NetworkInterface eth0 = networkUtils.getNetworkInterfaceByName("eth0");
+        System.out.println(networkUtils.getNetworkInterfaceInfo(eth0));
     }
 }

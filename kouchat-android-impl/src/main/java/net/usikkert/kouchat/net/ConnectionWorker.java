@@ -52,6 +52,8 @@ public class ConnectionWorker implements Runnable {
     /** Period of time to sleep if network is down. 15 sec. */
     private static final int SLEEP_DOWN = 1000 * 15;
 
+    private final NetworkUtils networkUtils = new NetworkUtils();
+
     /** Indicates whether the thread should run or not. */
     private boolean run;
 
@@ -143,7 +145,7 @@ public class ConnectionWorker implements Runnable {
         final NetworkInterface netif = selectNetworkInterface();
 
         // No network interface to connect with
-        if (!NetworkUtils.isUsable(netif)) {
+        if (!networkUtils.isUsable(netif)) {
             LOG.log(Level.FINE, "Network is down");
 
             if (networkUp) {
@@ -188,7 +190,7 @@ public class ConnectionWorker implements Runnable {
      * @return True if netif is new.
      */
     private boolean isNewNetworkInterface(final NetworkInterface netif) {
-        return !NetworkUtils.sameNetworkInterface(netif, networkInterface);
+        return !networkUtils.sameNetworkInterface(netif, networkInterface);
     }
 
     /**
@@ -275,7 +277,7 @@ public class ConnectionWorker implements Runnable {
      * @see NetworkUtils#isUsable(NetworkInterface)
      */
     private NetworkInterface selectNetworkInterface() {
-        final NetworkInterface firstUsableNetIf = NetworkUtils.findFirstUsableNetworkInterface();
+        final NetworkInterface firstUsableNetIf = networkUtils.findFirstUsableNetworkInterface();
 
         if (firstUsableNetIf == null) {
             LOG.log(Level.FINER, "No usable network interface detected.");
@@ -283,29 +285,29 @@ public class ConnectionWorker implements Runnable {
         }
 
         final NetworkInterface savedNetworkInterface =
-                NetworkUtils.getNetworkInterfaceByName(settings.getNetworkInterface());
+                networkUtils.getNetworkInterfaceByName(settings.getNetworkInterface());
 
-        if (NetworkUtils.isUsable(savedNetworkInterface)) {
+        if (networkUtils.isUsable(savedNetworkInterface)) {
             LOG.log(Level.FINER, "Using saved network interface: \n" +
-                    NetworkUtils.getNetworkInterfaceInfo(savedNetworkInterface));
+                    networkUtils.getNetworkInterfaceInfo(savedNetworkInterface));
             return savedNetworkInterface;
         }
 
         LOG.log(Level.FINER, "Saved network interface '" + settings.getNetworkInterface() + "' is invalid: \n" +
-                NetworkUtils.getNetworkInterfaceInfo(savedNetworkInterface));
+                networkUtils.getNetworkInterfaceInfo(savedNetworkInterface));
 
         final NetworkInterface osNetIf = osNetworkInfo.getOperatingSystemNetworkInterface();
 
-        if (NetworkUtils.isUsable(osNetIf)) {
+        if (networkUtils.isUsable(osNetIf)) {
             LOG.log(Level.FINER, "Using operating system's choice of network interface: \n" +
-                    NetworkUtils.getNetworkInterfaceInfo(osNetIf));
+                    networkUtils.getNetworkInterfaceInfo(osNetIf));
             return osNetIf;
         }
 
         LOG.finer("The operating system suggested the following invalid network interface: \n" +
-                NetworkUtils.getNetworkInterfaceInfo(osNetIf));
+                networkUtils.getNetworkInterfaceInfo(osNetIf));
         LOG.log(Level.FINER, "Overriding operating system's choice of network interface with: \n" +
-                NetworkUtils.getNetworkInterfaceInfo(firstUsableNetIf));
+                networkUtils.getNetworkInterfaceInfo(firstUsableNetIf));
 
         return firstUsableNetIf;
     }
@@ -317,7 +319,7 @@ public class ConnectionWorker implements Runnable {
      */
     public NetworkInterface getCurrentNetworkInterface() {
         final NetworkInterface updatedNetworkInterface =
-                NetworkUtils.getUpdatedNetworkInterface(networkInterface);
+                networkUtils.getUpdatedNetworkInterface(networkInterface);
 
         if (updatedNetworkInterface != null) {
             return updatedNetworkInterface;

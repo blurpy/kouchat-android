@@ -48,6 +48,8 @@ public class DefaultMessageResponder implements MessageResponder {
 
     private static final Logger LOG = Logger.getLogger(DefaultMessageResponder.class.getName());
 
+    private final NetworkUtils networkUtils = new NetworkUtils();
+
     private final Controller controller;
     private final User me;
     private final TransferList tList;
@@ -301,7 +303,7 @@ public class DefaultMessageResponder implements MessageResponder {
     public void meLogOn(final String ipAddress) {
         chatState.setLoggedOn(true);
         me.setIpAddress(ipAddress);
-        me.setHostName(NetworkUtils.getLocalHostName());
+        me.setHostName(networkUtils.getLocalHostName());
         msgController.showSystemMessage("You logged on as " + me.getNick() + " from " + createHostInfo(me));
         ui.showTopic();
     }

@@ -41,6 +41,8 @@ import org.junit.Test;
  */
 public class OperatingSystemNetworkInfoTest {
 
+    private final NetworkUtils networkUtils = new NetworkUtils();
+
     private Settings settings;
 
     @Before
@@ -56,7 +58,7 @@ public class OperatingSystemNetworkInfoTest {
      */
     @Test
     public void testFindingTheOSNetworkInterface() {
-        final Enumeration<NetworkInterface> networkInterfaces = NetworkUtils.getNetworkInterfaces();
+        final Enumeration<NetworkInterface> networkInterfaces = networkUtils.getNetworkInterfaces();
         final OperatingSystemNetworkInfo osNicInfo = new OperatingSystemNetworkInfo(settings);
         final NetworkInterface osInterface = osNicInfo.getOperatingSystemNetworkInterface();
 
@@ -71,7 +73,7 @@ public class OperatingSystemNetworkInfoTest {
         while (networkInterfaces.hasMoreElements()) {
             final NetworkInterface networkInterface = networkInterfaces.nextElement();
 
-            if (NetworkUtils.isUsable(networkInterface)) {
+            if (networkUtils.isUsable(networkInterface)) {
                 validNetworkAvailable = true;
                 break;
             }
@@ -87,6 +89,6 @@ public class OperatingSystemNetworkInfoTest {
 
         // This is known to sometimes fail in Vista. It is unknown why Vista
         // prefers unusable network interfaces.
-        assertTrue(NetworkUtils.isUsable(osInterface));
+        assertTrue(networkUtils.isUsable(osInterface));
     }
 }
