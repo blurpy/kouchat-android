@@ -27,6 +27,8 @@ import static org.mockito.Mockito.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import org.jetbrains.annotations.NonNls;
+
 /**
  * Utilities for tests.
  *
@@ -47,7 +49,7 @@ public final class TestUtils {
      * @param <T> The class of the field.
      * @return The value in the field of the object.
      */
-    public static <T> T getFieldValue(final Object object, final Class<T> fieldClass, final String fieldName) {
+    public static <T> T getFieldValue(final Object object, final Class<T> fieldClass, @NonNls final String fieldName) {
         Validate.notNull(object, "The object to get the value from can not be null");
         Validate.notNull(fieldClass, "The class of the field can not be null");
         Validate.notEmpty(fieldName, "The name of the field can not be empty");
@@ -63,7 +65,7 @@ public final class TestUtils {
      * @param fieldName The name of the field.
      * @param value The value to set in the field.
      */
-    public static void setFieldValue(final Object object, final String fieldName, final Object value) {
+    public static void setFieldValue(final Object object, @NonNls final String fieldName, final Object value) {
         Validate.notNull(object, "The object to set the value in can not be null");
         Validate.notEmpty(fieldName, "The name of the field can not be empty");
 
@@ -79,7 +81,7 @@ public final class TestUtils {
      * @param fieldName The name of the field.
      * @param classToMock The class to create a mock from, as the value to set in the field.
      */
-    public static <T> T setFieldValueWithMock(final Object object, final String fieldName, final Class<T> classToMock) {
+    public static <T> T setFieldValueWithMock(final Object object, @NonNls final String fieldName, final Class<T> classToMock) {
         Validate.notNull(classToMock, "The class to mock can not be null");
 
         final T mock = mock(classToMock);
@@ -95,7 +97,7 @@ public final class TestUtils {
      * @param fieldName The name of the field to check.
      * @return If the value is null.
      */
-    public static boolean fieldValueIsNull(final Object object, final String fieldName) {
+    public static boolean fieldValueIsNull(final Object object, @NonNls final String fieldName) {
         return getFieldValue(object, Object.class, fieldName) == null;
     }
 
