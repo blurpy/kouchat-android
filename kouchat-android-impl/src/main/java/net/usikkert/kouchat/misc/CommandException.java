@@ -30,8 +30,6 @@ package net.usikkert.kouchat.misc;
  */
 public class CommandException extends Exception {
 
-    private static final long serialVersionUID = 1L;
-
     /**
      * Creates a CommandException with no message or cause.
      */
