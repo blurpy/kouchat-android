@@ -36,6 +36,8 @@ import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
+import org.jetbrains.annotations.NonNls;
+
 /**
  * Parses and executes commands. A command starts with a slash, and can
  * have arguments.
@@ -753,7 +755,7 @@ public class CommandParser {
      * @param line The command in its raw form.
      */
     public void parse(final String line) {
-        String command = "";
+        @NonNls final String command;
 
         if (line.contains(" ")) {
             command = line.substring(1, line.indexOf(' '));
