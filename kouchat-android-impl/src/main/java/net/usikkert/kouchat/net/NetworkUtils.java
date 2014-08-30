@@ -157,6 +157,20 @@ public class NetworkUtils {
     }
 
     /**
+     * Returns a list of the IPv4-addresses on the network interface in string format.
+     *
+     * @param networkInterfaceInfo The network interface to get the IPv4-addresses from.
+     * @return All the IPv4-addresses on the network interface.
+     */
+    public String getIPv4Addresses(final NetworkInterfaceInfo networkInterfaceInfo) {
+        if (networkInterfaceInfo == null) {
+            return "";
+        }
+
+        return getIPv4Addresses(networkInterfaceInfo.getNetworkInterface());
+    }
+
+    /**
      * Returns the MAC-address of the network interface, in hex format.
      *
      * @param netif The network interface to get the MAC-address of.
@@ -293,8 +307,8 @@ public class NetworkUtils {
      * @return All the usable network interfaces.
      * @see #isUsable(NetworkInterface)
      */
-    public List<NetworkInterface> getUsableNetworkInterfaces() {
-        final ArrayList<NetworkInterface> usableNetworkInterfaces = new ArrayList<NetworkInterface>();
+    public List<NetworkInterfaceInfo> getUsableNetworkInterfaces() {
+        final List<NetworkInterfaceInfo> usableNetworkInterfaces = new ArrayList<NetworkInterfaceInfo>();
         final Enumeration<NetworkInterface> allNetworkInterfaces = getNetworkInterfaces();
 
         if (allNetworkInterfaces == null) {
@@ -303,8 +317,9 @@ public class NetworkUtils {
 
         while (allNetworkInterfaces.hasMoreElements()) {
             final NetworkInterface netif = allNetworkInterfaces.nextElement();
+
             if (isUsable(netif)) {
-                usableNetworkInterfaces.add(netif);
+                usableNetworkInterfaces.add(new NetworkInterfaceInfo(netif));
             }
         }
 
