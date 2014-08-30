@@ -99,7 +99,7 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
     }
 
     @Override
-    public void setAway() {
+    public void updateAwayState() {
         updateTitle();
     }
 

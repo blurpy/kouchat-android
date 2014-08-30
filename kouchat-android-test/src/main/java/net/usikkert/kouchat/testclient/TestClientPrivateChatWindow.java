@@ -80,7 +80,7 @@ public class TestClientPrivateChatWindow implements PrivateChatWindow {
     }
 
     @Override
-    public void setAway() {
+    public void updateAwayState() {
 
     }
 

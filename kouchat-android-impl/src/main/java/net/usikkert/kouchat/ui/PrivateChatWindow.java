@@ -77,7 +77,7 @@ public interface PrivateChatWindow {
     /**
      * Gives the window a chance to change settings that depend on the away state of the user.
      */
-    void setAway();
+    void updateAwayState();
 
     /**
      * Gives the window a chance to update after the user logged off.
