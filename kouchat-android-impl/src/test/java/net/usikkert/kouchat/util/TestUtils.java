@@ -25,6 +25,7 @@ package net.usikkert.kouchat.util;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * Utilities for tests.
@@ -146,6 +147,7 @@ public final class TestUtils {
 
         try {
             field.setAccessible(true);
+            removeFinal(field);
             field.set(object, value);
         }
 
@@ -153,9 +155,21 @@ public final class TestUtils {
             throw new RuntimeException(e);
         }
 
+        catch (final NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+
         finally {
             field.setAccessible(originalAccessible);
         }
+    }
+
+    // Mostly useful for static final fields
+    private static void removeFinal(final Field field) throws NoSuchFieldException, IllegalAccessException {
+        final Field modifiersField = Field.class.getDeclaredField("modifiers");
+
+        modifiersField.setAccessible(true);
+        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
     }
 
     private static Field getField(final Object object, final String fieldName) {
