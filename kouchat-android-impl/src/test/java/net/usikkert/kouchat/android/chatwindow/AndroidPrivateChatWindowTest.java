@@ -189,7 +189,7 @@ public class AndroidPrivateChatWindowTest {
     public void setAwayShouldHandleMissingController() {
         assertNull(getControllerFromChatWindow());
 
-        chatWindow.setAway(true);
+        chatWindow.setAway();
 
         verifyZeroInteractions(controller);
     }
@@ -198,7 +198,7 @@ public class AndroidPrivateChatWindowTest {
     public void setAwayShouldUpdateTitleAndSubtitle() {
         TestUtils.setFieldValue(chatWindow, "privateChatController", controller);
 
-        chatWindow.setAway(true);
+        chatWindow.setAway();
 
         verify(controller).updateTitleAndSubtitle("Vivi - KouChat", null); // Tested in more detail in updateTitle() tests
     }

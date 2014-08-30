@@ -75,12 +75,9 @@ public interface PrivateChatWindow {
     boolean isVisible();
 
     /**
-     * Gives the window a chance to change settings that depend on the away
-     * state of the user.
-     *
-     * @param away True if away.
+     * Gives the window a chance to change settings that depend on the away state of the user.
      */
-    void setAway(boolean away);
+    void setAway();
 
     /**
      * Gives the window a chance to update after the user logged off.

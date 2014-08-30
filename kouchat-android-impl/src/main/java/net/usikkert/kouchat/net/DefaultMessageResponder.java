@@ -362,7 +362,7 @@ public class DefaultMessageResponder implements MessageResponder {
                 }
 
                 if (user.getPrivchat() != null) {
-                    user.getPrivchat().setAway(away);
+                    user.getPrivchat().setAway();
 
                     if (away) {
                         msgController.showPrivateSystemMessage(user, user.getNick() + " went away: " + user.getAwayMsg());
