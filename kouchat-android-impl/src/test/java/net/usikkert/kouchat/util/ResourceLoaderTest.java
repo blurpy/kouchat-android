@@ -65,7 +65,7 @@ public class ResourceLoaderTest {
 
     @Test
     public void getResourceShouldReturnValidUrlIfFileExists() {
-        assertNotNull(resourceLoader.getResource("/sounds/error.wav"));
+        assertNotNull(resourceLoader.getResource("/test-messages.properties"));
     }
 
     @Test
