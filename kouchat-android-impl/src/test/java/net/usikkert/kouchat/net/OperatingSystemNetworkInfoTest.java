@@ -28,27 +28,52 @@ import static org.mockito.Mockito.*;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 
+import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link OperatingSystemNetworkInfo}.
  *
  * @author Christian Ihle
  */
+@SuppressWarnings("HardCodedStringLiteral")
 public class OperatingSystemNetworkInfoTest {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     private final NetworkUtils networkUtils = new NetworkUtils();
 
     private Settings settings;
+    private ErrorHandler errorHandler;
 
     @Before
     public void setUp() {
         settings = mock(Settings.class);
         when(settings.getMe()).thenReturn(new User("testuser", 123));
+        errorHandler = mock(ErrorHandler.class);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfSettingsIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Settings can not be null");
+
+        new OperatingSystemNetworkInfo(null, errorHandler);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfErrorHandlerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Error handler can not be null");
+
+        new OperatingSystemNetworkInfo(settings, null);
     }
 
     /**
@@ -59,7 +84,7 @@ public class OperatingSystemNetworkInfoTest {
     @Test
     public void testFindingTheOSNetworkInterface() {
         final Enumeration<NetworkInterface> networkInterfaces = networkUtils.getNetworkInterfaces();
-        final OperatingSystemNetworkInfo osNicInfo = new OperatingSystemNetworkInfo(settings);
+        final OperatingSystemNetworkInfo osNicInfo = new OperatingSystemNetworkInfo(settings, errorHandler);
         final NetworkInterface osInterface = osNicInfo.getOperatingSystemNetworkInterface();
 
         if (networkInterfaces == null) {

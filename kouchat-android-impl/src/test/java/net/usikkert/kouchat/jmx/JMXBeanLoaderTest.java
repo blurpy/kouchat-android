@@ -28,9 +28,11 @@ import static org.mockito.Mockito.*;
 import java.util.List;
 
 import net.usikkert.kouchat.misc.Controller;
+import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.net.ConnectionWorker;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -44,13 +46,25 @@ public class JMXBeanLoaderTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+    private Controller controller;
+    private ConnectionWorker connectionWorker;
+    private Settings settings;
+    private ErrorHandler errorHandler;
+
+    @Before
+    public void setUp() {
+        controller = mock(Controller.class);
+        connectionWorker = mock(ConnectionWorker.class);
+        settings = mock(Settings.class);
+        errorHandler = mock(ErrorHandler.class);
+    }
 
     @Test
     public void constructorShouldThrowExceptionIfControllerIsNull() {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Controller can not be null");
 
-        new JMXBeanLoader(null, mock(ConnectionWorker.class), mock(Settings.class));
+        new JMXBeanLoader(null, connectionWorker, settings, errorHandler);
     }
 
     @Test
@@ -58,7 +72,7 @@ public class JMXBeanLoaderTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("ConnectionWorker can not be null");
 
-        new JMXBeanLoader(mock(Controller.class), null, mock(Settings.class));
+        new JMXBeanLoader(controller, null, settings, errorHandler);
     }
 
     @Test
@@ -66,13 +80,20 @@ public class JMXBeanLoaderTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Settings can not be null");
 
-        new JMXBeanLoader(mock(Controller.class), mock(ConnectionWorker.class), null);
+        new JMXBeanLoader(controller, connectionWorker, null, errorHandler);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfErrorHandlerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Error handler can not be null");
+
+        new JMXBeanLoader(controller, connectionWorker, settings, null);
     }
 
     @Test
     public void getJMXBeansShouldIncludeThreeBeans() {
-        final JMXBeanLoader beanLoader =
-                new JMXBeanLoader(mock(Controller.class), mock(ConnectionWorker.class), mock(Settings.class));
+        final JMXBeanLoader beanLoader = new JMXBeanLoader(controller, connectionWorker, settings, errorHandler);
 
         final List<JMXBean> jmxBeans = beanLoader.getJMXBeans();
         assertNotNull(jmxBeans);

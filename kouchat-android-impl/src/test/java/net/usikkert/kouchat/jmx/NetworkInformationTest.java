@@ -22,54 +22,47 @@
 
 package net.usikkert.kouchat.jmx;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.mockito.Mockito.*;
 
-import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.net.ConnectionWorker;
-import net.usikkert.kouchat.util.Validate;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
- * Class for getting instances of JMX MBeans.
- *
- * <p>The following beans are registered:</p>
- *
- * <ul>
- *   <li>{@link NetworkInformation}</li>
- *   <li>{@link ControllerInformation}</li>
- *   <li>{@link GeneralInformation}</li>
- * </ul>
+ * Test of {@link NetworkInformation}.
  *
  * @author Christian Ihle
  */
-public class JMXBeanLoader {
+public class NetworkInformationTest {
 
-    private final List<JMXBean> jmxBeans;
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
-    /**
-     * Initializes the bean loader, and the JMX beans.
-     *
-     * @param controller The controller.
-     * @param connectionWorker The connection worker.
-     * @param settings The settings.
-     * @param errorHandler The error handler to use.
-     */
-    public JMXBeanLoader(final Controller controller, final ConnectionWorker connectionWorker,
-                         final Settings settings, final ErrorHandler errorHandler) {
-        Validate.notNull(controller, "Controller can not be null");
-        Validate.notNull(connectionWorker, "ConnectionWorker can not be null");
-        Validate.notNull(settings, "Settings can not be null");
-        Validate.notNull(errorHandler, "Error handler can not be null");
+    @Test
+    public void constructorShouldThrowExceptionIfConnectionWorkerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Connection worker can not be null");
 
-        jmxBeans = Arrays.asList(
-                new NetworkInformation(connectionWorker, settings, errorHandler),
-                new ControllerInformation(controller),
-                new GeneralInformation(settings));
+        new NetworkInformation(null, mock(Settings.class), mock(ErrorHandler.class));
     }
 
-    public List<JMXBean> getJMXBeans() {
-        return jmxBeans;
+    @Test
+    public void constructorShouldThrowExceptionIfSettingsIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Settings can not be null");
+
+        new NetworkInformation(mock(ConnectionWorker.class), null, mock(ErrorHandler.class));
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfErrorHandlerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Error handler can not be null");
+
+        new NetworkInformation(mock(ConnectionWorker.class), mock(Settings.class), null);
     }
 }

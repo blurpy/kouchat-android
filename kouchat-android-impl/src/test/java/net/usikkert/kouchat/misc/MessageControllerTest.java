@@ -29,7 +29,9 @@ import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link MessageController}.
@@ -38,16 +40,60 @@ import org.junit.Test;
  */
 public class MessageControllerTest {
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     private MessageController messageController;
 
     private ChatLogger chatLogger;
+    private ChatWindow chatWindow;
+    private UserInterface userInterface;
+    private Settings settings;
+    private ErrorHandler errorHandler;
 
     @Before
     public void setUp() {
-        messageController = new MessageController(mock(ChatWindow.class), mock(UserInterface.class), mock(Settings.class));
+        chatWindow = mock(ChatWindow.class);
+        userInterface = mock(UserInterface.class);
+        settings = mock(Settings.class);
+        errorHandler = mock(ErrorHandler.class);
+
+        messageController = new MessageController(chatWindow, userInterface, settings, errorHandler);
 
         chatLogger = mock(ChatLogger.class);
         TestUtils.setFieldValue(messageController, "cLog", chatLogger);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfChatWindowIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("ChatWindow can not be null");
+
+        new MessageController(null, userInterface, settings, errorHandler);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfUserInterfaceIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("UserInterface can not be null");
+
+        new MessageController(chatWindow, null, settings, errorHandler);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfSettingsIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Settings can not be null");
+
+        new MessageController(chatWindow, userInterface, null, errorHandler);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfErrorHandlerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Error handler can not be null");
+
+        new MessageController(chatWindow, userInterface, settings, null);
     }
 
     @Test

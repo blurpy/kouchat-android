@@ -65,11 +65,13 @@ public class UDPReceiver implements Runnable {
      * Default constructor.
      *
      * @param settings The settings to use.
+     * @param errorHandler The error handler to use.
      */
-    public UDPReceiver(final Settings settings) {
+    public UDPReceiver(final Settings settings, final ErrorHandler errorHandler) {
         Validate.notNull(settings, "Settings can not be null");
+        Validate.notNull(errorHandler, "Error handler can not be null");
 
-        errorHandler = ErrorHandler.getErrorHandler();
+        this.errorHandler = errorHandler;
         me = settings.getMe();
     }
 

@@ -62,9 +62,10 @@ public class ChatLogger implements SettingsListener {
      * Default constructor. Sets the log file prefix to <code>kouchat</code>.
      *
      * @param settings The settings to use.
+     * @param errorHandler The error handler to use.
      */
-    public ChatLogger(final Settings settings) {
-        this("kouchat", settings);
+    public ChatLogger(final Settings settings, final ErrorHandler errorHandler) {
+        this("kouchat", settings, errorHandler);
     }
 
     /**
@@ -74,17 +75,18 @@ public class ChatLogger implements SettingsListener {
      *
      * @param logFilePrefix The prefix for the log file name.
      * @param settings The settings to use.
+     * @param errorHandler The error handler to use.
      */
-    public ChatLogger(final String logFilePrefix, final Settings settings) {
+    public ChatLogger(final String logFilePrefix, final Settings settings, final ErrorHandler errorHandler) {
         Validate.notEmpty(logFilePrefix, "Log file prefix can not be empty");
         Validate.notNull(settings, "Settings can not be null");
+        Validate.notNull(errorHandler, "Error handler can not be null");
 
         this.logFilePrefix = logFilePrefix;
         this.settings = settings;
+        this.errorHandler = errorHandler;
 
         settings.addSettingsListener(this);
-
-        errorHandler = ErrorHandler.getErrorHandler();
 
         if (settings.isLogging()) {
             open();

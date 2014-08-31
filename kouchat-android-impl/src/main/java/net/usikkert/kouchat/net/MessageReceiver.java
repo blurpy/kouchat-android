@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.ReceiverListener;
 import net.usikkert.kouchat.misc.ErrorHandler;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * This is the thread that listens for multicast messages from
@@ -70,9 +71,10 @@ public class MessageReceiver implements Runnable {
      *
      * @see Constants#NETWORK_IP
      * @see Constants#NETWORK_CHAT_PORT
+     * @param errorHandler The error handler to use.
      */
-    public MessageReceiver() {
-        this(Constants.NETWORK_IP, Constants.NETWORK_CHAT_PORT);
+    public MessageReceiver(final ErrorHandler errorHandler) {
+        this(Constants.NETWORK_IP, Constants.NETWORK_CHAT_PORT, errorHandler);
     }
 
     /**
@@ -82,9 +84,13 @@ public class MessageReceiver implements Runnable {
      *
      * @param ipAddress Multicast ip address to connect to.
      * @param port Port to connect to.
+     * @param errorHandler The error handler to use.
      */
-    public MessageReceiver(final String ipAddress, final int port) {
+    public MessageReceiver(final String ipAddress, final int port, final ErrorHandler errorHandler) {
         LOG.fine("Creating MessageReceiver on " + ipAddress + ":" + port);
+
+        Validate.notEmpty(ipAddress, "IP address can not be empty");
+        Validate.notNull(errorHandler, "Error handler can not be null");
 
         this.port = port;
 
@@ -95,7 +101,6 @@ public class MessageReceiver implements Runnable {
         catch (final IOException e) {
             LOG.log(Level.SEVERE, e.toString(), e);
 
-            final ErrorHandler errorHandler = ErrorHandler.getErrorHandler();
             errorHandler.showCriticalError("Failed to initialize the network:\n" + e + "\n" +
                     Constants.APP_NAME + " will now shutdown.");
 

@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.misc.ErrorHandler;
+import net.usikkert.kouchat.util.Validate;
 
 /**
  * Sends UDP packets directly to a user. Useful for private chat,
@@ -54,9 +55,13 @@ public class UDPSender {
 
     /**
      * Default constructor.
+     *
+     * @param errorHandler The error handler to use.
      */
-    public UDPSender() {
-        errorHandler = ErrorHandler.getErrorHandler();
+    public UDPSender(final ErrorHandler errorHandler) {
+        Validate.notNull(errorHandler, "Error handler can not be null");
+
+        this.errorHandler = errorHandler;
     }
 
     /**

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.net.ConnectionWorker;
 import net.usikkert.kouchat.net.NetworkUtils;
@@ -46,19 +47,24 @@ public class NetworkInformation implements NetworkInformationMBean {
     private final ConnectionWorker connectionWorker;
 
     private final Settings settings;
+    private final ErrorHandler errorHandler;
 
     /**
      * Constructor.
      *
      * @param connectionWorker To get information about the network, and control the network.
      * @param settings The settings to use.
+     * @param errorHandler The error handler to use.
      */
-    public NetworkInformation(final ConnectionWorker connectionWorker, final Settings settings) {
+    public NetworkInformation(final ConnectionWorker connectionWorker, final Settings settings,
+                              final ErrorHandler errorHandler) {
         Validate.notNull(connectionWorker, "Connection worker can not be null");
         Validate.notNull(settings, "Settings can not be null");
+        Validate.notNull(errorHandler, "Error handler can not be null");
 
         this.connectionWorker = connectionWorker;
         this.settings = settings;
+        this.errorHandler = errorHandler;
     }
 
     /**
@@ -80,7 +86,7 @@ public class NetworkInformation implements NetworkInformationMBean {
      */
     @Override
     public String showOperatingSystemNetwork() {
-        final OperatingSystemNetworkInfo osNicInfo = new OperatingSystemNetworkInfo(settings);
+        final OperatingSystemNetworkInfo osNicInfo = new OperatingSystemNetworkInfo(settings, errorHandler);
         final NetworkInterface osInterface = osNicInfo.getOperatingSystemNetworkInterface();
 
         if (osInterface == null) {

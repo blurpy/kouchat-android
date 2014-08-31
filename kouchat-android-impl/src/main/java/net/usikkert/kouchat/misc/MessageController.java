@@ -47,18 +47,21 @@ public class MessageController {
      * @param chat The user interface object to write the formatted messages to.
      * @param ui The user interface.
      * @param settings The settings to use.
+     * @param errorHandler The error handler to use.
      */
-    public MessageController(final ChatWindow chat, final UserInterface ui, final Settings settings) {
+    public MessageController(final ChatWindow chat, final UserInterface ui, final Settings settings,
+                             final ErrorHandler errorHandler) {
         Validate.notNull(chat, "ChatWindow can not be null");
         Validate.notNull(ui, "UserInterface can not be null");
         Validate.notNull(settings, "Settings can not be null");
+        Validate.notNull(errorHandler, "Error handler can not be null");
 
         this.chat = chat;
         this.ui = ui;
         this.settings = settings;
 
         me = settings.getMe();
-        cLog = new ChatLogger(settings);
+        cLog = new ChatLogger(settings, errorHandler);
     }
 
     /**

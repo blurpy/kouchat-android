@@ -49,6 +49,7 @@ import org.junit.rules.ExpectedException;
  *
  * @author Christian Ihle
  */
+@SuppressWarnings("HardCodedStringLiteral")
 public class ControllerTest {
 
     @Rule
@@ -63,13 +64,16 @@ public class ControllerTest {
     private TransferList transferList;
     private MessageController messageController;
     private UserInterface ui;
+    private Settings settings;
+    private ErrorHandler errorHandler;
 
     private User me;
     private UserList userList;
 
     @Before
     public void setUp() {
-        final Settings settings = mock(Settings.class);
+        settings = mock(Settings.class);
+        errorHandler = mock(ErrorHandler.class);
 
         me = new User("TestUser", 123);
         when(settings.getMe()).thenReturn(me);
@@ -78,7 +82,7 @@ public class ControllerTest {
         messageController = mock(MessageController.class);
         when(ui.getMessageController()).thenReturn(messageController);
 
-        controller = spy(new Controller(ui, settings));
+        controller = spy(new Controller(ui, settings, errorHandler));
 
         messages = mock(Messages.class);
         TestUtils.setFieldValue(controller, "messages", messages);
@@ -105,6 +109,30 @@ public class ControllerTest {
         // The shutdown hook makes tests fail randomly, because it sometimes runs in parallel...
         final Thread shutdownHook = TestUtils.getFieldValue(controller, Thread.class, "shutdownHook");
         Runtime.getRuntime().removeShutdownHook(shutdownHook);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfUserInterfaceIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("User interface can not be null");
+
+        new Controller(null, settings, errorHandler);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfSettingsIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Settings can not be null");
+
+        new Controller(ui, null, errorHandler);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfErrorHandlerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Error handler can not be null");
+
+        new Controller(ui, settings, null);
     }
 
     @Test

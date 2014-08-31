@@ -79,6 +79,7 @@ public class Controller implements NetworkConnectionListener {
     private final Settings settings;
     private final DayTimer dayTimer;
     private final Thread shutdownHook;
+    private final ErrorHandler errorHandler;
 
     /**
      * Constructor. Initializes the controller.
@@ -87,13 +88,16 @@ public class Controller implements NetworkConnectionListener {
      *
      * @param ui The active user interface object.
      * @param settings The settings to use.
+     * @param errorHandler The error handler to use.
      */
-    public Controller(final UserInterface ui, final Settings settings) {
+    public Controller(final UserInterface ui, final Settings settings, final ErrorHandler errorHandler) {
         Validate.notNull(ui, "User interface can not be null");
         Validate.notNull(settings, "Settings can not be null");
+        Validate.notNull(errorHandler, "Error handler can not be null");
 
         this.ui = ui;
         this.settings = settings;
+        this.errorHandler = errorHandler;
 
         shutdownHook = new Thread("ControllerShutdownHook") {
             @Override
@@ -112,7 +116,7 @@ public class Controller implements NetworkConnectionListener {
         wList = new WaitingList();
         idleThread = new IdleThread(this, ui, settings);
         dayTimer = new DayTimer(ui);
-        networkService = new NetworkService(settings);
+        networkService = new NetworkService(settings, errorHandler);
         final MessageResponder msgResponder = new DefaultMessageResponder(this, ui, settings);
         final PrivateMessageResponder privmsgResponder = new DefaultPrivateMessageResponder(this, ui, settings);
         final MessageParser msgParser = new MessageParser(msgResponder, settings);
@@ -856,7 +860,7 @@ public class Controller implements NetworkConnectionListener {
      * @return A JMX bean loader.
      */
     public JMXBeanLoader createJMXBeanLoader() {
-        return new JMXBeanLoader(this, networkService.getConnectionWorker(), settings);
+        return new JMXBeanLoader(this, networkService.getConnectionWorker(), settings, errorHandler);
     }
 
     public void registerNetworkConnectionListener(final NetworkConnectionListener listener) {

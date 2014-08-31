@@ -20,56 +20,56 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.jmx;
+package net.usikkert.kouchat.net;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.mockito.Mockito.*;
 
-import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.ErrorHandler;
-import net.usikkert.kouchat.misc.Settings;
-import net.usikkert.kouchat.net.ConnectionWorker;
-import net.usikkert.kouchat.util.Validate;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
- * Class for getting instances of JMX MBeans.
- *
- * <p>The following beans are registered:</p>
- *
- * <ul>
- *   <li>{@link NetworkInformation}</li>
- *   <li>{@link ControllerInformation}</li>
- *   <li>{@link GeneralInformation}</li>
- * </ul>
+ * Test of {@link MessageReceiver}.
  *
  * @author Christian Ihle
  */
-public class JMXBeanLoader {
+@SuppressWarnings("HardCodedStringLiteral")
+public class MessageReceiverTest {
 
-    private final List<JMXBean> jmxBeans;
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
-    /**
-     * Initializes the bean loader, and the JMX beans.
-     *
-     * @param controller The controller.
-     * @param connectionWorker The connection worker.
-     * @param settings The settings.
-     * @param errorHandler The error handler to use.
-     */
-    public JMXBeanLoader(final Controller controller, final ConnectionWorker connectionWorker,
-                         final Settings settings, final ErrorHandler errorHandler) {
-        Validate.notNull(controller, "Controller can not be null");
-        Validate.notNull(connectionWorker, "ConnectionWorker can not be null");
-        Validate.notNull(settings, "Settings can not be null");
-        Validate.notNull(errorHandler, "Error handler can not be null");
+    @Test
+    public void constructor1ShouldThrowExceptionIfErrorHandlerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Error handler can not be null");
 
-        jmxBeans = Arrays.asList(
-                new NetworkInformation(connectionWorker, settings, errorHandler),
-                new ControllerInformation(controller),
-                new GeneralInformation(settings));
+        new MessageReceiver(null);
     }
 
-    public List<JMXBean> getJMXBeans() {
-        return jmxBeans;
+    @Test
+    public void constructor2ShouldThrowExceptionIfIpAddressIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("IP address can not be empty");
+
+        new MessageReceiver(null, 0, mock(ErrorHandler.class));
+    }
+
+    @Test
+    public void constructor2ShouldThrowExceptionIfIpAddressIsEmpty() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("IP address can not be empty");
+
+        new MessageReceiver(" ", 0, mock(ErrorHandler.class));
+    }
+
+    @Test
+    public void constructor2ShouldThrowExceptionIfErrorHandlerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Error handler can not be null");
+
+        new MessageReceiver("ip", 0, null);
     }
 }

@@ -23,26 +23,84 @@
 package net.usikkert.kouchat.misc;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link ChatLogger}.
  *
  * @author Christian Ihle
  */
+@SuppressWarnings("HardCodedStringLiteral")
 public class ChatLoggerTest {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     private ChatLogger chatLogger;
     private Settings settings;
+    private ErrorHandler errorHandler;
 
     @Before
     public void setUp() {
         settings = new Settings();
         settings.setLogLocation(System.getProperty("java.io.tmpdir"));
 
-        chatLogger = new ChatLogger(settings);
+        errorHandler = mock(ErrorHandler.class);
+
+        chatLogger = new ChatLogger(settings, errorHandler);
+    }
+
+    @Test
+    public void constructor1ShouldThrowExceptionIfSettingsIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Settings can not be null");
+
+        new ChatLogger(null, errorHandler);
+    }
+
+    @Test
+    public void constructor1ShouldThrowExceptionIfErrorHandlerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Error handler can not be null");
+
+        new ChatLogger(settings, null);
+    }
+
+    @Test
+    public void constructor2ShouldThrowExceptionIfLogFilePrefixIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Log file prefix can not be empty");
+
+        new ChatLogger(null, settings, errorHandler);
+    }
+
+    @Test
+    public void constructor2ShouldThrowExceptionIfLogFilePrefixIsEmpty() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Log file prefix can not be empty");
+
+        new ChatLogger(" ", settings, errorHandler);
+    }
+
+    @Test
+    public void constructor2ShouldThrowExceptionIfSettingsIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Settings can not be null");
+
+        new ChatLogger("prefix", null, errorHandler);
+    }
+
+    @Test
+    public void constructor2ShouldThrowExceptionIfErrorHandlerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Error handler can not be null");
+
+        new ChatLogger("prefix", settings, null);
     }
 
     @Test
