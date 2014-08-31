@@ -38,6 +38,7 @@ import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.CommandParser;
 import net.usikkert.kouchat.misc.Controller;
+import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.Topic;
@@ -75,6 +76,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     private final TransferList transferList;
     private final AndroidFileUtils androidFileUtils;
     private final Sleeper sleeper;
+    private final ErrorHandler errorHandler;
 
     private MainChatController mainChatController;
 
@@ -87,10 +89,11 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         this.context = context;
         this.settings = settings;
         this.notificationService = notificationService;
+        this.errorHandler = ErrorHandler.getErrorHandler();
 
         messageStyler = new MessageStylerWithHistory(context);
-        msgController = new MessageController(this, this, settings);
-        controller = new Controller(this, settings);
+        msgController = new MessageController(this, this, settings, errorHandler);
+        controller = new Controller(this, settings, errorHandler);
         commandParser = new CommandParser(controller, this, settings);
         androidFileUtils = new AndroidFileUtils();
         sleeper = new Sleeper();
@@ -356,7 +359,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         }
 
         if (user.getPrivateChatLogger() == null) {
-            user.setPrivateChatLogger(new ChatLogger(user.getNick(), settings));
+            user.setPrivateChatLogger(new ChatLogger(user.getNick(), settings, errorHandler));
         }
     }
 

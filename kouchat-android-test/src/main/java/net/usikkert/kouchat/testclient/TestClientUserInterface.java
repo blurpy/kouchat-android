@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.List;
 
 import net.usikkert.kouchat.misc.ChatLogger;
+import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
@@ -46,11 +47,14 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
     private final MessageController messageController;
     private final TestClientMessageReceiver messageReceiver;
     private final Settings settings;
+    private final ErrorHandler errorHandler;
+
     private BufferedWriter writer;
 
-    public TestClientUserInterface(final Settings settings) {
+    public TestClientUserInterface(final Settings settings, final ErrorHandler errorHandler) {
         this.settings = settings;
-        this.messageController = new MessageController(this, this, this.settings);
+        this.errorHandler = errorHandler;
+        this.messageController = new MessageController(this, this, settings, errorHandler);
         this.messageReceiver = new TestClientMessageReceiver();
     }
 
@@ -114,7 +118,7 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
         }
 
         if (user.getPrivateChatLogger() == null) {
-            user.setPrivateChatLogger(new ChatLogger(user.getNick(), settings));
+            user.setPrivateChatLogger(new ChatLogger(user.getNick(), settings, errorHandler));
         }
     }
 

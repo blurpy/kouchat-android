@@ -27,6 +27,7 @@ import java.io.File;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.CommandParser;
 import net.usikkert.kouchat.misc.Controller;
+import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
@@ -73,8 +74,9 @@ public class TestClient {
             TestUtils.setFieldValue(me, "code", userCode);
         }
 
-        ui = new TestClientUserInterface(settings);
-        controller = new Controller(ui, settings);
+        final ErrorHandler errorHandler = ErrorHandler.getErrorHandler();
+        ui = new TestClientUserInterface(settings, errorHandler);
+        controller = new Controller(ui, settings, errorHandler);
         transferList = controller.getTransferList();
         commandParser = new CommandParser(controller, ui, settings);
     }
