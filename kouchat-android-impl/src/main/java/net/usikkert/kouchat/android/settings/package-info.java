@@ -25,4 +25,4 @@
  *
  * @author Christian Ihle
  */
-package net.usikkert.kouchat.android.setting;
+package net.usikkert.kouchat.android.settings;

@@ -20,7 +20,7 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.android.setting;
+package net.usikkert.kouchat.android.settings;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.misc.Settings;
