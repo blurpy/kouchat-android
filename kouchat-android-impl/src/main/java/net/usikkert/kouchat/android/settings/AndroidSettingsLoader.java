@@ -23,8 +23,8 @@
 package net.usikkert.kouchat.android.settings;
 
 import net.usikkert.kouchat.android.R;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 

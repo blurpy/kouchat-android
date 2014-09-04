@@ -26,8 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.usikkert.kouchat.event.ReceiverListener;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Validate;
 
 /**

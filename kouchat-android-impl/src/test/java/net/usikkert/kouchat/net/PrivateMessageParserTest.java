@@ -28,8 +28,8 @@ import static org.mockito.Mockito.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;

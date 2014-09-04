@@ -26,7 +26,7 @@ import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.event.SettingsListener;
 import net.usikkert.kouchat.misc.Setting;
-import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Validate;
 
 import android.net.wifi.WifiManager;

@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.misc.ErrorHandler;
-import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Validate;
 
 /**

@@ -25,8 +25,8 @@ package net.usikkert.kouchat.jmx;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.misc.ErrorHandler;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.net.ConnectionWorker;
+import net.usikkert.kouchat.settings.Settings;
 
 import org.junit.Rule;
 import org.junit.Test;

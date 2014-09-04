@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.usikkert.kouchat.event.SettingsListener;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 

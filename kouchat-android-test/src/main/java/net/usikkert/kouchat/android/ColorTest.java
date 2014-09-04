@@ -28,8 +28,8 @@ import static org.fest.reflect.core.Reflection.*;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.util.RobotiumTestUtils;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.testclient.TestClient;
 
 import com.larswerkman.holocolorpicker.ColorPicker;

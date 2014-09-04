@@ -30,7 +30,7 @@ import net.usikkert.kouchat.android.component.HoloColorPickerPreference;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.android.util.RobolectricTestUtils;
-import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;

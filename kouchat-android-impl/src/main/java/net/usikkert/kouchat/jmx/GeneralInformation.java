@@ -22,8 +22,8 @@
 
 package net.usikkert.kouchat.jmx;
 
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Validate;
 
 /**

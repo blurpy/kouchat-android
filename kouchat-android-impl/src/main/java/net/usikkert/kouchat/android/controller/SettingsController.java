@@ -27,7 +27,7 @@ import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.component.HoloColorPickerPreference;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
-import net.usikkert.kouchat.misc.Settings;
+import net.usikkert.kouchat.settings.Settings;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;

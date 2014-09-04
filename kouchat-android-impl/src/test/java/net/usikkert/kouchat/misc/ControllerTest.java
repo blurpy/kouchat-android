@@ -35,6 +35,7 @@ import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.net.Messages;
 import net.usikkert.kouchat.net.NetworkService;
 import net.usikkert.kouchat.net.TransferList;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.ui.PrivateChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.TestUtils;

@@ -46,6 +46,7 @@ import net.usikkert.kouchat.net.NetworkService;
 import net.usikkert.kouchat.net.PrivateMessageParser;
 import net.usikkert.kouchat.net.PrivateMessageResponder;
 import net.usikkert.kouchat.net.TransferList;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;

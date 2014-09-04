@@ -25,6 +25,7 @@ package net.usikkert.kouchat.misc;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.Validate;
 

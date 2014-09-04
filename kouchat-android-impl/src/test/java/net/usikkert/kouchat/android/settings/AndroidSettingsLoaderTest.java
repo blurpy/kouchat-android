@@ -26,8 +26,8 @@ import static org.junit.Assert.*;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.util.RobolectricTestUtils;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;

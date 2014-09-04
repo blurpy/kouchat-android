@@ -28,12 +28,12 @@ import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.CommandParser;
 import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.ErrorHandler;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.net.TransferList;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 

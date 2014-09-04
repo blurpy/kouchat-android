@@ -28,10 +28,10 @@ import java.util.Enumeration;
 import java.util.List;
 
 import net.usikkert.kouchat.misc.ErrorHandler;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.net.ConnectionWorker;
 import net.usikkert.kouchat.net.NetworkUtils;
 import net.usikkert.kouchat.net.OperatingSystemNetworkInfo;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Validate;
 
 /**

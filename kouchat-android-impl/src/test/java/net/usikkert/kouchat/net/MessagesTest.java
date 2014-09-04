@@ -27,9 +27,9 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 
 import net.usikkert.kouchat.misc.CommandException;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.settings.Settings;
 
 import org.junit.Test;
 

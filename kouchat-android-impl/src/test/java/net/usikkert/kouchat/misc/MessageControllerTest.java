@@ -24,6 +24,7 @@ package net.usikkert.kouchat.misc;
 
 import static org.mockito.Mockito.*;
 
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.ui.ChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.TestUtils;

@@ -25,9 +25,9 @@ package net.usikkert.kouchat.net;
 import java.io.File;
 
 import net.usikkert.kouchat.misc.CommandException;
-import net.usikkert.kouchat.misc.Settings;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Validate;
 
 /**
