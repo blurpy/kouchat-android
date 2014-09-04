@@ -22,7 +22,7 @@
 
 package net.usikkert.kouchat.event;
 
-import net.usikkert.kouchat.misc.Setting;
+import net.usikkert.kouchat.settings.Setting;
 
 /**
  * This is the interface used by classes wishing to be notified

@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
-import net.usikkert.kouchat.misc.Setting;
+import net.usikkert.kouchat.settings.Setting;
 import net.usikkert.kouchat.settings.Settings;
 
 import org.junit.Before;

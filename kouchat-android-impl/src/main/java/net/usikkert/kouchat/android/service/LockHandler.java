@@ -25,7 +25,7 @@ package net.usikkert.kouchat.android.service;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.event.SettingsListener;
-import net.usikkert.kouchat.misc.Setting;
+import net.usikkert.kouchat.settings.Setting;
 import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Validate;
 

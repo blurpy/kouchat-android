@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.SettingsListener;
+import net.usikkert.kouchat.settings.Setting;
 import net.usikkert.kouchat.settings.Settings;
 
 import org.junit.Before;

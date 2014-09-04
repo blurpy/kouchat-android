@@ -37,7 +37,6 @@ import java.util.logging.Logger;
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.SettingsListener;
 import net.usikkert.kouchat.misc.ErrorHandler;
-import net.usikkert.kouchat.misc.Setting;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.IOTools;
 import net.usikkert.kouchat.util.Tools;
