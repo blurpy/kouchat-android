@@ -20,14 +20,13 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.misc;
+package net.usikkert.kouchat.settings;
 
 import static org.junit.Assert.*;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.SettingsListener;
-import net.usikkert.kouchat.settings.Setting;
-import net.usikkert.kouchat.settings.Settings;
+import net.usikkert.kouchat.misc.User;
 
 import org.junit.Before;
 import org.junit.Test;
