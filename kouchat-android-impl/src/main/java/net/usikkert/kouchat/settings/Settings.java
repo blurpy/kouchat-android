@@ -22,11 +22,9 @@
 
 package net.usikkert.kouchat.settings;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
+import static net.usikkert.kouchat.settings.PropertyFileSettings.*;
+
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +37,7 @@ import net.usikkert.kouchat.event.SettingsListener;
 import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.IOTools;
+import net.usikkert.kouchat.util.PropertyTools;
 import net.usikkert.kouchat.util.Tools;
 
 import org.jetbrains.annotations.NonNls;
@@ -71,6 +70,8 @@ public class Settings {
     private static final String FILENAME = Constants.APP_FOLDER + "kouchat.ini";
 
     private final IOTools ioTools = new IOTools();
+
+    private final PropertyTools propertyTools = new PropertyTools();
 
     /** A list of listeners. These listeners are notified when a setting is changed. */
     private final List<SettingsListener> listeners;
@@ -202,52 +203,27 @@ public class Settings {
      * or files.
      */
     public void saveSettings() {
-        FileWriter fileWriter = null;
-        BufferedWriter buffWriter = null;
+        final Properties properties = new Properties();
 
-        final File appFolder = new File(Constants.APP_FOLDER);
-
-        if (!appFolder.exists()) {
-            appFolder.mkdir();
-        }
+        properties.put(NICK_NAME.getKey(), me.getNick());
+        properties.put(OWN_COLOR.getKey(), String.valueOf(ownColor));
+        properties.put(SYS_COLOR.getKey(), String.valueOf(sysColor));
+        properties.put(LOGGING.getKey(), String.valueOf(logging));
+        properties.put(SOUND.getKey(), String.valueOf(sound));
+        properties.put(BROWSER.getKey(), String.valueOf(browser));
+        properties.put(SMILEYS.getKey(), String.valueOf(smileys));
+        properties.put(LOOK_AND_FEEL.getKey(), String.valueOf(lookAndFeel));
+        properties.put(BALLOONS.getKey(), String.valueOf(balloons));
+        properties.put(NETWORK_INTERFACE.getKey(), String.valueOf(networkInterface));
 
         try {
-            fileWriter = new FileWriter(FILENAME);
-            buffWriter = new BufferedWriter(fileWriter);
-
-            buffWriter.write("nick=" + me.getNick());
-            buffWriter.newLine();
-            buffWriter.write("owncolor=" + ownColor);
-            buffWriter.newLine();
-            buffWriter.write("syscolor=" + sysColor);
-            buffWriter.newLine();
-            buffWriter.write("logging=" + logging);
-            buffWriter.newLine();
-            buffWriter.write("sound=" + sound);
-            buffWriter.newLine();
-            // Properties does not support loading back slash, so replace with forward slash
-            buffWriter.write("browser=" + browser.replaceAll("\\\\", "/"));
-            buffWriter.newLine();
-            buffWriter.write("smileys=" + smileys);
-            buffWriter.newLine();
-            buffWriter.write("lookAndFeel=" + lookAndFeel);
-            buffWriter.newLine();
-            buffWriter.write("balloons=" + balloons);
-            buffWriter.newLine();
-            buffWriter.write("networkInterface=" + networkInterface);
-            buffWriter.newLine();
+            ioTools.createFolder(Constants.APP_FOLDER);
+            propertyTools.saveProperties(FILENAME, properties, "KouChat Settings");
         }
 
         catch (final IOException e) {
-            LOG.log(Level.SEVERE, e.toString());
+            LOG.log(Level.SEVERE, "Failed to save settings" , e);
             errorHandler.showError("Settings could not be saved:\n " + e);
-        }
-
-        finally {
-            ioTools.flush(buffWriter);
-            ioTools.flush(fileWriter);
-            ioTools.close(buffWriter);
-            ioTools.close(fileWriter);
         }
     }
 
@@ -256,21 +232,17 @@ public class Settings {
      * If some values are not found in the settings, the default is used instead.
      */
     private void loadSettings() {
-        FileInputStream fileStream = null;
-
         try {
-            final Properties fileContents = new Properties();
-            fileStream = new FileInputStream(FILENAME);
-            fileContents.load(fileStream);
+            final Properties fileContents = propertyTools.loadProperties(FILENAME);
 
-            final String tmpNick = fileContents.getProperty("nick");
+            final String tmpNick = fileContents.getProperty(NICK_NAME.getKey());
 
             if (tmpNick != null && Tools.isValidNick(tmpNick)) {
                 me.setNick(tmpNick.trim());
             }
 
             try {
-                ownColor = Integer.parseInt(fileContents.getProperty("owncolor"));
+                ownColor = Integer.parseInt(fileContents.getProperty(OWN_COLOR.getKey()));
             }
 
             catch (final NumberFormatException e) {
@@ -278,27 +250,27 @@ public class Settings {
             }
 
             try {
-                sysColor = Integer.parseInt(fileContents.getProperty("syscolor"));
+                sysColor = Integer.parseInt(fileContents.getProperty(SYS_COLOR.getKey()));
             }
 
             catch (final NumberFormatException e) {
                 LOG.log(Level.WARNING, "Could not read setting for syscolor..");
             }
 
-            logging = Boolean.valueOf(fileContents.getProperty("logging"));
-            balloons = Boolean.valueOf(fileContents.getProperty("balloons"));
-            browser = fileContents.getProperty("browser");
-            lookAndFeel = fileContents.getProperty("lookAndFeel");
-            networkInterface = fileContents.getProperty("networkInterface");
+            logging = Boolean.valueOf(fileContents.getProperty(LOGGING.getKey()));
+            balloons = Boolean.valueOf(fileContents.getProperty(BALLOONS.getKey()));
+            browser = fileContents.getProperty(BROWSER.getKey());
+            lookAndFeel = fileContents.getProperty(LOOK_AND_FEEL.getKey());
+            networkInterface = fileContents.getProperty(NETWORK_INTERFACE.getKey());
 
             // Defaults to true
-            if (fileContents.getProperty("sound") != null) {
-                sound = Boolean.valueOf(fileContents.getProperty("sound"));
+            if (fileContents.getProperty(SOUND.getKey()) != null) {
+                sound = Boolean.valueOf(fileContents.getProperty(SOUND.getKey()));
             }
 
             // Defaults to true
-            if (fileContents.getProperty("smileys") != null) {
-                smileys = Boolean.valueOf(fileContents.getProperty("smileys"));
+            if (fileContents.getProperty(SMILEYS.getKey()) != null) {
+                smileys = Boolean.valueOf(fileContents.getProperty(SMILEYS.getKey()));
             }
         }
 
@@ -308,10 +280,6 @@ public class Settings {
 
         catch (final IOException e) {
             LOG.log(Level.SEVERE, e.toString(), e);
-        }
-
-        finally {
-            ioTools.close(fileStream);
         }
     }
 

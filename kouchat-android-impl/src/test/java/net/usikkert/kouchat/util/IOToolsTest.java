@@ -22,21 +22,30 @@
 
 package net.usikkert.kouchat.util;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.Flushable;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link IOTools}.
  *
  * @author Christian Ihle
  */
+@SuppressWarnings("HardCodedStringLiteral")
 public class IOToolsTest {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     private IOTools ioTools;
 
@@ -44,6 +53,7 @@ public class IOToolsTest {
     public void setUp() {
         ioTools = new IOTools();
 
+        TestUtils.setFieldValueWithMock(ioTools, "LOG", Logger.class); // To silence log output in tests
     }
 
     @Test
@@ -92,5 +102,37 @@ public class IOToolsTest {
         ioTools.close(closeable);
 
         verify(closeable).close();
+    }
+
+    @Test
+    public void createFolderShouldThrowExceptionIfFolderIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Folder can not be empty");
+
+        ioTools.createFolder(null);
+    }
+
+    @Test
+    public void createFolderShouldThrowExceptionIfFolderIsEmpty() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Folder can not be empty");
+
+        ioTools.createFolder(" ");
+    }
+
+    @Test
+    public void createFolderShouldCreateMissingFolders() {
+        final File folder = new File("target/test-folder");
+        final File subFolder = new File("target/test-folder/sub-folder");
+
+        assertFalse(folder.exists());
+
+        ioTools.createFolder("target/test-folder/sub-folder");
+
+        assertTrue(folder.exists());
+        assertTrue(subFolder.exists());
+
+        folder.deleteOnExit();
+        subFolder.deleteOnExit();
     }
 }

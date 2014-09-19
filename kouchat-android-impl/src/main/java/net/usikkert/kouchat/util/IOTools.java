@@ -23,8 +23,11 @@
 package net.usikkert.kouchat.util;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.Flushable;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Tools for working with IO.
@@ -32,6 +35,8 @@ import java.io.IOException;
  * @author Christian Ihle
  */
 public class IOTools {
+
+    private static final Logger LOG = Logger.getLogger(IOTools.class.getName());
 
     /**
      * Flushes the parameter, and ignores any errors.
@@ -45,8 +50,11 @@ public class IOTools {
 
         try {
             flushable.flush();
-        } catch (final IOException e) {
+        }
+
+        catch (final IOException e) {
             // Don't care
+            LOG.log(Level.WARNING, "Flush failed", e);
         }
     }
 
@@ -62,8 +70,30 @@ public class IOTools {
 
         try {
             closeable.close();
-        } catch (final IOException e) {
+        }
+
+        catch (final IOException e) {
             // Don't care
+            LOG.log(Level.WARNING, "Close failed", e);
+        }
+    }
+
+    /**
+     * Creates the specified folder, including all missing folders in the path.
+     *
+     * @param folder The folder to create.
+     */
+    public void createFolder(final String folder) {
+        Validate.notEmpty(folder, "Folder can not be empty");
+
+        final File theFolder = new File(folder);
+
+        if (!theFolder.exists()) {
+            final boolean success = theFolder.mkdirs();
+
+            if (!success) {
+                LOG.log(Level.INFO, "Failed to create folder: " + folder);
+            }
         }
     }
 }
