@@ -443,7 +443,7 @@ public class Settings {
      *
      * @param setting The setting that has changed.
      */
-    private void fireSettingChanged(final Setting setting) {
+    protected void fireSettingChanged(final Setting setting) {
         for (final SettingsListener listener : listeners) {
             listener.settingChanged(setting);
         }
