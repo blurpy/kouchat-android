@@ -22,7 +22,6 @@
 
 package net.usikkert.kouchat.android.settings;
 
-import net.usikkert.kouchat.settings.Setting;
 import net.usikkert.kouchat.settings.Settings;
 
 /**
@@ -58,7 +57,7 @@ public class AndroidSettings extends Settings {
     public void setWakeLockEnabled(final boolean wakeLockEnabled) {
         if (this.wakeLockEnabled != wakeLockEnabled) {
             this.wakeLockEnabled = wakeLockEnabled;
-            fireSettingChanged(Setting.WAKE_LOCK);
+            fireSettingChanged(AndroidSetting.WAKE_LOCK);
         }
     }
 }

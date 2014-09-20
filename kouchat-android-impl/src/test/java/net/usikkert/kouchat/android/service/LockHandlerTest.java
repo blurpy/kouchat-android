@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.settings.AndroidSetting;
 import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.settings.Setting;
 
@@ -337,7 +338,7 @@ public class LockHandlerTest {
     public void settingChangedShouldAcquireWakeLockIfItIsChangedToEnabled() {
         when(wakeLock.isHeld()).thenReturn(false);
 
-        handler.settingChanged(Setting.WAKE_LOCK);
+        handler.settingChanged(AndroidSetting.WAKE_LOCK);
 
         verify(wakeLock).acquire();
     }
@@ -347,7 +348,7 @@ public class LockHandlerTest {
         when(wakeLock.isHeld()).thenReturn(true);
         when(settings.isWakeLockEnabled()).thenReturn(false);
 
-        handler.settingChanged(Setting.WAKE_LOCK);
+        handler.settingChanged(AndroidSetting.WAKE_LOCK);
 
         verify(wakeLock).release();
     }

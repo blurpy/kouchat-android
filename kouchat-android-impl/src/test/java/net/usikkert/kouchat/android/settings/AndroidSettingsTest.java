@@ -69,6 +69,6 @@ public class AndroidSettingsTest {
         settings.setWakeLockEnabled(true);
 
         assertTrue(settings.isWakeLockEnabled());
-        assertEquals(Setting.WAKE_LOCK, lastChangedSetting);
+        assertEquals(AndroidSetting.WAKE_LOCK, lastChangedSetting);
     }
 }

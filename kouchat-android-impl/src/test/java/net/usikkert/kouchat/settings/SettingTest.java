@@ -87,9 +87,4 @@ public class SettingTest {
     public void loggingShouldWorkWithEquals() {
         assertEquals(Setting.LOGGING, Setting.LOGGING);
     }
-
-    @Test
-    public void wakeLockShouldWorkWithEquals() {
-        assertEquals(Setting.WAKE_LOCK, Setting.WAKE_LOCK);
-    }
 }

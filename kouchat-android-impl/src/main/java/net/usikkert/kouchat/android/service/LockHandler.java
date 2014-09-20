@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.android.service;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.settings.AndroidSetting;
 import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.event.SettingsListener;
@@ -117,7 +118,7 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
      */
     @Override
     public void settingChanged(final Setting setting) {
-        if (setting.equals(Setting.WAKE_LOCK)) {
+        if (setting.equals(AndroidSetting.WAKE_LOCK)) {
             if (settings.isWakeLockEnabled()) {
                 acquireWakeLock();
             }
