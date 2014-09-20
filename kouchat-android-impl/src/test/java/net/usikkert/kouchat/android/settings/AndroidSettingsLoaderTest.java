@@ -27,7 +27,6 @@ import static org.junit.Assert.*;
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.util.RobolectricTestUtils;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
@@ -53,7 +52,7 @@ public class AndroidSettingsLoaderTest {
 
     private AndroidSettingsLoader settingsLoader;
 
-    private Settings settings;
+    private AndroidSettings settings;
     private Application context;
 
     private User me;
@@ -63,7 +62,7 @@ public class AndroidSettingsLoaderTest {
         settingsLoader = new AndroidSettingsLoader();
 
         context = Robolectric.application;
-        settings = new Settings();
+        settings = new AndroidSettings();
 
         me = new User("Me", 1234);
         TestUtils.setFieldValue(settings, "me", me);

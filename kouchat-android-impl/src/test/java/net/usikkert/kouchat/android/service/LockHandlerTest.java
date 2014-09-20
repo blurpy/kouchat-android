@@ -26,8 +26,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.settings.Setting;
-import net.usikkert.kouchat.settings.Settings;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -57,7 +57,7 @@ public class LockHandlerTest {
 
     private LockHandler handler;
 
-    private Settings settings;
+    private AndroidSettings settings;
     private AndroidUserInterface ui;
 
     private WifiManager wifiManager;
@@ -70,7 +70,7 @@ public class LockHandlerTest {
     @Before
     @SuppressLint("InlinedApi")
     public void setUp() {
-        settings = mock(Settings.class);
+        settings = mock(AndroidSettings.class);
         ui = mock(AndroidUserInterface.class);
 
         wifiManager = mock(WifiManager.class);
@@ -388,7 +388,7 @@ public class LockHandlerTest {
 
     @Test
     public void settingsListenerShouldEnableAndDisableWakeLockBasedOnChangedSetting() {
-        final Settings realSettings = new Settings();
+        final AndroidSettings realSettings = new AndroidSettings();
         new LockHandler(ui, realSettings, wifiManager, powerManager);
 
         verifyZeroInteractions(wakeLock);

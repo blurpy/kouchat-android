@@ -31,6 +31,7 @@ import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.filetransfer.AndroidFileTransferListener;
 import net.usikkert.kouchat.android.filetransfer.AndroidFileUtils;
 import net.usikkert.kouchat.android.notification.NotificationService;
+import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.event.FileTransferListener;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.misc.ChatLogger;
@@ -44,7 +45,6 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.net.TransferList;
-import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.ui.PrivateChatWindow;
 import net.usikkert.kouchat.util.Sleeper;
 import net.usikkert.kouchat.util.TestUtils;
@@ -88,11 +88,11 @@ public class AndroidUserInterfaceTest {
     private TransferList transferList;
     private AndroidFileUtils androidFileUtils;
     private Sleeper sleeper;
-    private Settings settings;
+    private AndroidSettings settings;
 
     @Before
     public void setUp() {
-        settings = mock(Settings.class);
+        settings = mock(AndroidSettings.class);
         me = new User("Me", 1234);
         when(settings.getMe()).thenReturn(me);
         testUser = new User("TestUser", 1235);
@@ -125,7 +125,7 @@ public class AndroidUserInterfaceTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Context can not be null");
 
-        new AndroidUserInterface(null, mock(Settings.class), mock(NotificationService.class));
+        new AndroidUserInterface(null, mock(AndroidSettings.class), mock(NotificationService.class));
     }
 
     @Test
@@ -141,7 +141,7 @@ public class AndroidUserInterfaceTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("NotificationService can not be null");
 
-        new AndroidUserInterface(mock(Context.class), mock(Settings.class), null);
+        new AndroidUserInterface(mock(Context.class), mock(AndroidSettings.class), null);
     }
 
     @Test

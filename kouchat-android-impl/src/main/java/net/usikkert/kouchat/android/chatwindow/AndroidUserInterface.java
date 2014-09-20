@@ -33,6 +33,7 @@ import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.filetransfer.AndroidFileTransferListener;
 import net.usikkert.kouchat.android.filetransfer.AndroidFileUtils;
 import net.usikkert.kouchat.android.notification.NotificationService;
+import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
@@ -46,7 +47,6 @@ import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.net.TransferList;
-import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.ui.ChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.Sleeper;
@@ -70,7 +70,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     private final User me;
     private final MessageStylerWithHistory messageStyler;
     private final Context context;
-    private final Settings settings;
+    private final AndroidSettings settings;
     private final NotificationService notificationService;
     private final CommandParser commandParser;
     private final TransferList transferList;
@@ -80,7 +80,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
     private MainChatController mainChatController;
 
-    public AndroidUserInterface(final Context context, final Settings settings,
+    public AndroidUserInterface(final Context context, final AndroidSettings settings,
                                 final NotificationService notificationService) {
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(settings, "Settings can not be null");
@@ -584,7 +584,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
      *
      * @return The settings.
      */
-    public Settings getSettings() {
+    public AndroidSettings getSettings() {
         return settings;
     }
 

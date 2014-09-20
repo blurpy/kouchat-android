@@ -23,10 +23,10 @@
 package net.usikkert.kouchat.android.service;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.event.SettingsListener;
 import net.usikkert.kouchat.settings.Setting;
-import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Validate;
 
 import android.net.wifi.WifiManager;
@@ -60,10 +60,10 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
     private final WifiManager.WifiLock wifiLock;
     private final WifiManager.MulticastLock multicastLock;
 
-    private final Settings settings;
+    private final AndroidSettings settings;
 
     public LockHandler(final AndroidUserInterface androidUserInterface,
-                       final Settings settings,
+                       final AndroidSettings settings,
                        final WifiManager wifiManager,
                        final PowerManager powerManager) {
         Validate.notNull(androidUserInterface, "AndroidUserInterface can not be null");

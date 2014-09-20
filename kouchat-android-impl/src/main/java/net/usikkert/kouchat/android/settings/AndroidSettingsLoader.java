@@ -24,7 +24,6 @@ package net.usikkert.kouchat.android.settings;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
@@ -53,7 +52,7 @@ public class AndroidSettingsLoader {
     private static final String DEFAULT_NICK_NAME = "NewUser";
     private static final String CLIENT = "Android";
 
-    public void loadStoredSettings(final Context context, final Settings settings) {
+    public void loadStoredSettings(final Context context, final AndroidSettings settings) {
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(settings, "Settings can not be null");
 
@@ -66,7 +65,7 @@ public class AndroidSettingsLoader {
         loadWakeLock(context, preferences, settings);
     }
 
-    private void loadClient(final Settings settings) {
+    private void loadClient(final AndroidSettings settings) {
         settings.setClient(CLIENT);
     }
 
@@ -87,7 +86,8 @@ public class AndroidSettingsLoader {
         return DEFAULT_NICK_NAME;
     }
 
-    private void loadOwnColor(final Context context, final SharedPreferences preferences, final Settings settings) {
+    private void loadOwnColor(final Context context, final SharedPreferences preferences,
+                              final AndroidSettings settings) {
         final String ownColorKey = context.getString(R.string.settings_own_color_key);
         final int ownColor = preferences.getInt(ownColorKey, -1);
 
@@ -96,7 +96,8 @@ public class AndroidSettingsLoader {
         }
     }
 
-    private void loadSystemColor(final Context context, final SharedPreferences preferences, final Settings settings) {
+    private void loadSystemColor(final Context context, final SharedPreferences preferences,
+                                 final AndroidSettings settings) {
         final String systemColorKey = context.getString(R.string.settings_sys_color_key);
         final int systemColor = preferences.getInt(systemColorKey, -1);
 
@@ -105,7 +106,8 @@ public class AndroidSettingsLoader {
         }
     }
 
-    private void loadWakeLock(final Context context, final SharedPreferences preferences, final Settings settings) {
+    private void loadWakeLock(final Context context, final SharedPreferences preferences,
+                              final AndroidSettings settings) {
         final String wakeLockKey = context.getString(R.string.settings_wake_lock_key);
         final boolean wakeLockEnabled = preferences.getBoolean(wakeLockKey, false);
 

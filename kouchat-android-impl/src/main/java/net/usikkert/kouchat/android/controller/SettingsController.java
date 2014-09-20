@@ -27,7 +27,7 @@ import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.component.HoloColorPickerPreference;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
-import net.usikkert.kouchat.settings.Settings;
+import net.usikkert.kouchat.android.settings.AndroidSettings;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -62,7 +62,7 @@ public class SettingsController extends SherlockPreferenceActivity
                                            SharedPreferences.OnSharedPreferenceChangeListener {
 
     private AndroidUserInterface androidUserInterface;
-    private Settings settings;
+    private AndroidSettings settings;
 
     private ServiceConnection serviceConnection;
 
@@ -111,9 +111,9 @@ public class SettingsController extends SherlockPreferenceActivity
      *
      * <ul>
      *   <li>Changed nick name: the nick name is set as the summary of the preference.</li>
-     *   <li>Changed wake lock: stores the setting in the {@link Settings}.</li>
-     *   <li>Changed own color: stores the setting in the {@link Settings}.</li>
-     *   <li>Changed system color: stores the setting in the {@link Settings}.</li>
+     *   <li>Changed wake lock: stores the setting in the {@link AndroidSettings}.</li>
+     *   <li>Changed own color: stores the setting in the {@link AndroidSettings}.</li>
+     *   <li>Changed system color: stores the setting in the {@link AndroidSettings}.</li>
      * </ul>
      *
      * {@inheritDoc}

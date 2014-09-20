@@ -29,8 +29,8 @@ import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.component.HoloColorPickerPreference;
 import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.android.util.RobolectricTestUtils;
-import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
@@ -67,7 +67,7 @@ public class SettingsControllerTest {
     private ActivityController<SettingsController> activityController;
 
     private AndroidUserInterface ui;
-    private Settings settings;
+    private AndroidSettings settings;
 
     private EditTextPreference nickNamePreference;
     private CheckBoxPreference wakeLockPreference;
@@ -80,7 +80,7 @@ public class SettingsControllerTest {
         controller = activityController.get();
 
         ui = mock(AndroidUserInterface.class);
-        settings = mock(Settings.class);
+        settings = mock(AndroidSettings.class);
 
         when(ui.getSettings()).thenReturn(settings);
 

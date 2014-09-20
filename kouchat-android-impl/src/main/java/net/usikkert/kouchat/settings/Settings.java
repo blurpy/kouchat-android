@@ -125,11 +125,6 @@ public class Settings {
     /** The location to store logs. */
     private String logLocation;
 
-    // Android settings
-
-    /** If the wake lock should be enabled. */
-    private boolean wakeLockEnabled;
-
     /**
      * Constructor.
      *
@@ -154,8 +149,6 @@ public class Settings {
         sound = true;
         smileys = true;
         lookAndFeel = "";
-
-        wakeLockEnabled = false;
 
         loadSettings();
     }
@@ -562,28 +555,5 @@ public class Settings {
      */
     public void setNetworkInterface(final String networkInterface) {
         this.networkInterface = networkInterface;
-    }
-
-    /**
-     * If the wake lock should be enabled.
-     *
-     * @return If the wake lock should be enabled.
-     */
-    public boolean isWakeLockEnabled() {
-        return wakeLockEnabled;
-    }
-
-    /**
-     * Sets if the wake lock should be enabled.
-     *
-     * Listeners are notified of the change.
-     *
-     * @param wakeLockEnabled If the wake lock should be enabled.
-     */
-    public void setWakeLockEnabled(final boolean wakeLockEnabled) {
-        if (this.wakeLockEnabled != wakeLockEnabled) {
-            this.wakeLockEnabled = wakeLockEnabled;
-            fireSettingChanged(Setting.WAKE_LOCK);
-        }
     }
 }

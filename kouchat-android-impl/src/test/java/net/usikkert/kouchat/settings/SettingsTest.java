@@ -83,26 +83,6 @@ public class SettingsTest {
     }
 
     @Test
-    public void setWakeLockEnabledShouldNotNotifyListenersIfSettingIsUnchanged() {
-        assertFalse(settings.isWakeLockEnabled());
-
-        settings.setWakeLockEnabled(false);
-
-        assertFalse(settings.isWakeLockEnabled());
-        assertNull(lastChangedSetting);
-    }
-
-    @Test
-    public void setWakeLockEnabledShouldNotifyListenersIfSettingIsChanged() {
-        assertFalse(settings.isWakeLockEnabled());
-
-        settings.setWakeLockEnabled(true);
-
-        assertTrue(settings.isWakeLockEnabled());
-        assertEquals(Setting.WAKE_LOCK, lastChangedSetting);
-    }
-
-    @Test
     public void setLoggingShouldNotNotifyListenersIfSettingIsUnchanged() {
         assertFalse(settings.isLogging());
 

@@ -24,8 +24,8 @@ package net.usikkert.kouchat.android.service;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.notification.NotificationService;
+import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.android.settings.AndroidSettingsLoader;
-import net.usikkert.kouchat.settings.Settings;
 
 import android.app.Service;
 import android.content.Context;
@@ -56,7 +56,7 @@ public class ChatService extends Service {
     public void onCreate() {
         notificationService = new NotificationService(this);
 
-        final Settings settings = new Settings();
+        final AndroidSettings settings = new AndroidSettings();
         final AndroidSettingsLoader androidSettingsLoader = new AndroidSettingsLoader();
         androidSettingsLoader.loadStoredSettings(this, settings);
 
