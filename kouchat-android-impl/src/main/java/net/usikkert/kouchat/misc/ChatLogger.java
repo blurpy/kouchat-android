@@ -186,7 +186,7 @@ public class ChatLogger implements SettingsListener {
      */
     @Override
     public void settingChanged(final Setting setting) {
-        if (setting == Setting.LOGGING) {
+        if (setting.equals(Setting.LOGGING)) {
             LOG.fine("Handling change in log setting");
 
             if (settings.isLogging()) {

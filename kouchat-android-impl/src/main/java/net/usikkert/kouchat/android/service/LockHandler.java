@@ -117,7 +117,7 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
      */
     @Override
     public void settingChanged(final Setting setting) {
-        if (setting == Setting.WAKE_LOCK) {
+        if (setting.equals(Setting.WAKE_LOCK)) {
             if (settings.isWakeLockEnabled()) {
                 acquireWakeLock();
             }
