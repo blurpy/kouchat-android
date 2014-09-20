@@ -22,18 +22,52 @@
 
 package net.usikkert.kouchat.settings;
 
+import net.usikkert.kouchat.android.settings.AndroidSettings;
+import net.usikkert.kouchat.event.SettingsListener;
+
+import org.jetbrains.annotations.NonNls;
+
 /**
- * An enum representing the different types of settings that can be changed.
+ * An "enum" representing the different types of settings that can be changed.
  *
- * <p>Not a complete list.</p>
+ * <p>Contains only the settings that can be used with {@link SettingsListener}.</p>
+ *
+ * <p>This is not a real enum because of the need to support inheritance. Use {@link #equals(Object)}
+ * instead of <code>==</code> for comparison, to avoid issues with class loaders and serialization.</p>
  *
  * @author Christian Ihle
  */
-public enum Setting {
+public class Setting {
 
-    OWN_COLOR,
-    SYS_COLOR,
-    LOGGING,
-    SOUND,
-    WAKE_LOCK
+    /** Maps to {@link Settings#isLogging()}. */
+    public static final Setting LOGGING = new Setting("LOGGING");
+
+    /** Maps to {@link AndroidSettings#isWakeLockEnabled()}. */
+    public static final Setting WAKE_LOCK = new Setting("WAKE_LOCK");
+
+    private final String name; // Must be unique
+
+    protected Setting(@NonNls final String name) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Setting setting = (Setting) o;
+
+        return name.equals(setting.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }

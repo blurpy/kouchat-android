@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.settings;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.SettingsListener;
@@ -36,10 +37,12 @@ import org.junit.Test;
  *
  * @author Christian Ihle
  */
+@SuppressWarnings("HardCodedStringLiteral")
 public class SettingsTest {
 
     private Settings settings;
 
+    private SettingsListener listener;
     private Setting lastChangedSetting;
 
     @Before
@@ -54,11 +57,13 @@ public class SettingsTest {
 
         System.setProperty("file.separator", "/");
 
-        settings.addSettingsListener(new SettingsListener() {
+        listener = new SettingsListener() {
             public void settingChanged(final Setting setting) {
                 lastChangedSetting = setting;
             }
-        });
+        };
+
+        settings.addSettingsListener(listener);
     }
 
     @Test
@@ -103,63 +108,30 @@ public class SettingsTest {
     }
 
     @Test
-    public void setSoundShouldNotNotifyListenersIfSettingIsUnchanged() {
-        assertFalse(settings.isSound());
-
-        settings.setSound(false);
-
-        assertFalse(settings.isSound());
-        assertNull(lastChangedSetting);
-    }
-
-    @Test
-    public void setSoundShouldNotifyListenersIfSettingIsChanged() {
+    public void setSoundShouldWork() {
         assertFalse(settings.isSound());
 
         settings.setSound(true);
 
         assertTrue(settings.isSound());
-        assertEquals(Setting.SOUND, lastChangedSetting);
     }
 
     @Test
-    public void setOwnColorShouldNotNotifyListenersIfSettingIsUnchanged() {
-        assertEquals(0, settings.getOwnColor());
-
-        settings.setOwnColor(0);
-
-        assertEquals(0, settings.getOwnColor());
-        assertNull(lastChangedSetting);
-    }
-
-    @Test
-    public void setOwnColorShouldNotifyListenersIfSettingIsChanged() {
+    public void setOwnColorShouldWork() {
         assertEquals(0, settings.getOwnColor());
 
         settings.setOwnColor(100);
 
         assertEquals(100, settings.getOwnColor());
-        assertEquals(Setting.OWN_COLOR, lastChangedSetting);
     }
 
     @Test
-    public void setSysColorShouldNotNotifyListenersIfSettingIsUnchanged() {
-        assertEquals(0, settings.getSysColor());
-
-        settings.setSysColor(0);
-
-        assertEquals(0, settings.getSysColor());
-        assertNull(lastChangedSetting);
-    }
-
-    @Test
-    public void setSysColorShouldNotifyListenersIfSettingIsChanged() {
+    public void setSysColorShouldWork() {
         assertEquals(0, settings.getSysColor());
 
         settings.setSysColor(100);
 
         assertEquals(100, settings.getSysColor());
-        assertEquals(Setting.SYS_COLOR, lastChangedSetting);
     }
 
     @Test
@@ -170,5 +142,23 @@ public class SettingsTest {
         settings.setClient("SuperClient");
 
         assertEquals("KouChat v" + Constants.APP_VERSION + " SuperClient", me.getClient());
+    }
+
+    @Test
+    public void fireSettingChangedShouldNotifyAllListeners() {
+        settings.removeSettingsListener(listener);
+
+        final SettingsListener listener1 = mock(SettingsListener.class);
+        final SettingsListener listener2 = mock(SettingsListener.class);
+
+        settings.addSettingsListener(listener1);
+        settings.addSettingsListener(listener2);
+
+        final Setting setting = new Setting("MONKEY");
+
+        settings.fireSettingChanged(setting);
+
+        verify(listener1).settingChanged(setting);
+        verify(listener2).settingChanged(setting);
     }
 }
