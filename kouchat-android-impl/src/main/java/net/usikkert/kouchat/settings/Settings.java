@@ -24,7 +24,6 @@ package net.usikkert.kouchat.settings;
 
 import static net.usikkert.kouchat.settings.PropertyFileSettings.*;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,10 +80,7 @@ public class Settings {
 
     // The stored settings:
 
-    /**
-     * The nick name of the application user. The rest of the values in <code>me</code>
-     * is generated in the constructor.
-     */
+    /** The application user. Only the nick name is stored. */
     private final User me;
 
     /** The color of the user's own messages. */
@@ -133,14 +129,9 @@ public class Settings {
      * <p>Remember to {@link #setClient(String)}.</p>
      */
     public Settings() {
-        final int code = 10000000 + (int) (Math.random() * 9999999);
+        final MeFactory meFactory = new MeFactory();
 
-        me = new User(createNickName(code), code);
-        me.setMe(true);
-        me.setLastIdle(System.currentTimeMillis());
-        me.setLogonTime(System.currentTimeMillis());
-        me.setOperatingSystem(System.getProperty("os.name"));
-
+        me = meFactory.createMe();
         listeners = new ArrayList<SettingsListener>();
         errorHandler = ErrorHandler.getErrorHandler();
         browser = "";
@@ -149,8 +140,6 @@ public class Settings {
         sound = true;
         smileys = true;
         lookAndFeel = "";
-
-        loadSettings();
     }
 
     /**
@@ -165,49 +154,22 @@ public class Settings {
     }
 
     /**
-     * Creates a new default nick name from the name of the user logged in to
-     * the operating system. The name is shortened to 10 characters and the
-     * first letter is capitalized.
-     *
-     * <p>If the name is invalid as a nick name then the user code is used instead.</p>
-     *
-     * @param code The user code.
-     * @return The created nick name.
-     */
-    private String createNickName(final int code) {
-        final String userName = System.getProperty("user.name");
-
-        if (userName == null) {
-            return Integer.toString(code);
-        }
-
-        final String[] splitUserName = userName.split(" ");
-        final String defaultNick = Tools.capitalizeFirstLetter(Tools.shorten(splitUserName[0].trim(), 10));
-
-        if (Tools.isValidNick(defaultNick)) {
-            return defaultNick;
-        }
-
-        return Integer.toString(code);
-    }
-
-    /**
      * Saves the current settings to file. Creates any missing folders
      * or files.
      */
     public void saveSettings() {
         final Properties properties = new Properties();
 
-        properties.put(NICK_NAME.getKey(), me.getNick());
+        properties.put(NICK_NAME.getKey(), Tools.emptyIfNull(me.getNick()));
         properties.put(OWN_COLOR.getKey(), String.valueOf(ownColor));
         properties.put(SYS_COLOR.getKey(), String.valueOf(sysColor));
         properties.put(LOGGING.getKey(), String.valueOf(logging));
         properties.put(SOUND.getKey(), String.valueOf(sound));
-        properties.put(BROWSER.getKey(), String.valueOf(browser));
+        properties.put(BROWSER.getKey(), Tools.emptyIfNull(browser));
         properties.put(SMILEYS.getKey(), String.valueOf(smileys));
-        properties.put(LOOK_AND_FEEL.getKey(), String.valueOf(lookAndFeel));
+        properties.put(LOOK_AND_FEEL.getKey(), Tools.emptyIfNull(lookAndFeel));
         properties.put(BALLOONS.getKey(), String.valueOf(balloons));
-        properties.put(NETWORK_INTERFACE.getKey(), String.valueOf(networkInterface));
+        properties.put(NETWORK_INTERFACE.getKey(), Tools.emptyIfNull(networkInterface));
 
         try {
             ioTools.createFolder(Constants.APP_FOLDER);
@@ -217,62 +179,6 @@ public class Settings {
         catch (final IOException e) {
             LOG.log(Level.SEVERE, "Failed to save settings" , e);
             errorHandler.showError("Settings could not be saved:\n " + e);
-        }
-    }
-
-    /**
-     * Loads the settings from file.
-     * If some values are not found in the settings, the default is used instead.
-     */
-    private void loadSettings() {
-        try {
-            final Properties fileContents = propertyTools.loadProperties(FILENAME);
-
-            final String tmpNick = fileContents.getProperty(NICK_NAME.getKey());
-
-            if (tmpNick != null && Tools.isValidNick(tmpNick)) {
-                me.setNick(tmpNick.trim());
-            }
-
-            try {
-                ownColor = Integer.parseInt(fileContents.getProperty(OWN_COLOR.getKey()));
-            }
-
-            catch (final NumberFormatException e) {
-                LOG.log(Level.WARNING, "Could not read setting for owncolor..");
-            }
-
-            try {
-                sysColor = Integer.parseInt(fileContents.getProperty(SYS_COLOR.getKey()));
-            }
-
-            catch (final NumberFormatException e) {
-                LOG.log(Level.WARNING, "Could not read setting for syscolor..");
-            }
-
-            logging = Boolean.valueOf(fileContents.getProperty(LOGGING.getKey()));
-            balloons = Boolean.valueOf(fileContents.getProperty(BALLOONS.getKey()));
-            browser = fileContents.getProperty(BROWSER.getKey());
-            lookAndFeel = fileContents.getProperty(LOOK_AND_FEEL.getKey());
-            networkInterface = fileContents.getProperty(NETWORK_INTERFACE.getKey());
-
-            // Defaults to true
-            if (fileContents.getProperty(SOUND.getKey()) != null) {
-                sound = Boolean.valueOf(fileContents.getProperty(SOUND.getKey()));
-            }
-
-            // Defaults to true
-            if (fileContents.getProperty(SMILEYS.getKey()) != null) {
-                smileys = Boolean.valueOf(fileContents.getProperty(SMILEYS.getKey()));
-            }
-        }
-
-        catch (final FileNotFoundException e) {
-            LOG.log(Level.WARNING, "Could not find " + FILENAME + ", using default settings.");
-        }
-
-        catch (final IOException e) {
-            LOG.log(Level.SEVERE, e.toString(), e);
         }
     }
 

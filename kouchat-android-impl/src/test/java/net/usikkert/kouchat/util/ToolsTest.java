@@ -36,6 +36,7 @@ import org.junit.rules.ExpectedException;
  *
  * @author Christian Ihle
  */
+@SuppressWarnings("HardCodedStringLiteral")
 public class ToolsTest {
 
     @Rule
@@ -253,6 +254,21 @@ public class ToolsTest {
         final File file = Tools.getFileWithIncrementedName(new File("this.is.a.song.ogg"));
 
         assertEquals("this.is.a.song_2.ogg", file.getName());
+    }
+
+    @Test
+    public void emptyIfNullShouldReturnAnEmptyStringWhenInputIsNull() {
+        assertEquals("", Tools.emptyIfNull(null));
+    }
+
+    @Test
+    public void emptyIfNullShouldReturnAnEmptyStringWhenInputIsEmpty() {
+        assertEquals("", Tools.emptyIfNull(""));
+    }
+
+    @Test
+    public void emptyIfNullShouldReturnTheInputStringWhenInputIsNotEmpty() {
+        assertEquals("hello", Tools.emptyIfNull("hello"));
     }
 
     /**

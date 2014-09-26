@@ -413,4 +413,18 @@ public final class Tools {
 
         return newFile;
     }
+
+    /**
+     * Returns an empty string if the input is null.
+     *
+     * @param string The string to check.
+     * @return An empty string if the input is null, or the input string if not.
+     */
+    public static String emptyIfNull(final String string) {
+        if (string == null) {
+            return "";
+        }
+
+        return string;
+    }
 }
