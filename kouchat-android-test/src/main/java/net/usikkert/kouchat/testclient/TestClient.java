@@ -24,6 +24,7 @@ package net.usikkert.kouchat.testclient;
 
 import java.io.File;
 
+import net.usikkert.kouchat.android.settings.AndroidSettingsSaver;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.CommandParser;
 import net.usikkert.kouchat.misc.Controller;
@@ -76,7 +77,7 @@ public class TestClient {
 
         final ErrorHandler errorHandler = ErrorHandler.getErrorHandler();
         ui = new TestClientUserInterface(settings, errorHandler);
-        controller = new Controller(ui, settings, errorHandler);
+        controller = new Controller(ui, settings, new AndroidSettingsSaver(), errorHandler);
         transferList = controller.getTransferList();
         commandParser = new CommandParser(controller, ui, settings);
     }
