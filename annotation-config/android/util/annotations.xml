@@ -1,0 +1,5 @@
+<root>
+  <item name='android.util.Log'>
+    <annotation name='org.jetbrains.annotations.NonNls'/>
+  </item>
+</root>
