@@ -47,6 +47,7 @@ import net.usikkert.kouchat.net.PrivateMessageParser;
 import net.usikkert.kouchat.net.PrivateMessageResponder;
 import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.settings.Settings;
+import net.usikkert.kouchat.settings.SettingsSaver;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
@@ -78,6 +79,7 @@ public class Controller implements NetworkConnectionListener {
     private final UserInterface ui;
     private final MessageController msgController;
     private final Settings settings;
+    private final SettingsSaver settingsSaver;
     private final DayTimer dayTimer;
     private final Thread shutdownHook;
     private final ErrorHandler errorHandler;
@@ -89,15 +91,19 @@ public class Controller implements NetworkConnectionListener {
      *
      * @param ui The active user interface object.
      * @param settings The settings to use.
+     * @param settingsSaver The saver to use for storing settings.
      * @param errorHandler The error handler to use.
      */
-    public Controller(final UserInterface ui, final Settings settings, final ErrorHandler errorHandler) {
+    public Controller(final UserInterface ui, final Settings settings, final SettingsSaver settingsSaver,
+                      final ErrorHandler errorHandler) {
         Validate.notNull(ui, "User interface can not be null");
         Validate.notNull(settings, "Settings can not be null");
+        Validate.notNull(settingsSaver, "Settings saver can not be null");
         Validate.notNull(errorHandler, "Error handler can not be null");
 
         this.ui = ui;
         this.settings = settings;
+        this.settingsSaver = settingsSaver;
         this.errorHandler = errorHandler;
 
         shutdownHook = new Thread("ControllerShutdownHook") {
@@ -306,7 +312,7 @@ public class Controller implements NetworkConnectionListener {
 
         messages.sendNickMessage(newNick);
         changeNick(me.getCode(), newNick);
-        settings.saveSettings();
+        saveSettings();
     }
 
     /**
@@ -317,6 +323,13 @@ public class Controller implements NetworkConnectionListener {
      */
     public void changeNick(final int code, final String nick) {
         userListController.changeNickName(code, nick);
+    }
+
+    /**
+     * Saves the current settings.
+     */
+    public void saveSettings() {
+        settingsSaver.saveSettings();
     }
 
     /**

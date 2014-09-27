@@ -22,61 +22,25 @@
 
 package net.usikkert.kouchat.settings;
 
-import static net.usikkert.kouchat.settings.PropertyFileSettings.*;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.SettingsListener;
-import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.misc.User;
-import net.usikkert.kouchat.util.IOTools;
-import net.usikkert.kouchat.util.PropertyTools;
 import net.usikkert.kouchat.util.Tools;
 
 import org.jetbrains.annotations.NonNls;
 
 /**
- * This is a class that loads and saves the application settings to file.
- *
- * <p>These settings are persisted:</p>
- *
- * <ul>
- *   <li>Nick name</li>
- *   <li>Browser</li>
- *   <li>Enable sound</li>
- *   <li>Enable logging</li>
- *   <li>Enable balloons</li>
- *   <li>Enable smileys</li>
- *   <li>Own message color</li>
- *   <li>System message color</li>
- *   <li>Chosen look and feel</li>
- *   <li>Chosen network interface</li>
- * </ul>
+ * This class contains all the application settings.
  *
  * @author Christian Ihle
  */
 public class Settings {
 
-    private static final Logger LOG = Logger.getLogger(Settings.class.getName());
-
-    /** The path to the file storing the settings. */
-    private static final String FILENAME = Constants.APP_FOLDER + "kouchat.ini";
-
-    private final IOTools ioTools = new IOTools();
-
-    private final PropertyTools propertyTools = new PropertyTools();
-
     /** A list of listeners. These listeners are notified when a setting is changed. */
     private final List<SettingsListener> listeners;
-
-    /** The error handler, for showing messages to the user. */
-    private final ErrorHandler errorHandler;
 
     // The stored settings:
 
@@ -133,7 +97,6 @@ public class Settings {
 
         me = meFactory.createMe();
         listeners = new ArrayList<SettingsListener>();
-        errorHandler = ErrorHandler.getErrorHandler();
         browser = "";
         ownColor = -15987646;
         sysColor = -16759040;
@@ -151,35 +114,6 @@ public class Settings {
      */
     public void setClient(@NonNls final String client) {
         me.setClient(Constants.APP_NAME + " v" + Constants.APP_VERSION + " " + client);
-    }
-
-    /**
-     * Saves the current settings to file. Creates any missing folders
-     * or files.
-     */
-    public void saveSettings() {
-        final Properties properties = new Properties();
-
-        properties.put(NICK_NAME.getKey(), Tools.emptyIfNull(me.getNick()));
-        properties.put(OWN_COLOR.getKey(), String.valueOf(ownColor));
-        properties.put(SYS_COLOR.getKey(), String.valueOf(sysColor));
-        properties.put(LOGGING.getKey(), String.valueOf(logging));
-        properties.put(SOUND.getKey(), String.valueOf(sound));
-        properties.put(BROWSER.getKey(), Tools.emptyIfNull(browser));
-        properties.put(SMILEYS.getKey(), String.valueOf(smileys));
-        properties.put(LOOK_AND_FEEL.getKey(), Tools.emptyIfNull(lookAndFeel));
-        properties.put(BALLOONS.getKey(), String.valueOf(balloons));
-        properties.put(NETWORK_INTERFACE.getKey(), Tools.emptyIfNull(networkInterface));
-
-        try {
-            ioTools.createFolder(Constants.APP_FOLDER);
-            propertyTools.saveProperties(FILENAME, properties, "KouChat Settings");
-        }
-
-        catch (final IOException e) {
-            LOG.log(Level.SEVERE, "Failed to save settings" , e);
-            errorHandler.showError("Settings could not be saved:\n " + e);
-        }
     }
 
     /**

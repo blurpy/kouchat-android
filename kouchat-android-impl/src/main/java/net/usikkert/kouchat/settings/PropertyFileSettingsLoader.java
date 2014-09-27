@@ -43,9 +43,10 @@ import net.usikkert.kouchat.util.Validate;
  */
 public class PropertyFileSettingsLoader {
 
-    private static final Logger LOG = Logger.getLogger(Settings.class.getName());
+    /** The full path to the file where settings are stored. */
+    public static final String SETTINGS_FILE = Constants.APP_FOLDER + "kouchat.ini";
 
-    private static final String FILENAME = Constants.APP_FOLDER + "kouchat.ini";
+    private static final Logger LOG = Logger.getLogger(PropertyFileSettingsLoader.class.getName());
 
     private final PropertyTools propertyTools = new PropertyTools();
 
@@ -60,7 +61,7 @@ public class PropertyFileSettingsLoader {
         Validate.notNull(settings, "Settings can not be null");
 
         try {
-            final Properties fileContents = propertyTools.loadProperties(FILENAME);
+            final Properties fileContents = propertyTools.loadProperties(SETTINGS_FILE);
 
             setNickName(settings, fileContents);
             setOwnColor(settings, fileContents);
@@ -75,7 +76,7 @@ public class PropertyFileSettingsLoader {
         }
 
         catch (final FileNotFoundException e) {
-            LOG.log(Level.WARNING, "Could not find " + FILENAME + ", using default settings.");
+            LOG.log(Level.WARNING, "Could not find " + SETTINGS_FILE + ", using default settings.");
         }
 
         catch (final IOException e) {
