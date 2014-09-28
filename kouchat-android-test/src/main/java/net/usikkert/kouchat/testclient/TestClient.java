@@ -75,7 +75,7 @@ public class TestClient {
             TestUtils.setFieldValue(me, "code", userCode);
         }
 
-        final ErrorHandler errorHandler = ErrorHandler.getErrorHandler();
+        final ErrorHandler errorHandler = new ErrorHandler();
         ui = new TestClientUserInterface(settings, errorHandler);
         controller = new Controller(ui, settings, new AndroidSettingsSaver(), errorHandler);
         transferList = controller.getTransferList();

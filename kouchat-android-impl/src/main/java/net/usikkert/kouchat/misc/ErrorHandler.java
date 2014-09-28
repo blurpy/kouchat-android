@@ -26,35 +26,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.usikkert.kouchat.event.ErrorListener;
+import net.usikkert.kouchat.util.Validate;
 
 /**
- * This is a singleton class for reporting errors to listeners.
- * These errors will be shown to the user of the application.
+ * This is a class for reporting errors to listeners.
+ *
+ * <p>These errors will be shown to the user of the application.</p>
  *
  * @author Christian Ihle
  */
 public class ErrorHandler {
 
-    /** The single instance of this class. */
-    private static final ErrorHandler INSTANCE = new ErrorHandler(); // TODO remove singleton
-
     /** The error listeners. */
     private final List<ErrorListener> listeners;
 
-    /**
-     * Private constructor.
-     */
-    private ErrorHandler() {
+    public ErrorHandler() {
         listeners = new ArrayList<ErrorListener>();
-    }
-
-    /**
-     * Will return the only instance of this class.
-     *
-     * @return The only instance of ErrorHandler.
-     */
-    public static ErrorHandler getErrorHandler() {
-        return INSTANCE;
     }
 
     /**
@@ -85,6 +72,8 @@ public class ErrorHandler {
      * @param listener The class to add as a listener.
      */
     public void addErrorListener(final ErrorListener listener) {
+        Validate.notNull(listener, "Error listener can not be null");
+
         listeners.add(listener);
     }
 
@@ -94,6 +83,8 @@ public class ErrorHandler {
      * @param listener The class to remove as a listener.
      */
     public void removeErrorListener(final ErrorListener listener) {
+        Validate.notNull(listener, "Error listener can not be null");
+
         listeners.remove(listener);
     }
 }
