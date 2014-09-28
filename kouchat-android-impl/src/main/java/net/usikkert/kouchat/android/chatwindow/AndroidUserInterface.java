@@ -90,7 +90,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         this.context = context;
         this.settings = settings;
         this.notificationService = notificationService;
-        this.errorHandler = new ErrorHandler();
+        this.errorHandler = new ErrorHandler(); // TODO add a listener for showing errors
 
         messageStyler = new MessageStylerWithHistory(context);
         msgController = new MessageController(this, this, settings, errorHandler);
