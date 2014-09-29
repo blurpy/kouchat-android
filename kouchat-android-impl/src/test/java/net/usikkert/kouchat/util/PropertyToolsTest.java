@@ -38,6 +38,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Test of {@link PropertyTools}.
@@ -49,6 +50,9 @@ public class PropertyToolsTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private PropertyTools propertyTools;
 
@@ -80,7 +84,8 @@ public class PropertyToolsTest {
     @Test
     public void loadPropertiesShouldThrowExceptionIfFileNotFound() throws IOException {
         expectedException.expect(FileNotFoundException.class);
-        expectedException.expectMessage("unknown.properties (No such file or directory)");
+        // Linux: (No such file or directory) || Windows: (The system cannot find the file specified)
+        expectedException.expectMessage("unknown.properties (");
 
         propertyTools.loadProperties("unknown.properties");
     }
@@ -146,7 +151,8 @@ public class PropertyToolsTest {
     @Test
     public void savePropertiesShouldThrowExceptionIfFileCouldNotBeSaved() throws IOException {
         expectedException.expect(FileNotFoundException.class);
-        expectedException.expectMessage("(Is a directory)");
+        // Linux: (Is a directory) || Windows: (Access is denied)
+        expectedException.expectMessage("test-classes (");
 
         final File filePath = getPathTo("");
 
@@ -155,117 +161,85 @@ public class PropertyToolsTest {
 
     @Test
     public void savePropertiesShouldSavePropertiesToNewFile() throws IOException {
-        final File filePath = getPathTo("temp1.properties");
+        final File filePath = getTempPathTo("temp1.properties");
 
-        try {
-            assertFalse(filePath.exists());
+        assertFalse(filePath.exists());
 
-            final Properties properties = new Properties();
-            properties.put("key1", "value1");
-            properties.put("key2", "value2");
+        final Properties properties = new Properties();
+        properties.put("key1", "value1");
+        properties.put("key2", "value2");
 
-            propertyTools.saveProperties(filePath.getAbsolutePath(), properties, null);
+        propertyTools.saveProperties(filePath.getAbsolutePath(), properties, null);
 
-            assertTrue(filePath.exists());
+        assertTrue(filePath.exists());
 
-            final Properties loadedProperties = propertyTools.loadProperties(filePath.getAbsolutePath());
-            assertEquals(2, loadedProperties.size());
-            assertEquals("value1", loadedProperties.getProperty("key1"));
-            assertEquals("value2", loadedProperties.getProperty("key2"));
-        }
-
-        finally {
-            if (filePath.exists()) {
-                filePath.deleteOnExit();
-            }
-        }
+        final Properties loadedProperties = propertyTools.loadProperties(filePath.getAbsolutePath());
+        assertEquals(2, loadedProperties.size());
+        assertEquals("value1", loadedProperties.getProperty("key1"));
+        assertEquals("value2", loadedProperties.getProperty("key2"));
     }
 
     @Test
     public void savePropertiesShouldSavePropertiesToExistingFile() throws IOException {
-        final File filePath = getPathTo("temp2.properties");
+        final File filePath = getTempPathTo("temp2.properties");
 
-        try {
-            assertFalse(filePath.exists());
+        assertFalse(filePath.exists());
 
-            final Properties firstProperties = new Properties();
-            firstProperties.put("key1", "value1");
-            firstProperties.put("key2", "value2");
+        final Properties firstProperties = new Properties();
+        firstProperties.put("key1", "value1");
+        firstProperties.put("key2", "value2");
 
-            propertyTools.saveProperties(filePath.getAbsolutePath(), firstProperties, null);
+        propertyTools.saveProperties(filePath.getAbsolutePath(), firstProperties, null);
 
-            assertTrue(filePath.exists());
+        assertTrue(filePath.exists());
 
-            final Properties secondProperties = new Properties();
-            secondProperties.put("key2", "new value");
-            secondProperties.put("key3", "new key");
+        final Properties secondProperties = new Properties();
+        secondProperties.put("key2", "new value");
+        secondProperties.put("key3", "new key");
 
-            propertyTools.saveProperties(filePath.getAbsolutePath(), secondProperties, null);
+        propertyTools.saveProperties(filePath.getAbsolutePath(), secondProperties, null);
 
-            final Properties loadedProperties = propertyTools.loadProperties(filePath.getAbsolutePath());
-            assertEquals(2, loadedProperties.size());
-            assertEquals("new value", loadedProperties.getProperty("key2"));
-            assertEquals("new key", loadedProperties.getProperty("key3"));
-        }
-
-        finally {
-            if (filePath.exists()) {
-                filePath.deleteOnExit();
-            }
-        }
+        final Properties loadedProperties = propertyTools.loadProperties(filePath.getAbsolutePath());
+        assertEquals(2, loadedProperties.size());
+        assertEquals("new value", loadedProperties.getProperty("key2"));
+        assertEquals("new key", loadedProperties.getProperty("key3"));
     }
 
     @Test
     public void savePropertiesShouldHandlePathCharacters() throws IOException {
-        final File filePath = getPathTo("temp3.properties");
+        final File filePath = getTempPathTo("temp3.properties");
 
-        try {
-            assertFalse(filePath.exists());
+        assertFalse(filePath.exists());
 
-            final Properties properties = new Properties();
-            properties.put("linux", "/opt/opera/the bin/opera");
-            properties.put("windows", "C:\\Programs and features\\Opera\\opera.exe");
+        final Properties properties = new Properties();
+        properties.put("linux", "/opt/opera/the bin/opera");
+        properties.put("windows", "C:\\Programs and features\\Opera\\opera.exe");
 
-            propertyTools.saveProperties(filePath.getAbsolutePath(), properties, null);
+        propertyTools.saveProperties(filePath.getAbsolutePath(), properties, null);
 
-            assertTrue(filePath.exists());
+        assertTrue(filePath.exists());
 
-            final Properties loadedProperties = propertyTools.loadProperties(filePath.getAbsolutePath());
-            assertEquals(2, loadedProperties.size());
-            assertEquals("/opt/opera/the bin/opera", loadedProperties.getProperty("linux"));
-            assertEquals("C:\\Programs and features\\Opera\\opera.exe", loadedProperties.getProperty("windows"));
-        }
-
-        finally {
-            if (filePath.exists()) {
-                filePath.deleteOnExit();
-            }
-        }
+        final Properties loadedProperties = propertyTools.loadProperties(filePath.getAbsolutePath());
+        assertEquals(2, loadedProperties.size());
+        assertEquals("/opt/opera/the bin/opera", loadedProperties.getProperty("linux"));
+        assertEquals("C:\\Programs and features\\Opera\\opera.exe", loadedProperties.getProperty("windows"));
     }
 
     @Test
     public void savePropertiesShouldFlushAndCloseFileWriterWhenDone() throws IOException {
-        final File filePath = getPathTo("temp4.properties");
+        final File filePath = getTempPathTo("temp4.properties");
 
-        try {
-            assertFalse(filePath.exists());
+        assertFalse(filePath.exists());
 
-            final Properties properties = new Properties();
-            properties.put("key", "value");
+        final Properties properties = new Properties();
+        properties.put("key", "value");
 
-            propertyTools.saveProperties(filePath.getAbsolutePath(), properties, null);
+        propertyTools.saveProperties(filePath.getAbsolutePath(), properties, null);
 
-            assertTrue(filePath.exists());
+        assertTrue(filePath.exists());
 
-            verify(ioTools).flush(any(FileWriter.class));
-            verify(ioTools).close(any(FileWriter.class));
-        }
-
-        finally {
-            if (filePath.exists()) {
-                filePath.deleteOnExit();
-            }
-        }
+        verify(ioTools).flush(any(FileWriter.class));
+        verify(ioTools).close(any(FileWriter.class));
     }
 
     @Test
@@ -287,5 +261,9 @@ public class PropertyToolsTest {
         final URL classpathUrl = getClass().getResource("/");
 
         return new File(classpathUrl.getPath(), fileName);
+    }
+
+    private File getTempPathTo(@NonNls final String fileName) {
+        return new File(temporaryFolder.getRoot(), fileName);
     }
 }
