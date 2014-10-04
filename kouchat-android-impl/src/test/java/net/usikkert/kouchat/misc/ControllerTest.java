@@ -30,15 +30,17 @@ import java.util.Arrays;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
+import net.usikkert.kouchat.message.CoreMessages;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
-import net.usikkert.kouchat.net.Messages;
+import net.usikkert.kouchat.net.NetworkMessages;
 import net.usikkert.kouchat.net.NetworkService;
 import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.settings.SettingsSaver;
 import net.usikkert.kouchat.ui.PrivateChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
+import net.usikkert.kouchat.util.DateTools;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
@@ -59,7 +61,7 @@ public class ControllerTest {
 
     private Controller controller;
 
-    private Messages messages;
+    private NetworkMessages networkMessages;
     private NetworkService networkService;
     private IdleThread idleThread;
     private DayTimer dayTimer;
@@ -68,7 +70,9 @@ public class ControllerTest {
     private UserInterface ui;
     private Settings settings;
     private SettingsSaver settingsSaver;
+    private CoreMessages coreMessages;
     private ErrorHandler errorHandler;
+    private DateTools dateTools;
 
     private User me;
     private UserList userList;
@@ -77,6 +81,7 @@ public class ControllerTest {
     public void setUp() {
         settings = mock(Settings.class);
         settingsSaver = mock(SettingsSaver.class);
+        coreMessages = new CoreMessages();
         errorHandler = mock(ErrorHandler.class);
 
         me = new User("TestUser", 123);
@@ -86,29 +91,24 @@ public class ControllerTest {
         messageController = mock(MessageController.class);
         when(ui.getMessageController()).thenReturn(messageController);
 
-        controller = spy(new Controller(ui, settings, settingsSaver, errorHandler));
+        controller = spy(new Controller(ui, settings, settingsSaver, coreMessages, errorHandler));
 
-        messages = mock(Messages.class);
-        TestUtils.setFieldValue(controller, "messages", messages);
-
-        networkService = mock(NetworkService.class);
-        TestUtils.setFieldValue(controller, "networkService", networkService);
+        networkMessages = TestUtils.setFieldValueWithMock(controller, "networkMessages", NetworkMessages.class);
+        networkService = TestUtils.setFieldValueWithMock(controller, "networkService", NetworkService.class);
 
         // The idle thread makes tests fail randomly, because it sometimes runs in parallel and removes idle users...
         final IdleThread realIdleThread = TestUtils.getFieldValue(controller, IdleThread.class, "idleThread");
         realIdleThread.stopThread();
 
-        idleThread = mock(IdleThread.class);
-        TestUtils.setFieldValue(controller, "idleThread", idleThread);
+        idleThread = TestUtils.setFieldValueWithMock(controller, "idleThread", IdleThread.class);
+        dayTimer = TestUtils.setFieldValueWithMock(controller, "dayTimer", DayTimer.class);
 
-        dayTimer = mock(DayTimer.class);
-        TestUtils.setFieldValue(controller, "dayTimer", dayTimer);
-
-        final UserListController userListController = TestUtils.getFieldValue(controller, UserListController.class, "userListController");
+        final UserListController userListController =
+                TestUtils.getFieldValue(controller, UserListController.class, "userListController");
         userList = userListController.getUserList();
 
-        transferList = mock(TransferList.class);
-        TestUtils.setFieldValue(controller, "tList", transferList);
+        transferList = TestUtils.setFieldValueWithMock(controller, "tList", TransferList.class);
+        dateTools = TestUtils.setFieldValueWithMock(controller, "dateTools", DateTools.class);
 
         // The shutdown hook makes tests fail randomly, because it sometimes runs in parallel...
         final Thread shutdownHook = TestUtils.getFieldValue(controller, Thread.class, "shutdownHook");
@@ -120,7 +120,7 @@ public class ControllerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("User interface can not be null");
 
-        new Controller(null, settings, settingsSaver, errorHandler);
+        new Controller(null, settings, settingsSaver, coreMessages, errorHandler);
     }
 
     @Test
@@ -128,7 +128,7 @@ public class ControllerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Settings can not be null");
 
-        new Controller(ui, null, settingsSaver, errorHandler);
+        new Controller(ui, null, settingsSaver, coreMessages, errorHandler);
     }
 
     @Test
@@ -136,7 +136,15 @@ public class ControllerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Settings saver can not be null");
 
-        new Controller(ui, settings, null, errorHandler);
+        new Controller(ui, settings, null, coreMessages, errorHandler);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfCoreMessagesIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Core messages can not be null");
+
+        new Controller(ui, settings, settingsSaver, null, errorHandler);
     }
 
     @Test
@@ -144,7 +152,7 @@ public class ControllerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Error handler can not be null");
 
-        new Controller(ui, settings, settingsSaver, null);
+        new Controller(ui, settings, settingsSaver, coreMessages, null);
     }
 
     @Test
@@ -153,27 +161,27 @@ public class ControllerTest {
 
         // Not writing - nothing happens
         controller.updateMeWriting(false);
-        verifyZeroInteractions(messages);
+        verifyZeroInteractions(networkMessages);
         assertFalse(me.isWriting());
 
         // Wrote something - notify others and update me
         controller.updateMeWriting(true);
-        verify(messages).sendWritingMessage();
+        verify(networkMessages).sendWritingMessage();
         assertTrue(me.isWriting());
 
         // Continues to write - nothing happens
         controller.updateMeWriting(true);
-        verifyNoMoreInteractions(messages);
+        verifyNoMoreInteractions(networkMessages);
         assertTrue(me.isWriting());
 
         // Stopped writing - notify others and update me
         controller.updateMeWriting(false);
-        verify(messages).sendStoppedWritingMessage();
+        verify(networkMessages).sendStoppedWritingMessage();
         assertFalse(me.isWriting());
 
         // Still not writing - nothing happens
         controller.updateMeWriting(false);
-        verifyNoMoreInteractions(messages);
+        verifyNoMoreInteractions(networkMessages);
         assertFalse(me.isWriting());
     }
 
@@ -272,14 +280,14 @@ public class ControllerTest {
 
         controller.sendFile(user, file);
 
-        verify(messages).sendFile(user, file);
+        verify(networkMessages).sendFile(user, file);
     }
 
     @Test
     public void beforeNetworkCameUpShouldDoNothing() {
         controller.beforeNetworkCameUp();
 
-        verifyZeroInteractions(networkService, messages);
+        verifyZeroInteractions(networkService, networkMessages);
     }
 
     @Test
@@ -453,13 +461,16 @@ public class ControllerTest {
 
     @Test
     public void startShouldStartThreadsAndShowWelcomeMessages() {
+        when(dateTools.currentDateToString(anyString())).thenReturn("X-mass");
+
         controller.start();
 
         verify(dayTimer).startTimer();
         verify(idleThread).start();
 
         verify(messageController).showSystemMessage("Welcome to KouChat v" + Constants.APP_VERSION + "!");
-        verify(messageController).showSystemMessage(startsWith("Today is "));
+        verify(messageController).showSystemMessage("Today is X-mass");
+        verify(dateTools).currentDateToString("EEEE, d MMMM yyyy");
     }
 
     @Test
@@ -488,7 +499,7 @@ public class ControllerTest {
 
         controller.changeAwayStatus(me.getCode(), true, "this is the message");
 
-        verify(messages).sendAwayMessage("this is the message");
+        verify(networkMessages).sendAwayMessage("this is the message");
         verify(userListController).changeAwayStatus(me.getCode(), true, "this is the message");
     }
 
@@ -500,7 +511,7 @@ public class ControllerTest {
 
         controller.changeAwayStatus(me.getCode(), true, "    trim me    ");
 
-        verify(messages).sendAwayMessage("trim me");
+        verify(networkMessages).sendAwayMessage("trim me");
         verify(userListController).changeAwayStatus(me.getCode(), true, "trim me");
     }
 
@@ -512,7 +523,7 @@ public class ControllerTest {
 
         controller.changeAwayStatus(me.getCode(), false, "");
 
-        verify(messages).sendBackMessage();
+        verify(networkMessages).sendBackMessage();
         verify(userListController).changeAwayStatus(me.getCode(), false, "");
     }
 
@@ -523,7 +534,7 @@ public class ControllerTest {
 
         controller.changeAwayStatus(654, true, "Away message");
 
-        verifyZeroInteractions(messages);
+        verifyZeroInteractions(networkMessages);
         verify(userListController).changeAwayStatus(654, true, "Away message");
     }
 
@@ -534,7 +545,7 @@ public class ControllerTest {
 
         controller.changeAwayStatus(654, false, "");
 
-        verifyZeroInteractions(messages);
+        verifyZeroInteractions(networkMessages);
         verify(userListController).changeAwayStatus(654, false, "");
     }
 
@@ -590,7 +601,7 @@ public class ControllerTest {
     public void changeMyNickShouldSendMessageAndChangeNickAndSave() throws CommandException {
         controller.changeMyNick("kelly");
 
-        verify(messages).sendNickMessage("kelly");
+        verify(networkMessages).sendNickMessage("kelly");
         verify(controller).changeNick(me.getCode(), "kelly");
         verify(controller).saveSettings();
     }

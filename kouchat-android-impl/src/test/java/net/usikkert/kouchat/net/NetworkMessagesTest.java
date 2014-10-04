@@ -34,11 +34,11 @@ import net.usikkert.kouchat.settings.Settings;
 import org.junit.Test;
 
 /**
- * Test of {@link Messages}.
+ * Test of {@link NetworkMessages}.
  *
  * @author Christian Ihle
  */
-public class MessagesTest {
+public class NetworkMessagesTest {
 
     /** The settings. */
     private final Settings settings;
@@ -47,7 +47,7 @@ public class MessagesTest {
     private final User me;
 
     /** The message class tested here. */
-    private final Messages messages;
+    private final NetworkMessages messages;
 
     /** Mocked network service used by messages. */
     private final NetworkService service;
@@ -55,7 +55,7 @@ public class MessagesTest {
     /**
      * Constructor.
      */
-    public MessagesTest() {
+    public NetworkMessagesTest() {
         settings = mock(Settings.class);
         me = new User("TestUser", 123);
         when(settings.getMe()).thenReturn(me);
@@ -63,7 +63,7 @@ public class MessagesTest {
         service = mock(NetworkService.class);
         when(service.sendMulticastMsg(anyString())).thenReturn(true);
         when(service.sendUDPMsg(anyString(), anyString(), anyInt())).thenReturn(true);
-        messages = new Messages(service, settings);
+        messages = new NetworkMessages(service, settings);
     }
 
     /**

@@ -21,6 +21,12 @@
           <include>CHANGES</include>
         </includes>
       </resource>
+      <resource>
+        <directory>src/main/resources/</directory>
+        <includes>
+          <include>messages/</include>
+        </includes>
+      </resource>
     </resources>
 
     <plugins>
@@ -102,6 +108,12 @@
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-api-mockito</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

@@ -31,12 +31,12 @@ import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Validate;
 
 /**
- * This class gives access to sending the different kinds of messages
+ * This class gives access to sending the different kinds of network messages
  * that this application supports. Both multicast, and normal udp.
  *
  * @author Christian Ihle
  */
-public class Messages {
+public class NetworkMessages {
 
     /** The network service used for sending the actual messages. */
     private final NetworkService networkService;
@@ -53,7 +53,7 @@ public class Messages {
      * @param networkService The network service used for sending the actual messages.
      * @param settings The settings to use.
      */
-    public Messages(final NetworkService networkService, final Settings settings) {
+    public NetworkMessages(final NetworkService networkService, final Settings settings) {
         Validate.notNull(networkService, "Network service can not be null");
         Validate.notNull(settings, "Settings can not be null");
 

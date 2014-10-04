@@ -36,6 +36,7 @@ import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.android.settings.AndroidSettingsSaver;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
+import net.usikkert.kouchat.message.CoreMessages;
 import net.usikkert.kouchat.misc.ChatLogger;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.CommandParser;
@@ -94,7 +95,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
         messageStyler = new MessageStylerWithHistory(context);
         msgController = new MessageController(this, this, settings, errorHandler);
-        controller = new Controller(this, settings, new AndroidSettingsSaver(), errorHandler);
+        controller = new Controller(this, settings, new AndroidSettingsSaver(), new CoreMessages(), errorHandler);
         commandParser = new CommandParser(controller, this, settings);
         androidFileUtils = new AndroidFileUtils();
         sleeper = new Sleeper();

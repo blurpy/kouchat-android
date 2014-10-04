@@ -31,6 +31,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import net.usikkert.kouchat.Constants;
+import net.usikkert.kouchat.message.CoreMessages;
 import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.util.IOTools;
 import net.usikkert.kouchat.util.PropertyTools;
@@ -60,14 +61,16 @@ public class PropertyFileSettingsSaverTest {
 
     private IOTools ioTools;
     private PropertyTools propertyTools;
+    private CoreMessages coreMessages;
     private ErrorHandler errorHandler;
 
     @Before
     public void setUp() {
         settings = new Settings();
+        coreMessages = new CoreMessages();
         errorHandler = mock(ErrorHandler.class);
 
-        settingsSaver = new PropertyFileSettingsSaver(settings, errorHandler);
+        settingsSaver = new PropertyFileSettingsSaver(settings, coreMessages, errorHandler);
 
         ioTools = TestUtils.setFieldValueWithMock(settingsSaver, "ioTools", IOTools.class);
         propertyTools = TestUtils.setFieldValueWithMock(settingsSaver, "propertyTools", PropertyTools.class);
@@ -79,7 +82,15 @@ public class PropertyFileSettingsSaverTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Settings can not be null");
 
-        new PropertyFileSettingsSaver(null, errorHandler);
+        new PropertyFileSettingsSaver(null, coreMessages, errorHandler);
+    }
+
+    @Test
+    public void constructorShouldThrowExceptionIfCoreMessagesIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Core messages can not be null");
+
+        new PropertyFileSettingsSaver(settings, null, errorHandler);
     }
 
     @Test
@@ -87,7 +98,7 @@ public class PropertyFileSettingsSaverTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Error handler can not be null");
 
-        new PropertyFileSettingsSaver(settings, null);
+        new PropertyFileSettingsSaver(settings, coreMessages, null);
     }
 
     @Test
@@ -109,7 +120,7 @@ public class PropertyFileSettingsSaverTest {
 
         settingsSaver.saveSettings();
 
-        verify(errorHandler).showError("Settings could not be saved:\n java.io.IOException: Don't save");
+        verify(errorHandler).showError("Settings could not be saved:\njava.io.IOException: Don't save");
     }
 
     @Test

@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.usikkert.kouchat.Constants;
+import net.usikkert.kouchat.message.CoreMessages;
 import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.IOTools;
@@ -50,13 +51,17 @@ public class PropertyFileSettingsSaver implements SettingsSaver {
     private final PropertyTools propertyTools = new PropertyTools();
 
     private final Settings settings;
+    private final CoreMessages coreMessages;
     private final ErrorHandler errorHandler;
 
-    public PropertyFileSettingsSaver(final Settings settings, final ErrorHandler errorHandler) {
+    public PropertyFileSettingsSaver(final Settings settings, final CoreMessages coreMessages,
+                                     final ErrorHandler errorHandler) {
         Validate.notNull(settings, "Settings can not be null");
+        Validate.notNull(coreMessages, "Core messages can not be null");
         Validate.notNull(errorHandler, "Error handler can not be null");
 
         this.settings = settings;
+        this.coreMessages = coreMessages;
         this.errorHandler = errorHandler;
     }
 
@@ -81,12 +86,13 @@ public class PropertyFileSettingsSaver implements SettingsSaver {
 
         try {
             ioTools.createFolder(Constants.APP_FOLDER);
-            propertyTools.saveProperties(PropertyFileSettingsLoader.SETTINGS_FILE, properties, "KouChat Settings");
+            propertyTools.saveProperties(PropertyFileSettingsLoader.SETTINGS_FILE, properties,
+                                         coreMessages.getMessage("core.settings.file.comment", Constants.APP_NAME));
         }
 
         catch (final IOException e) {
             LOG.log(Level.SEVERE, "Failed to save settings" , e);
-            errorHandler.showError("Settings could not be saved:\n " + e);
+            errorHandler.showError(coreMessages.getMessage("core.settings.errorPopup.saveFailed", e));
         }
     }
 }
