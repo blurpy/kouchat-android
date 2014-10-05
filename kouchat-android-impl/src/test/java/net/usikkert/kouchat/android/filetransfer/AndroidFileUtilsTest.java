@@ -28,13 +28,13 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 import java.io.IOException;
 
+import net.usikkert.kouchat.junit.ExpectedException;
 import net.usikkert.kouchat.util.ToolsTest;
 
 import org.fest.util.Lists;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;

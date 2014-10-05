@@ -25,13 +25,13 @@ package net.usikkert.kouchat.android.userlist;
 import static org.junit.Assert.*;
 
 import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.junit.ExpectedException;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.TestUtils;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;

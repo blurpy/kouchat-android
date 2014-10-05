@@ -28,12 +28,12 @@ import static org.mockito.Mockito.*;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.settings.AndroidSetting;
 import net.usikkert.kouchat.android.settings.AndroidSettings;
+import net.usikkert.kouchat.junit.ExpectedException;
 import net.usikkert.kouchat.settings.Setting;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
