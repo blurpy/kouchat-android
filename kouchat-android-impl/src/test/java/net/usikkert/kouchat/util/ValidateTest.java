@@ -22,9 +22,10 @@
 
 package net.usikkert.kouchat.util;
 
+import net.usikkert.kouchat.junit.ExpectedException;
+
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link Validate}.

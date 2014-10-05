@@ -31,10 +31,11 @@ import java.io.Flushable;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import net.usikkert.kouchat.junit.ExpectedException;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link IOTools}.

@@ -27,10 +27,11 @@ import static org.mockito.Mockito.*;
 
 import java.net.NetworkInterface;
 
+import net.usikkert.kouchat.junit.ExpectedException;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;

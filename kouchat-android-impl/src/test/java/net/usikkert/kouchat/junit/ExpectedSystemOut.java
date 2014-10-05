@@ -20,40 +20,54 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.net;
+package net.usikkert.kouchat.junit;
 
 import static org.mockito.Mockito.*;
 
-import net.usikkert.kouchat.junit.ExpectedException;
-import net.usikkert.kouchat.misc.ErrorHandler;
-import net.usikkert.kouchat.settings.Settings;
+import java.io.PrintStream;
 
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 
 /**
- * Test of {@link ConnectionWorker}.
+ * A junit rule that mocks {@link System#out}, to avoid output and to verify usage.
+ *
+ * <p>Use regular verify methods directly on {@link System#out} during tests.</p>
+ *
+ * <p>This is better than {@link StandardOutputStreamLog}, which registers as an additional stream,
+ * keeping the output to the console.</p>
  *
  * @author Christian Ihle
  */
-public class ConnectionWorkerTest {
+public class ExpectedSystemOut implements TestRule {
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    private PrintStream originalSystemOut;
 
-    @Test
-    public void constructorShouldThrowExceptionIfSettingsIsNull() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Settings can not be null");
+    @Override
+    public Statement apply(final Statement base, final Description description) {
+        return new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+                beforeSetUp();
 
-        new ConnectionWorker(null, mock(ErrorHandler.class));
+                try {
+                    base.evaluate();
+                } finally {
+                    afterTearDown();
+                }
+            }
+        };
     }
 
-    @Test
-    public void constructorShouldThrowExceptionIfErrorHandlerIsNull() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Error handler can not be null");
+    private void beforeSetUp() {
+        originalSystemOut = System.out;
 
-        new ConnectionWorker(mock(Settings.class), null);
+        System.setOut(mock(PrintStream.class));
+    }
+
+    private void afterTearDown() {
+        System.setOut(originalSystemOut);
     }
 }

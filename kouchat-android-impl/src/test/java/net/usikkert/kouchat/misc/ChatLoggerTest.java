@@ -25,12 +25,12 @@ package net.usikkert.kouchat.misc;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import net.usikkert.kouchat.junit.ExpectedException;
 import net.usikkert.kouchat.settings.Settings;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link ChatLogger}.

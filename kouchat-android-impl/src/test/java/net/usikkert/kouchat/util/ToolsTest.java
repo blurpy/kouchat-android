@@ -27,9 +27,10 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 
+import net.usikkert.kouchat.junit.ExpectedException;
+
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link Tools}.

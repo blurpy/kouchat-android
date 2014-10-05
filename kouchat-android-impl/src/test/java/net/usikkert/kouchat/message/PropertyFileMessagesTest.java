@@ -26,16 +26,18 @@ import static org.junit.Assert.*;
 
 import java.util.MissingResourceException;
 
+import net.usikkert.kouchat.junit.ExpectedException;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link PropertyFileMessages}.
  *
  * @author Christian Ihle
  */
+@SuppressWarnings("HardCodedStringLiteral")
 public class PropertyFileMessagesTest {
 
     @Rule
@@ -67,7 +69,7 @@ public class PropertyFileMessagesTest {
     @Test
     public void constructorShouldThrowExceptionIfBaseNameIsInvalid() {
         expectedException.expect(MissingResourceException.class);
-        expectedException.expectMessage("Can't find bundle for base name wrong");
+        expectedException.expectMessageContaining("Can't find bundle for base name wrong"); // And some locale
 
         new PropertyFileMessages("wrong");
     }

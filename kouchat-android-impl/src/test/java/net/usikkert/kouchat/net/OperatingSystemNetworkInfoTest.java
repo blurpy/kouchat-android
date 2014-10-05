@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 
+import net.usikkert.kouchat.junit.ExpectedException;
 import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.settings.Settings;
@@ -35,7 +36,6 @@ import net.usikkert.kouchat.settings.Settings;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link OperatingSystemNetworkInfo}.

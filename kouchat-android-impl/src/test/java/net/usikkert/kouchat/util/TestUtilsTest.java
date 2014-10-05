@@ -25,9 +25,10 @@ package net.usikkert.kouchat.util;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import net.usikkert.kouchat.junit.ExpectedException;
+
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.MockingDetails;
 
 /**
@@ -73,7 +74,7 @@ public class TestUtilsTest {
     @Test
     public void getFieldValueShouldThrowExceptionIfInvalidFieldName() {
         expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage("NoSuchFieldException: wrongField");
+        expectedException.expectMessage("java.lang.NoSuchFieldException: wrongField");
 
         final TestClass testClass = new TestClass(null, null);
 
@@ -124,7 +125,7 @@ public class TestUtilsTest {
     @Test
     public void setFieldValueShouldThrowExceptionIfInvalidFieldName() {
         expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage("NoSuchFieldException: wrongField");
+        expectedException.expectMessage("java.lang.NoSuchFieldException: wrongField");
 
         final TestClass testClass = new TestClass(null, null);
 

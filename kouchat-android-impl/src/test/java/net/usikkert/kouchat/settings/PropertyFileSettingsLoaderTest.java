@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.usikkert.kouchat.Constants;
+import net.usikkert.kouchat.junit.ExpectedException;
 import net.usikkert.kouchat.util.PropertyTools;
 import net.usikkert.kouchat.util.TestUtils;
 import net.usikkert.kouchat.util.Tools;
@@ -40,7 +41,6 @@ import net.usikkert.kouchat.util.Tools;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link PropertyFileSettingsLoader}.

@@ -24,11 +24,11 @@ package net.usikkert.kouchat.net;
 
 import static org.mockito.Mockito.*;
 
+import net.usikkert.kouchat.junit.ExpectedException;
 import net.usikkert.kouchat.misc.ErrorHandler;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link MessageSender}.

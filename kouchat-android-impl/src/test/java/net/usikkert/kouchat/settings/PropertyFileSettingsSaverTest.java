@@ -31,6 +31,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import net.usikkert.kouchat.Constants;
+import net.usikkert.kouchat.junit.ExpectedException;
 import net.usikkert.kouchat.message.CoreMessages;
 import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.util.IOTools;
@@ -40,7 +41,6 @@ import net.usikkert.kouchat.util.TestUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 

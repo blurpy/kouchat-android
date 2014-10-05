@@ -30,6 +30,7 @@ import java.util.Arrays;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
+import net.usikkert.kouchat.junit.ExpectedException;
 import net.usikkert.kouchat.message.CoreMessages;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
@@ -46,7 +47,6 @@ import net.usikkert.kouchat.util.TestUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Test of {@link Controller}.
