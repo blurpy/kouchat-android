@@ -39,6 +39,8 @@ import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
+import org.jetbrains.annotations.NonNls;
+
 /**
  * A class that can be used for simulating a KouChat client in tests.
  *
@@ -61,7 +63,7 @@ public class TestClient {
         this(nickName, userCode, 0);
     }
 
-    public TestClient(final String nickName, final int userCode, final int ownColor) {
+    public TestClient(@NonNls final String nickName, final int userCode, final int ownColor) {
         final Settings settings = new Settings();
         settings.setClient("Test");
 
