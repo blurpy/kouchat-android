@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Date;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
@@ -41,12 +42,16 @@ import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.settings.SettingsSaver;
 import net.usikkert.kouchat.ui.PrivateChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
+import net.usikkert.kouchat.util.DateTestUtils;
 import net.usikkert.kouchat.util.DateTools;
 import net.usikkert.kouchat.util.TestUtils;
+import net.usikkert.kouchat.util.TimerTools;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 
 /**
  * Test of {@link Controller}.
@@ -73,19 +78,21 @@ public class ControllerTest {
     private CoreMessages coreMessages;
     private ErrorHandler errorHandler;
     private DateTools dateTools;
+    private TimerTools timerTools;
 
     private User me;
+    private User otherUser;
     private UserList userList;
 
     @Before
     public void setUp() {
-        settings = mock(Settings.class);
+        settings = new Settings();
         settingsSaver = mock(SettingsSaver.class);
         coreMessages = new CoreMessages();
         errorHandler = mock(ErrorHandler.class);
 
-        me = new User("TestUser", 123);
-        when(settings.getMe()).thenReturn(me);
+        me = settings.getMe();
+        otherUser = new User("OtherUser", 124);
 
         ui = mock(UserInterface.class);
         messageController = mock(MessageController.class);
@@ -109,6 +116,7 @@ public class ControllerTest {
 
         transferList = TestUtils.setFieldValueWithMock(controller, "tList", TransferList.class);
         dateTools = TestUtils.setFieldValueWithMock(controller, "dateTools", DateTools.class);
+        timerTools = TestUtils.setFieldValueWithMock(controller, "timerTools", TimerTools.class);
 
         // The shutdown hook makes tests fail randomly, because it sometimes runs in parallel...
         final Thread shutdownHook = TestUtils.getFieldValue(controller, Thread.class, "shutdownHook");
@@ -255,16 +263,8 @@ public class ControllerTest {
         when(networkService.isNetworkUp()).thenReturn(true);
         controller.getChatState().setLoggedOn(true);
 
-        final StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < 45; i++) {
-            sb.append("1234567890");
-        }
-
-        sb.append("1"); // 451 characters with 1 byte each, at least in UTF-8
-
         final File file = mock(File.class);
-        when(file.getName()).thenReturn(sb.toString());
+        when(file.getName()).thenReturn(createStringOfSize(451));
 
         controller.sendFile(mock(User.class), file);
     }
@@ -460,6 +460,34 @@ public class ControllerTest {
     }
 
     @Test
+    public void logOffShouldRemoveOtherUsersThanMeWhenRemoveUsersIsTrue() {
+        final User user1 = new User("User1", 124);
+        userList.add(user1);
+
+        final User user2 = new User("User2", 125);
+        userList.add(user2);
+
+        controller.logOff(true);
+
+        verify(controller).removeUser(user1, "You logged off");
+        verify(controller).removeUser(user2, "You logged off");
+        verify(controller, never()).removeUser(eq(me), anyString());
+    }
+
+    @Test
+    public void logOffShouldNotRemoveUsersWhenRemoveUsersIsFalse() {
+        final User user1 = new User("User1", 124);
+        userList.add(user1);
+
+        final User user2 = new User("User2", 125);
+        userList.add(user2);
+
+        controller.logOff(false);
+
+        verify(controller, never()).removeUser(any(User.class), anyString());
+    }
+
+    @Test
     public void startShouldStartThreadsAndShowWelcomeMessages() {
         when(dateTools.currentDateToString(anyString())).thenReturn("X-mass");
 
@@ -611,6 +639,304 @@ public class ControllerTest {
         controller.saveSettings();
 
         verify(settingsSaver).saveSettings();
+    }
+
+    @Test
+    public void sendChatMessageShouldThrowExceptionIfNotConnected() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a chat message without being connected");
+
+        assertFalse(controller.isConnected());
+
+        controller.sendChatMessage("chat message");
+    }
+
+    @Test
+    public void sendChatMessageShouldThrowExceptionIfMeIsAway() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a chat message while away");
+
+        doReturn(true).when(controller).isConnected();
+        me.setAway(true);
+
+        controller.sendChatMessage("chat message");
+    }
+
+    @Test
+    public void sendChatMessageShouldThrowExceptionIfMessageIsEmpty() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send an empty chat message");
+
+        doReturn(true).when(controller).isConnected();
+
+        controller.sendChatMessage(" ");
+    }
+
+    @Test
+    public void sendChatMessageShouldThrowExceptionIfMessageIsTooLong() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a chat message with more than 450 bytes");
+
+        doReturn(true).when(controller).isConnected();
+
+        controller.sendChatMessage(createStringOfSize(451));
+    }
+
+    @Test
+    public void sendChatMessageShouldSendMessageUsingNetworkMessages() throws CommandException {
+        doReturn(true).when(controller).isConnected();
+
+        controller.sendChatMessage("the message");
+
+        verify(networkMessages).sendChatMessage("the message");
+    }
+
+    @Test
+    public void changeTopicShouldThrowExceptionIfNotLoggedOn() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not change the topic without being connected");
+
+        assertFalse(controller.isLoggedOn());
+
+        controller.changeTopic("topic");
+    }
+
+    @Test
+    public void changeTopicShouldThrowExceptionIfMeIsAway() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not change the topic while away");
+
+        doReturn(true).when(controller).isLoggedOn();
+        me.setAway(true);
+
+        controller.changeTopic("topic");
+    }
+
+    @Test
+    public void changeTopicShouldThrowExceptionIfMessageIsTooLong() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not set a topic with more than 450 bytes");
+
+        doReturn(true).when(controller).isLoggedOn();
+
+        controller.changeTopic(createStringOfSize(451));
+    }
+
+    @Test
+    public void changeTopicShouldUpdateTopicAndSendTopicChangeMessage() throws CommandException {
+        doReturn(true).when(controller).isLoggedOn();
+
+        controller.changeTopic("new topic");
+
+        final ArgumentCaptor<Topic> topicCaptor = ArgumentCaptor.forClass(Topic.class);
+        verify(networkMessages).sendTopicChangeMessage(topicCaptor.capture());
+
+        final Topic messageTopic = topicCaptor.getValue();
+        final Topic controllerTopic = controller.getTopic();
+
+        assertEquals("new topic", messageTopic.getTopic());
+        assertEquals("new topic", controllerTopic.getTopic());
+
+        assertEquals(me.getNick(), messageTopic.getNick());
+        assertEquals(me.getNick(), controllerTopic.getNick());
+
+        assertTrue(DateTestUtils.isNow(new Date(messageTopic.getTime())));
+        assertEquals(messageTopic.getTime(), controllerTopic.getTime());
+    }
+
+    @Test
+    public void sendPrivateMessageShouldThrowExceptionIfNotConnected() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a private chat message without being connected");
+
+        assertFalse(controller.isConnected());
+
+        controller.sendPrivateMessage("msg", otherUser);
+    }
+
+    @Test
+    public void sendPrivateMessageShouldThrowExceptionIfMeIsAway() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a private chat message while away");
+
+        doReturn(true).when(controller).isConnected();
+        me.setAway(true);
+
+        controller.sendPrivateMessage("msg", otherUser);
+    }
+
+    @Test
+    public void sendPrivateMessageShouldThrowExceptionIfMessageIsEmpty() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send an empty private chat message");
+
+        doReturn(true).when(controller).isConnected();
+
+        controller.sendPrivateMessage(" ", otherUser);
+    }
+
+    @Test
+    public void sendPrivateMessageShouldThrowExceptionIfMessageIsTooLong() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a private chat message with more than 450 bytes");
+
+        doReturn(true).when(controller).isConnected();
+
+        controller.sendPrivateMessage(createStringOfSize(451), otherUser);
+    }
+
+    @Test
+    public void sendPrivateMessageShouldThrowExceptionIfUserHasNoPortNumber() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a private chat message to a user with no available port number");
+
+        doReturn(true).when(controller).isConnected();
+        assertEquals(0, otherUser.getPrivateChatPort());
+
+        controller.sendPrivateMessage("msg", otherUser);
+    }
+
+    @Test
+    public void sendPrivateMessageShouldThrowExceptionIfUserIsAway() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a private chat message to a user that is away");
+
+        doReturn(true).when(controller).isConnected();
+        otherUser.setPrivateChatPort(10);
+        otherUser.setAway(true);
+
+        controller.sendPrivateMessage("msg", otherUser);
+    }
+
+    @Test
+    public void sendPrivateMessageShouldThrowExceptionIfUserIsOffline() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a private chat message to a user that is offline");
+
+        doReturn(true).when(controller).isConnected();
+        otherUser.setPrivateChatPort(10);
+        otherUser.setOnline(false);
+
+        controller.sendPrivateMessage("msg", otherUser);
+    }
+
+    @Test
+    public void sendPrivateMessageShouldThrowExceptionIfPrivateChatIsDisabled() throws CommandException {
+        expectedException.expect(CommandException.class);
+        expectedException.expectMessage("You can not send a private chat message when private chat is disabled");
+
+        doReturn(true).when(controller).isConnected();
+        otherUser.setPrivateChatPort(10);
+        settings.setNoPrivateChat(true);
+
+        controller.sendPrivateMessage("msg", otherUser);
+    }
+
+    @Test
+    public void sendPrivateMessageShouldSendUsingNetworkMessages() throws CommandException {
+        doReturn(true).when(controller).isConnected();
+        otherUser.setPrivateChatPort(10);
+
+        controller.sendPrivateMessage("the private message", otherUser);
+
+        verify(networkMessages).sendPrivateMessage("the private message", otherUser);
+    }
+
+    @Test
+    public void networkCameUpShouldStartDelayedLogOnTimerIfNotLoggedOn() {
+        assertFalse(controller.isLoggedOn());
+
+        controller.networkCameUp(true);
+
+        verify(timerTools).scheduleTimerTask(eq("DelayedLogonTimer"), any(DelayedLogonTask.class), eq(1500L));
+    }
+
+    @Test
+    public void networkCameUpShouldSendLogOnMessagesIfNotLoggedOn() {
+        assertFalse(controller.isLoggedOn());
+
+        controller.networkCameUp(true);
+
+        final InOrder inOrder = inOrder(networkMessages);
+
+        inOrder.verify(networkMessages).sendLogonMessage();
+        inOrder.verify(networkMessages).sendClient();
+        inOrder.verify(networkMessages).sendExposeMessage();
+        inOrder.verify(networkMessages).sendGetTopicMessage();
+    }
+
+    @Test
+    public void networkCameUpShouldUpdateTopicInUiIfLoggedOn() {
+        doReturn(true).when(controller).isLoggedOn();
+
+        controller.networkCameUp(true);
+
+        verify(ui).showTopic();
+    }
+
+    @Test
+    public void networkCameUpShouldShowSystemMessageIfLoggedOnAndSilentIsFalse() {
+        doReturn(true).when(controller).isLoggedOn();
+
+        controller.networkCameUp(false);
+
+        verify(messageController).showSystemMessage("You are connected to the network again");
+    }
+
+    @Test
+    public void networkCameUpShouldNotShowSystemMessageIfLoggedOnAndSilentIsTrue() {
+        doReturn(true).when(controller).isLoggedOn();
+
+        controller.networkCameUp(true);
+
+        verify(messageController, never()).showSystemMessage(anyString());
+    }
+
+    @Test
+    public void networkCameUpShouldSendMessagesToDiscoverChatStateIfLoggedOn() {
+        doReturn(true).when(controller).isLoggedOn();
+
+        controller.networkCameUp(true);
+
+        final InOrder inOrder = inOrder(networkMessages);
+
+        inOrder.verify(networkMessages).sendTopicRequestedMessage(controller.getTopic());
+        inOrder.verify(networkMessages).sendExposingMessage();
+        inOrder.verify(networkMessages).sendGetTopicMessage();
+        inOrder.verify(networkMessages).sendExposeMessage();
+        inOrder.verify(networkMessages).sendIdleMessage();
+    }
+
+    @Test
+    public void networkWentDownShouldUpdateTopicInUi() {
+        controller.networkWentDown(true);
+
+        verify(ui).showTopic();
+    }
+
+    @Test
+    public void networkWentDownShouldShowLogOffSystemMessageIfNotLoggedOn() {
+        controller.networkWentDown(true);
+
+        verify(messageController).showSystemMessage("You logged off");
+    }
+
+    @Test
+    public void networkWentDownShouldShowLostContactSystemMessageIfLoggedOnAndSilentIsFalse() {
+        doReturn(true).when(controller).isLoggedOn();
+
+        controller.networkWentDown(false);
+
+        verify(messageController).showSystemMessage("You lost contact with the network");
+    }
+
+    @Test
+    public void networkWentDownShouldNotShowSystemMessageIfLoggedOnAndSilentIsTrue() {
+        doReturn(true).when(controller).isLoggedOn();
+
+        controller.networkWentDown(true);
+
+        verify(messageController, never()).showSystemMessage(anyString());
     }
 
     private String createStringOfSize(final int size) {

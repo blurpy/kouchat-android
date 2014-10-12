@@ -24,10 +24,6 @@ package net.usikkert.kouchat.misc;
 
 import java.io.File;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.autocomplete.AutoCompleter;
@@ -51,6 +47,7 @@ import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.settings.SettingsSaver;
 import net.usikkert.kouchat.ui.UserInterface;
 import net.usikkert.kouchat.util.DateTools;
+import net.usikkert.kouchat.util.TimerTools;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
@@ -67,10 +64,11 @@ import net.usikkert.kouchat.util.Validate;
  */
 public class Controller implements NetworkConnectionListener {
 
-    /** The logger. */
-    private static final Logger LOG = Logger.getLogger(Controller.class.getName());
+    /** The time to wait after the network is up before logon is set as completed. */
+    private static final int LOGON_DELAY = 1500;
 
     private final DateTools dateTools = new DateTools();
+    private final TimerTools timerTools = new TimerTools();
 
     private final ChatState chatState;
     private final UserListController userListController;
@@ -237,13 +235,13 @@ public class Controller implements NetworkConnectionListener {
      */
     public void goAway(final String awayMessage) throws CommandException {
         if (Tools.isEmpty(awayMessage)) {
-            throw new CommandException("You can not go away without an away message");
+            throw new CommandException(coreMessages.getMessage("core.away.error.missingAwayMessage"));
         }
 
         changeAwayStatus(me.getCode(), true, awayMessage);
 
         ui.changeAway(true);
-        msgController.showSystemMessage("You went away: " + me.getAwayMsg());
+        msgController.showSystemMessage(coreMessages.getMessage("core.away.wentAway.systemMessage", me.getAwayMsg()));
     }
 
     /**
@@ -255,7 +253,7 @@ public class Controller implements NetworkConnectionListener {
         changeAwayStatus(me.getCode(), false, "");
 
         ui.changeAway(false);
-        msgController.showSystemMessage("You came back");
+        msgController.showSystemMessage(coreMessages.getMessage("core.away.cameBack.systemMessage"));
     }
 
     /**
@@ -269,9 +267,10 @@ public class Controller implements NetworkConnectionListener {
      */
     public void changeAwayStatus(final int code, final boolean away, final String awaymsg) throws CommandException {
         if (code == me.getCode() && !isLoggedOn()) {
-            throw new CommandException("You can not change away mode without being connected");
+            throw new CommandException(coreMessages.getMessage("core.away.error.notConnected"));
         } else if (Tools.getBytes(awaymsg) > Constants.MESSAGE_MAX_BYTES) {
-            throw new CommandException("You can not set an away message with more than " + Constants.MESSAGE_MAX_BYTES + " bytes");
+            throw new CommandException(coreMessages.getMessage("core.away.error.awayMessageTooLong",
+                                                               Constants.MESSAGE_MAX_BYTES));
         }
 
         final String trimmedAwayMessage = awaymsg.trim();
@@ -316,7 +315,7 @@ public class Controller implements NetworkConnectionListener {
      */
     public void changeMyNick(final String newNick) throws CommandException {
         if (me.isAway()) {
-            throw new CommandException("You can not change nick while away");
+            throw new CommandException(coreMessages.getMessage("core.nick.error.meIsAway"));
         }
 
         networkMessages.sendNickMessage(newNick);
@@ -376,8 +375,7 @@ public class Controller implements NetworkConnectionListener {
      * This should be run after a successful logon, to update the connection state.
      */
     private void runDelayedLogon() {
-        final Timer delayedLogonTimer = new Timer("DelayedLogonTimer");
-        delayedLogonTimer.schedule(new DelayedLogonTask(), 0);
+        timerTools.scheduleTimerTask("DelayedLogonTimer", new DelayedLogonTask(networkService, chatState), LOGON_DELAY);
     }
 
     /**
@@ -428,7 +426,7 @@ public class Controller implements NetworkConnectionListener {
             final User user = userList.get(i);
 
             if (!user.isMe()) {
-                removeUser(user, "You logged off");
+                removeUser(user, coreMessages.getMessage("core.network.logOff.systemMessage"));
                 i--;
             }
         }
@@ -552,13 +550,14 @@ public class Controller implements NetworkConnectionListener {
      */
     public void sendChatMessage(final String msg) throws CommandException {
         if (!isConnected()) {
-            throw new CommandException("You can not send a chat message without being connected");
+            throw new CommandException(coreMessages.getMessage("core.chatMessage.error.notConnected"));
         } else if (me.isAway()) {
-            throw new CommandException("You can not send a chat message while away");
+            throw new CommandException(coreMessages.getMessage("core.chatMessage.error.meIsAway"));
         } else if (msg.trim().length() == 0) {
-            throw new CommandException("You can not send an empty chat message");
+            throw new CommandException(coreMessages.getMessage("core.chatMessage.error.emptyMessage"));
         } else if (Tools.getBytes(msg) > Constants.MESSAGE_MAX_BYTES) {
-            throw new CommandException("You can not send a chat message with more than " + Constants.MESSAGE_MAX_BYTES + " bytes");
+            throw new CommandException(coreMessages.getMessage("core.chatMessage.error.messageTooLong",
+                                                               Constants.MESSAGE_MAX_BYTES));
         } else {
             networkMessages.sendChatMessage(msg);
         }
@@ -581,11 +580,12 @@ public class Controller implements NetworkConnectionListener {
      */
     public void changeTopic(final String newTopic) throws CommandException {
         if (!isLoggedOn()) {
-            throw new CommandException("You can not change the topic without being connected");
+            throw new CommandException(coreMessages.getMessage("core.topic.error.notConnected"));
         } else if (me.isAway()) {
-            throw new CommandException("You can not change the topic while away");
+            throw new CommandException(coreMessages.getMessage("core.topic.error.meIsAway"));
         } else if (Tools.getBytes(newTopic) > Constants.MESSAGE_MAX_BYTES) {
-            throw new CommandException("You can not set a topic with more than " + Constants.MESSAGE_MAX_BYTES + " bytes");
+            throw new CommandException(coreMessages.getMessage("core.topic.error.messageTooLong",
+                                                               Constants.MESSAGE_MAX_BYTES));
         }
 
         final long time = System.currentTimeMillis();
@@ -650,15 +650,16 @@ public class Controller implements NetworkConnectionListener {
         Validate.notNull(file, "File can not be null");
 
         if (user.isMe()) {
-            throw new CommandException("You can not send a file to yourself");
+            throw new CommandException(coreMessages.getMessage("core.sendFile.error.isMe"));
         } else if (!isConnected()) {
-            throw new CommandException("You can not send a file without being connected");
+            throw new CommandException(coreMessages.getMessage("core.sendFile.error.notConnected"));
         } else if (me.isAway()) {
-            throw new CommandException("You can not send a file while away");
+            throw new CommandException(coreMessages.getMessage("core.sendFile.error.meIsAway"));
         } else if (user.isAway()) {
-            throw new CommandException("You can not send a file to a user that is away");
+            throw new CommandException(coreMessages.getMessage("core.sendFile.error.userIsAway"));
         } else if (Tools.getBytes(file.getName()) > Constants.MESSAGE_MAX_BYTES) {
-            throw new CommandException("You can not send a file with a name with more than " + Constants.MESSAGE_MAX_BYTES + " bytes");
+            throw new CommandException(coreMessages.getMessage("core.sendFile.error.messageTooLong",
+                                                               Constants.MESSAGE_MAX_BYTES));
         } else {
             networkMessages.sendFile(user, file);
         }
@@ -714,21 +715,22 @@ public class Controller implements NetworkConnectionListener {
      */
     public void sendPrivateMessage(final String privmsg, final User user) throws CommandException {
         if (!isConnected()) {
-            throw new CommandException("You can not send a private chat message without being connected");
+            throw new CommandException(coreMessages.getMessage("core.privateChatMessage.error.notConnected"));
         } else if (me.isAway()) {
-            throw new CommandException("You can not send a private chat message while away");
+            throw new CommandException(coreMessages.getMessage("core.privateChatMessage.error.meIsAway"));
         } else if (privmsg.trim().length() == 0) {
-            throw new CommandException("You can not send an empty private chat message");
+            throw new CommandException(coreMessages.getMessage("core.privateChatMessage.error.emptyMessage"));
         } else if (Tools.getBytes(privmsg) > Constants.MESSAGE_MAX_BYTES) {
-            throw new CommandException("You can not send a private chat message with more than " + Constants.MESSAGE_MAX_BYTES + " bytes");
+            throw new CommandException(coreMessages.getMessage("core.privateChatMessage.error.messageTooLong",
+                                                               Constants.MESSAGE_MAX_BYTES));
         } else if (user.getPrivateChatPort() == 0) {
-            throw new CommandException("You can not send a private chat message to a user with no available port number");
+            throw new CommandException(coreMessages.getMessage("core.privateChatMessage.error.noPortNumber"));
         } else if (user.isAway()) {
-            throw new CommandException("You can not send a private chat message to a user that is away");
+            throw new CommandException(coreMessages.getMessage("core.privateChatMessage.error.userIsAway"));
         } else if (!user.isOnline()) {
-            throw new CommandException("You can not send a private chat message to a user that is offline");
+            throw new CommandException(coreMessages.getMessage("core.privateChatMessage.error.userIsOffline"));
         } else if (settings.isNoPrivateChat()) {
-            throw new CommandException("You can not send a private chat message when private chat is disabled");
+            throw new CommandException(coreMessages.getMessage("core.privateChatMessage.error.privateChatDisabled"));
         } else {
             networkMessages.sendPrivateMessage(privmsg, user);
         }
@@ -772,35 +774,6 @@ public class Controller implements NetworkConnectionListener {
     }
 
     /**
-     * This timer task sleeps for 1.5 seconds before updating the
-     * {@link WaitingList} to set the status to logged on if the
-     * client was successful in connecting to the network.
-     *
-     * @author Christian Ihle
-     */
-    private class DelayedLogonTask extends TimerTask {
-        /**
-         * The task runs as a thread.
-         */
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(1500);
-            }
-
-            catch (final InterruptedException e) {
-                LOG.log(Level.SEVERE, e.toString(), e);
-            }
-
-            if (networkService.isNetworkUp()) {
-                chatState.setLogonCompleted(true);
-                // To stop the timer from running in the background
-                cancel();
-            }
-        }
-    }
-
-    /**
      * Creates a new instance of the {@link AutoCompleter}, with
      * a {@link CommandAutoCompleteList} and a {@link UserAutoCompleteList}.
      *
@@ -837,7 +810,7 @@ public class Controller implements NetworkConnectionListener {
             ui.showTopic();
 
             if (!silent) {
-                msgController.showSystemMessage("You are connected to the network again");
+                msgController.showSystemMessage(coreMessages.getMessage("core.network.connectionBack.systemMessage"));
             }
 
             networkMessages.sendTopicRequestedMessage(getTopic());
@@ -859,12 +832,12 @@ public class Controller implements NetworkConnectionListener {
 
         if (isLoggedOn()) {
             if (!silent) {
-                msgController.showSystemMessage("You lost contact with the network");
+                msgController.showSystemMessage(coreMessages.getMessage("core.network.connectionLost.systemMessage"));
             }
         }
 
         else {
-            msgController.showSystemMessage("You logged off");
+            msgController.showSystemMessage(coreMessages.getMessage("core.network.logOff.systemMessage"));
         }
     }
 
