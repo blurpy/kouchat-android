@@ -45,6 +45,8 @@ public class AndroidFileUtils {
 
     private static final Logger LOG = Logger.getLogger(AndroidFileUtils.class.getName());
 
+    private static final String URI_SCHEME_CONTENT = "content";
+
     /**
      * Gets a {@link File} reference to the file represented by the {@link Uri}.
      *
@@ -60,7 +62,7 @@ public class AndroidFileUtils {
     public File getFileFromContentUri(final Uri uri, final ContentResolver contentResolver) {
         Validate.notNull(contentResolver, "ContentResolver can not be null");
 
-        if (uri == null || !uri.getScheme().equals("content")) {
+        if (uri == null || !uri.getScheme().equals(URI_SCHEME_CONTENT)) {
             return null;
         }
 
