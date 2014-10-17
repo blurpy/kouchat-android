@@ -56,6 +56,7 @@ import android.os.Environment;
  *
  * @author Christian Ihle
  */
+@SuppressWarnings("HardCodedStringLiteral")
 @Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner.class)
 public class AndroidFileUtilsTest {
@@ -135,6 +136,37 @@ public class AndroidFileUtilsTest {
 
         assertNotNull(fileFromUri);
         assertEquals("dsc0001.jpg", fileFromUri.getName());
+    }
+
+    @Test
+    public void getFileFromFileUriShouldThrowExceptionIfUriIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("File uri can not be null");
+
+        androidFileUtils.getFileFromFileUri(null);
+    }
+
+    @Test
+    public void getFileFromFileUriShouldReturnFileWithUriPathIfFileExists() throws IOException {
+        final File tempFile = File.createTempFile("getFileFromFileUri", ".tmp");
+        assertTrue(tempFile.exists());
+
+        final Uri uri = Uri.fromFile(tempFile);
+        assertTrue(uri.getScheme().equals("file"));
+
+        final File file = androidFileUtils.getFileFromFileUri(uri);
+
+        assertEquals(tempFile, file);
+    }
+
+    @Test
+    public void getFileFromFileUriShouldReturnNullIfFileDoesNotExist() throws IOException {
+        final Uri uri = Uri.parse("file:///storage/emulated/0/kouchat-1600x1600.png");
+        assertTrue(uri.getScheme().equals("file"));
+
+        final File file = androidFileUtils.getFileFromFileUri(uri);
+
+        assertNull(file);
     }
 
     @Test

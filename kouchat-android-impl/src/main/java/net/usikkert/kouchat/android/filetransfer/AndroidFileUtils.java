@@ -80,6 +80,27 @@ public class AndroidFileUtils {
     }
 
     /**
+     * Gets a {@link File} reference to the file represented by the file {@link Uri}.
+     *
+     * <p>The uri is expected to be in the following format:
+     * <code>file:///storage/emulated/0/kouchat-1600x1600.png</code></p>
+     *
+     * @param uri File uri to the file to return.
+     * @return The file, if it's found, or <code>null</code> if not found.
+     */
+    File getFileFromFileUri(final Uri uri) {
+        Validate.notNull(uri, "File uri can not be null");
+
+        final File file = new File(uri.getPath());
+
+        if (file.exists()) {
+            return file;
+        }
+
+        return null;
+    }
+
+    /**
      * Adds the file to the media database in Android.
      *
      * <p>It's an important step after adding a file to the file system. Without doing this, the
