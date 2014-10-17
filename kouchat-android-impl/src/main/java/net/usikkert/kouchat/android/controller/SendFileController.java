@@ -80,7 +80,7 @@ public class SendFileController extends Activity implements UserListListener {
 
         final Intent intent = getIntent();
         final Uri uriToFile = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        fileToSend = androidFileUtils.getFileFromContentUri(uriToFile, getContentResolver());
+        fileToSend = androidFileUtils.getFileFromUri(uriToFile, getContentResolver());
 
         final TextView line1TextView = (TextView) findViewById(R.id.sendFileLine1TextView);
         line2TextView = (TextView) findViewById(R.id.sendFileLine2TextView);

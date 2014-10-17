@@ -85,7 +85,7 @@ public class AndroidFileUtils {
      * @param contentResolver The content resolver, from a context.
      * @return The file, if it's found, or <code>null</code> if not found.
      */
-    public File getFileFromContentUri(final Uri uri, final ContentResolver contentResolver) {
+    File getFileFromContentUri(final Uri uri, final ContentResolver contentResolver) {
         Validate.notNull(uri, "Content uri can not be null");
         Validate.notNull(contentResolver, "ContentResolver can not be null");
 

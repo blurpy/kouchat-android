@@ -351,7 +351,7 @@ public class SendFileControllerTest {
         assertNotNull("Unable to find kouchat-1600x1600.png", resource);
 
         final File file = new File(resource.getFile());
-        when(androidFileUtils.getFileFromContentUri(uri, controller.getContentResolver())).thenReturn(file);
+        when(androidFileUtils.getFileFromUri(uri, controller.getContentResolver())).thenReturn(file);
 
         setupControllerWithIntent(uri);
 
