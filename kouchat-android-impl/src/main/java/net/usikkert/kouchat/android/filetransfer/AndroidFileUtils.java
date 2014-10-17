@@ -46,9 +46,35 @@ public class AndroidFileUtils {
     private static final Logger LOG = Logger.getLogger(AndroidFileUtils.class.getName());
 
     private static final String URI_SCHEME_CONTENT = "content";
+    private static final String URI_SCHEME_FILE = "file";
 
     /**
      * Gets a {@link File} reference to the file represented by the {@link Uri}.
+     *
+     * <p>Supports <code>content://</code> and <code>file://</code> uris.</p>
+     *
+     * @param uri Uri to the file to return. Can be <code>null</code>.
+     * @param contentResolver The content resolver, from a context, for usage if content uri.
+     * @return The file, if it's found, or <code>null</code> if not found.
+     */
+    public File getFileFromUri(final Uri uri, final ContentResolver contentResolver) {
+        if (uri == null) {
+            return null;
+        }
+
+        if (uri.getScheme().equals(URI_SCHEME_CONTENT)) {
+            return getFileFromContentUri(uri, contentResolver);
+        }
+
+        if (uri.getScheme().equals(URI_SCHEME_FILE)) {
+            return getFileFromFileUri(uri);
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets a {@link File} reference to the file represented by the content {@link Uri}.
      *
      * <p>The uri is expected to be in the following format: <code>content://media/external/images/media/22</code></p>
      *

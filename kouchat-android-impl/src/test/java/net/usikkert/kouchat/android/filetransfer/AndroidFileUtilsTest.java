@@ -72,7 +72,7 @@ public class AndroidFileUtilsTest {
 
     @Before
     public void setUp() {
-        androidFileUtils = new AndroidFileUtils();
+        androidFileUtils = spy(new AndroidFileUtils());
 
         contentResolver = Robolectric.application.getContentResolver();
         shadowContentResolver = Robolectric.shadowOf(contentResolver);
@@ -88,6 +88,42 @@ public class AndroidFileUtilsTest {
                 return moveToNext(); // Not implemented in SimpleTestCursor
             }
         };
+    }
+
+    @Test
+    public void getFileFromUriShouldReturnNullIfUriIsNull() {
+        assertNull(androidFileUtils.getFileFromUri(null, contentResolver));
+    }
+
+    @Test
+    public void getFileFromUriShouldReturnNullIfUriIsOfUnsupportedType() {
+        assertNull(androidFileUtils.getFileFromUri(Uri.parse("ftp://ftp.google.com"), contentResolver));
+    }
+
+    @Test
+    public void getFileFromUriShouldReturnResultFromContentUriIfContentScheme() {
+        final Uri uri = Uri.parse("content://contacts/photos/253");
+        final File tempFile = new File("tmp.txt");
+
+        when(androidFileUtils.getFileFromContentUri(uri, contentResolver)).thenReturn(tempFile);
+
+        final File fileFromUri = androidFileUtils.getFileFromUri(uri, contentResolver);
+
+        assertSame(tempFile, fileFromUri);
+        verify(androidFileUtils).getFileFromContentUri(uri, contentResolver);
+    }
+
+    @Test
+    public void getFileFromUriShouldReturnResultFromGetFromFileUriIfFileScheme() {
+        final Uri uri = Uri.parse("file:///storage/emulated/0/kouchat-1600x1600.png");
+        final File tempFile = new File("tmp.txt");
+
+        when(androidFileUtils.getFileFromFileUri(uri)).thenReturn(tempFile);
+
+        final File fileFromUri = androidFileUtils.getFileFromUri(uri, contentResolver);
+
+        assertSame(tempFile, fileFromUri);
+        verify(androidFileUtils).getFileFromFileUri(uri);
     }
 
     @Test
