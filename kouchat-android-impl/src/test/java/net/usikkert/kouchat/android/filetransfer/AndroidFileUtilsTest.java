@@ -41,7 +41,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowContentResolver;
 import org.robolectric.tester.android.database.SimpleTestCursor;
-import org.robolectric.tester.android.database.TestCursor;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -135,17 +134,11 @@ public class AndroidFileUtilsTest {
     }
 
     @Test
-    public void getFileFromContentUriShouldNotQueryAndJustReturnNullIfUriIsNull() {
-        shadowContentResolver.setCursor(new TestCursor());
+    public void getFileFromContentUriShouldThrowExceptionIfUriIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Content uri can not be null");
 
         assertNull(androidFileUtils.getFileFromContentUri(null, contentResolver));
-    }
-
-    @Test
-    public void getFileFromContentUriShouldNotQueryAndJustReturnNullIfUriIsWrongType() {
-        shadowContentResolver.setCursor(new TestCursor());
-
-        assertNull(androidFileUtils.getFileFromContentUri(Uri.parse("file://home/nothing.txt"), contentResolver));
     }
 
     @Test

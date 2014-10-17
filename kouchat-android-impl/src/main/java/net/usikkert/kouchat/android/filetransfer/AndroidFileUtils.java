@@ -86,11 +86,8 @@ public class AndroidFileUtils {
      * @return The file, if it's found, or <code>null</code> if not found.
      */
     public File getFileFromContentUri(final Uri uri, final ContentResolver contentResolver) {
+        Validate.notNull(uri, "Content uri can not be null");
         Validate.notNull(contentResolver, "ContentResolver can not be null");
-
-        if (uri == null || !uri.getScheme().equals(URI_SCHEME_CONTENT)) {
-            return null;
-        }
 
         final String[] columns = new String[] {MediaStore.MediaColumns.DATA};
         final Cursor cursor = contentResolver.query(uri, columns, null, null, null);
