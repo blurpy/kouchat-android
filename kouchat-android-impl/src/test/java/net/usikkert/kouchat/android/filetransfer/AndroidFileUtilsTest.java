@@ -127,7 +127,7 @@ public class AndroidFileUtilsTest {
     }
 
     @Test
-    public void getFileFromUriShouldThrowExceptionIfContentResolverIsNull() {
+    public void getFileFromContentUriShouldThrowExceptionIfContentResolverIsNull() {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("ContentResolver can not be null");
 
@@ -135,35 +135,35 @@ public class AndroidFileUtilsTest {
     }
 
     @Test
-    public void getFileFromUriShouldNotQueryAndJustReturnNullIfUriIsNull() {
+    public void getFileFromContentUriShouldNotQueryAndJustReturnNullIfUriIsNull() {
         shadowContentResolver.setCursor(new TestCursor());
 
         assertNull(androidFileUtils.getFileFromContentUri(null, contentResolver));
     }
 
     @Test
-    public void getFileFromUriShouldNotQueryAndJustReturnNullIfUriIsWrongType() {
+    public void getFileFromContentUriShouldNotQueryAndJustReturnNullIfUriIsWrongType() {
         shadowContentResolver.setCursor(new TestCursor());
 
         assertNull(androidFileUtils.getFileFromContentUri(Uri.parse("file://home/nothing.txt"), contentResolver));
     }
 
     @Test
-    public void getFileFromUriShouldReturnNullIfCursorIsNullAfterQuery() {
+    public void getFileFromContentUriShouldReturnNullIfCursorIsNullAfterQuery() {
         shadowContentResolver.setCursor(null);
 
         assertNull(androidFileUtils.getFileFromContentUri(Uri.parse("content://contacts/photos/253"), contentResolver));
     }
 
     @Test
-    public void getFileFromUriShouldReturnNullIfNoResults() {
+    public void getFileFromContentUriShouldReturnNullIfNoResults() {
         shadowContentResolver.setCursor(cursor);
 
         assertNull(androidFileUtils.getFileFromContentUri(Uri.parse("content://contacts/photos/253"), contentResolver));
     }
 
     @Test
-    public void getFileFromUriShouldReturnFirstResult() {
+    public void getFileFromContentUriShouldReturnFirstResult() {
         shadowContentResolver.setCursor(cursor);
         cursor.setColumnNames(Lists.newArrayList("_data"));
         cursor.setResults(new String[][] {{"/home/user/pictures/dsc0001.jpg", "/home/user/pictures/dsc0002.jpg"}});
