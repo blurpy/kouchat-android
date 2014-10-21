@@ -102,6 +102,19 @@ public final class FileUtils {
     }
 
     /**
+     * Returns a representation of <code>kouchat-1600x1600.png</code> with a <code>file://</code> uri
+     * that can be used to get the actual file on the SD card.
+     *
+     * @return <code>kouchat-1600x1600.png</code>.
+     */
+    public static AndroidFile getKouChatImageFromSdCardWithFileUri() {
+        final File externalStorageDirectory = Environment.getExternalStorageDirectory();
+        final File image = new File(externalStorageDirectory, KOUCHAT_FILE);
+
+        return new AndroidFile(image);
+    }
+
+    /**
      * Returns a representation of <code>kouchat-1600x1600.png</code> than can be used to get the
      * actual file on the internal storage.
      *

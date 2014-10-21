@@ -52,6 +52,7 @@ import android.widget.ListView;
 public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileController> {
 
     private static AndroidFile imageWithContentUri;
+    private static AndroidFile imageWithFileUri;
 
     private Solo solo;
 
@@ -79,6 +80,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         if (imageWithContentUri == null) {
             FileUtils.copyKouChatImageFromAssetsToSdCard(instrumentation, activity);
             imageWithContentUri = FileUtils.getKouChatImageFromSdCardWithContentUri(activity);
+            imageWithFileUri = FileUtils.getKouChatImageFromSdCardWithFileUri();
         }
 
         assertTrue(RobotiumTestUtils.searchText(solo, "Unable to locate the file to send."));
@@ -137,6 +139,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
     }
 
     public void test04FileTransferAcceptedWithContentUri() throws IOException {
+        assertEquals("content", imageWithContentUri.getUri().getScheme());
         setActivityIntent(imageWithContentUri.getUri());
 
         final SendFileController activity = getActivity();
@@ -169,7 +172,41 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         assertTrue("Should be able to delete temporary file: " + newFile, newFile.delete()); // Cleanup
     }
 
-    public void test05FileTransferRejected() {
+    public void test05FileTransferAcceptedWithFileUri() throws IOException {
+        assertEquals("file", imageWithFileUri.getUri().getScheme());
+        setActivityIntent(imageWithFileUri.getUri());
+
+        final SendFileController activity = getActivity();
+        solo = new Solo(getInstrumentation(), activity);
+        solo.sleep(1000);
+
+        final User me = RobotiumTestUtils.getMe(activity);
+
+        albert.logon();
+        solo.sleep(1000);
+
+        solo.clickInList(1); // Click on Albert
+        solo.sleep(1000);
+
+        RobotiumTestUtils.launchMainChat(this);
+        solo.sleep(1000);
+
+        final File newFile = FileUtils.createNewFile(imageWithFileUri);
+        assertFalse("Should not exist: " + newFile, newFile.exists());
+
+        albert.acceptFile(me, imageWithFileUri.getName(), newFile);
+        solo.sleep(2000);
+
+        assertTrue(textIsVisible(imageWithFileUri.getName() + " successfully sent to Albert"));
+        assertTrue("Should exist: " + newFile, newFile.exists());
+        final ByteSource originalFile = Files.asByteSource(imageWithFileUri.getFile());
+        final ByteSource savedFile = Files.asByteSource(newFile);
+        assertTrue(originalFile.contentEquals(savedFile));
+
+        assertTrue("Should be able to delete temporary file: " + newFile, newFile.delete()); // Cleanup
+    }
+
+    public void test06FileTransferRejected() {
         setActivityIntent(imageWithContentUri.getUri());
 
         final SendFileController activity = getActivity();
@@ -193,7 +230,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         assertTrue(textIsVisible("Tina aborted reception of " + imageWithContentUri.getName()));
     }
 
-    public void test06ShouldNotBeAbleToSendFileToUserThatIsAway() {
+    public void test07ShouldNotBeAbleToSendFileToUserThatIsAway() {
         setActivityIntent(imageWithContentUri.getUri());
 
         final SendFileController activity = getActivity();
@@ -221,6 +258,7 @@ public class SendFileTest extends ActivityInstrumentationTestCase2<SendFileContr
         RobotiumTestUtils.quit(solo);
 
         imageWithContentUri = null;
+        imageWithFileUri = null;
     }
 
     public void tearDown() {
