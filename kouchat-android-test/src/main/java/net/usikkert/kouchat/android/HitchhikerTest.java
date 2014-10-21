@@ -87,7 +87,7 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
             originalNickName = me.getNick();
 
             FileUtils.copyKouChatImageFromAssetsToSdCard(instrumentation, activity);
-            image = FileUtils.getKouChatImageFromSdCard(activity);
+            image = FileUtils.getKouChatImageFromSdCardWithContentUri(activity);
         }
     }
 

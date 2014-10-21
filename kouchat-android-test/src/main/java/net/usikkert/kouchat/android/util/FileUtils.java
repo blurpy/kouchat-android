@@ -89,13 +89,13 @@ public final class FileUtils {
     }
 
     /**
-     * Returns a representation of <code>kouchat-1600x1600.png</code> than can be used to get the
-     * actual file on the SD card.
+     * Returns a representation of <code>kouchat-1600x1600.png</code> with a <code>content://</code> uri
+     * that can be used to get the actual file on the SD card.
      *
      * @param activity The activity under test.
      * @return <code>kouchat-1600x1600.png</code>.
      */
-    public static AndroidFile getKouChatImageFromSdCard(final Activity activity) {
+    public static AndroidFile getKouChatImageFromSdCardWithContentUri(final Activity activity) {
         final Cursor cursor = getCursorForKouChatImageFromExternalStorage(activity);
 
         return getKouChatImageFromStorage(cursor);

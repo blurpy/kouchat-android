@@ -69,7 +69,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
 
         if (image == null) {
             FileUtils.copyKouChatImageFromAssetsToSdCard(getInstrumentation(), activity);
-            image = FileUtils.getKouChatImageFromSdCard(activity);
+            image = FileUtils.getKouChatImageFromSdCardWithContentUri(activity);
         }
     }
 

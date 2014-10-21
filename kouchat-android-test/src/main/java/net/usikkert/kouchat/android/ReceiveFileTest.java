@@ -99,7 +99,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
 
             // Make sure we have an image to send from a test client to the real client
             FileUtils.copyKouChatImageFromAssetsToSdCard(instrumentation, mainChatController);
-            image = FileUtils.getKouChatImageFromSdCard(mainChatController);
+            image = FileUtils.getKouChatImageFromSdCardWithContentUri(mainChatController);
 
             requestedFile = getLocationToRequestedFile("");
             requestedFile1 = getLocationToRequestedFile("_1");
