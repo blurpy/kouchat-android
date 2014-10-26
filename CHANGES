@@ -5,7 +5,7 @@
 * version 1.0.2 (26.10.2014)
   - Lots of cleanups regarding singletons and statics.
   - Split code for saving and loading desktop settings out of Android.
-  - Added support for sending files from file managers using the file:// protocol
+  - Added support for sending files from file managers using the file:// protocol.
   - Started work on translation support.
 
 
