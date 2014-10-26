@@ -2,11 +2,11 @@
 - KouChat Android CHANGES
 
 
-* version 1.0.2 (xx.xx.2014)
+* version 1.0.2 (26.10.2014)
   - Lots of cleanups regarding singletons and statics.
   - Split code for saving and loading desktop settings out of Android.
-  - Added support for sending files from file managers using the file://protocol
-  - Started work on language support.
+  - Added support for sending files from file managers using the file:// protocol
+  - Started work on translation support.
 
 
 * version 1.0.1 (17.08.2014)
