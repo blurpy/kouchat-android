@@ -1,0 +1,29 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "24.0.1"
+
+    defaultConfig {
+        applicationId "net.usikkert.kouchat.android"
+        minSdkVersion 16
+        targetSdkVersion 22
+        versionCode 15
+        versionName "1.1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    compile 'com.larswerkman:HoloColorPicker:1.3'
+    compile 'org.jetbrains:annotations:13.0'
+
+    testCompile 'junit:junit:4.12'
+}
