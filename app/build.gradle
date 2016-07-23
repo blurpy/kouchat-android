@@ -26,4 +26,9 @@ dependencies {
     compile 'org.jetbrains:annotations:13.0'
 
     testCompile 'junit:junit:4.12'
+
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.0.1'
+    androidTestCompile 'org.easytesting:fest-reflect:1.4.1'
+    androidTestCompile 'com.google.guava:guava:16.0'
+    androidTestCompile 'commons-io:commons-io:2.4'
 }

@@ -27,11 +27,11 @@ import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestClient;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.robotium.solo.Solo;
 
 import android.app.Instrumentation;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
 
@@ -202,7 +202,7 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
 
     private void checkTopic(final String topic) {
         // getActivity() returns the old activity after rotate
-        final SherlockActivity currentActivity = (SherlockActivity) solo.getCurrentActivity();
+        final AppCompatActivity currentActivity = (AppCompatActivity) solo.getCurrentActivity();
         final ActionBar supportActionBar = currentActivity.getSupportActionBar();
 
         assertEquals(me.getNick() + " - KouChat", supportActionBar.getTitle());

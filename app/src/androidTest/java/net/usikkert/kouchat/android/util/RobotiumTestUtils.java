@@ -37,8 +37,6 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestUtils;
 import net.usikkert.kouchat.util.Tools;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.robotium.solo.Solo;
 
 import android.app.Activity;
@@ -47,7 +45,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.Build;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.InstrumentationTestCase;
 import android.text.Layout;
@@ -269,15 +268,7 @@ public final class RobotiumTestUtils {
      * @param solo The solo tester.
      */
     public static void goUp(final Solo solo) {
-        // Native ActionBar in use.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            solo.clickOnView(solo.getView(android.R.id.home));
-        }
-
-        // Compatibility ActionBar from ActionBarSherlock in use.
-        else {
-            solo.clickOnView(solo.getView(R.id.abs__home));
-        }
+        solo.clickOnView(solo.getView(android.R.id.home));
     }
 
     /**
@@ -496,7 +487,7 @@ public final class RobotiumTestUtils {
         solo.assertCurrentActivity("Should have opened the private chat", PrivateChatController.class);
 
         // To be sure we are chatting with the right user
-        final SherlockActivity currentActivity = (SherlockActivity) solo.getCurrentActivity();
+        final AppCompatActivity currentActivity = (AppCompatActivity) solo.getCurrentActivity();
         final ActionBar actionBar = currentActivity.getSupportActionBar();
         assertEquals(userName + " - KouChat", actionBar.getTitle());
         assertEquals(awayMessage, actionBar.getSubtitle());

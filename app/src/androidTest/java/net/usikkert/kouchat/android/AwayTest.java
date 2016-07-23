@@ -30,10 +30,10 @@ import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestClient;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.robotium.solo.Solo;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
 

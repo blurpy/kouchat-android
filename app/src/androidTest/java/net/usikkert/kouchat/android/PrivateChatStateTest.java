@@ -27,12 +27,12 @@ import net.usikkert.kouchat.android.util.RobotiumTestUtils;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.testclient.TestClient;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.robotium.solo.Solo;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -378,7 +378,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
     }
 
     private void checkTitle(final String title, final String subtitle) {
-        final SherlockActivity currentActivity = (SherlockActivity) solo.getCurrentActivity();
+        final AppCompatActivity currentActivity = (AppCompatActivity) solo.getCurrentActivity();
         final ActionBar actionBar = currentActivity.getSupportActionBar();
 
         assertEquals(title, actionBar.getTitle());
