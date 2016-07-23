@@ -2,8 +2,8 @@
 - KouChat Android CHANGES
 
 
-* version 1.1.0 (xx.xx.2014)
-  - Nothing yet.
+* version 1.1.0 (xx.xx.2016)
+  - Converted to Gradle for building.
 
 
 * version 1.0.2 (26.10.2014)
