@@ -8,7 +8,8 @@
   <!-- Forcing overflow button on devices with a hardware menu button, for a consistent and discoverable menu -->
   <item android:id="@+id/mainChatMenu"
         app:showAsAction="always"
-        android:title="@string/menu">
+        android:title="@string/menu"
+        android:icon="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha">
 
     <menu>
       <item android:id="@+id/mainChatMenuSettings"
