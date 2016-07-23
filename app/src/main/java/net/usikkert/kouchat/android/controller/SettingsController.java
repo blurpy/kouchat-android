@@ -29,10 +29,7 @@ import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.android.settings.AndroidSettings;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
-
+import android.app.ActionBar;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -42,6 +39,8 @@ import android.os.IBinder;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.view.MenuItem;
 
 /**
  * Controller for changing the settings.
@@ -57,7 +56,7 @@ import android.preference.Preference;
  *
  * @author Christian Ihle
  */
-public class SettingsController extends SherlockPreferenceActivity
+public class SettingsController extends PreferenceActivity
                                 implements Preference.OnPreferenceChangeListener,
                                            SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -88,8 +87,11 @@ public class SettingsController extends SherlockPreferenceActivity
         final Intent chatServiceIntent = createChatServiceIntent();
         bindService(chatServiceIntent, serviceConnection, BIND_NOT_FOREGROUND);
 
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        final ActionBar actionBar = getActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     /**

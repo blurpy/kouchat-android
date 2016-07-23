@@ -29,10 +29,6 @@ import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.misc.User;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +36,10 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -51,7 +50,7 @@ import android.widget.TextView;
  *
  * @author Christian Ihle
  */
-public class PrivateChatController extends SherlockActivity {
+public class PrivateChatController extends AppCompatActivity {
 
     private ControllerUtils controllerUtils = new ControllerUtils();
 

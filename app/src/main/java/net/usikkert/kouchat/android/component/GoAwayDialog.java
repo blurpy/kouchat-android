@@ -29,7 +29,6 @@ import net.usikkert.kouchat.util.Validate;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -46,15 +45,14 @@ public class GoAwayDialog {
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(androidUserInterface, "AndroidUserInterface can not be null");
 
-        final Context wrappedContext = new ContextThemeWrapper(context, R.style.Theme_Default_Dialog);
-        final LayoutInflater inflater = LayoutInflater.from(wrappedContext);
+        final LayoutInflater inflater = LayoutInflater.from(context);
 
         final View goAwayDialog = inflater.inflate(R.layout.go_away_dialog, null);
         final EditText goAwayDialogInput = (EditText) goAwayDialog.findViewById(R.id.goAwayDialogInput);
 
         blockNewLinesInTheInput(goAwayDialogInput);
 
-        final AlertDialog alertDialog = createGoAwayDialog(androidUserInterface, wrappedContext, goAwayDialog, goAwayDialogInput);
+        final AlertDialog alertDialog = createGoAwayDialog(androidUserInterface, context, goAwayDialog, goAwayDialogInput);
         makeSoftwareKeyboardVisible(alertDialog);
 
         alertDialog.show();

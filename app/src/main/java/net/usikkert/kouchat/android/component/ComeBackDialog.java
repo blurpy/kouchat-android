@@ -29,7 +29,6 @@ import net.usikkert.kouchat.util.Validate;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -45,15 +44,14 @@ public class ComeBackDialog {
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(androidUserInterface, "AndroidUserInterface can not be null");
 
-        final Context wrappedContext = new ContextThemeWrapper(context, R.style.Theme_Default_Dialog);
-        final LayoutInflater inflater = LayoutInflater.from(wrappedContext);
+        final LayoutInflater inflater = LayoutInflater.from(context);
 
         final View comeBackDialog = inflater.inflate(R.layout.come_back_dialog, null);
         final TextView comeBackDialogMessage = (TextView) comeBackDialog.findViewById(R.id.comeBackDialogMessage);
 
-        setComeBackMessage(androidUserInterface, wrappedContext, comeBackDialogMessage);
+        setComeBackMessage(androidUserInterface, context, comeBackDialogMessage);
 
-        final AlertDialog alertDialog = createComeBackDialog(androidUserInterface, wrappedContext, comeBackDialog);
+        final AlertDialog alertDialog = createComeBackDialog(androidUserInterface, context, comeBackDialog);
 
         alertDialog.show();
     }

@@ -3,5 +3,5 @@
 <!-- Styles for Android 3.0 and newer. -->
 
 <resources>
-  <style name="Theme.Default.Dialog" parent="android:Theme.Holo.Light.Dialog"/>
+  <!--<style name="Theme.Default.Dialog" parent="android:Theme.Holo.Light.Dialog"/>-->
 </resources>

@@ -29,7 +29,6 @@ import net.usikkert.kouchat.util.Validate;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -46,8 +45,7 @@ public class TopicDialog {
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(androidUserInterface, "AndroidUserInterface can not be null");
 
-        final Context wrappedContext = new ContextThemeWrapper(context, R.style.Theme_Default_Dialog);
-        final LayoutInflater inflater = LayoutInflater.from(wrappedContext);
+        final LayoutInflater inflater = LayoutInflater.from(context);
 
         final View topicDialog = inflater.inflate(R.layout.topic_dialog, null);
         final EditText topicDialogInput = (EditText) topicDialog.findViewById(R.id.topicDialogInput);
@@ -56,7 +54,7 @@ public class TopicDialog {
         setCurrentTopicInTheInput(androidUserInterface, topicDialogInput);
         selectAllTheTextInTheInput(topicDialogInput);
 
-        final AlertDialog alertDialog = createTopicDialog(androidUserInterface, wrappedContext, topicDialog, topicDialogInput);
+        final AlertDialog alertDialog = createTopicDialog(androidUserInterface, context, topicDialog, topicDialogInput);
         makeSoftwareKeyboardVisible(alertDialog);
 
         alertDialog.show();

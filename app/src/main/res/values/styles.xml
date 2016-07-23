@@ -2,7 +2,7 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
   <!-- Style for Android 2.3.3. -->
-  <style name="Theme.Default.Dialog" parent="android:Theme.Dialog"/>
+  <!--<style name="Theme.Default.Dialog" parent="android:Theme.Dialog"/>-->
   <!-- Style for Android 2.3.3. -->
 
   <!-- Overrides default Sherlock theme, with larger font for the ActionBar subtitle.
@@ -10,17 +10,17 @@
        The normal android-prefixed attributes apply the theme to the native action bar and the unprefixed attributes
        are for the custom implementation. Since both theming APIs are exactly the same you need only reference
        your customizations twice rather than having to implement them twice. -->
-  <style name="Theme.KouChat.Light" parent="Theme.Sherlock.Light">
-    <item name="actionBarStyle">@style/Widget.KouChat.Light.ActionBar.Solid</item>
-    <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.KouChat.Light.ActionBar.Solid</item>
+  <style name="Theme.KouChat.Light" parent="Theme.AppCompat.Light">
+    <!--<item name="actionBarStyle">@style/Widget.KouChat.Light.ActionBar.Solid</item>-->
+    <!--<item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.KouChat.Light.ActionBar.Solid</item>-->
   </style>
 
-  <style name="Widget.KouChat.Light.ActionBar.Solid" parent="Widget.Sherlock.Light.ActionBar.Solid">
-    <item name="subtitleTextStyle">@style/Widget.KouChat.Light.ActionBar.Solid.subtitleTextStyle</item>
-    <item name="android:subtitleTextStyle" tools:ignore="NewApi">@style/Widget.KouChat.Light.ActionBar.Solid.subtitleTextStyle</item>
-  </style>
+  <!--<style name="Widget.KouChat.Light.ActionBar.Solid" parent="Widget.Sherlock.Light.ActionBar.Solid">-->
+    <!--<item name="subtitleTextStyle">@style/Widget.KouChat.Light.ActionBar.Solid.subtitleTextStyle</item>-->
+    <!--<item name="android:subtitleTextStyle" tools:ignore="NewApi">@style/Widget.KouChat.Light.ActionBar.Solid.subtitleTextStyle</item>-->
+  <!--</style>-->
 
-  <style name="Widget.KouChat.Light.ActionBar.Solid.subtitleTextStyle" parent="Widget">
-    <item name="android:textSize">@dimen/text_size</item>
-  </style>
+  <!--<style name="Widget.KouChat.Light.ActionBar.Solid.subtitleTextStyle" parent="Widget">-->
+    <!--<item name="android:textSize">@dimen/text_size</item>-->
+  <!--</style>-->
 </resources>

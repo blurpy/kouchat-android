@@ -36,12 +36,6 @@ import net.usikkert.kouchat.event.UserListListener;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -49,9 +43,14 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -82,7 +81,7 @@ import android.widget.TextView;
  *
  * @author Christian Ihle
  */
-public class MainChatController extends SherlockActivity implements UserListListener {
+public class MainChatController extends AppCompatActivity implements UserListListener {
 
     private ControllerUtils controllerUtils = new ControllerUtils();
 
@@ -274,7 +273,7 @@ public class MainChatController extends SherlockActivity implements UserListList
      */
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        final MenuInflater inflater = getSupportMenuInflater();
+        final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_chat_menu, menu);
 
         return true;

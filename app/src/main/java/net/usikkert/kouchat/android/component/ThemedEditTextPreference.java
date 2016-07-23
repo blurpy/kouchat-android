@@ -22,12 +22,9 @@
 
 package net.usikkert.kouchat.android.component;
 
-import net.usikkert.kouchat.android.R;
-
 import android.content.Context;
 import android.preference.EditTextPreference;
 import android.util.AttributeSet;
-import android.view.ContextThemeWrapper;
 
 /**
  * An {@link EditTextPreference} that uses the default dialog theme of the platform.
@@ -42,38 +39,19 @@ import android.view.ContextThemeWrapper;
  */
 public class ThemedEditTextPreference extends EditTextPreference {
 
-    /**
-     * An overridden context with the correct theme.
-     * It must be used in {@link #getContext()} instead of in the constructors,
-     * or else the color of the preference turns white. Kind of hackish, but works so far.
-     */
-    private final ContextThemeWrapper context;
-
     public ThemedEditTextPreference(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        this.context = createContextThemeWrapper(context);
         blockNewLines();
     }
 
     public ThemedEditTextPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        this.context = createContextThemeWrapper(context);
         blockNewLines();
     }
 
     public ThemedEditTextPreference(final Context context) {
         super(context);
-        this.context = createContextThemeWrapper(context);
         blockNewLines();
-    }
-
-    @Override
-    public Context getContext() {
-        return context;
-    }
-
-    private ContextThemeWrapper createContextThemeWrapper(final Context originalContext) {
-        return new ContextThemeWrapper(originalContext, R.style.Theme_Default_Dialog);
     }
 
     /**
