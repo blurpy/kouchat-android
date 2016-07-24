@@ -167,7 +167,11 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         solo.sleep(500);
 
         // Turn the screen back "on" again and return to the private chat
-        getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
+        getInstrumentation().runOnMainSync(new Runnable() {
+            public void run() {
+                getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
+            }
+        });
 
         // Go back to the main chat
         RobotiumTestUtils.goBack(solo);

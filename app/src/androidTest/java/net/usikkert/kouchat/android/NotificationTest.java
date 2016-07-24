@@ -185,7 +185,11 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         assertNewMessageNotification();
 
         // Pretend to return to the private chat using the list of running applications
-        getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
+        getInstrumentation().runOnMainSync(new Runnable() {
+            public void run() {
+                getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
+            }
+        });
 
         solo.sleep(1500);
         assertNewMessageNotification();
@@ -214,7 +218,11 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         assertNewMessageNotification();
 
         // Pretend to return to the private chat using the list of running applications
-        getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
+        getInstrumentation().runOnMainSync(new Runnable() {
+            public void run() {
+                getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
+            }
+        });
 
         solo.sleep(1500);
         assertNewMessageNotification();
@@ -240,7 +248,11 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         assertNewMessageNotification();
 
         // Pretend to return to the private chat using the list of running applications
-        getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
+        getInstrumentation().runOnMainSync(new Runnable() {
+            public void run() {
+                getInstrumentation().callActivityOnResume(solo.getCurrentActivity());
+            }
+        });
 
         solo.sleep(1500);
         assertDefaultNotification();
