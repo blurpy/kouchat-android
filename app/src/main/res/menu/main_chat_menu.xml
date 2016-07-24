@@ -9,7 +9,7 @@
   <item android:id="@+id/mainChatMenu"
         app:showAsAction="always"
         android:title="@string/menu"
-        android:icon="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha">
+        android:icon="@drawable/abc_ic_menu_overflow_material">
 
     <menu>
       <item android:id="@+id/mainChatMenuSettings"
