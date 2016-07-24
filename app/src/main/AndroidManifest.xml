@@ -27,7 +27,8 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".controller.SettingsController"/>
+    <activity android:name=".controller.SettingsController"
+              android:label="@string/settings_title"/>
 
     <!-- Sets windowSoftInputMode to adjustResize to keep the software keyboard from pushing the text view up,
          making it difficult to see the messages at the top. -->

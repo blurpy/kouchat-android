@@ -22,25 +22,13 @@
 
 package net.usikkert.kouchat.android.controller;
 
-import net.usikkert.kouchat.android.R;
-import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
-import net.usikkert.kouchat.android.component.HoloColorPickerPreference;
-import net.usikkert.kouchat.android.service.ChatService;
-import net.usikkert.kouchat.android.service.ChatServiceBinder;
-import net.usikkert.kouchat.android.settings.AndroidSettings;
-
-import android.app.ActionBar;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import net.usikkert.kouchat.android.R;
 
 /**
  * Controller for changing the settings.
@@ -56,119 +44,15 @@ import android.view.MenuItem;
  *
  * @author Christian Ihle
  */
-public class SettingsController extends PreferenceActivity
-                                implements Preference.OnPreferenceChangeListener,
-                                           SharedPreferences.OnSharedPreferenceChangeListener {
-
-    private AndroidUserInterface androidUserInterface;
-    private AndroidSettings settings;
-
-    private ServiceConnection serviceConnection;
-
-    private String nickNameKey;
-    private String wakeLockKey;
-    private String ownColorKey;
-    private String systemColorKey;
+public class SettingsController extends AppCompatActivity {
 
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.settings);
 
-        nickNameKey = getString(R.string.settings_key_nick_name);
-        wakeLockKey = getString(R.string.settings_wake_lock_key);
-        ownColorKey = getString(R.string.settings_own_color_key);
-        systemColorKey = getString(R.string.settings_sys_color_key);
+        setContentView(R.layout.settings);
 
-        final Preference nickNamePreference = findPreference(nickNameKey);
-        nickNamePreference.setOnPreferenceChangeListener(this);
-        setValueAsSummary(nickNamePreference);
-
-        serviceConnection = createServiceConnection();
-        final Intent chatServiceIntent = createChatServiceIntent();
-        bindService(chatServiceIntent, serviceConnection, BIND_NOT_FOREGROUND);
-
-        final ActionBar actionBar = getActionBar();
-
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    /**
-     * Handles validation when the nick name is about to be changed, and changes the actual nick name if it's valid.
-     *
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean onPreferenceChange(final Preference preference, final Object value) {
-        if (preference.getKey().equals(nickNameKey)) {
-            return androidUserInterface.changeNickName(value.toString());
-        }
-
-        return true;
-    }
-
-    /**
-     * Updates state after a setting has been changed and saved.
-     *
-     * <ul>
-     *   <li>Changed nick name: the nick name is set as the summary of the preference.</li>
-     *   <li>Changed wake lock: stores the setting in the {@link AndroidSettings}.</li>
-     *   <li>Changed own color: stores the setting in the {@link AndroidSettings}.</li>
-     *   <li>Changed system color: stores the setting in the {@link AndroidSettings}.</li>
-     * </ul>
-     *
-     * {@inheritDoc}
-     */
-    @Override
-    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        if (key.equals(nickNameKey)) {
-            setValueAsSummary(key);
-        }
-
-        else if (key.equals(wakeLockKey)) {
-            final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(key);
-            settings.setWakeLockEnabled(checkBoxPreference.isChecked());
-        }
-
-        else if (key.equals(ownColorKey)) {
-            final HoloColorPickerPreference preference = (HoloColorPickerPreference) findPreference(key);
-            settings.setOwnColor(preference.getPersistedColor());
-        }
-
-        else if (key.equals(systemColorKey)) {
-            final HoloColorPickerPreference preference = (HoloColorPickerPreference) findPreference(key);
-            settings.setSysColor(preference.getPersistedColor());
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (androidUserInterface != null) {
-            unbindService(serviceConnection);
-        }
-
-        androidUserInterface = null;
-        settings = null;
-        serviceConnection = null;
-        nickNameKey = null;
-        wakeLockKey = null;
-        ownColorKey = null;
-        systemColorKey = null;
-
-        super.onDestroy();
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -183,42 +67,5 @@ public class SettingsController extends PreferenceActivity
     private boolean goBackToMainChat() {
         startActivity(new Intent(this, MainChatController.class));
         return true;
-    }
-
-    private void setValueAsSummary(final String key) {
-        final Preference preference = findPreference(key);
-        setValueAsSummary(preference);
-    }
-
-    /**
-     * Sets the current value of a setting as the summary, so it's visible without clicking
-     * on the setting to change it. Unless it's not set, in which case the default summary is left untouched.
-     *
-     * @param preference The setting to update.
-     */
-    private void setValueAsSummary(final Preference preference) {
-        final EditTextPreference editTextPreference = (EditTextPreference) preference;
-
-        if (editTextPreference.getText() != null) {
-            preference.setSummary(editTextPreference.getText());
-        }
-    }
-
-    private Intent createChatServiceIntent() {
-        return new Intent(this, ChatService.class);
-    }
-
-    private ServiceConnection createServiceConnection() {
-        return new ServiceConnection() {
-            @Override
-            public void onServiceConnected(final ComponentName componentName, final IBinder iBinder) {
-                final ChatServiceBinder binder = (ChatServiceBinder) iBinder;
-                androidUserInterface = binder.getAndroidUserInterface();
-                settings = androidUserInterface.getSettings();
-            }
-
-            @Override
-            public void onServiceDisconnected(final ComponentName componentName) { }
-        };
     }
 }

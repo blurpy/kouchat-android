@@ -6,6 +6,7 @@
   - Converted to Gradle for building.
   - Replaced ActionBarSherlock with AppCompat.
   - Migrated to NotificationCompat.Builder to avoid usage of deprecated apis.
+  - Moved to PreferenceFragment to get ActionBar in the Settings.
 
 
 * version 1.0.2 (26.10.2014)
