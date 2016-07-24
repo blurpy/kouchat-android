@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="net.usikkert.kouchat.android"
-          android:versionCode="15"
-          android:versionName="1.1.0">
-
-  <uses-sdk android:minSdkVersion="10"
-            android:targetSdkVersion="16"
-            tools:ignore="OldTargetApi"/>
+          package="net.usikkert.kouchat.android">
 
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -17,11 +10,6 @@
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
   <uses-feature android:name="android.hardware.wifi"/>
-
-  <!-- For apps targeting minSdkVersion value less than 13, a <supports-screens> element must be declared
-       with both android:largeScreens="true" and android:xlargeScreens="true". -->
-  <supports-screens android:largeScreens="true"
-                    android:xlargeScreens="true"/>
 
   <application android:label="@string/app_name"
                android:icon="@drawable/ic_launcher"
