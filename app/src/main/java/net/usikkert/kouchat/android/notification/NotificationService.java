@@ -38,6 +38,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.NotificationCompat;
 
 /**
  * Service for handling notifications.
@@ -95,7 +96,7 @@ public class NotificationService {
      * @return A complete notification.
      */
     public Notification createServiceNotification() {
-        return createNotificationWithLatestInfo(R.drawable.ic_stat_notify_default, R.string.notification_running);
+        return createNotificationWithLatestInfo(R.drawable.ic_stat_notify_default, R.string.notification_running).build();
     }
 
     /**
@@ -230,12 +231,12 @@ public class NotificationService {
         Validate.notNull(fileReceiver, "FileReceiver can not be null");
 
         final int notificationId = fileReceiver.getId() + FILE_TRANSFER_NOTIFICATION_ID;
-        final Notification notification = createNewFileTransferNotification();
+        final NotificationCompat.Builder notification = createNewFileTransferNotification();
         final Intent intent = createReceiveFileControllerIntent(fileReceiver);
         final PendingIntent pendingIntent = createReceiveFileControllerPendingIntent(notificationId, intent);
         setNewFileTransferLatestEventInfo(fileReceiver, notification, pendingIntent);
 
-        notificationManager.notify(notificationId, notification);
+        notificationManager.notify(notificationId, notification.build());
         currentFileTransferIds.add(fileReceiver.getId());
     }
 
@@ -261,21 +262,22 @@ public class NotificationService {
     }
 
     private void sendDefaultNotification() {
-        final Notification notification =
+        final NotificationCompat.Builder notification =
                 createNotificationWithLatestInfo(R.drawable.ic_stat_notify_default, R.string.notification_running);
 
-        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
+        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification.build());
     }
 
     private void sendNewMessageNotification() {
-        final Notification notification =
+        final NotificationCompat.Builder notification =
                 createNotificationWithLatestInfo(R.drawable.ic_stat_notify_activity, R.string.notification_new_message);
 
-        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification);
+        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification.build());
     }
 
-    private Notification createNotificationWithLatestInfo(final int iconId, final int latestInfoTextId) {
-        final Notification notification = createNotification(iconId);
+    private NotificationCompat.Builder createNotificationWithLatestInfo(final int iconId,
+                                                                        final int latestInfoTextId) {
+        final NotificationCompat.Builder notification = createNotification(iconId);
         final PendingIntent pendingIntent = createPendingIntent();
 
         setLatestEventInfo(notification, pendingIntent, latestInfoTextId);
@@ -283,13 +285,13 @@ public class NotificationService {
         return notification;
     }
 
-    private Notification createNotification(final int iconId) {
+    private NotificationCompat.Builder createNotification(final int iconId) {
         currentIconId = iconId;
 
-        final Notification notification = new Notification(
-                iconId,
-                context.getText(R.string.notification_startup), // Text shown when starting KouChat
-                System.currentTimeMillis());
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+        notification.setSmallIcon(iconId);
+        // Text shown when the notification arrives
+        notification.setTicker(context.getText(R.string.notification_startup));
 
         disableSwipeToCancel(notification);
 
@@ -301,21 +303,24 @@ public class NotificationService {
         return PendingIntent.getActivity(context, 0, new Intent(context, MainChatController.class), 0);
     }
 
-    private void setLatestEventInfo(final Notification notification, final PendingIntent pendingIntent,
+    private void setLatestEventInfo(final NotificationCompat.Builder notification,
+                                    final PendingIntent pendingIntent,
                                     final int latestInfoTextId) {
         currentLatestInfoTextId = latestInfoTextId;
 
-        notification.setLatestEventInfo(context,
-                context.getText(R.string.app_name), // First line of the notification in the drawer
-                context.getText(latestInfoTextId), // Second line of the notification in the drawer
-                pendingIntent);
+        // First line of the notification in the drawer
+        notification.setContentTitle(context.getText(R.string.app_name));
+        // Second line of the notification in the drawer
+        notification.setContentText(context.getText(latestInfoTextId));
+
+        notification.setContentIntent(pendingIntent);
     }
 
-    private Notification createNewFileTransferNotification() {
-        final Notification notification = new Notification(
-                R.drawable.ic_stat_notify_activity, // Icon
-                context.getString(R.string.notification_new_file_transfer), // Text shown when the notification arrives
-                System.currentTimeMillis());
+    private NotificationCompat.Builder createNewFileTransferNotification() {
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+        notification.setSmallIcon(R.drawable.ic_stat_notify_activity);
+        // Text shown when the notification arrives
+        notification.setTicker(context.getText(R.string.notification_new_file_transfer));
 
         disableSwipeToCancel(notification);
 
@@ -332,21 +337,25 @@ public class NotificationService {
         return intent;
     }
 
-    private PendingIntent createReceiveFileControllerPendingIntent(final int notificationId, final Intent intent) {
+    private PendingIntent createReceiveFileControllerPendingIntent(final int notificationId,
+                                                                   final Intent intent) {
         return PendingIntent.getActivity(context, notificationId, intent, 0);
     }
 
-    private void setNewFileTransferLatestEventInfo(final FileReceiver fileReceiver, final Notification notification,
+    private void setNewFileTransferLatestEventInfo(final FileReceiver fileReceiver,
+                                                   final NotificationCompat.Builder notification,
                                                    final PendingIntent pendingIntent) {
         final String nick = fileReceiver.getUser().getNick();
 
-        notification.setLatestEventInfo(context,
-                context.getString(R.string.notification_file_transfer_from, nick), // First line of the notification in the drawer
-                fileReceiver.getFileName(), // Second line of the notification in the drawer
-                pendingIntent);
+        // First line of the notification in the drawer
+        notification.setContentTitle(context.getString(R.string.notification_file_transfer_from, nick));
+        // Second line of the notification in the drawer
+        notification.setContentText(fileReceiver.getFileName());
+
+        notification.setContentIntent(pendingIntent);
     }
 
-    private void disableSwipeToCancel(final Notification notification) {
-        notification.flags |= Notification.FLAG_NO_CLEAR;
+    private void disableSwipeToCancel(final NotificationCompat.Builder notification) {
+        notification.setOngoing(true);
     }
 }
