@@ -403,8 +403,10 @@ public class MainChatController extends AppCompatActivity implements UserListLis
     public void updateTitleAndSubtitle(final String title, final String subtitle) {
         runOnUiThread(new Runnable() {
             public void run() {
-                actionBar.setTitle(title);
-                actionBar.setSubtitle(subtitle);
+                if (!destroyed) {
+                    actionBar.setTitle(title);
+                    actionBar.setSubtitle(subtitle);
+                }
             }
         });
     }
