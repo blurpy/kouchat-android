@@ -7,6 +7,7 @@
   - Replaced ActionBarSherlock with AppCompat.
   - Migrated to NotificationCompat.Builder to avoid usage of deprecated apis.
   - Moved to PreferenceFragment to get ActionBar in the Settings.
+  - Updated statusbar icon to be white and transparent to make it work on Android 5 and up.
 
 
 * version 1.0.2 (26.10.2014)
