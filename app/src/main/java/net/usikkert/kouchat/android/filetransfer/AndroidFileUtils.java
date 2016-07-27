@@ -93,18 +93,28 @@ public class AndroidFileUtils {
         Validate.notNull(contentResolver, "ContentResolver can not be null");
 
         final String[] columns = new String[] {OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE};
-        final Cursor cursor = contentResolver.query(uri, columns, null, null, null);
+        Cursor cursor = null;
 
-        if (cursor == null || cursor.getCount() == 0) {
-            return null;
+        try {
+            cursor = contentResolver.query(uri, columns, null, null, null);
+
+            if (cursor == null || cursor.getCount() == 0) {
+                return null;
+            }
+
+            cursor.moveToFirst();
+
+            final String name = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+            final long size = cursor.getLong(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE));
+
+            return new FileToSend(new UriInputStreamOpener(uri, contentResolver), name, size);
         }
 
-        cursor.moveToFirst();
-
-        final String name = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
-        final long size = cursor.getLong(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE));
-
-        return new FileToSend(new UriInputStreamOpener(uri, contentResolver), name, size);
+        finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
     /**
