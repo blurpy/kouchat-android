@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.net;
 
+import net.usikkert.kouchat.util.Validate;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,21 +36,46 @@ import java.io.InputStream;
  */
 public class FileToSend {
 
-    private final File file;
+    private final InputStreamOpener inputStreamOpener;
+    private final String name;
+    private final long length;
 
     public FileToSend(final File file) {
-        this.file = file;
+        Validate.notNull(file, "File to send can not be null");
+
+        this.inputStreamOpener = new FileInputStreamOpener(file);
+        this.name = file.getName();
+        this.length = file.length();
     }
 
     public long length() {
-        return file.length();
+        return length;
     }
 
     public String getName() {
-        return file.getName();
+        return name;
     }
 
     public InputStream getInputStream() throws FileNotFoundException {
-        return new FileInputStream(file);
+        return inputStreamOpener.open();
+    }
+
+    public interface InputStreamOpener {
+
+        InputStream open() throws FileNotFoundException;
+    }
+
+    static class FileInputStreamOpener implements InputStreamOpener {
+
+        private final File file;
+
+        FileInputStreamOpener(final File file) {
+            this.file = file;
+        }
+
+        @Override
+        public InputStream open() throws FileNotFoundException {
+            return new FileInputStream(file);
+        }
     }
 }
