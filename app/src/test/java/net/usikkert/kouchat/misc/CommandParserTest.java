@@ -29,7 +29,7 @@ import java.io.File;
 
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
-import net.usikkert.kouchat.net.FileTransfer;
+import net.usikkert.kouchat.net.FileToSend;
 import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.ui.UserInterface;
@@ -393,7 +393,7 @@ public class CommandParserTest {
         final User someOne = setupSomeOne();
         final FileSender fileSender = setupFileSender(someOne);
         when(fileSender.isWaiting()).thenReturn(true);
-        final File file = setupFile(fileSender);
+        final FileToSend file = setupFile(fileSender);
         when(fileSender.getUser()).thenReturn(someOne);
 
         parser.parse("/cancel SomeOne 1");
@@ -486,11 +486,20 @@ public class CommandParserTest {
      * Rusable test methods.
      */
 
-    private File setupFile(final FileTransfer fileTransfer) {
+    private File setupFile(final FileReceiver fileReceiver) {
         final File file = mock(File.class);
         when(file.getName()).thenReturn("doc.pdf");
 
-        when(fileTransfer.getFile()).thenReturn(file);
+        when(fileReceiver.getFile()).thenReturn(file);
+
+        return file;
+    }
+
+    private FileToSend setupFile(final FileSender fileSender) {
+        final FileToSend file = mock(FileToSend.class);
+        when(file.getName()).thenReturn("doc.pdf");
+
+        when(fileSender.getFile()).thenReturn(file);
 
         return file;
     }

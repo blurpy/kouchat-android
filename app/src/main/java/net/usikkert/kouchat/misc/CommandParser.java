@@ -31,6 +31,7 @@ import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.net.FileTransfer;
+import net.usikkert.kouchat.net.FileToSend;
 import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.ui.UserInterface;
@@ -622,7 +623,7 @@ public class CommandParser {
     private void appendTransferInfo(final FileTransfer fileTransfer, final StringBuilder transferInfo, final String direction) {
         transferInfo.append("\n  ");
         transferInfo.append("#" + fileTransfer.getId() + " ");
-        transferInfo.append(fileTransfer.getFile().getName());
+        transferInfo.append(fileTransfer.getFileName());
         transferInfo.append(" [" + Tools.byteToString(fileTransfer.getFileSize()) + "]");
         transferInfo.append(" (" + fileTransfer.getPercent() + "%, ");
         transferInfo.append(Tools.byteToString(fileTransfer.getSpeed()) + "/s)");
@@ -713,7 +714,7 @@ public class CommandParser {
 
             // This means that the other user has not answered yet
             if (fs.isWaiting()) {
-                final File file = fs.getFile();
+                final FileToSend file = fs.getFile();
                 final User user = fs.getUser();
 
                 msgController.showSystemMessage("You cancelled sending of " +

@@ -333,7 +333,6 @@ public class FileReceiver implements FileTransfer {
      *
      * @return The file.
      */
-    @Override
     public File getFile() {
         return file;
     }
@@ -392,6 +391,7 @@ public class FileReceiver implements FileTransfer {
      *
      * @return The name of the file.
      */
+    @Override
     public String getFileName() {
         return file.getName();
     }

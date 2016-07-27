@@ -321,6 +321,16 @@ public class FileSender implements FileTransfer {
     }
 
     /**
+     * Gets the name of the file being transferred.
+     *
+     * @return The name of the file.
+     */
+    @Override
+    public String getFileName() {
+        return file.getName();
+    }
+
+    /**
      * Gets the size of the file being transferred, in bytes.
      *
      * @return The file size.
@@ -365,9 +375,8 @@ public class FileSender implements FileTransfer {
      *
      * @return The file.
      */
-    @Override
-    public File getFile() {
-        return file;
+    public FileToSend getFile() {
+        return new FileToSend(file);
     }
 
     /**

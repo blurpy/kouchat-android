@@ -83,8 +83,8 @@ public class MockFileTransfer implements FileTransfer {
      * {@inheritDoc}
      */
     @Override
-    public File getFile() {
-        return file;
+    public String getFileName() {
+        return file.getName();
     }
 
     /**

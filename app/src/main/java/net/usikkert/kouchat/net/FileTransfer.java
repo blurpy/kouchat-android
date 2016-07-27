@@ -22,8 +22,6 @@
 
 package net.usikkert.kouchat.net;
 
-import java.io.File;
-
 import net.usikkert.kouchat.event.FileTransferListener;
 import net.usikkert.kouchat.misc.User;
 
@@ -75,11 +73,11 @@ public interface FileTransfer {
     long getTransferred();
 
     /**
-     * Gets the file that is being transferred.
+     * Gets the name of the file being transferred.
      *
-     * @return The file.
+     * @return The name of the file.
      */
-    File getFile();
+    String getFileName();
 
     /**
      * Gets the size of the file being transferred, in bytes.
