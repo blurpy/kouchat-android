@@ -28,13 +28,18 @@ import net.usikkert.kouchat.android.service.ChatService;
 import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.net.FileReceiver;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 /**
  * Controller for showing a accept/reject file transfer dialog, after clicking on a notification.
@@ -43,9 +48,13 @@ import android.os.IBinder;
  */
 public class ReceiveFileController extends Activity {
 
+    private static final int WRITE_REQUEST_CODE = 101;
+    private static final String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
     private ReceiveFileDialog receiveFileDialog = new ReceiveFileDialog();
 
     private ServiceConnection serviceConnection;
+    private FileReceiver fileReceiver;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -62,6 +71,7 @@ public class ReceiveFileController extends Activity {
 
         serviceConnection = null;
         receiveFileDialog = null;
+        fileReceiver = null;
 
         super.onDestroy();
     }
@@ -75,7 +85,7 @@ public class ReceiveFileController extends Activity {
             @Override
             public void onServiceConnected(final ComponentName componentName, final IBinder iBinder) {
                 final ChatServiceBinder binder = (ChatServiceBinder) iBinder;
-                showDialog(binder.getAndroidUserInterface());
+                showDialogOrAskPermission(binder.getAndroidUserInterface());
             }
 
             @Override
@@ -83,17 +93,48 @@ public class ReceiveFileController extends Activity {
         };
     }
 
-    private void showDialog(final AndroidUserInterface androidUserInterface) {
+    private void showDialogOrAskPermission(final AndroidUserInterface androidUserInterface) {
         final Intent intent = getIntent();
         final int userCode = intent.getIntExtra("userCode", -1);
         final int fileTransferId = intent.getIntExtra("fileTransferId", -1);
 
-        final FileReceiver fileReceiver = androidUserInterface.getFileReceiver(userCode, fileTransferId);
+        fileReceiver = androidUserInterface.getFileReceiver(userCode, fileTransferId);
 
+        final int permission = ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE);
+
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            doShowDialog();
+        }
+
+        else {
+            ActivityCompat.requestPermissions(
+                    this, new String[] {WRITE_EXTERNAL_STORAGE}, WRITE_REQUEST_CODE);
+        }
+    }
+
+    private void doShowDialog() {
         if (fileReceiver == null) {
             receiveFileDialog.showMissingFileDialog(this);
         } else {
             receiveFileDialog.showReceiveFileDialog(this, fileReceiver);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode,
+                                           @NonNull final String[] permissions,
+                                           @NonNull final int[] grantResults) {
+        switch (requestCode) {
+            case WRITE_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    doShowDialog();
+                }
+
+                else {
+                    fileReceiver.reject();
+                }
+            }
         }
     }
 }
