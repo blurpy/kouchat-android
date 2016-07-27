@@ -81,7 +81,9 @@ public class SendFileController extends Activity implements UserListListener {
         final Uri uriToFile = intent.getParcelableExtra(Intent.EXTRA_STREAM);
 
         // To avoid "requires android.permission.MANAGE_DOCUMENTS" error when opening input stream
-        grantUriPermission(getPackageName(), uriToFile, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (uriToFile != null) {
+            grantUriPermission(getPackageName(), uriToFile, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
 
         fileToSend = androidFileUtils.getFileFromUri(uriToFile, getApplicationContext().getContentResolver());
 
