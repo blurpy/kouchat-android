@@ -25,7 +25,6 @@ package net.usikkert.kouchat.misc;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -35,6 +34,7 @@ import net.usikkert.kouchat.junit.ExpectedException;
 import net.usikkert.kouchat.message.CoreMessages;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
+import net.usikkert.kouchat.net.FileToSend;
 import net.usikkert.kouchat.net.NetworkMessages;
 import net.usikkert.kouchat.net.NetworkService;
 import net.usikkert.kouchat.net.TransferList;
@@ -198,7 +198,7 @@ public class ControllerTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("User can not be null");
 
-        controller.sendFile(null, mock(File.class));
+        controller.sendFile(null, mock(FileToSend.class));
     }
 
     @Test
@@ -217,7 +217,7 @@ public class ControllerTest {
         final User user = mock(User.class);
         when(user.isMe()).thenReturn(true);
 
-        controller.sendFile(user, mock(File.class));
+        controller.sendFile(user, mock(FileToSend.class));
     }
 
     @Test
@@ -225,7 +225,7 @@ public class ControllerTest {
         expectedException.expect(CommandException.class);
         expectedException.expectMessage("You can not send a file without being connected");
 
-        controller.sendFile(mock(User.class), mock(File.class));
+        controller.sendFile(mock(User.class), mock(FileToSend.class));
     }
 
     @Test
@@ -238,7 +238,7 @@ public class ControllerTest {
 
         me.setAway(true);
 
-        controller.sendFile(mock(User.class), mock(File.class));
+        controller.sendFile(mock(User.class), mock(FileToSend.class));
     }
 
     @Test
@@ -252,7 +252,7 @@ public class ControllerTest {
         final User user = new User("Test", 124);
         user.setAway(true);
 
-        controller.sendFile(user, mock(File.class));
+        controller.sendFile(user, mock(FileToSend.class));
     }
 
     @Test
@@ -263,7 +263,7 @@ public class ControllerTest {
         when(networkService.isNetworkUp()).thenReturn(true);
         controller.getChatState().setLoggedOn(true);
 
-        final File file = mock(File.class);
+        final FileToSend file = mock(FileToSend.class);
         when(file.getName()).thenReturn(createStringOfSize(451));
 
         controller.sendFile(mock(User.class), file);
@@ -274,7 +274,7 @@ public class ControllerTest {
         when(networkService.isNetworkUp()).thenReturn(true);
         controller.getChatState().setLoggedOn(true);
 
-        final File file = mock(File.class);
+        final FileToSend file = mock(FileToSend.class);
         when(file.getName()).thenReturn("file.txt");
         final User user = mock(User.class);
 

@@ -48,6 +48,7 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
+import net.usikkert.kouchat.net.FileToSend;
 import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.ui.ChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
@@ -596,7 +597,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
      * @param user The user to send to.
      * @param file The file to send.
      */
-    public void sendFile(final User user, final File file) {
+    public void sendFile(final User user, final FileToSend file) {
         new CommandWithToastOnExceptionAsyncTask(context, new Command() {
             @Override
             public void runCommand() throws CommandException {

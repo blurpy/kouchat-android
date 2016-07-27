@@ -22,8 +22,6 @@
 
 package net.usikkert.kouchat.net;
 
-import java.io.File;
-
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
@@ -294,7 +292,7 @@ public class NetworkMessages {
      * @param file The file to send.
      * @throws CommandException If the message was not sent successfully.
      */
-    public void sendFile(final User user, final File file) throws CommandException {
+    public void sendFile(final User user, final FileToSend file) throws CommandException {
         final String msg = createMessage("SENDFILE") +
                 "(" + user.getCode() + ")" +
                 "[" + file.length() + "]" +

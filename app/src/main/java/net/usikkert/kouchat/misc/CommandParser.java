@@ -264,7 +264,7 @@ public class CommandParser {
 
                     if (sendFile.exists() && sendFile.isFile()) {
                         try {
-                            sendFile(user, sendFile);
+                            sendFile(user, new FileToSend(sendFile));
                         }
 
                         catch (final CommandException e) {
@@ -690,7 +690,7 @@ public class CommandParser {
      * @param file The file to send to the user.
      * @throws CommandException If there was a problem sending the file.
      */
-    public void sendFile(final User user, final File file) throws CommandException {
+    public void sendFile(final User user, final FileToSend file) throws CommandException {
         controller.sendFile(user, file);
         final FileSender fileSend = tList.addFileSender(user, file);
         ui.showTransfer(fileSend);

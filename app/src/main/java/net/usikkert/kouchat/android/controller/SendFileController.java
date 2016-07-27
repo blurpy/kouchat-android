@@ -34,6 +34,7 @@ import net.usikkert.kouchat.android.userlist.UserListAdapterWithoutMe;
 import net.usikkert.kouchat.event.UserListListener;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
+import net.usikkert.kouchat.net.FileToSend;
 import net.usikkert.kouchat.util.Tools;
 
 import android.app.Activity;
@@ -145,7 +146,7 @@ public class SendFileController extends Activity implements UserListListener {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
                 final User selectedUser = (User) adapterView.getItemAtPosition(position);
-                androidUserInterface.sendFile(selectedUser, fileToSend);
+                androidUserInterface.sendFile(selectedUser, new FileToSend(fileToSend));
                 finish();
             }
         });

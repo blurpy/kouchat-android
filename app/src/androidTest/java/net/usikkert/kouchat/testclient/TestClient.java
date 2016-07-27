@@ -34,6 +34,7 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
+import net.usikkert.kouchat.net.FileToSend;
 import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Tools;
@@ -310,7 +311,7 @@ public class TestClient {
         final User localUser = controller.getUser(user.getCode()); // Because user might be from another context
 
         try {
-            commandParser.sendFile(localUser, file);
+            commandParser.sendFile(localUser, new FileToSend(file));
         } catch (final CommandException e) {
             throw new RuntimeException(e);
         }

@@ -22,7 +22,6 @@
 
 package net.usikkert.kouchat.net;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -95,9 +94,9 @@ public class FileSender implements FileTransfer {
      * @param file The file to send.
      * @param id The unique ID of this file transfer.
      */
-    public FileSender(final User user, final File file, final int id) {
+    public FileSender(final User user, final FileToSend file, final int id) {
         this.user = user;
-        this.file = new FileToSend(file);
+        this.file = file;
         this.id = id;
 
         bCounter = new ByteCounter();

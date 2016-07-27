@@ -24,8 +24,6 @@ package net.usikkert.kouchat.net;
 
 import static org.mockito.Mockito.*;
 
-import java.io.File;
-
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
@@ -156,7 +154,7 @@ public class NetworkMessagesTest {
         final long fileLength = 80800L;
         final String fileName = "a_file.txt";
 
-        final File file = mock(File.class);
+        final FileToSend file = mock(FileToSend.class);
         when(file.getName()).thenReturn(fileName);
         when(file.length()).thenReturn(fileLength);
         final int fileHash = file.hashCode(); // Cannot be mocked it seems

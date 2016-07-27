@@ -22,7 +22,6 @@
 
 package net.usikkert.kouchat.misc;
 
-import java.io.File;
 import java.util.List;
 
 import net.usikkert.kouchat.Constants;
@@ -36,6 +35,7 @@ import net.usikkert.kouchat.net.DefaultMessageResponder;
 import net.usikkert.kouchat.net.DefaultPrivateMessageResponder;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
+import net.usikkert.kouchat.net.FileToSend;
 import net.usikkert.kouchat.net.MessageParser;
 import net.usikkert.kouchat.net.MessageResponder;
 import net.usikkert.kouchat.net.NetworkMessages;
@@ -645,7 +645,7 @@ public class Controller implements NetworkConnectionListener {
      *                          or the specified user is away,
      *                          or the file name is too long.
      */
-    public void sendFile(final User user, final File file) throws CommandException {
+    public void sendFile(final User user, final FileToSend file) throws CommandException {
         Validate.notNull(user, "User can not be null");
         Validate.notNull(file, "File can not be null");
 

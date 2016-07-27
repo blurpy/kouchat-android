@@ -59,7 +59,7 @@ public class TransferList {
      * @param file The file to send.
      * @return The file sender object that was added to the transfer list.
      */
-    public FileSender addFileSender(final User user, final File file) {
+    public FileSender addFileSender(final User user, final FileToSend file) {
         final FileSender fileSender = new FileSender(user, file, ++fileTransferIdCounter);
         senders.add(fileSender);
 
