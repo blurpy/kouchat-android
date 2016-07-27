@@ -23,6 +23,9 @@
 package net.usikkert.kouchat.net;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * Abstraction around a file to send to another user.
@@ -43,5 +46,9 @@ public class FileToSend {
 
     public String getName() {
         return file.getName();
+    }
+
+    public InputStream getInputStream() throws FileNotFoundException {
+        return new FileInputStream(file);
     }
 }
