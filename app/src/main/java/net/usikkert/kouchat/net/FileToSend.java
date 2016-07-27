@@ -48,6 +48,14 @@ public class FileToSend {
         this.length = file.length();
     }
 
+    public FileToSend(final InputStreamOpener inputStreamOpener,
+                      final String name,
+                      final long length) {
+        this.inputStreamOpener = inputStreamOpener;
+        this.name = name;
+        this.length = length;
+    }
+
     public long length() {
         return length;
     }

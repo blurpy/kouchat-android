@@ -23,8 +23,11 @@
 package net.usikkert.kouchat.android.filetransfer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.logging.Logger;
 
+import net.usikkert.kouchat.net.FileToSend;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
@@ -34,7 +37,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 
 /**
  * Utility methods for handling files on Android.
@@ -57,7 +60,7 @@ public class AndroidFileUtils {
      * @param contentResolver The content resolver, from a context, for usage if content uri.
      * @return The file, if it's found, or <code>null</code> if not found.
      */
-    public File getFileFromUri(final Uri uri, final ContentResolver contentResolver) {
+    public FileToSend getFileFromUri(final Uri uri, final ContentResolver contentResolver) {
         if (uri == null) {
             return null;
         }
@@ -85,11 +88,11 @@ public class AndroidFileUtils {
      * @param contentResolver The content resolver, from a context.
      * @return The file, if it's found, or <code>null</code> if not found.
      */
-    File getFileFromContentUri(final Uri uri, final ContentResolver contentResolver) {
+    FileToSend getFileFromContentUri(final Uri uri, final ContentResolver contentResolver) {
         Validate.notNull(uri, "Content uri can not be null");
         Validate.notNull(contentResolver, "ContentResolver can not be null");
 
-        final String[] columns = new String[] {MediaStore.MediaColumns.DATA};
+        final String[] columns = new String[] {OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE};
         final Cursor cursor = contentResolver.query(uri, columns, null, null, null);
 
         if (cursor == null || cursor.getCount() == 0) {
@@ -97,9 +100,11 @@ public class AndroidFileUtils {
         }
 
         cursor.moveToFirst();
-        final String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
 
-        return new File(path);
+        final String name = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+        final long size = cursor.getLong(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE));
+
+        return new FileToSend(new UriInputStreamOpener(uri, contentResolver), name, size);
     }
 
     /**
@@ -111,13 +116,13 @@ public class AndroidFileUtils {
      * @param uri File uri to the file to return.
      * @return The file, if it's found, or <code>null</code> if not found.
      */
-    File getFileFromFileUri(final Uri uri) {
+    FileToSend getFileFromFileUri(final Uri uri) {
         Validate.notNull(uri, "File uri can not be null");
 
         final File file = new File(uri.getPath());
 
         if (file.exists()) {
-            return file;
+            return new FileToSend(file);
         }
 
         return null;
@@ -166,5 +171,21 @@ public class AndroidFileUtils {
         }
 
         return Tools.getFileWithIncrementedName(new File(directory, fileName));
+    }
+
+    static class UriInputStreamOpener implements FileToSend.InputStreamOpener {
+
+        private final Uri uri;
+        private final ContentResolver contentResolver;
+
+        UriInputStreamOpener(final Uri uri, final ContentResolver contentResolver) {
+            this.uri = uri;
+            this.contentResolver = contentResolver;
+        }
+
+        @Override
+        public InputStream open() throws FileNotFoundException {
+            return contentResolver.openInputStream(uri);
+        }
     }
 }

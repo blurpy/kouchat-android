@@ -22,8 +22,6 @@
 
 package net.usikkert.kouchat.android.controller;
 
-import java.io.File;
-
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.filetransfer.AndroidFileUtils;
@@ -67,7 +65,7 @@ public class SendFileController extends Activity implements UserListListener {
     private TextView line2TextView;
     private ListView userListView;
 
-    private File fileToSend;
+    private FileToSend fileToSend;
 
     private AndroidUserInterface androidUserInterface;
     private UserList userList;
@@ -81,7 +79,7 @@ public class SendFileController extends Activity implements UserListListener {
 
         final Intent intent = getIntent();
         final Uri uriToFile = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        fileToSend = androidFileUtils.getFileFromUri(uriToFile, getContentResolver());
+        fileToSend = androidFileUtils.getFileFromUri(uriToFile, getApplicationContext().getContentResolver());
 
         final TextView line1TextView = (TextView) findViewById(R.id.sendFileLine1TextView);
         line2TextView = (TextView) findViewById(R.id.sendFileLine2TextView);
@@ -146,7 +144,7 @@ public class SendFileController extends Activity implements UserListListener {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
                 final User selectedUser = (User) adapterView.getItemAtPosition(position);
-                androidUserInterface.sendFile(selectedUser, new FileToSend(fileToSend));
+                androidUserInterface.sendFile(selectedUser, fileToSend);
                 finish();
             }
         });
