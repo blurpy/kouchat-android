@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-  <TextView android:id="@+id/topicDialogMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size"
-            android:text="@string/topic_dialog_message"
-            android:padding="8dp"/>
+  <TextView
+      android:id="@+id/topicDialogMessage"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textSize="@dimen/text_size"
+      android:text="@string/topic_dialog_message"
+      android:padding="8dp"/>
 
-  <EditText android:id="@+id/topicDialogInput"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size"
-            android:layout_margin="4dp"
-            android:hint="@string/topic_dialog_enter_topic_hint"/>
+  <net.usikkert.kouchat.android.component.ThemedEditText
+      android:id="@+id/topicDialogInput"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:textSize="@dimen/text_size"
+      android:layout_margin="4dp"
+      android:hint="@string/topic_dialog_enter_topic_hint"/>
 
 </LinearLayout>

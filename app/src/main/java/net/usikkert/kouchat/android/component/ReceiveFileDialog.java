@@ -105,7 +105,8 @@ public class ReceiveFileDialog {
     }
 
     private AlertDialog.Builder setupSharedDialogDetails(final Activity activity) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        final Context wrappedContext = new ContextThemeWrapper(activity, R.style.Theme_KouChat_Dialog);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(wrappedContext);
 
         builder.setTitle(activity.getString(R.string.dialog_title_file_transfer_request));
         builder.setIcon(R.drawable.ic_dialog);

@@ -21,46 +21,34 @@
 
 package net.usikkert.kouchat.android.component;
 
-import net.usikkert.kouchat.android.R;
-
 import android.content.Context;
-import android.preference.EditTextPreference;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
+import android.widget.EditText;
+
+import net.usikkert.kouchat.android.R;
 
 /**
- * An {@link EditTextPreference} that uses the default dialog theme of the platform.
+ * An {@link EditText} that uses the default dialog theme of the platform.
  *
- * <p>This is necessary because KouChat is using a light theme from ActionBarSherlock,
- * but the theme doesn't apply correctly to dialogs on Android 2.3.3. The dialogs in that version
- * are still dark, but the text changes to a dark color. So it's difficult to read.</p>
+ * <p>This is necessary to make the dialog use correct default dialog colors on Android 4.</p>
  *
  * <p>Inspired by http://stackoverflow.com/questions/14032977/correct-text-color-appearance-in-alertdialog</p>
  *
  * @author Christian Ihle
  */
-public class ThemedEditTextPreference extends EditTextPreference {
+public class ThemedEditText extends EditText {
 
-    public ThemedEditTextPreference(final Context context, final AttributeSet attrs, final int defStyle) {
+    public ThemedEditText(final Context context, final AttributeSet attrs, final int defStyle) {
         super(createContextThemeWrapper(context), attrs, defStyle);
-        blockNewLines();
     }
 
-    public ThemedEditTextPreference(final Context context, final AttributeSet attrs) {
+    public ThemedEditText(final Context context, final AttributeSet attrs) {
         super(createContextThemeWrapper(context), attrs);
-        blockNewLines();
     }
 
-    public ThemedEditTextPreference(final Context context) {
+    public ThemedEditText(final Context context) {
         super(createContextThemeWrapper(context));
-        blockNewLines();
-    }
-
-    /**
-     * Avoid getting new lines when pressing 'enter'.
-     */
-    private void blockNewLines() {
-        getEditText().addTextChangedListener(new NoNewLineTextWatcher());
     }
 
     private static ContextThemeWrapper createContextThemeWrapper(final Context originalContext) {
