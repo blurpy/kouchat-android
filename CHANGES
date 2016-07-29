@@ -11,6 +11,7 @@
   - Improved support for sending files with content uris.
   - Added support for asking for permissions on Android 6.
   - Fixed issue where user interface would sometimes hang on Android 6.
+  - Remove KouChat from title on settings and private chat.
 
 
 * version 1.0.2 (26.10.2014)

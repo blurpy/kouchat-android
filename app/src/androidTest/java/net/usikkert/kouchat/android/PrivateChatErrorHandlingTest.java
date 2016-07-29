@@ -54,7 +54,7 @@ public class PrivateChatErrorHandlingTest extends ActivityInstrumentationTestCas
         solo = new Solo(getInstrumentation(), activity);
         solo.sleep(1000);
 
-        checkTitle(activity, "User not found - KouChat");
+        checkTitle(activity, "User not found");
         RobotiumTestUtils.writeLine(solo, "Should not be able to send this");
         solo.sleep(500);
         assertFalse(RobotiumTestUtils.searchText(solo, "Should not be able to send this"));
@@ -72,7 +72,7 @@ public class PrivateChatErrorHandlingTest extends ActivityInstrumentationTestCas
         solo = new Solo(getInstrumentation(), activity);
         solo.sleep(1000);
 
-        checkTitle(activity, "User not found - KouChat");
+        checkTitle(activity, "User not found");
         RobotiumTestUtils.writeLine(solo, "Should not be able to send this");
         solo.sleep(500);
         assertFalse(RobotiumTestUtils.searchText(solo, "Should not be able to send this"));
@@ -96,7 +96,7 @@ public class PrivateChatErrorHandlingTest extends ActivityInstrumentationTestCas
         solo = new Solo(getInstrumentation(), activity);
         solo.sleep(1000);
 
-        checkTitle(activity, "Kou - KouChat");
+        checkTitle(activity, "Kou");
         RobotiumTestUtils.writeLine(solo, "Should be able to send this");
         solo.sleep(500);
         assertTrue(textIsVisible("Should be able to send this"));

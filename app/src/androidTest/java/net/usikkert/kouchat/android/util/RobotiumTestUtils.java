@@ -495,7 +495,7 @@ public final class RobotiumTestUtils {
         // To be sure we are chatting with the right user
         final AppCompatActivity currentActivity = (AppCompatActivity) solo.getCurrentActivity();
         final ActionBar actionBar = currentActivity.getSupportActionBar();
-        assertEquals(userName + " - KouChat", actionBar.getTitle());
+        assertEquals(userName, actionBar.getTitle());
         assertEquals(awayMessage, actionBar.getSubtitle());
     }
 

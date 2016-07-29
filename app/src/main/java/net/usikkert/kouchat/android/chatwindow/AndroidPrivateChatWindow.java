@@ -125,18 +125,18 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
      *
      * <p>Normal:</p>
      * <ul>
-     *   <li><code>Vivi - KouChat</code></li>
+     *   <li><code>Vivi</code></li>
      * </ul>
      *
      * <p>Away:</p>
      * <ul>
-     *   <li><code>Vivi (Away) - KouChat</code></li>
+     *   <li><code>Vivi (Away)</code></li>
      *   <li><code>Out shopping</code></li>
      * </ul>
      *
      * <p>Offline:</p>
      * <ul>
-     *   <li><code>Vivi (Offline) - KouChat</code></li>
+     *   <li><code>Vivi (Offline)</code></li>
      * </ul>
      */
     public void updateTitle() {
@@ -160,9 +160,6 @@ public class AndroidPrivateChatWindow implements PrivateChatWindow {
         else if (user.isAway()) {
             title.append(" (Away)");
         }
-
-        title.append(" - ");
-        title.append(Constants.APP_NAME);
 
         return title.toString();
     }
