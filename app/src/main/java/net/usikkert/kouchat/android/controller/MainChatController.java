@@ -236,7 +236,7 @@ public class MainChatController extends AppCompatActivity implements UserListLis
 
         if (androidUserInterface != null) {
             userList.removeUserListListener(this);
-            androidUserInterface.unregisterMainChatController();
+            androidUserInterface.unregisterMainChatController(this);
             unbindService(serviceConnection);
         }
 

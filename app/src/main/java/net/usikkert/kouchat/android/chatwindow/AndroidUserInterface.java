@@ -417,8 +417,10 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         mainChatController.updateChat(messageStyler.getHistory());
     }
 
-    public void unregisterMainChatController() {
-        mainChatController = null;
+    public void unregisterMainChatController(final MainChatController theMainChatController) {
+        if (this.mainChatController == theMainChatController) {
+            this.mainChatController = null;
+        }
     }
 
     public void sendMessage(final String message) {
