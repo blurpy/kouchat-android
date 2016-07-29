@@ -32,7 +32,7 @@ dependencies {
     testCompile 'org.powermock:powermock-api-mockito:1.6.4'
     testCompile 'joda-time:joda-time:2.4'
 
-    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.0.1'
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.6.0'
     androidTestCompile 'org.easytesting:fest-reflect:1.4.1'
     androidTestCompile 'com.google.guava:guava:18.0'
     androidTestCompile 'commons-io:commons-io:2.4'
