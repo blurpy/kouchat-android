@@ -48,7 +48,7 @@
     <!-- Sets taskAffinity to keep the previous KouChat activity from showing behind the dialog,
          and excludeFromRecents to keep the dialog from showing in the list of running apps. -->
     <activity android:name=".controller.ReceiveFileController"
-              android:theme="@android:style/Theme.Translucent.NoTitleBar"
+              android:theme="@style/Theme.KouChat.Dialog.Translucent"
               android:taskAffinity=""
               android:excludeFromRecents="true"/>
 

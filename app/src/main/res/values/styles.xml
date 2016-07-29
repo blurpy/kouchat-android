@@ -15,6 +15,14 @@
     <!--<item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.KouChat.Light.ActionBar.Solid</item>-->
   </style>
 
+  <style name="Theme.KouChat.Dialog.Translucent" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+  </style>
+
   <!--<style name="Widget.KouChat.Light.ActionBar.Solid" parent="Widget.Sherlock.Light.ActionBar.Solid">-->
     <!--<item name="subtitleTextStyle">@style/Widget.KouChat.Light.ActionBar.Solid.subtitleTextStyle</item>-->
     <!--<item name="android:subtitleTextStyle" tools:ignore="NewApi">@style/Widget.KouChat.Light.ActionBar.Solid.subtitleTextStyle</item>-->
