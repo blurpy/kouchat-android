@@ -84,7 +84,7 @@ public class ManualLinkTest extends ActivityInstrumentationTestCase2<MainChatCon
     }
 
     public void test02LinksShouldWorkInThePrivateChat() {
-        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 2, 2, "Test");
 
         RobotiumTestUtils.writeLine(solo, URL);
 

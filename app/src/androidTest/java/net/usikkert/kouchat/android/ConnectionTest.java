@@ -134,7 +134,7 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
         solo.sleep(500);
         assertTrue(solo.searchText("You can not send a chat message without being connected"));
 
-        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 2, 2, "Test");
 
         RobotiumTestUtils.writeLine(solo, "Don't send this");
         solo.sleep(500);

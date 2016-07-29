@@ -268,7 +268,7 @@ public final class RobotiumTestUtils {
      * @param solo The solo tester.
      */
     public static void goUp(final Solo solo) {
-        solo.clickOnView(solo.getView(android.R.id.home));
+        solo.clickOnActionBarHomeButton();
     }
 
     /**
@@ -457,13 +457,15 @@ public final class RobotiumTestUtils {
      * <p>Expects that the user is not away.</p>
      *
      * @param solo The solo tester.
+     * @param instrumentation The instrumentation instance.
      * @param numberOfUsers Number of users to expect in the main chat.
      * @param userNumber The number to expect the specified user to be in the list.
      * @param userName Expected user name of the user to open the private chat with.
      */
-    public static void openPrivateChat(final Solo solo, final int numberOfUsers, final int userNumber,
+    public static void openPrivateChat(final Solo solo, final Instrumentation instrumentation,
+                                       final int numberOfUsers, final int userNumber,
                                        final String userName) {
-        openPrivateChat(solo, numberOfUsers, userNumber, userName, null);
+        openPrivateChat(solo, instrumentation, numberOfUsers, userNumber, userName, null);
     }
 
     /**
@@ -472,12 +474,14 @@ public final class RobotiumTestUtils {
      * <p>Supports a user that is away.</p>
      *
      * @param solo The solo tester.
+     * @param instrumentation The instrumentation instance.
      * @param numberOfUsers Number of users to expect in the main chat.
      * @param userNumber The number to expect the specified user to be in the list.
      * @param userName Expected user name of the user to open the private chat with.
      * @param awayMessage Expected away message of the user to open the private chat with.
      */
-    public static void openPrivateChat(final Solo solo, final int numberOfUsers, final int userNumber,
+    public static void openPrivateChat(final Solo solo, final Instrumentation instrumentation,
+                                       final int numberOfUsers, final int userNumber,
                                        final String userName, final String awayMessage) {
         solo.sleep(500);
         assertEquals(numberOfUsers, solo.getCurrentViews(ListView.class).get(0).getCount());
@@ -485,6 +489,8 @@ public final class RobotiumTestUtils {
         solo.sleep(500);
 
         solo.assertCurrentActivity("Should have opened the private chat", PrivateChatController.class);
+        instrumentation.waitForIdleSync();
+        solo.sleep(500);
 
         // To be sure we are chatting with the right user
         final AppCompatActivity currentActivity = (AppCompatActivity) solo.getCurrentActivity();

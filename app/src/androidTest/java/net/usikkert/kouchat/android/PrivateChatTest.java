@@ -72,7 +72,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         RobotiumTestUtils.writeLine(solo, "This is a new message from myself");
         solo.sleep(500);
 
-        assertTrue(RobotiumTestUtils.searchText(solo, "This is a new message from myself"));
+        assertTrue(textIsVisible("This is a new message from myself"));
     }
 
     public void test02OwnMessageShouldArriveAtOtherClient() {
@@ -101,7 +101,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         RobotiumTestUtils.switchOrientation(solo);
         solo.sleep(500);
 
-        assertTrue(RobotiumTestUtils.searchText(solo, "This is the third message"));
+        assertTrue(textIsVisible("This is the third message"));
     }
 
     // Must be verified manually
@@ -254,7 +254,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     private void openPrivateChat() {
-        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 2, 2, "Test");
     }
 
     private boolean textIsVisible(final String textToFind) {

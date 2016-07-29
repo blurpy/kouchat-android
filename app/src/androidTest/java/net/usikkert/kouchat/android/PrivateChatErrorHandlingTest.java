@@ -99,7 +99,7 @@ public class PrivateChatErrorHandlingTest extends ActivityInstrumentationTestCas
         checkTitle(activity, "Kou - KouChat");
         RobotiumTestUtils.writeLine(solo, "Should be able to send this");
         solo.sleep(500);
-        assertTrue(RobotiumTestUtils.searchText(solo, "Should be able to send this"));
+        assertTrue(textIsVisible("Should be able to send this"));
 
         // Service is still running
         assertFalse(TestUtils.fieldValueIsNull(activity, "androidUserInterface"));
@@ -137,5 +137,9 @@ public class PrivateChatErrorHandlingTest extends ActivityInstrumentationTestCas
 
         assertEquals(title, actionBar.getTitle());
         assertNull(actionBar.getSubtitle());
+    }
+
+    private boolean textIsVisible(final String text) {
+        return RobotiumTestUtils.textIsVisible(solo, R.id.privateChatView, R.id.privateChatScroll, text);
     }
 }

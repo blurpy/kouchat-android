@@ -231,7 +231,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
     }
 
     public void test06ChangingColorsShouldWorkWithPrivateChat() {
-        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 2, 2, "Test");
 
         sendOwnMessage("This is my original color in the private chat");
         checkPrivateTextColorAndClient("This is my original color in the private chat", newOwnColor);
@@ -254,7 +254,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
         final int systemColor = systemColorPicker.getColor();
 
         RobotiumTestUtils.goHome(solo);
-        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 2, 2, "Test");
 
         sendOwnMessage("This is my new color in the private chat");
         checkPrivateTextColor("This is my original color in the private chat", newOwnColor);
@@ -432,7 +432,7 @@ public class ColorTest extends ActivityInstrumentationTestCase2<MainChatControll
 
     private ColorPicker openColorPicker(final String colorPickerText) {
         solo.clickOnText(colorPickerText);
-        solo.sleep(200);
+        solo.sleep(500);
 
         return solo.getView(ColorPicker.class, 0);
     }

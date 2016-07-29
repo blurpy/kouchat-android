@@ -173,7 +173,7 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         RobotiumTestUtils.goHome(solo);
 
         sleep(500);
-        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Ford");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 2, 2, "Ford");
 
         sleep(500);
         RobotiumTestUtils.writeLine(solo, "Ford?");

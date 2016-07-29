@@ -62,7 +62,7 @@ public class MainChatTest extends ActivityInstrumentationTestCase2<MainChatContr
         RobotiumTestUtils.writeLine(solo, "This is a new message from myself");
         solo.sleep(500);
 
-        assertTrue(RobotiumTestUtils.searchText(solo, "This is a new message from myself"));
+        assertTrue(textIsVisible("This is a new message from myself"));
     }
 
     public void test02OwnMessageShouldArriveAtOtherClient() {

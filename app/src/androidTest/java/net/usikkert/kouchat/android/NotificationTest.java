@@ -143,7 +143,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertDefaultNotification();
 
-        RobotiumTestUtils.openPrivateChat(solo, 3, 3, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 3, 3, "Test");
 
         otherUser.sendPrivateChatMessage("You should get a notification now!", me);
         solo.sleep(1500);
@@ -206,7 +206,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(1500);
         assertDefaultNotification();
 
-        RobotiumTestUtils.openPrivateChat(solo, 3, 3, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 3, 3, "Test");
         solo.sleep(500);
 
         // Pretend to start another application while in the private chat
@@ -282,16 +282,22 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
     }
 
     private void assertDefaultNotification() {
+        getInstrumentation().waitForIdleSync();
+        solo.sleep(500);
+
         assertEquals(R.string.notification_running, notificationService.getCurrentLatestInfoTextId());
         assertEquals(R.drawable.ic_stat_notify_default, notificationService.getCurrentIconId());
     }
 
     private void assertNewMessageNotification() {
+        getInstrumentation().waitForIdleSync();
+        solo.sleep(500);
+
         assertEquals(R.string.notification_new_message, notificationService.getCurrentLatestInfoTextId());
         assertEquals(R.drawable.ic_stat_notify_activity, notificationService.getCurrentIconId());
     }
 
     private void openPrivateChat() {
-        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 2, 2, "Test");
     }
 }

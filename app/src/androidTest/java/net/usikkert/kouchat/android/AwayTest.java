@@ -168,7 +168,7 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         solo.sleep(500);
         checkIfAway();
 
-        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 2, 2, "Test");
 
         RobotiumTestUtils.writeLine(solo, "Don't send this private message");
         assertTrue(solo.searchText("You can not send a private chat message while away"));

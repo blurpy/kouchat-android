@@ -197,7 +197,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         assertEquals(envelope, getBitmapForUser(3, 3));
 
         // Chat with first user
-        RobotiumTestUtils.openPrivateChat(solo, 3, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 3, 2, "Test");
         assertTrue(solo.searchText("First message from user 1"));
         RobotiumTestUtils.writeLine(solo, "Hello user 1");
         solo.sleep(500);
@@ -212,7 +212,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         assertEquals(envelope, getBitmapForUser(3, 3));
 
         // Chat with second user
-        RobotiumTestUtils.openPrivateChat(solo, 3, 3, "Test2");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 3, 3, "Test2");
         assertTrue(solo.searchText("First message from user 2"));
         RobotiumTestUtils.writeLine(solo, "Hello user 2");
         solo.sleep(500);
@@ -231,7 +231,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         assertEquals(dot, getBitmapForUser(3, 3));
 
         // Check message from first user
-        RobotiumTestUtils.openPrivateChat(solo, 3, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 3, 2, "Test");
         assertTrue(solo.searchText("Third message from user 1"));
 
         // Check that the message has been read
@@ -248,7 +248,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
 
         // Get message from first user, and open the chat
         client.sendPrivateChatMessage("Message from user 1", me);
-        RobotiumTestUtils.openPrivateChat(solo, 3, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 3, 2, "Test");
         assertTrue(solo.searchText("Message from user 1"));
 
         // Pretend to click "home" while in the private chat
@@ -259,7 +259,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
 
         // Get message from the second user, and open the chat
         client2.sendPrivateChatMessage("Message from user 2", me);
-        RobotiumTestUtils.openPrivateChat(solo, 3, 3, "Test2");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 3, 3, "Test2");
         assertTrue(solo.searchText("Message from user 2"));
 
         // Get new message from the first user, while still in the chat with the second user
@@ -267,7 +267,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
 
         // Go back and look at the new message from the first user
         RobotiumTestUtils.goBack(solo);
-        RobotiumTestUtils.openPrivateChat(solo, 3, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 3, 2, "Test");
         assertTrue(solo.searchText("New message from user 1"));
 
         solo.sleep(500);
@@ -304,7 +304,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         client.goAway("Going away again");
         solo.sleep(500);
 
-        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test (Away)", "Going away again");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 2, 2, "Test (Away)", "Going away again");
 
         RobotiumTestUtils.writeLine(solo, "Don't leave me!");
         solo.sleep(500);
@@ -358,7 +358,7 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
     }
 
     private void openPrivateChat() {
-        RobotiumTestUtils.openPrivateChat(solo, 2, 2, "Test");
+        RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 2, 2, "Test");
     }
 
     private Bitmap getBitmapForTestUser() {
@@ -384,6 +384,9 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
     private void checkTitle(final String title, final String subtitle) {
         final AppCompatActivity currentActivity = (AppCompatActivity) solo.getCurrentActivity();
         final ActionBar actionBar = currentActivity.getSupportActionBar();
+
+        getInstrumentation().waitForIdleSync();
+        solo.sleep(500);
 
         assertEquals(title, actionBar.getTitle());
         assertEquals(subtitle, actionBar.getSubtitle());
