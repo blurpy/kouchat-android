@@ -11,7 +11,8 @@
   - Improved support for sending files with content uris.
   - Added support for asking for permissions on Android 6.
   - Fixed issue where user interface would sometimes hang on Android 6.
-  - Remove KouChat from title on settings and private chat.
+  - Removed KouChat from title on settings and private chat.
+  - Removed line height fix on Android 5 and up, because of bug #77941 with ignored line spacing.
 
 
 * version 1.0.2 (26.10.2014)

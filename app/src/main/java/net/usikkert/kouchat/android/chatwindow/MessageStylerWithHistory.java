@@ -32,6 +32,7 @@ import net.usikkert.kouchat.util.Validate;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
@@ -109,6 +110,10 @@ public class MessageStylerWithHistory {
     }
 
     private void fixLineHeight(final String message, final SpannableStringBuilder messageBuilder) {
-        messageBuilder.setSpan(new DefaultLineHeightSpan(), 0, message.length(), 0);
+        // Line spacing is broken on Android 5, 6 and 7. See #77941
+        // Don't add this span, or the smileys will partially overlap the text.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            messageBuilder.setSpan(new DefaultLineHeightSpan(), 0, message.length(), 0);
+        }
     }
 }
