@@ -288,7 +288,7 @@ public class NotificationService {
     private NotificationCompat.Builder createNotification(final int iconId) {
         currentIconId = iconId;
 
-        NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
         notification.setSmallIcon(iconId);
         // Text shown when the notification arrives
         notification.setTicker(context.getText(R.string.notification_startup));
@@ -317,7 +317,7 @@ public class NotificationService {
     }
 
     private NotificationCompat.Builder createNewFileTransferNotification() {
-        NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
         notification.setSmallIcon(R.drawable.ic_stat_notify_activity);
         // Text shown when the notification arrives
         notification.setTicker(context.getText(R.string.notification_new_file_transfer));
