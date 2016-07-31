@@ -318,7 +318,7 @@ public class NotificationService {
 
     private NotificationCompat.Builder createNewFileTransferNotification() {
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
-        notification.setSmallIcon(R.drawable.ic_stat_notify_activity);
+        notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
         // Text shown when the notification arrives
         notification.setTicker(context.getText(R.string.notification_new_file_transfer));
 
