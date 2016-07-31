@@ -27,7 +27,7 @@ xxxhdpi: 192*192 (168*168)
 
 ic_stat_notify.png:
   mdpi: 24*24 (22*22)
-  hdpi: 36*36 (33*33)
+  hdpi: 36*36 (32*32)
  xhdpi: 48*48 (44*44)
 xxhdpi: 72*72 (66*66)
 
