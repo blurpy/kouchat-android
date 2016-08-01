@@ -150,10 +150,7 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
         solo.clickOnView(solo.getView(R.id.privateChatScroll));
         solo.sleep(500);
 
-        // Input field can't loose focus on Android 2.3.3. Skipping this assert.
-        if (!MiscTestUtils.isRunningOnAndroid233()) {
-            assertFalse(privateChatInput.hasFocus());
-        }
+        assertFalse(privateChatInput.hasFocus());
 
         // Let's enter a few key strokes when the input field lacks focus
         solo.sendKey(KeyEvent.KEYCODE_A);
@@ -205,14 +202,6 @@ public class PrivateChatTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     public void test11ShouldNotScrollAutomaticallyWhenInputFieldLacksFocus() {
-        if (MiscTestUtils.isRunningOnAndroid233()) {
-            solo.sleep(500);
-            RobotiumTestUtils.writeLine(solo, "Input field can't loose focus on Android 2.3.3. Skipping test.");
-            solo.sleep(1000);
-
-            return;
-        }
-
         openPrivateChat();
 
         solo.sleep(1000);

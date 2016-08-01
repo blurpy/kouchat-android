@@ -22,7 +22,6 @@
 
 package net.usikkert.kouchat.android.component;
 
-import android.os.Build;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 
@@ -48,13 +47,8 @@ public class LinkMovementMethodWithSelectSupport extends LinkMovementMethod {
     private static LinkMovementMethodWithSelectSupport instance;
 
     @Override
-    @SuppressWarnings("SimplifiableIfStatement")
     public boolean canSelectArbitrarily() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            return true;
-        }
-
-        return super.canSelectArbitrarily();
+        return true;
     }
 
     public static MovementMethod getInstance() {
