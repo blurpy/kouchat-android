@@ -1,61 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string name="app_name">KouChat</string>
-    <string name="menu">Menu</string>
-    <string name="quit">Quit</string>
-    <string name="about">About</string>
-    <string name="settings">Settings</string>
+  <string name="app_name">KouChat</string>
+  <string name="menu">Menu</string>
+  <string name="quit">Quit</string>
+  <string name="about">About</string>
+  <string name="settings">Settings</string>
   <string name="about_text">
-    \u0020Copyright 2006-2014 by Christian Ihle\n
+    \u0020Copyright 2006-2014 by Christian Ihle\n\n
     contact@kouchat.net\n
-    http://www.kouchat.net\n\n
+    http://www.kouchat.net\n
+    https://www.facebook.com/kouchatapp\n\n
     Source available under the GNU LGPLv3:\n
     http://www.gnu.org/licenses/lgpl-3.0.txt
   </string>
   <string name="settings_nick_name_dialog_message">
     A nick name can have between 1 and 10 characters. Legal characters are:\n“a-z”, “0-9”, “-” and “_”.
   </string>
-    <string name="settings_nick_name_title">Set nick name</string>
-    <string name="settings_key_nick_name">nick_name</string>
-    <string name="settings_nick_name_summary">Set your own nick name, so others can identify you in the chat.</string>
-    <string name="settings_wake_lock_key">wake_lock</string>
-    <string name="settings_wake_lock_title">Enable wake lock</string>
+  <string name="settings_nick_name_title">Set nick name</string>
+  <string name="settings_key_nick_name">nick_name</string>
+  <string name="settings_nick_name_summary">Set your own nick name, so others can identify you in the chat.</string>
+  <string name="settings_wake_lock_key">wake_lock</string>
+  <string name="settings_wake_lock_title">Enable wake lock</string>
   <string name="settings_wake_lock_summary">
     Enable the wake lock to keep the device from sleeping while KouChat is running. Can help with timeout issues.
   </string>
-    <string name="settings_own_color_key">own_color</string>
-    <string name="settings_own_color_title">Set own message color</string>
-    <string name="settings_own_color_summary">Set the color for your own messages.</string>
-    <string name="settings_sys_color_key">sys_color</string>
-    <string name="settings_sys_color_title">Set info message color</string>
-    <string name="settings_sys_color_summary">Set the color for information messages.</string>
-    <string name="settings_title">Settings</string>
-    <string name="private_chat_title">User not found</string>
-    <string name="error_nick_name_invalid">Invalid nick name</string>
-    <string name="error_nick_name_in_use">The nick name is in use by someone else.</string>
-    <string name="message_your_nick_name_changed">You changed nick to %s</string>
-    <string name="notification_startup">KouChat is up and running</string>
-    <string name="notification_running">Running</string>
-    <string name="notification_new_message">New unread messages</string>
-    <string name="notification_new_file_transfer">New file transfer request</string>
-    <string name="notification_file_transfer_from">File transfer from %1$s</string>
-    <string name="cancel">Cancel</string>
-    <string name="send_file_info">File name: %1$s \nFile size: %2$s</string>
-    <string name="send_file_select_user">Please select the user to send the file to.</string>
-    <string name="send_file_no_users">-- No connected users.</string>
-    <string name="send_file_no_file">Unable to locate the file to send.</string>
-    <string name="dialog_title_file_transfer_request">File transfer request</string>
-    <string name="dialog_receive_file_accept_question">%1$s is trying to send you the file ‘%2$s’ (%3$s). Do you want to accept the file transfer?</string>
-    <string name="dialog_receive_file_not_found">Unable to find the specified file transfer request.</string>
-    <string name="accept">Accept</string>
-    <string name="reject">Reject</string>
-    <string name="topic">Topic</string>
-    <string name="topic_dialog_message">Set or change the current topic.</string>
-    <string name="topic_dialog_enter_topic_hint">Enter topic</string>
-    <string name="away">Away</string>
-    <string name="go_away_dialog_message">Go away?</string>
-    <string name="go_away_dialog_enter_away_message_hint">Enter away message</string>
-    <string name="come_back_dialog_message">Come back from \'%1$s\'?</string>
+  <string name="settings_own_color_key">own_color</string>
+  <string name="settings_own_color_title">Set own message color</string>
+  <string name="settings_own_color_summary">Set the color for your own messages.</string>
+  <string name="settings_sys_color_key">sys_color</string>
+  <string name="settings_sys_color_title">Set info message color</string>
+  <string name="settings_sys_color_summary">Set the color for information messages.</string>
+  <string name="settings_title">Settings</string>
+  <string name="private_chat_title">User not found</string>
+  <string name="error_nick_name_invalid">Invalid nick name</string>
+  <string name="error_nick_name_in_use">The nick name is in use by someone else.</string>
+  <string name="message_your_nick_name_changed">You changed nick to %s</string>
+  <string name="notification_startup">KouChat is up and running</string>
+  <string name="notification_running">Running</string>
+  <string name="notification_new_message">New unread messages</string>
+  <string name="notification_new_file_transfer">New file transfer request</string>
+  <string name="notification_file_transfer_from">File transfer from %1$s</string>
+  <string name="cancel">Cancel</string>
+  <string name="send_file_info">File name: %1$s \nFile size: %2$s</string>
+  <string name="send_file_select_user">Please select the user to send the file to.</string>
+  <string name="send_file_no_users">-- No connected users.</string>
+  <string name="send_file_no_file">Unable to locate the file to send.</string>
+  <string name="dialog_title_file_transfer_request">File transfer request</string>
+  <string name="dialog_receive_file_accept_question">%1$s is trying to send you the file ‘%2$s’ (%3$s). Do you want to accept the file transfer?</string>
+  <string name="dialog_receive_file_not_found">Unable to find the specified file transfer request.</string>
+  <string name="accept">Accept</string>
+  <string name="reject">Reject</string>
+  <string name="topic">Topic</string>
+  <string name="topic_dialog_message">Set or change the current topic.</string>
+  <string name="topic_dialog_enter_topic_hint">Enter topic</string>
+  <string name="away">Away</string>
+  <string name="go_away_dialog_message">Go away?</string>
+  <string name="go_away_dialog_enter_away_message_hint">Enter away message</string>
+  <string name="come_back_dialog_message">Come back from \'%1$s\'?</string>
 
 </resources>
