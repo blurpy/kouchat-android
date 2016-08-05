@@ -258,9 +258,17 @@ public class NotificationService {
 
         else {
             notification = new NotificationCompat.Builder(context);
-            notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
-            notification.setContentTitle(context.getString(R.string.notification_file_transfer_from,
-                                         fileTransfer.getUser().getNick()));
+
+            if (fileTransfer.getDirection() == FileTransfer.Direction.RECEIVE) {
+                notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
+                notification.setContentTitle(context.getString(R.string.notification_file_transfer_from,
+                                                               fileTransfer.getUser().getNick()));
+            } else {
+                notification.setSmallIcon(R.drawable.ic_stat_notify_send);
+                notification.setContentTitle(context.getString(R.string.notification_file_transfer_to,
+                                                               fileTransfer.getUser().getNick()));
+            }
+
             disableSwipeToCancel(notification);
             currentFileTransfers.put(fileTransfer, notification);
         }
@@ -287,12 +295,18 @@ public class NotificationService {
 
         final int notificationId = fileTransfer.getId() + FILE_TRANSFER_NOTIFICATION_ID;
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
-        notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
         notification.setProgress(100, fileTransfer.getPercent(), false);
         enableSwipeToCancel(notification);
 
-        notification.setContentTitle(context.getString(R.string.notification_file_transfer_from,
-                                     fileTransfer.getUser().getNick()));
+        if (fileTransfer.getDirection() == FileTransfer.Direction.RECEIVE) {
+            notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
+            notification.setContentTitle(context.getString(R.string.notification_file_transfer_from,
+                                                           fileTransfer.getUser().getNick()));
+        } else {
+            notification.setSmallIcon(R.drawable.ic_stat_notify_send);
+            notification.setContentTitle(context.getString(R.string.notification_file_transfer_to,
+                                                           fileTransfer.getUser().getNick()));
+        }
 
         notification.setContentText(text + ": " + fileTransfer.getFileName());
 

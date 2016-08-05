@@ -163,7 +163,8 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     public void showTransfer(final FileSender fileSend) {
         Validate.notNull(fileSend, "FileSender can not be null");
 
-        new AndroidFileTransferListener(fileSend);
+        new AndroidFileTransferListener(fileSend, context, androidFileUtils,
+                                        msgController, notificationService);
     }
 
     /**

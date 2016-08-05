@@ -13,6 +13,7 @@
   - Fixed issue where user interface would sometimes hang on Android 6.
   - Removed KouChat from title on settings and private chat.
   - Removed line height fix on Android 5 and up, because of bug #77941 with ignored line spacing.
+  - Added notification with progress bar and cancel button for file transfers.
 
 
 * version 1.0.2 (26.10.2014)
