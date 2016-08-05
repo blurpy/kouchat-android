@@ -30,7 +30,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
-import net.usikkert.kouchat.net.FileReceiver;
 
 /**
  * Service called from file transfer notification to cancel ongoing file transfer.
@@ -97,11 +96,7 @@ public class CancelFileTransferService extends IntentService {
         final int userCode = intent.getIntExtra("userCode", -1);
         final int fileTransferId = intent.getIntExtra("fileTransferId", -1);
 
-        final FileReceiver fileReceiver = androidUserInterface.getFileReceiver(userCode, fileTransferId);
-
-        if (fileReceiver != null) {
-            fileReceiver.cancel();
-        }
+        androidUserInterface.cancelFileTransfer(userCode, fileTransferId);
     }
 
     private Intent createChatServiceIntent() {

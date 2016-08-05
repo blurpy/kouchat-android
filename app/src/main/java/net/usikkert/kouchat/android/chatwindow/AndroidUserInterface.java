@@ -49,6 +49,7 @@ import net.usikkert.kouchat.misc.UserList;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
 import net.usikkert.kouchat.net.FileToSend;
+import net.usikkert.kouchat.net.FileTransfer;
 import net.usikkert.kouchat.net.TransferList;
 import net.usikkert.kouchat.ui.ChatWindow;
 import net.usikkert.kouchat.ui.UserInterface;
@@ -177,6 +178,15 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     public FileReceiver getFileReceiver(final int userCode, final int fileTransferId) {
         final User user = getUser(userCode);
         return transferList.getFileReceiver(user, fileTransferId);
+    }
+
+    public void cancelFileTransfer(final int userCode, final int fileTransferId) {
+        final User user = getUser(userCode);
+        final FileTransfer fileTransfer = transferList.getFileTransfer(user, fileTransferId);
+
+        if (fileTransfer != null) {
+            commandParser.cancelFileTransfer(fileTransfer);
+        }
     }
 
     /**
