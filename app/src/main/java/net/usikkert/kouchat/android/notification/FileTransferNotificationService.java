@@ -69,9 +69,16 @@ public class FileTransferNotificationService {
         Validate.notNull(fileReceiver, "FileReceiver can not be null");
 
         final int notificationId = buildNotificationId(fileReceiver);
-        final NotificationCompat.Builder notification = createNewFileTransferNotification();
-        final PendingIntent pendingIntent = createIntentForReceiveFileDialog(notificationId, fileReceiver);
-        setNewFileTransferLatestEventInfo(fileReceiver, notification, pendingIntent);
+        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+
+        notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
+        notification.setTicker(context.getText(R.string.notification_new_file_transfer));
+        notification.setContentTitle(context.getString(R.string.notification_file_transfer_from,
+                                                       fileReceiver.getUser().getNick()));
+        notification.setContentText(fileReceiver.getFileName());
+        notification.setContentIntent(createIntentForReceiveFileDialog(notificationId, fileReceiver));
+
+        disableSwipeToCancel(notification);
 
         notificationManager.notify(notificationId, notification.build());
         currentFileTransferIds.add(fileReceiver.getId());
@@ -159,17 +166,6 @@ public class FileTransferNotificationService {
         return fileTransfer.getId() + FILE_TRANSFER_NOTIFICATION_ID;
     }
 
-    private NotificationCompat.Builder createNewFileTransferNotification() {
-        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
-        notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
-        // Text shown when the notification arrives
-        notification.setTicker(context.getText(R.string.notification_new_file_transfer));
-
-        disableSwipeToCancel(notification);
-
-        return notification;
-    }
-
     private PendingIntent createIntentForReceiveFileDialog(final int notificationId,
                                                            final FileReceiver fileReceiver) {
         final Intent intent = new Intent(context, ReceiveFileController.class);
@@ -190,19 +186,6 @@ public class FileTransferNotificationService {
         intent.setAction("cancelFileTransfer " + System.currentTimeMillis()); // Unique - to avoid it being cached
 
         return PendingIntent.getService(context, notificationId, intent, 0);
-    }
-
-    private void setNewFileTransferLatestEventInfo(final FileReceiver fileReceiver,
-                                                   final NotificationCompat.Builder notification,
-                                                   final PendingIntent pendingIntent) {
-        final String nick = fileReceiver.getUser().getNick();
-
-        // First line of the notification in the drawer
-        notification.setContentTitle(context.getString(R.string.notification_file_transfer_from, nick));
-        // Second line of the notification in the drawer
-        notification.setContentText(fileReceiver.getFileName());
-
-        notification.setContentIntent(pendingIntent);
     }
 
     private void enableSwipeToCancel(final NotificationCompat.Builder notification) {
