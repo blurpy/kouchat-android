@@ -70,8 +70,7 @@ public class FileTransferNotificationService {
 
         final int notificationId = buildNotificationId(fileReceiver);
         final NotificationCompat.Builder notification = createNewFileTransferNotification();
-        final Intent intent = createReceiveFileControllerIntent(fileReceiver);
-        final PendingIntent pendingIntent = createReceiveFileControllerPendingIntent(notificationId, intent);
+        final PendingIntent pendingIntent = createPendingIntentForReceiveFileDialog(notificationId, fileReceiver);
         setNewFileTransferLatestEventInfo(fileReceiver, notification, pendingIntent);
 
         notificationManager.notify(notificationId, notification.build());
@@ -174,18 +173,14 @@ public class FileTransferNotificationService {
         return notification;
     }
 
-    private Intent createReceiveFileControllerIntent(final FileReceiver fileReceiver) {
+    private PendingIntent createPendingIntentForReceiveFileDialog(final int notificationId,
+                                                                  final FileReceiver fileReceiver) {
         final Intent intent = new Intent(context, ReceiveFileController.class);
 
         intent.putExtra("userCode", fileReceiver.getUser().getCode());
         intent.putExtra("fileTransferId", fileReceiver.getId());
         intent.setAction("openReceiveFileDialog " + System.currentTimeMillis()); // Unique - to avoid it being cached
 
-        return intent;
-    }
-
-    private PendingIntent createReceiveFileControllerPendingIntent(final int notificationId,
-                                                                   final Intent intent) {
         return PendingIntent.getActivity(context, notificationId, intent, 0);
     }
 
