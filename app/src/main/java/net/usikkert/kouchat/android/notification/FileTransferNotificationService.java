@@ -86,6 +86,7 @@ public class FileTransferNotificationService {
 
     public void updateFileTransferProgress(final FileTransfer fileTransfer, final String text) {
         Validate.notNull(fileTransfer, "FileTransfer can not be null");
+        Validate.notEmpty(text, "Text can not be empty");
 
         final int notificationId = buildNotificationId(fileTransfer);
         final NotificationCompat.Builder notification;
@@ -125,6 +126,7 @@ public class FileTransferNotificationService {
 
     public void completeFileTransferProgress(final FileTransfer fileTransfer, final String text) {
         Validate.notNull(fileTransfer, "FileTransfer can not be null");
+        Validate.notEmpty(text, "Text can not be empty");
 
         final int notificationId = buildNotificationId(fileTransfer);
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
