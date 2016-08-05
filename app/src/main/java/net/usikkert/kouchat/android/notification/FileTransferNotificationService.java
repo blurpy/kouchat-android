@@ -111,13 +111,13 @@ public class FileTransferNotificationService {
             notification.addAction(R.drawable.ic_button_cancel, "Cancel", pendingIntent);
 
             disableSwipeToCancel(notification);
+
             currentFileTransfers.put(fileTransfer, notification);
         }
 
         final String contentText = text + ": " + fileTransfer.getFileName();
         notification.setContentText(contentText);
         notification.setStyle(new NotificationCompat.BigTextStyle().bigText(contentText));
-
         notification.setProgress(100, fileTransfer.getPercent(), false);
 
         notificationManager.notify(notificationId, notification.build());
@@ -128,8 +128,6 @@ public class FileTransferNotificationService {
 
         final int notificationId = buildNotificationId(fileTransfer);
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
-        notification.setProgress(100, fileTransfer.getPercent(), false);
-        enableSwipeToCancel(notification);
 
         if (fileTransfer.getDirection() == FileTransfer.Direction.RECEIVE) {
             notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
@@ -141,7 +139,10 @@ public class FileTransferNotificationService {
                                                            fileTransfer.getUser().getNick()));
         }
 
+        notification.setProgress(100, fileTransfer.getPercent(), false);
         notification.setContentText(text + ": " + fileTransfer.getFileName());
+
+        enableSwipeToCancel(notification);
 
         currentFileTransferIds.remove(fileTransfer.getId());
         currentFileTransfers.remove(fileTransfer);
