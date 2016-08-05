@@ -4,14 +4,15 @@
 KouChat is an open source, serverless, LAN chat application.
 It's written in Java, and is free software.
 
-Requirements: Android v2.3.3 or newer.
+Requirements: Android v4.1 or newer.
 
 Enjoy :)
 
 
 
-Copyright 2006-2014 Christian Ihle
+Copyright 2006-2016 Christian Ihle
 http://www.kouchat.net/
+https://www.facebook.com/kouchatapp
 
 Source and graphics available under the GNU LGPL v3.
 See COPYING for details.
