@@ -246,35 +246,35 @@ public class NotificationService {
         currentFileTransferIds.add(fileReceiver.getId());
     }
 
-    public void updateFileTransferProgress(final FileReceiver fileReceiver, final String text) {
-        Validate.notNull(fileReceiver, "FileReceiver can not be null");
+    public void updateFileTransferProgress(final FileTransfer fileTransfer, final String text) {
+        Validate.notNull(fileTransfer, "FileTransfer can not be null");
 
-        final int notificationId = fileReceiver.getId() + FILE_TRANSFER_NOTIFICATION_ID;
+        final int notificationId = fileTransfer.getId() + FILE_TRANSFER_NOTIFICATION_ID;
         final NotificationCompat.Builder notification;
 
-        if (currentFileTransfers.containsKey(fileReceiver)) {
-            notification = currentFileTransfers.get(fileReceiver);
+        if (currentFileTransfers.containsKey(fileTransfer)) {
+            notification = currentFileTransfers.get(fileTransfer);
         }
 
         else {
             notification = new NotificationCompat.Builder(context);
             notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
             notification.setContentTitle(context.getString(R.string.notification_file_transfer_from,
-                                         fileReceiver.getUser().getNick()));
+                                         fileTransfer.getUser().getNick()));
             disableSwipeToCancel(notification);
-            currentFileTransfers.put(fileReceiver, notification);
+            currentFileTransfers.put(fileTransfer, notification);
         }
 
-        final String contentText = text + ": " + fileReceiver.getFileName();
+        final String contentText = text + ": " + fileTransfer.getFileName();
         notification.setContentText(contentText);
         notification.setStyle(new NotificationCompat.BigTextStyle().bigText(contentText));
 
-        notification.setProgress(100, fileReceiver.getPercent(), false);
+        notification.setProgress(100, fileTransfer.getPercent(), false);
 
         if (notification.mActions.isEmpty()) {
             final Intent intent = new Intent(context, CancelFileTransferService.class);
-            intent.putExtra("userCode", fileReceiver.getUser().getCode());
-            intent.putExtra("fileTransferId", fileReceiver.getId());
+            intent.putExtra("userCode", fileTransfer.getUser().getCode());
+            intent.putExtra("fileTransferId", fileTransfer.getId());
             final PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
             notification.addAction(R.drawable.ic_button_cancel, "Cancel", pendingIntent);
         }
@@ -282,22 +282,22 @@ public class NotificationService {
         notificationManager.notify(notificationId, notification.build());
     }
 
-    public void completeFileTransferProgress(final FileReceiver fileReceiver, final String text) {
-        Validate.notNull(fileReceiver, "FileReceiver can not be null");
+    public void completeFileTransferProgress(final FileTransfer fileTransfer, final String text) {
+        Validate.notNull(fileTransfer, "FileTransfer can not be null");
 
-        final int notificationId = fileReceiver.getId() + FILE_TRANSFER_NOTIFICATION_ID;
+        final int notificationId = fileTransfer.getId() + FILE_TRANSFER_NOTIFICATION_ID;
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
         notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
-        notification.setProgress(100, fileReceiver.getPercent(), false);
+        notification.setProgress(100, fileTransfer.getPercent(), false);
         enableSwipeToCancel(notification);
 
         notification.setContentTitle(context.getString(R.string.notification_file_transfer_from,
-                                     fileReceiver.getUser().getNick()));
+                                     fileTransfer.getUser().getNick()));
 
-        notification.setContentText(text + ": " + fileReceiver.getFileName());
+        notification.setContentText(text + ": " + fileTransfer.getFileName());
 
-        currentFileTransferIds.remove(fileReceiver.getId());
-        currentFileTransfers.remove(fileReceiver);
+        currentFileTransferIds.remove(fileTransfer.getId());
+        currentFileTransfers.remove(fileTransfer);
 
         notificationManager.notify(notificationId, notification.build());
     }

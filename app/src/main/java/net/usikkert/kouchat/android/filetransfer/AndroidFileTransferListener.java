@@ -27,6 +27,7 @@ import net.usikkert.kouchat.event.FileTransferListener;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileSender;
+import net.usikkert.kouchat.net.FileTransfer;
 import net.usikkert.kouchat.util.Validate;
 
 import android.content.Context;
@@ -38,32 +39,32 @@ import android.content.Context;
  */
 public class AndroidFileTransferListener implements FileTransferListener {
 
-    private FileReceiver fileReceiver;
+    private FileTransfer fileTransfer;
     private Context context;
     private AndroidFileUtils androidFileUtils;
     private MessageController messageController;
     private NotificationService notificationService;
     private int percentTransferred;
 
-    public AndroidFileTransferListener(final FileReceiver fileReceiver,
+    public AndroidFileTransferListener(final FileTransfer fileTransfer,
                                        final Context context,
                                        final AndroidFileUtils androidFileUtils,
                                        final MessageController messageController,
                                        final NotificationService notificationService) {
-        Validate.notNull(fileReceiver, "FileReceiver can not be null");
+        Validate.notNull(fileTransfer, "FileTransfer can not be null");
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(androidFileUtils, "AndroidFileUtils can not be null");
         Validate.notNull(messageController, "MessageController can not be null");
         Validate.notNull(notificationService, "NotificationService can not be null");
 
-        this.fileReceiver = fileReceiver;
+        this.fileTransfer = fileTransfer;
         this.context = context;
         this.androidFileUtils = androidFileUtils;
         this.messageController = messageController;
         this.notificationService = notificationService;
         this.percentTransferred = -1;
 
-        fileReceiver.registerListener(this);
+        fileTransfer.registerListener(this);
     }
 
     public AndroidFileTransferListener(final FileSender fileSender) {
@@ -74,15 +75,15 @@ public class AndroidFileTransferListener implements FileTransferListener {
 
     @Override
     public void statusWaiting() {
-        if (fileReceiver != null) {
-            notificationService.updateFileTransferProgress(fileReceiver, "Waiting");
+        if (fileTransfer != null) {
+            notificationService.updateFileTransferProgress(fileTransfer, "Waiting");
         }
     }
 
     @Override
     public void statusConnecting() {
-        if (fileReceiver != null) {
-            notificationService.updateFileTransferProgress(fileReceiver, "Connecting");
+        if (fileTransfer != null) {
+            notificationService.updateFileTransferProgress(fileTransfer, "Connecting");
         }
     }
 
@@ -104,7 +105,9 @@ public class AndroidFileTransferListener implements FileTransferListener {
      */
     @Override
     public void statusTransferring() {
-        if (fileReceiver != null) {
+        if (fileTransfer != null) {
+            final FileReceiver fileReceiver = (FileReceiver) fileTransfer;
+
             notificationService.updateFileTransferProgress(fileReceiver, "Receiving");
 
             messageController.showSystemMessage("Receiving " + fileReceiver.getOriginalFileName() +
@@ -118,9 +121,10 @@ public class AndroidFileTransferListener implements FileTransferListener {
      */
     @Override
     public void statusCompleted() {
-        if (fileReceiver != null) {
-            notificationService.completeFileTransferProgress(fileReceiver, "Completed");
+        if (fileTransfer != null) {
+            notificationService.completeFileTransferProgress(fileTransfer, "Completed");
 
+            final FileReceiver fileReceiver = (FileReceiver) fileTransfer;
             androidFileUtils.addFileToMediaDatabase(context, fileReceiver.getFile());
 
         }
@@ -128,19 +132,19 @@ public class AndroidFileTransferListener implements FileTransferListener {
 
     @Override
     public void statusFailed() {
-        if (fileReceiver != null) {
-            notificationService.completeFileTransferProgress(fileReceiver, "Failed");
+        if (fileTransfer != null) {
+            notificationService.completeFileTransferProgress(fileTransfer, "Failed");
         }
     }
 
     @Override
     public void transferUpdate() {
-        if (fileReceiver != null) {
-            final int percent = fileReceiver.getPercent();
+        if (fileTransfer != null) {
+            final int percent = fileTransfer.getPercent();
 
             if (percent != percentTransferred) {
                 percentTransferred = percent;
-                notificationService.updateFileTransferProgress(fileReceiver, "Receiving");
+                notificationService.updateFileTransferProgress(fileTransfer, "Receiving");
             }
         }
     }
