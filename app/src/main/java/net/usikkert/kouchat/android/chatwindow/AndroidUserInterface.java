@@ -132,7 +132,9 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
             sleeper.sleep(500);
         }
 
-        notificationService.cancelFileTransferNotification(fileReceiver);
+        if (!fileReceiver.isAccepted()) {
+            notificationService.cancelFileTransferNotification(fileReceiver);
+        }
     }
 
     /**
@@ -148,7 +150,8 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         final File fileInDownloads = androidFileUtils.createFileInDownloadsWithAvailableName(fileRes.getFileName());
         fileRes.setFile(fileInDownloads);
 
-        new AndroidFileTransferListener(fileRes, context, androidFileUtils, msgController);
+        new AndroidFileTransferListener(fileRes, context, androidFileUtils,
+                                        msgController, notificationService);
     }
 
     /**

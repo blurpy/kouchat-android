@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android.filetransfer;
 
+import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.event.FileTransferListener;
 import net.usikkert.kouchat.misc.MessageController;
 import net.usikkert.kouchat.net.FileReceiver;
@@ -31,7 +32,7 @@ import net.usikkert.kouchat.util.Validate;
 import android.content.Context;
 
 /**
- * A very basic file transfer listener.
+ * A file transfer listener that updates a notification with progress.
  *
  * @author Christian Ihle
  */
@@ -41,20 +42,26 @@ public class AndroidFileTransferListener implements FileTransferListener {
     private Context context;
     private AndroidFileUtils androidFileUtils;
     private MessageController messageController;
+    private NotificationService notificationService;
+    private int percentTransferred;
 
     public AndroidFileTransferListener(final FileReceiver fileReceiver,
                                        final Context context,
                                        final AndroidFileUtils androidFileUtils,
-                                       final MessageController messageController) {
+                                       final MessageController messageController,
+                                       final NotificationService notificationService) {
         Validate.notNull(fileReceiver, "FileReceiver can not be null");
         Validate.notNull(context, "Context can not be null");
         Validate.notNull(androidFileUtils, "AndroidFileUtils can not be null");
         Validate.notNull(messageController, "MessageController can not be null");
+        Validate.notNull(notificationService, "NotificationService can not be null");
 
         this.fileReceiver = fileReceiver;
         this.context = context;
         this.androidFileUtils = androidFileUtils;
         this.messageController = messageController;
+        this.notificationService = notificationService;
+        this.percentTransferred = -1;
 
         fileReceiver.registerListener(this);
     }
@@ -67,12 +74,16 @@ public class AndroidFileTransferListener implements FileTransferListener {
 
     @Override
     public void statusWaiting() {
-
+        if (fileReceiver != null) {
+            notificationService.updateFileTransferProgress(fileReceiver, "Waiting");
+        }
     }
 
     @Override
     public void statusConnecting() {
-
+        if (fileReceiver != null) {
+            notificationService.updateFileTransferProgress(fileReceiver, "Connecting");
+        }
     }
 
     /**
@@ -94,28 +105,43 @@ public class AndroidFileTransferListener implements FileTransferListener {
     @Override
     public void statusTransferring() {
         if (fileReceiver != null) {
+            notificationService.updateFileTransferProgress(fileReceiver, "Receiving");
+
             messageController.showSystemMessage("Receiving " + fileReceiver.getOriginalFileName() +
                     " from " + fileReceiver.getUser().getNick());
         }
     }
 
     /**
-     * Makes sure the received file is scanned and inserted into the media database when the file transfer is completed.
+     * Makes sure the received file is scanned and inserted into the media database
+     * when the file transfer is completed.
      */
     @Override
     public void statusCompleted() {
         if (fileReceiver != null) {
+            notificationService.completeFileTransferProgress(fileReceiver, "Completed");
+
             androidFileUtils.addFileToMediaDatabase(context, fileReceiver.getFile());
+
         }
     }
 
     @Override
     public void statusFailed() {
-
+        if (fileReceiver != null) {
+            notificationService.completeFileTransferProgress(fileReceiver, "Failed");
+        }
     }
 
     @Override
     public void transferUpdate() {
+        if (fileReceiver != null) {
+            final int percent = fileReceiver.getPercent();
 
+            if (percent != percentTransferred) {
+                percentTransferred = percent;
+                notificationService.updateFileTransferProgress(fileReceiver, "Receiving");
+            }
+        }
     }
 }
