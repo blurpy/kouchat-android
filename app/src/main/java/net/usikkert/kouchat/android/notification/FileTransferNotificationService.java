@@ -68,7 +68,7 @@ public class FileTransferNotificationService {
     public void notifyNewFileTransfer(final FileReceiver fileReceiver) {
         Validate.notNull(fileReceiver, "FileReceiver can not be null");
 
-        final int notificationId = fileReceiver.getId() + FILE_TRANSFER_NOTIFICATION_ID;
+        final int notificationId = buildNotificationId(fileReceiver);
         final NotificationCompat.Builder notification = createNewFileTransferNotification();
         final Intent intent = createReceiveFileControllerIntent(fileReceiver);
         final PendingIntent pendingIntent = createReceiveFileControllerPendingIntent(notificationId, intent);
@@ -81,7 +81,7 @@ public class FileTransferNotificationService {
     public void updateFileTransferProgress(final FileTransfer fileTransfer, final String text) {
         Validate.notNull(fileTransfer, "FileTransfer can not be null");
 
-        final int notificationId = fileTransfer.getId() + FILE_TRANSFER_NOTIFICATION_ID;
+        final int notificationId = buildNotificationId(fileTransfer);
         final NotificationCompat.Builder notification;
 
         if (currentFileTransfers.containsKey(fileTransfer)) {
@@ -123,7 +123,7 @@ public class FileTransferNotificationService {
     public void completeFileTransferProgress(final FileTransfer fileTransfer, final String text) {
         Validate.notNull(fileTransfer, "FileTransfer can not be null");
 
-        final int notificationId = fileTransfer.getId() + FILE_TRANSFER_NOTIFICATION_ID;
+        final int notificationId = buildNotificationId(fileTransfer);
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
         notification.setProgress(100, fileTransfer.getPercent(), false);
         enableSwipeToCancel(notification);
@@ -157,6 +157,10 @@ public class FileTransferNotificationService {
 
     public Set<Integer> getCurrentFileTransferIds() {
         return Collections.unmodifiableSet(currentFileTransferIds);
+    }
+
+    private int buildNotificationId(final FileTransfer fileTransfer) {
+        return fileTransfer.getId() + FILE_TRANSFER_NOTIFICATION_ID;
     }
 
     private NotificationCompat.Builder createNewFileTransferNotification() {
