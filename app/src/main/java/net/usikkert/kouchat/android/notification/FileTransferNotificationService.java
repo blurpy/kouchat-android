@@ -109,7 +109,7 @@ public class FileTransferNotificationService {
             }
 
             final PendingIntent pendingIntent = createIntentForCancel(notificationId, fileTransfer);
-            notification.addAction(R.drawable.ic_button_cancel, "Cancel", pendingIntent);
+            notification.addAction(R.drawable.ic_button_cancel, context.getString(R.string.cancel), pendingIntent);
 
             disableSwipeToCancel(notification);
 
