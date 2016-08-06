@@ -345,7 +345,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     @Override
     public void notifyMessageArrived(final User user, final String message) {
         if (!isVisible()) {
-            notificationService.notifyNewMainChatMessage();
+            notificationService.notifyNewMainChatMessage(user, message);
         }
     }
 

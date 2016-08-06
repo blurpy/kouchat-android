@@ -63,6 +63,7 @@ public class NotificationService {
     private final Context context;
     private final NotificationManager notificationManager;
     private final FileTransferNotificationService fileTransferNotificationService;
+    private final MessageNotificationService messageNotificationService;
 
     private boolean mainChatActivity;
     private final Set<User> privateChatActivityUsers;
@@ -82,6 +83,7 @@ public class NotificationService {
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         fileTransferNotificationService = new FileTransferNotificationService(context, notificationManager);
+        messageNotificationService = new MessageNotificationService(context, notificationManager);
 
         mainChatActivity = false;
         privateChatActivityUsers = new HashSet<>();
@@ -108,8 +110,13 @@ public class NotificationService {
      *   <li>Switches to the activity icon.</li>
      *   <li>Sets the flag for activity in the main chat.</li>
      * </ul>
+     *
+     * @param user The user that sent the message.
+     * @param message The message sent by the user.
      */
-    public void notifyNewMainChatMessage() {
+    public void notifyNewMainChatMessage(final User user, final String message) {
+        messageNotificationService.notifyNewMainChatMessage(user, message);
+
         sendNewMessageNotification();
 
         mainChatActivity = true;
@@ -149,6 +156,8 @@ public class NotificationService {
      * </ul>
      */
     public void resetAllNotifications() {
+        messageNotificationService.resetAllNotifications();
+
         sendDefaultNotification();
 
         mainChatActivity = false;
