@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android.filetransfer;
 
+import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.notification.NotificationService;
 import net.usikkert.kouchat.event.FileTransferListener;
 import net.usikkert.kouchat.misc.MessageController;
@@ -43,6 +44,10 @@ public class AndroidFileTransferListener implements FileTransferListener {
     private final AndroidFileUtils androidFileUtils;
     private final MessageController messageController;
     private final NotificationService notificationService;
+
+    private final String receivingText;
+    private final String sendingText;
+
     private int percentTransferred;
 
     public AndroidFileTransferListener(final FileTransfer fileTransfer,
@@ -63,17 +68,22 @@ public class AndroidFileTransferListener implements FileTransferListener {
         this.notificationService = notificationService;
         this.percentTransferred = -1;
 
+        receivingText = context.getString(R.string.notification_receiving);
+        sendingText = context.getString(R.string.notification_sending);
+
         fileTransfer.registerListener(this);
     }
 
     @Override
     public void statusWaiting() {
-        notificationService.updateFileTransferProgress(fileTransfer, "Waiting");
+        notificationService.updateFileTransferProgress(
+                fileTransfer, context.getString(R.string.notification_waiting));
     }
 
     @Override
     public void statusConnecting() {
-        notificationService.updateFileTransferProgress(fileTransfer, "Connecting");
+        notificationService.updateFileTransferProgress(
+                fileTransfer, context.getString(R.string.notification_connecting));
     }
 
     /**
@@ -97,14 +107,16 @@ public class AndroidFileTransferListener implements FileTransferListener {
         if (fileTransfer.getDirection() == FileTransfer.Direction.RECEIVE) {
             final FileReceiver fileReceiver = (FileReceiver) fileTransfer;
 
-            notificationService.updateFileTransferProgress(fileReceiver, "Receiving");
+            notificationService.updateFileTransferProgress(fileReceiver, receivingText);
 
-            messageController.showSystemMessage("Receiving " + fileReceiver.getOriginalFileName() +
-                                                        " from " + fileReceiver.getUser().getNick());
+            messageController.showSystemMessage(
+                    context.getString(R.string.notification_receiving_file_from,
+                                      fileReceiver.getOriginalFileName(),
+                                      fileReceiver.getUser().getNick()));
         }
 
         else {
-            notificationService.updateFileTransferProgress(fileTransfer, "Sending");
+            notificationService.updateFileTransferProgress(fileTransfer, sendingText);
         }
     }
 
@@ -114,7 +126,8 @@ public class AndroidFileTransferListener implements FileTransferListener {
      */
     @Override
     public void statusCompleted() {
-        notificationService.completeFileTransferProgress(fileTransfer, "Completed");
+        notificationService.completeFileTransferProgress(
+                fileTransfer, context.getString(R.string.notification_completed));
 
         if (fileTransfer.getDirection() == FileTransfer.Direction.RECEIVE) {
             final FileReceiver fileReceiver = (FileReceiver) fileTransfer;
@@ -125,7 +138,8 @@ public class AndroidFileTransferListener implements FileTransferListener {
 
     @Override
     public void statusFailed() {
-        notificationService.completeFileTransferProgress(fileTransfer, "Failed");
+        notificationService.completeFileTransferProgress(
+                fileTransfer, context.getString(R.string.notification_failed));
     }
 
     @Override
@@ -136,11 +150,11 @@ public class AndroidFileTransferListener implements FileTransferListener {
             percentTransferred = percent;
 
             if (fileTransfer.getDirection() == FileTransfer.Direction.RECEIVE) {
-                notificationService.updateFileTransferProgress(fileTransfer, "Receiving");
+                notificationService.updateFileTransferProgress(fileTransfer, receivingText);
             }
 
             else {
-                notificationService.updateFileTransferProgress(fileTransfer, "Sending");
+                notificationService.updateFileTransferProgress(fileTransfer, sendingText);
             }
         }
     }
