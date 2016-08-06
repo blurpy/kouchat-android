@@ -13,7 +13,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="download.svg">
+   sodipodi:docname="receive.svg">
   <metadata
      id="metadata10">
     <rdf:RDF>
@@ -39,16 +39,21 @@
      inkscape:window-width="1920"
      inkscape:window-height="1135"
      id="namedview6"
-     showgrid="false"
+     showgrid="true"
      inkscape:zoom="27.812867"
-     inkscape:cx="12.373892"
+     inkscape:cx="5.2908394"
      inkscape:cy="11.078471"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg2" />
+     inkscape:current-layer="svg2"
+     showguides="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4133" />
+  </sodipodi:namedview>
   <path
-     d="m 21,11.000001 -5.136423,0 0,-9.000001 -7.70463,0 0,9.000001 L 3,11.003583 12.011261,18.000001 Z M 3.0225258,20 l 0,2 L 21,22 21,20 Z"
+     d="m 21,11 -5,0 L 16,2 8,2 l 0,9 -5,0 9,7 z M 3,20 l 0,2 18,0 0,-2 z"
      id="path4"
      inkscape:connector-curvature="0"
      sodipodi:nodetypes="ccccccccccccc"
