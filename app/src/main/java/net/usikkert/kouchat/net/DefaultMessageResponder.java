@@ -109,7 +109,7 @@ public class DefaultMessageResponder implements MessageResponder {
                     me.setNewMsg(true);
                 }
 
-                ui.notifyMessageArrived(user);
+                ui.notifyMessageArrived(user, msg);
             }
 
             else {

@@ -102,7 +102,7 @@ public class DefaultPrivateMessageResponder implements PrivateMessageResponder {
                     controller.changeNewMessage(user.getCode(), true);
                 }
 
-                ui.notifyPrivateMessageArrived(user);
+                ui.notifyPrivateMessageArrived(user, msg);
             }
         }
 

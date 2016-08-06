@@ -99,12 +99,12 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
     }
 
     @Override
-    public void notifyMessageArrived(final User user) {
+    public void notifyMessageArrived(final User user, final String message) {
 
     }
 
     @Override
-    public void notifyPrivateMessageArrived(final User user) {
+    public void notifyPrivateMessageArrived(final User user, final String message) {
 
     }
 

@@ -137,7 +137,7 @@ public class DefaultMessageResponderTest {
         responder.messageArrived(100, "msg", 200);
 
         verify(messageController).showUserMessage("Tester", "msg", 200);
-        verify(userInterface).notifyMessageArrived(user);
+        verify(userInterface).notifyMessageArrived(user, "msg");
         assertTrue(me.isNewMsg());
     }
 
@@ -148,10 +148,10 @@ public class DefaultMessageResponderTest {
         when(userInterface.isVisible()).thenReturn(true);
         when(userInterface.isFocused()).thenReturn(true);
 
-        responder.messageArrived(100, "msg", 200);
+        responder.messageArrived(100, "msg2", 200);
 
-        verify(messageController).showUserMessage("Tester", "msg", 200);
-        verify(userInterface).notifyMessageArrived(user);
+        verify(messageController).showUserMessage("Tester", "msg2", 200);
+        verify(userInterface).notifyMessageArrived(user, "msg2");
         assertFalse(me.isNewMsg());
     }
 
@@ -162,10 +162,10 @@ public class DefaultMessageResponderTest {
         when(userInterface.isVisible()).thenReturn(false);
         when(userInterface.isFocused()).thenReturn(false); // Can't be focused if not visible
 
-        responder.messageArrived(100, "msg", 200);
+        responder.messageArrived(100, "msg3", 200);
 
-        verify(messageController).showUserMessage("Tester", "msg", 200);
-        verify(userInterface).notifyMessageArrived(user);
+        verify(messageController).showUserMessage("Tester", "msg3", 200);
+        verify(userInterface).notifyMessageArrived(user, "msg3");
         assertFalse(me.isNewMsg());
     }
 

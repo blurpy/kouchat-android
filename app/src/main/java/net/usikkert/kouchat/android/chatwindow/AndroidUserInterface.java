@@ -343,7 +343,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
      * Notifies about a new message if the main chat is not visible.
      */
     @Override
-    public void notifyMessageArrived(final User user) {
+    public void notifyMessageArrived(final User user, final String message) {
         if (!isVisible()) {
             notificationService.notifyNewMainChatMessage();
         }
@@ -354,7 +354,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
      * the user who sent the message is visible.
      */
     @Override
-    public void notifyPrivateMessageArrived(final User user) {
+    public void notifyPrivateMessageArrived(final User user, final String message) {
         Validate.notNull(user, "User can not be null");
         Validate.notNull(user.getPrivchat(), "Private chat can not be null");
 
