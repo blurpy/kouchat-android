@@ -97,8 +97,9 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
 
         messageStyler = new MessageStylerWithHistory(context);
         msgController = new MessageController(this, this, settings, errorHandler);
-        controller = new Controller(this, settings, new AndroidSettingsSaver(), new CoreMessages(), errorHandler);
-        commandParser = new CommandParser(controller, this, settings);
+        final CoreMessages coreMessages = new CoreMessages();
+        controller = new Controller(this, settings, new AndroidSettingsSaver(), coreMessages, errorHandler);
+        commandParser = new CommandParser(controller, this, settings, coreMessages);
         androidFileUtils = new AndroidFileUtils();
         sleeper = new Sleeper();
 

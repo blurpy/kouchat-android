@@ -40,6 +40,9 @@ import org.junit.Test;
 /**
  * Test of {@link OperatingSystemNetworkInfo}.
  *
+ * <p>This test might fail on Mac OS X. If so, add <code>-Djava.net.preferIPv4Stack=true</code>
+ * as VM option.</p>
+ *
  * @author Christian Ihle
  */
 @SuppressWarnings("HardCodedStringLiteral")

@@ -179,8 +179,7 @@ public class MessageReceiver implements Runnable {
                 }
 
                 mcSocket.joinGroup(address);
-                // Crashes in Android 2.3.3 emulator
-                // LOG.log(Level.FINE, "Connected to " + mcSocket.getNetworkInterface());
+                LOG.log(Level.FINE, "Connected to " + mcSocket.getNetworkInterface());
                 connected = true;
             }
         }

@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.net;
 
+import static net.usikkert.kouchat.net.NetworkMessageType.*;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -89,7 +91,7 @@ public class PrivateMessageParser implements ReceiverListener {
             final User tempme = settings.getMe();
 
             if (fromCode != tempme.getCode() && toCode == tempme.getCode()) {
-                if (type.equals("PRIVMSG")) {
+                if (type.equals(PRIVMSG)) {
                     final int leftBracket = msg.indexOf("[");
                     final int rightBracket = msg.indexOf("]");
                     final int rgb = Integer.parseInt(msg.substring(leftBracket + 1, rightBracket));

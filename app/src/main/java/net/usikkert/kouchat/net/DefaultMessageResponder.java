@@ -24,9 +24,8 @@ package net.usikkert.kouchat.net;
 
 import java.io.File;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import net.usikkert.kouchat.message.CoreMessages;
 import net.usikkert.kouchat.misc.ChatState;
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Controller;
@@ -36,6 +35,9 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.misc.WaitingList;
 import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.ui.UserInterface;
+import net.usikkert.kouchat.util.DateTools;
+import net.usikkert.kouchat.util.Logger;
+import net.usikkert.kouchat.util.Sleeper;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
@@ -46,9 +48,11 @@ import net.usikkert.kouchat.util.Validate;
  */
 public class DefaultMessageResponder implements MessageResponder {
 
-    private static final Logger LOG = Logger.getLogger(DefaultMessageResponder.class.getName());
+    private static final Logger LOG = Logger.getLogger(DefaultMessageResponder.class);
 
     private final NetworkUtils networkUtils = new NetworkUtils();
+    private final Sleeper sleeper = new Sleeper();
+    private final DateTools dateTools = new DateTools();
 
     private final Controller controller;
     private final User me;
@@ -57,6 +61,7 @@ public class DefaultMessageResponder implements MessageResponder {
     private final UserInterface ui;
     private final MessageController msgController;
     private final ChatState chatState;
+    private final CoreMessages coreMessages;
 
     /**
      * Constructor.
@@ -64,14 +69,18 @@ public class DefaultMessageResponder implements MessageResponder {
      * @param controller The controller to use for communication.
      * @param ui The user interface to update.
      * @param settings The settings to use.
+     * @param coreMessages The core messages to use.
      */
-    public DefaultMessageResponder(final Controller controller, final UserInterface ui, final Settings settings) {
+    public DefaultMessageResponder(final Controller controller, final UserInterface ui, final Settings settings,
+                                   final CoreMessages coreMessages) {
         Validate.notNull(controller, "Controller can not be null");
         Validate.notNull(ui, "UserInterface can not be null");
         Validate.notNull(settings, "Settings can not be null");
+        Validate.notNull(coreMessages, "Core messages can not be null");
 
         this.controller = controller;
         this.ui = ui;
+        this.coreMessages = coreMessages;
 
         msgController = ui.getMessageController();
         me = settings.getMe();
@@ -82,8 +91,6 @@ public class DefaultMessageResponder implements MessageResponder {
 
     /**
      * Shows a message from a user in the user interface.
-     * If the user that sent the message does not yet exist in the user list,
-     * the user is asked to identify itself before the message is shown.
      *
      * @param userCode The unique code of the user who sent the message.
      * @param msg The message.
@@ -91,50 +98,27 @@ public class DefaultMessageResponder implements MessageResponder {
      */
     @Override
     public void messageArrived(final int userCode, final String msg, final int color) {
-        // A little hack to stop messages from showing before the user is logged on
-        final Thread t = new Thread("DefaultMessageResponderMessageArrived") {
-            @Override
-            public void run() {
-                if (isAlive()) {
-                    int counter = 0;
+        if (!controller.isNewUser(userCode)) {
+            final User user = controller.getUser(userCode);
 
-                    while (wList.isWaitingUser(userCode) && counter < 40) {
-                        counter++;
-                        Tools.sleep(50);
-                    }
+            if (!user.isAway()) {
+                msgController.showUserMessage(user.getNick(), msg, color);
+
+                // Visible but not in front
+                if (ui.isVisible() && !ui.isFocused()) {
+                    me.setNewMsg(true);
                 }
 
-                if (!controller.isNewUser(userCode)) {
-                    final User user = controller.getUser(userCode);
-
-                    if (!user.isAway()) {
-                        msgController.showUserMessage(user.getNick(), msg, color);
-
-                        // Visible but not in front
-                        if (ui.isVisible() && !ui.isFocused()) {
-                            me.setNewMsg(true);
-                        }
-
-                        ui.notifyMessageArrived(user);
-                    }
-                }
-
-                else {
-                    LOG.log(Level.SEVERE, "Could not find user: " + userCode);
-                }
+                ui.notifyMessageArrived(user);
             }
-        };
 
-        if (controller.isNewUser(userCode)) {
-            wList.addWaitingUser(userCode);
-            controller.sendExposeMessage();
-            controller.sendGetTopicMessage();
-
-            t.start();
+            else {
+                LOG.severe("User is away - ignoring message. user=%s, userCode=%s, message=%s", user, userCode, msg);
+            }
         }
 
         else {
-            t.run();
+            LOG.severe("User is unknown - ignoring message. userCode=%s, message=%s", userCode, msg);
         }
     }
 
@@ -149,10 +133,15 @@ public class DefaultMessageResponder implements MessageResponder {
         final User user = controller.getUser(userCode);
 
         if (user != null) {
-            final String logOffMessage = user.getNick() + " logged off";
+            final String logOffMessage =
+                    coreMessages.getMessage("core.network.systemMessage.userLogOff", user.getNick());
 
             controller.removeUser(user, logOffMessage);
             msgController.showSystemMessage(logOffMessage);
+        }
+
+        else {
+            LOG.severe("User is unknown - ignoring logoff. userCode=%s", userCode);
         }
     }
 
@@ -166,15 +155,21 @@ public class DefaultMessageResponder implements MessageResponder {
     @Override
     public void userLogOn(final User newUser) {
         if (me.getNick().trim().equalsIgnoreCase(newUser.getNick())) {
+            LOG.severe("User logs on with your nick name - resetting nick and sending nick crash message. " +
+                               "user=%s, userCode=%s", newUser, newUser.getCode());
             controller.sendNickCrashMessage(newUser.getNick());
             newUser.setNick("" + newUser.getCode());
         }
 
         else if (controller.isNickInUse(newUser.getNick())) {
+            LOG.severe("User logs on with someone else's nick name - resetting nick. " +
+                               "user=%s, userCode=%s", newUser, newUser.getCode());
             newUser.setNick("" + newUser.getCode());
         }
 
         else if (!Tools.isValidNick(newUser.getNick())) {
+            LOG.severe("User logs on with invalid nick name - resetting nick. " +
+                               "user=%s, userCode=%s", newUser, newUser.getCode());
             newUser.setNick("" + newUser.getCode());
         }
 
@@ -217,39 +212,31 @@ public class DefaultMessageResponder implements MessageResponder {
      */
     @Override
     public void topicChanged(final int userCode, final String newTopic, final String nick, final long time) {
-        if (controller.isNewUser(userCode)) {
-            wList.addWaitingUser(userCode);
-            controller.sendExposeMessage();
-            controller.sendGetTopicMessage();
-        }
+        if (time > 0 && nick.length() > 0) {
+            final Topic topic = controller.getTopic();
 
-        else {
-            if (time > 0 && nick.length() > 0) {
-                final Topic topic = controller.getTopic();
-
-                if (newTopic != null) {
-                    if (!newTopic.equals(topic.getTopic()) && time > topic.getTime()) {
-                        if (chatState.isLogonCompleted()) {
-                            msgController.showSystemMessage(nick + " changed the topic to: " + newTopic);
-                        }
-
-                        // Shown during startup.
-                        else {
-                            final String date = Tools.dateToString(new Date(time), "HH:mm:ss, dd. MMM. yy");
-                            msgController.showSystemMessage("Topic is: " + newTopic + " (set by " + nick + " at " + date + ")");
-                        }
-
-                        topic.changeTopic(newTopic, nick, time);
-                        ui.showTopic();
+            if (newTopic != null) {
+                if (!newTopic.equals(topic.getTopic()) && time > topic.getTime()) {
+                    if (chatState.isLogonCompleted()) {
+                        msgController.showSystemMessage(nick + " changed the topic to: " + newTopic);
                     }
+
+                    // Shown during startup.
+                    else {
+                        final String date = dateTools.dateToString(new Date(time), "HH:mm:ss, dd. MMM. yy");
+                        msgController.showSystemMessage("Topic is: " + newTopic + " (set by " + nick + " at " + date + ")");
+                    }
+
+                    topic.changeTopic(newTopic, nick, time);
+                    ui.showTopic();
                 }
+            }
 
-                else {
-                    if (!topic.getTopic().equals(newTopic) && time > topic.getTime() && chatState.isLogonCompleted()) {
-                        msgController.showSystemMessage(nick + " removed the topic");
-                        topic.changeTopic("", "", time);
-                        ui.showTopic();
-                    }
+            else {
+                if (!topic.getTopic().equals(newTopic) && time > topic.getTime() && chatState.isLogonCompleted()) {
+                    msgController.showSystemMessage(nick + " removed the topic");
+                    topic.changeTopic("", "", time);
+                    ui.showTopic();
                 }
             }
         }
@@ -344,37 +331,35 @@ public class DefaultMessageResponder implements MessageResponder {
      */
     @Override
     public void awayChanged(final int userCode, final boolean away, final String awayMsg) {
-        if (controller.isNewUser(userCode)) {
-            wList.addWaitingUser(userCode);
-            controller.sendExposeMessage();
-            controller.sendGetTopicMessage();
+        final User user = controller.getUser(userCode);
+
+        if (user == null) {
+            LOG.severe("Could not find user: %s", userCode);
+            return;
         }
 
-        else {
-            try {
-                final User user = controller.getUser(userCode);
-                controller.changeAwayStatus(userCode, away, awayMsg);
+        try {
+            controller.changeAwayStatus(userCode, away, awayMsg);
+
+            if (away) {
+                msgController.showSystemMessage(user.getNick() + " went away: " + user.getAwayMsg());
+            } else {
+                msgController.showSystemMessage(user.getNick() + " came back");
+            }
+
+            if (user.getPrivchat() != null) {
+                user.getPrivchat().updateAwayState();
 
                 if (away) {
-                    msgController.showSystemMessage(user.getNick() + " went away: " + user.getAwayMsg());
+                    msgController.showPrivateSystemMessage(user, user.getNick() + " went away: " + user.getAwayMsg());
                 } else {
-                    msgController.showSystemMessage(user.getNick() + " came back");
-                }
-
-                if (user.getPrivchat() != null) {
-                    user.getPrivchat().updateAwayState();
-
-                    if (away) {
-                        msgController.showPrivateSystemMessage(user, user.getNick() + " went away: " + user.getAwayMsg());
-                    } else {
-                        msgController.showPrivateSystemMessage(user, user.getNick() + " came back");
-                    }
+                    msgController.showPrivateSystemMessage(user, user.getNick() + " came back");
                 }
             }
+        }
 
-            catch (final CommandException e) {
-                LOG.log(Level.SEVERE, "Something very strange going on here...\n" + e);
-            }
+        catch (final CommandException e) {
+            LOG.severe("Something very strange going on here: %s", e.getMessage());
         }
     }
 
@@ -403,20 +388,18 @@ public class DefaultMessageResponder implements MessageResponder {
      */
     @Override
     public void userIdle(final int userCode, final String ipAddress) {
-        if (controller.isNewUser(userCode)) {
-            wList.addWaitingUser(userCode);
-            controller.sendExposeMessage();
-            controller.sendGetTopicMessage();
+        final User user = controller.getUser(userCode);
+
+        if (user == null) {
+            LOG.severe("Could not find user: %s", userCode);
+            return;
         }
 
-        else {
-            final User user = controller.getUser(userCode);
-            user.setLastIdle(System.currentTimeMillis());
+        user.setLastIdle(System.currentTimeMillis());
 
-            if (!user.getIpAddress().equals(ipAddress)) {
-                msgController.showSystemMessage(user.getNick() + " changed ip from " + user.getIpAddress() + " to " + ipAddress);
-                user.setIpAddress(ipAddress);
-            }
+        if (!user.getIpAddress().equals(ipAddress)) {
+            msgController.showSystemMessage(user.getNick() + " changed ip from " + user.getIpAddress() + " to " + ipAddress);
+            user.setIpAddress(ipAddress);
         }
     }
 
@@ -456,38 +439,32 @@ public class DefaultMessageResponder implements MessageResponder {
      */
     @Override
     public void nickChanged(final int userCode, final String newNick) {
-        if (controller.isNewUser(userCode)) {
-            wList.addWaitingUser(userCode);
-            controller.sendExposeMessage();
-            controller.sendGetTopicMessage();
+        final User user = controller.getUser(userCode);
+
+        if (user == null) {
+            LOG.severe("Could not find user: %s", userCode);
+            return;
+        }
+
+        if (!controller.isNickInUse(newNick) && Tools.isValidNick(newNick)) {
+            final String oldNick = user.getNick();
+            controller.changeNick(userCode, newNick);
+            msgController.showSystemMessage(oldNick + " changed nick to " + newNick);
+
+            if (user.getPrivchat() != null) {
+                msgController.showPrivateSystemMessage(user, oldNick + " changed nick to " + user.getNick());
+                user.getPrivchat().updateUserInformation();
+            }
         }
 
         else {
-            final User user = controller.getUser(userCode);
-
-            if (!controller.isNickInUse(newNick) && Tools.isValidNick(newNick)) {
-                final String oldNick = user.getNick();
-                controller.changeNick(userCode, newNick);
-                msgController.showSystemMessage(oldNick + " changed nick to " + newNick);
-
-                if (user.getPrivchat() != null) {
-                    msgController.showPrivateSystemMessage(user, oldNick + " changed nick to " + user.getNick());
-                    user.getPrivchat().updateUserInformation();
-                }
-            }
-
-            else {
-                LOG.log(Level.SEVERE, user.getNick() + " tried to change nick to '" + newNick + "', which is invalid");
-            }
+            LOG.severe("%s tried to change nick to '%s', which is invalid", user.getNick(), newNick);
         }
     }
 
     /**
      * Asks if the application user wants to receive a file from another user,
      * and if so, starts a server listening for a file transfer.
-     *
-     * If the user does not exist in the user list, it's asked to identify
-     * itself first.
      *
      * @param userCode The unique code of the user who is asking to send a file.
      * @param byteSize The size of the file in bytes.
@@ -497,88 +474,70 @@ public class DefaultMessageResponder implements MessageResponder {
      */
     @Override
     public void fileSend(final int userCode, final long byteSize, final String fileName, final String user, final int fileHash) {
-        if (controller.isNewUser(userCode)) {
-            wList.addWaitingUser(userCode);
-            controller.sendExposeMessage();
-            controller.sendGetTopicMessage();
+        if (!controller.isNewUser(userCode)) {
+            final String size = Tools.byteToString(byteSize);
+            final User tmpUser = controller.getUser(userCode);
+            final File defaultFile = new File(
+                    System.getProperty("user.home") + System.getProperty("file.separator") + fileName);
+            final FileReceiver fileRes = tList.addFileReceiver(tmpUser, defaultFile, byteSize);
+
+            msgController.showSystemMessage(
+                    user + " is trying to send the file " + fileName + " (#" + fileRes.getId() + ") [" + size + "]");
+
+            if (ui.askFileSave(user, fileName, size)) {
+                ui.showFileSave(fileRes);
+
+                if (fileRes.isAccepted() && !fileRes.isCanceled()) {
+                    ui.showTransfer(fileRes);
+
+                    try {
+                        final int port = fileRes.startServer();
+                        controller.sendFileAccept(tmpUser, port, fileHash, fileName);
+
+                        if (fileRes.transfer()) {
+                            msgController.showSystemMessage("Successfully received " + fileName +
+                                                                    " from " + user + ", and saved as " + fileRes.getFile().getName());
+                        }
+
+                        else {
+                            msgController.showSystemMessage("Failed to receive " + fileName + " from " + user);
+                            fileRes.cancel();
+                        }
+                    }
+
+                    // Failed to start the server
+                    catch (final ServerException e) {
+                        LOG.severe(e, "Failed to start server: %s", e.getMessage());
+                        msgController.showSystemMessage("Failed to receive " + fileName + " from " + user);
+                        controller.sendFileAbort(tmpUser, fileHash, fileName);
+                        fileRes.cancel();
+                    }
+
+                    // Failed to send the accept message
+                    catch (final CommandException e) {
+                        msgController.showSystemMessage("Failed to receive " + fileName + " from " + user);
+                        fileRes.cancel();
+                    }
+                }
+
+                else if (!fileRes.isCanceled()) {
+                    msgController.showSystemMessage("You declined to receive " + fileName + " from " + user);
+                    controller.sendFileAbort(tmpUser, fileHash, fileName);
+                }
+
+            }
+
+            else if (!fileRes.isCanceled()) {
+                msgController.showSystemMessage("You declined to receive " + fileName + " from " + user);
+                controller.sendFileAbort(tmpUser, fileHash, fileName);
+            }
+
+            tList.removeFileReceiver(fileRes);
         }
 
-        new Thread("DefaultMessageResponderFileSend") {
-            @Override
-            public void run() {
-                int counter = 0;
-
-                while (wList.isWaitingUser(userCode) && counter < 40) {
-                    counter++;
-                    Tools.sleep(50);
-                }
-
-                if (!controller.isNewUser(userCode)) {
-                    final String size = Tools.byteToString(byteSize);
-                    final User tmpUser = controller.getUser(userCode);
-                    final File defaultFile = new File(
-                            System.getProperty("user.home") + System.getProperty("file.separator") + fileName);
-                    final FileReceiver fileRes = tList.addFileReceiver(tmpUser, defaultFile, byteSize);
-
-                    msgController.showSystemMessage(
-                            user + " is trying to send the file " + fileName + " (#" + fileRes.getId() + ") [" + size + "]");
-
-                    if (ui.askFileSave(user, fileName, size)) {
-                        ui.showFileSave(fileRes);
-
-                        if (fileRes.isAccepted() && !fileRes.isCanceled()) {
-                            ui.showTransfer(fileRes);
-
-                            try {
-                                final int port = fileRes.startServer();
-                                controller.sendFileAccept(tmpUser, port, fileHash, fileName);
-
-                                if (fileRes.transfer()) {
-                                    msgController.showSystemMessage("Successfully received " + fileName +
-                                            " from " + user + ", and saved as " + fileRes.getFile().getName());
-                                }
-
-                                else {
-                                    msgController.showSystemMessage("Failed to receive " + fileName + " from " + user);
-                                    fileRes.cancel();
-                                }
-                            }
-
-                            // Failed to start the server
-                            catch (final ServerException e) {
-                                LOG.log(Level.SEVERE, e.toString(), e);
-                                msgController.showSystemMessage("Failed to receive " + fileName + " from " + user);
-                                controller.sendFileAbort(tmpUser, fileHash, fileName);
-                                fileRes.cancel();
-                            }
-
-                            // Failed to send the accept message
-                            catch (final CommandException e) {
-                                msgController.showSystemMessage("Failed to receive " + fileName + " from " + user);
-                                fileRes.cancel();
-                            }
-                        }
-
-                        else if (!fileRes.isCanceled()) {
-                            msgController.showSystemMessage("You declined to receive " + fileName + " from " + user);
-                            controller.sendFileAbort(tmpUser, fileHash, fileName);
-                        }
-
-                    }
-
-                    else if (!fileRes.isCanceled()) {
-                        msgController.showSystemMessage("You declined to receive " + fileName + " from " + user);
-                        controller.sendFileAbort(tmpUser, fileHash, fileName);
-                    }
-
-                    tList.removeFileReceiver(fileRes);
-                }
-
-                else {
-                    LOG.log(Level.SEVERE, "Could not find user: " + user);
-                }
-            }
-        } .start();
+        else {
+            LOG.severe("Could not find user: %s", user);
+        }
     }
 
     /**
@@ -620,30 +579,25 @@ public class DefaultMessageResponder implements MessageResponder {
      */
     @Override
     public void fileSendAccepted(final int userCode, final String fileName, final int fileHash, final int port) {
-        new Thread("DefaultMessageResponderFileSendAccepted") {
-            @Override
-            public void run() {
-                final User user = controller.getUser(userCode);
-                final FileSender fileSend = tList.getFileSender(user, fileName, fileHash);
+        final User user = controller.getUser(userCode);
+        final FileSender fileSend = tList.getFileSender(user, fileName, fileHash);
 
-                if (fileSend != null) {
-                    msgController.showSystemMessage(user.getNick() + " accepted sending of " + fileName);
+        if (fileSend != null) {
+            msgController.showSystemMessage(user.getNick() + " accepted sending of " + fileName);
 
-                    // Give the server some time to set up the connection first
-                    Tools.sleep(200);
+            // Give the server some time to set up the connection first
+            sleeper.sleep(200);
 
-                    if (fileSend.transfer(port)) {
-                        msgController.showSystemMessage(fileName + " successfully sent to " + user.getNick());
-                    }
-
-                    else {
-                        msgController.showSystemMessage("Failed to send " + fileName + " to " + user.getNick());
-                    }
-
-                    tList.removeFileSender(fileSend);
-                }
+            if (fileSend.transfer(port)) {
+                msgController.showSystemMessage(fileName + " successfully sent to " + user.getNick());
             }
-        } .start();
+
+            else {
+                msgController.showSystemMessage("Failed to send " + fileName + " to " + user.getNick());
+            }
+
+            tList.removeFileSender(fileSend);
+        }
     }
 
     /**
@@ -656,7 +610,8 @@ public class DefaultMessageResponder implements MessageResponder {
      * @param privateChatPort The port to use for sending private chat messages to this user.
      */
     @Override
-    public void clientInfo(final int userCode, final String client, final long timeSinceLogon, final String operatingSystem, final int privateChatPort) {
+    public void clientInfo(final int userCode, final String client, final long timeSinceLogon,
+                           final String operatingSystem, final int privateChatPort) {
         final User user = controller.getUser(userCode);
 
         if (user != null) {
@@ -667,7 +622,7 @@ public class DefaultMessageResponder implements MessageResponder {
         }
 
         else {
-            LOG.log(Level.SEVERE, "Could not find user: " + userCode);
+            LOG.severe("Could not find user: %s", userCode);
         }
     }
 }

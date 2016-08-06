@@ -71,4 +71,54 @@ public class DateToolsTest {
 
         assertEquals(String.valueOf(new DateTime().getYear()), dateAsString);
     }
+
+    @Test
+    public void howLongFromNowShouldReturnZeroIfThenIsZero() {
+        final String howLongFromNow = dateTools.howLongFromNow(0);
+
+        assertEquals("0 days, 00:00:00", howLongFromNow);
+    }
+
+    @Test
+    public void howLongFromNowShouldReturnCorrectWhenSeconds() {
+        final DateTime then = new DateTime()
+                .minusSeconds(3);
+        final String howLongFromNow = dateTools.howLongFromNow(then.toDate().getTime());
+
+        assertEquals("0 days, 00:00:03", howLongFromNow);
+    }
+
+    @Test
+    public void howLongFromNowShouldReturnCorrectWhenMinutes() {
+        final DateTime then = new DateTime()
+                .minusSeconds(12)
+                .minusMinutes(5);
+        final String howLongFromNow = dateTools.howLongFromNow(then.toDate().getTime());
+
+        assertEquals("0 days, 00:05:12", howLongFromNow);
+    }
+
+    @Test
+    public void howLongFromNowShouldReturnCorrectWhenHours() {
+        final DateTime then = new DateTime()
+                .minusSeconds(51)
+                .minusMinutes(22)
+                .minusHours(5);
+        final String howLongFromNow = dateTools.howLongFromNow(then.toDate().getTime());
+
+        assertEquals("0 days, 05:22:51", howLongFromNow);
+    }
+
+    @Test
+    public void howLongFromNowShouldReturnCorrectWhenDays() {
+        final DateTime then = new DateTime()
+                .minusSeconds(6)
+                .minusMinutes(44)
+                .minusHours(14)
+                .minusDays(2);
+        final String howLongFromNow = dateTools.howLongFromNow(then.toDate().getTime());
+
+        // Note: this might fail when logonTime is summer time and current time is not
+        assertEquals("2 days, 14:44:06", howLongFromNow);
+    }
 }

@@ -41,6 +41,13 @@ public final class TestUtils {
     }
 
     /**
+     * If this system is a Mac.
+     */
+    public static boolean isMac() {
+        return System.getProperty("os.name").toLowerCase().contains("mac");
+    }
+
+    /**
      * Gets the value of the field with the specified name in the specified object. Supports inheritance.
      *
      * @param object The object to get the value from.

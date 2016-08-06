@@ -161,8 +161,7 @@ public class MessageSender {
 
                 mcSocket.joinGroup(address);
                 mcSocket.setTimeToLive(64);
-                // // Crashes in Android 2.3.3 emulator
-                // LOG.log(Level.FINE, "Connected to " + mcSocket.getNetworkInterface());
+                LOG.log(Level.FINE, "Connected to " + mcSocket.getNetworkInterface());
                 connected = true;
             }
         }

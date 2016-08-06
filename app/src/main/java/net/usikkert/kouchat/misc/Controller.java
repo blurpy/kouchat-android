@@ -31,6 +31,7 @@ import net.usikkert.kouchat.autocomplete.UserAutoCompleteList;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.jmx.JMXBeanLoader;
 import net.usikkert.kouchat.message.CoreMessages;
+import net.usikkert.kouchat.net.AsyncMessageResponderWrapper;
 import net.usikkert.kouchat.net.DefaultMessageResponder;
 import net.usikkert.kouchat.net.DefaultPrivateMessageResponder;
 import net.usikkert.kouchat.net.FileReceiver;
@@ -130,9 +131,10 @@ public class Controller implements NetworkConnectionListener {
         idleThread = new IdleThread(this, ui, settings);
         dayTimer = new DayTimer(ui);
         networkService = new NetworkService(settings, errorHandler);
-        final MessageResponder msgResponder = new DefaultMessageResponder(this, ui, settings);
+        final MessageResponder msgResponder = new DefaultMessageResponder(this, ui, settings, coreMessages);
+        final AsyncMessageResponderWrapper msgResponderWrapper = new AsyncMessageResponderWrapper(msgResponder, this);
         final PrivateMessageResponder privmsgResponder = new DefaultPrivateMessageResponder(this, ui, settings);
-        final MessageParser msgParser = new MessageParser(msgResponder, settings);
+        final MessageParser msgParser = new MessageParser(msgResponderWrapper, settings);
         networkService.registerMessageReceiverListener(msgParser);
         final PrivateMessageParser privmsgParser = new PrivateMessageParser(privmsgResponder, settings);
         networkService.registerUDPReceiverListener(privmsgParser);
@@ -148,10 +150,10 @@ public class Controller implements NetworkConnectionListener {
         dayTimer.startTimer();
         idleThread.start();
 
-        msgController.showSystemMessage(coreMessages.getMessage("core.startup.welcome.systemMessage",
+        msgController.showSystemMessage(coreMessages.getMessage("core.startup.systemMessage.welcome",
                                                                 Constants.APP_NAME, Constants.APP_VERSION));
-        final String date = dateTools.currentDateToString(coreMessages.getMessage("core.dateFormat.long"));
-        msgController.showSystemMessage(coreMessages.getMessage("core.startup.todayIs.systemMessage", date));
+        final String date = dateTools.currentDateToString(coreMessages.getMessage("core.dateFormat.today"));
+        msgController.showSystemMessage(coreMessages.getMessage("core.startup.systemMessage.todayIs", date));
     }
 
     /**
@@ -241,7 +243,7 @@ public class Controller implements NetworkConnectionListener {
         changeAwayStatus(me.getCode(), true, awayMessage);
 
         ui.changeAway(true);
-        msgController.showSystemMessage(coreMessages.getMessage("core.away.wentAway.systemMessage", me.getAwayMsg()));
+        msgController.showSystemMessage(coreMessages.getMessage("core.away.systemMessage.wentAway", me.getAwayMsg()));
     }
 
     /**
@@ -253,7 +255,7 @@ public class Controller implements NetworkConnectionListener {
         changeAwayStatus(me.getCode(), false, "");
 
         ui.changeAway(false);
-        msgController.showSystemMessage(coreMessages.getMessage("core.away.cameBack.systemMessage"));
+        msgController.showSystemMessage(coreMessages.getMessage("core.away.systemMessage.cameBack"));
     }
 
     /**
@@ -426,7 +428,7 @@ public class Controller implements NetworkConnectionListener {
             final User user = userList.get(i);
 
             if (!user.isMe()) {
-                removeUser(user, coreMessages.getMessage("core.network.logOff.systemMessage"));
+                removeUser(user, coreMessages.getMessage("core.network.systemMessage.meLogOff"));
                 i--;
             }
         }
@@ -810,7 +812,7 @@ public class Controller implements NetworkConnectionListener {
             ui.showTopic();
 
             if (!silent) {
-                msgController.showSystemMessage(coreMessages.getMessage("core.network.connectionBack.systemMessage"));
+                msgController.showSystemMessage(coreMessages.getMessage("core.network.systemMessage.connectionBack"));
             }
 
             networkMessages.sendTopicRequestedMessage(getTopic());
@@ -832,12 +834,12 @@ public class Controller implements NetworkConnectionListener {
 
         if (isLoggedOn()) {
             if (!silent) {
-                msgController.showSystemMessage(coreMessages.getMessage("core.network.connectionLost.systemMessage"));
+                msgController.showSystemMessage(coreMessages.getMessage("core.network.systemMessage.connectionLost"));
             }
         }
 
         else {
-            msgController.showSystemMessage(coreMessages.getMessage("core.network.logOff.systemMessage"));
+            msgController.showSystemMessage(coreMessages.getMessage("core.network.systemMessage.meLogOff"));
         }
     }
 

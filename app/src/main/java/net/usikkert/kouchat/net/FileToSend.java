@@ -51,6 +51,8 @@ public class FileToSend {
     public FileToSend(final InputStreamOpener inputStreamOpener,
                       final String name,
                       final long length) {
+        Validate.notNull(inputStreamOpener, "InputStreamOpener can not be null");
+
         this.inputStreamOpener = inputStreamOpener;
         this.name = name;
         this.length = length;
@@ -66,6 +68,24 @@ public class FileToSend {
 
     public InputStream getInputStream() throws FileNotFoundException {
         return inputStreamOpener.open();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final FileToSend that = (FileToSend) o;
+
+        if (length != that.length) return false;
+        return name != null ? name.equals(that.name) : that.name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (int) (length ^ (length >>> 32));
+        return result;
     }
 
     public interface InputStreamOpener {

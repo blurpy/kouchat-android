@@ -54,4 +54,33 @@ public class DateTools {
     public String dateToString(final Date date, final String format) {
         return Tools.dateToString(date, format);
     }
+
+    /**
+     * Returns a string showing how long has passed from 'then' to now.
+     *
+     * @param then An earlier time.
+     * @return How long it's been since 'then'.
+     */
+    public String howLongFromNow(final long then) {
+        if (then != 0) {
+            final long diff = System.currentTimeMillis() - then;
+            final long totSec = diff / 1000;
+
+            final int oneday = 86400;
+            final int onehour = 3600;
+            final int onemin = 60;
+
+            final int days = Math.round(totSec / oneday);
+            final int hours = Math.round(totSec - days * oneday) / onehour;
+            final int minutes = Math.round(totSec - days * oneday - hours * onehour) / onemin;
+            final int seconds = Math.round(totSec - days * oneday - hours * onehour - minutes * onemin);
+
+            return days + " days, " + Tools.getDoubleDigit(hours) + ":" + Tools.getDoubleDigit(minutes) +
+                    ":" + Tools.getDoubleDigit(seconds);
+        }
+
+        else {
+            return "0 days, 00:00:00";
+        }
+    }
 }

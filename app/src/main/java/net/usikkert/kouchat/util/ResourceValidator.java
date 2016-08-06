@@ -23,7 +23,7 @@
 package net.usikkert.kouchat.util;
 
 import java.net.URL;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -40,7 +40,7 @@ public class ResourceValidator {
      * Constructor.
      */
     public ResourceValidator() {
-        resourceMap = new HashMap<String, URL>();
+        resourceMap = new LinkedHashMap<String, URL>();
     }
 
     /**

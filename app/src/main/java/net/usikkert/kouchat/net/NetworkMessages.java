@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.net;
 
+import static net.usikkert.kouchat.net.NetworkMessageType.*;
+
 import net.usikkert.kouchat.misc.CommandException;
 import net.usikkert.kouchat.misc.Topic;
 import net.usikkert.kouchat.misc.User;
@@ -66,7 +68,7 @@ public class NetworkMessages {
      * <p>Note: the network will be checked if this fails!</p>
      */
     public void sendIdleMessage() {
-        final String msg = createMessage("IDLE");
+        final String msg = createMessage(IDLE);
         final boolean sent = networkService.sendMulticastMsg(msg);
 
         if (!sent) {
@@ -108,7 +110,7 @@ public class NetworkMessages {
      * @param awayMsg The away message to set.
      */
     public void sendAwayMessage(final String awayMsg) {
-        final String msg = createMessage("AWAY") + awayMsg;
+        final String msg = createMessage(AWAY) + awayMsg;
         final boolean sent = networkService.sendMulticastMsg(msg);
 
         if (!sent) {
@@ -122,7 +124,7 @@ public class NetworkMessages {
      * <p>Note: the network will be checked if this fails!</p>
      */
     public void sendBackMessage() {
-        final String msg = createMessage("BACK");
+        final String msg = createMessage(BACK);
         final boolean sent = networkService.sendMulticastMsg(msg);
 
         if (!sent) {
@@ -139,7 +141,7 @@ public class NetworkMessages {
      * @throws CommandException If the message was not sent successfully.
      */
     public void sendChatMessage(final String chatMsg) throws CommandException {
-        final String msg = createMessage("MSG") +
+        final String msg = createMessage(MSG) +
                 "[" + settings.getOwnColor() + "]" +
                 chatMsg;
 
@@ -155,7 +157,7 @@ public class NetworkMessages {
      * Sends a message to log this client on the network.
      */
     public void sendLogonMessage() {
-        final String msg = createMessage("LOGON");
+        final String msg = createMessage(LOGON);
         networkService.sendMulticastMsg(msg);
     }
 
@@ -163,7 +165,7 @@ public class NetworkMessages {
      * Sends a message to log this client off the network.
      */
     public void sendLogoffMessage() {
-        final String msg = createMessage("LOGOFF");
+        final String msg = createMessage(LOGOFF);
         networkService.sendMulticastMsg(msg);
     }
 
@@ -171,7 +173,7 @@ public class NetworkMessages {
      * Sends a message asking the other clients to identify themselves.
      */
     public void sendExposeMessage() {
-        final String msg = createMessage("EXPOSE");
+        final String msg = createMessage(EXPOSE);
         networkService.sendMulticastMsg(msg);
     }
 
@@ -179,7 +181,7 @@ public class NetworkMessages {
      * Sends a message to identify this client.
      */
     public void sendExposingMessage() {
-        final String msg = createMessage("EXPOSING") + me.getAwayMsg();
+        final String msg = createMessage(EXPOSING) + me.getAwayMsg();
         networkService.sendMulticastMsg(msg);
     }
 
@@ -187,7 +189,7 @@ public class NetworkMessages {
      * Sends a message to ask for the current topic.
      */
     public void sendGetTopicMessage() {
-        final String msg = createMessage("GETTOPIC");
+        final String msg = createMessage(GETTOPIC);
         networkService.sendMulticastMsg(msg);
     }
 
@@ -195,7 +197,7 @@ public class NetworkMessages {
      * Sends a message to notify that the user is writing.
      */
     public void sendWritingMessage() {
-        final String msg = createMessage("WRITING");
+        final String msg = createMessage(WRITING);
         networkService.sendMulticastMsg(msg);
     }
 
@@ -203,7 +205,7 @@ public class NetworkMessages {
      * Sends a message to notify that the user has stopped writing.
      */
     public void sendStoppedWritingMessage() {
-        final String msg = createMessage("STOPPEDWRITING");
+        final String msg = createMessage(STOPPEDWRITING);
         networkService.sendMulticastMsg(msg);
     }
 
@@ -215,7 +217,7 @@ public class NetworkMessages {
      * @param newNick The new nick to send.
      */
     public void sendNickMessage(final String newNick) {
-        final String msg = createMessage("NICK", newNick);
+        final String msg = createMessage(NICK, newNick);
         final boolean sent = networkService.sendMulticastMsg(msg);
 
         if (!sent) {
@@ -230,7 +232,7 @@ public class NetworkMessages {
      * @param crashNick The nick name that is already in use by the user.
      */
     public void sendNickCrashMessage(final String crashNick) {
-        final String msg = createMessage("NICKCRASH") + crashNick;
+        final String msg = createMessage(NICKCRASH) + crashNick;
         networkService.sendMulticastMsg(msg);
     }
 
@@ -242,7 +244,7 @@ public class NetworkMessages {
      * @param fileName The name of the file.
      */
     public void sendFileAbort(final User user, final int fileHash, final String fileName) {
-        final String msg = createMessage("SENDFILEABORT") +
+        final String msg = createMessage(SENDFILEABORT) +
                 "(" + user.getCode() + ")" +
                 "{" + fileHash + "}" +
                 fileName;
@@ -269,7 +271,7 @@ public class NetworkMessages {
      */
     public void sendFileAccept(final User user, final int port,
             final int fileHash, final String fileName) throws CommandException {
-        final String msg = createMessage("SENDFILEACCEPT") +
+        final String msg = createMessage(SENDFILEACCEPT) +
                 "(" + user.getCode() + ")" +
                 "[" + port + "]" +
                 "{" + fileHash + "}" +
@@ -293,7 +295,7 @@ public class NetworkMessages {
      * @throws CommandException If the message was not sent successfully.
      */
     public void sendFile(final User user, final FileToSend file) throws CommandException {
-        final String msg = createMessage("SENDFILE") +
+        final String msg = createMessage(SENDFILE) +
                 "(" + user.getCode() + ")" +
                 "[" + file.length() + "]" +
                 "{" + file.hashCode() + "}" +
@@ -318,7 +320,7 @@ public class NetworkMessages {
      * </ul>
      */
     public void sendClient() {
-        final String msg = createMessage("CLIENT") +
+        final String msg = createMessage(CLIENT) +
                 "(" + me.getClient() + ")" +
                 "[" + (System.currentTimeMillis() - me.getLogonTime()) + "]" +
                 "{" + me.getOperatingSystem() + "}" +
@@ -337,7 +339,7 @@ public class NetworkMessages {
      * @throws CommandException If the message was not sent successfully.
      */
     public void sendPrivateMessage(final String privMsg, final User user) throws CommandException {
-        final String msg = createMessage("PRIVMSG") +
+        final String msg = createMessage(PRIVMSG) +
                 "(" + user.getCode() + ")" +
                 "[" + settings.getOwnColor() + "]" +
                 privMsg;
@@ -380,7 +382,7 @@ public class NetworkMessages {
      * @return The new message.
      */
     private String createTopicMessage(final Topic topic) {
-        return createMessage("TOPIC") +
+        return createMessage(TOPIC) +
                 "(" + topic.getNick() + ")" +
                 "[" + topic.getTime() + "]" +
                 topic.getTopic();
