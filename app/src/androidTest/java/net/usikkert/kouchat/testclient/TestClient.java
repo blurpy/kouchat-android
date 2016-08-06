@@ -81,9 +81,10 @@ public class TestClient {
 
         final ErrorHandler errorHandler = new ErrorHandler();
         ui = new TestClientUserInterface(settings, errorHandler);
-        controller = new Controller(ui, settings, new AndroidSettingsSaver(), new CoreMessages(), errorHandler);
+        final CoreMessages coreMessages = new CoreMessages();
+        controller = new Controller(ui, settings, new AndroidSettingsSaver(), coreMessages, errorHandler);
         transferList = controller.getTransferList();
-        commandParser = new CommandParser(controller, ui, settings);
+        commandParser = new CommandParser(controller, ui, settings, coreMessages);
     }
 
     public int getUserCode() {
