@@ -318,6 +318,10 @@ public class TestClient {
         }
     }
 
+    public void setFileTransferDelay(final int delay) {
+        ui.setFileTransferDelay(delay);
+    }
+
     /**
      * Cancels sending the given file to the given user.
      *

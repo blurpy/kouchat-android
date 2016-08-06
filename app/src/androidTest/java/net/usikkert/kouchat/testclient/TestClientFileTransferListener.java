@@ -32,23 +32,34 @@ import net.usikkert.kouchat.net.FileTransfer;
  */
 public class TestClientFileTransferListener implements FileTransferListener {
 
-    public TestClientFileTransferListener(final FileTransfer fileTransfer) {
+    private final int fileTransferDelay;
+
+    public TestClientFileTransferListener(final FileTransfer fileTransfer,
+                                          final int fileTransferDelay) {
+        this.fileTransferDelay = fileTransferDelay;
+
         fileTransfer.registerListener(this);
     }
 
     @Override
     public void statusWaiting() {
-
+        if (hasDelay()) {
+            sleep(500);
+        }
     }
 
     @Override
     public void statusConnecting() {
-
+        if (hasDelay()) {
+            sleep(3000);
+        }
     }
 
     @Override
     public void statusTransferring() {
-
+        if (hasDelay()) {
+            sleep(500);
+        }
     }
 
     @Override
@@ -63,6 +74,20 @@ public class TestClientFileTransferListener implements FileTransferListener {
 
     @Override
     public void transferUpdate() {
+        if (hasDelay()) {
+            sleep(fileTransferDelay);
+        }
+    }
 
+    private boolean hasDelay() {
+        return fileTransferDelay > 0;
+    }
+
+    private void sleep(final int sleep) {
+        try {
+            Thread.sleep(sleep);
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

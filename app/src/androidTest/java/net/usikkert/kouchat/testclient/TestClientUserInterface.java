@@ -51,6 +51,8 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
 
     private BufferedWriter writer;
 
+    private int fileTransferDelay;
+
     public TestClientUserInterface(final Settings settings, final ErrorHandler errorHandler) {
         this.settings = settings;
         this.errorHandler = errorHandler;
@@ -73,12 +75,12 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
 
     @Override
     public void showTransfer(final FileReceiver fileRes) {
-        new TestClientFileTransferListener(fileRes);
+        new TestClientFileTransferListener(fileRes, fileTransferDelay);
     }
 
     @Override
     public void showTransfer(final FileSender fileSend) {
-        new TestClientFileTransferListener(fileSend);
+        new TestClientFileTransferListener(fileSend, fileTransferDelay);
     }
 
     @Override
@@ -175,5 +177,9 @@ public class TestClientUserInterface implements UserInterface, ChatWindow {
         catch (final IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setFileTransferDelay(final int fileTransferDelay) {
+        this.fileTransferDelay = fileTransferDelay;
     }
 }
