@@ -256,6 +256,10 @@ public class NotificationService {
         return fileTransferNotificationService.getCurrentFileTransferIds();
     }
 
+    public void removeAllNotifications() {
+        notificationManager.cancelAll();
+    }
+
     private void sendDefaultNotification() {
         final NotificationCompat.Builder notification =
                 createNotificationWithLatestInfo(R.drawable.ic_stat_notify_default, R.string.notification_running);

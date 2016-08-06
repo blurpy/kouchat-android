@@ -94,6 +94,7 @@ public class ChatService extends Service {
     @Override
     public void onDestroy() {
         androidUserInterface.logOff();
+        notificationService.removeAllNotifications();
         lockHandler.releaseAllLocks();
         chatServiceBinder.onDestroy();
 
