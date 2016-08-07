@@ -72,7 +72,7 @@ public class MessageNotificationService {
         notification.setContentTitle(context.getString(R.string.notification_new_message));
         notification.setContentText(latestMessage);
         notification.setSmallIcon(R.drawable.ic_stat_notify_activity);
-        notification.setStyle(fillInboxStyle());
+        notification.setStyle(fillMainChatInbox());
         notification.setContentIntent(createIntentForMainChat());
 
         notificationManager.notify(MESSAGE_NOTIFICATION_ID, notification.build());
@@ -85,18 +85,21 @@ public class MessageNotificationService {
         notification.setContentTitle(user.getNick());
         notification.setContentText(message);
         notification.setSmallIcon(R.drawable.ic_stat_notify_activity);
-        notification.setStyle(fillPrivateInboxStyle(user));
+        notification.setStyle(fillPrivateChatInbox(user));
         notification.setContentIntent(createIntentForMainChat());
 
         notificationManager.notify(getNotificationIdForUser(user), notification.build());
     }
 
     private void addPrivateMessageToList(final User user, final String message) {
-        if (!privateMessages.containsKey(user)) {
-            privateMessages.put(user, new CircularFifoQueue<String>(MAX_MESSAGES));
+        Collection<String> userMessages = privateMessages.get(user);
+
+        if (userMessages == null) {
+            userMessages = new CircularFifoQueue<>(MAX_MESSAGES);
+            privateMessages.put(user, userMessages);
         }
 
-        privateMessages.get(user).add(message);
+        userMessages.add(message);
     }
 
     public void resetAllNotifications() {
@@ -115,7 +118,7 @@ public class MessageNotificationService {
         }
     }
 
-    private NotificationCompat.InboxStyle fillInboxStyle() {
+    private NotificationCompat.InboxStyle fillMainChatInbox() {
         final NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
         for (final String msg : messages) {
@@ -125,12 +128,14 @@ public class MessageNotificationService {
         return inboxStyle;
     }
 
-    private NotificationCompat.Style fillPrivateInboxStyle(final User user) {
+    private NotificationCompat.Style fillPrivateChatInbox(final User user) {
         final NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        final Collection<String> privateMsg = privateMessages.get(user);
+        final Collection<String> userMessages = privateMessages.get(user);
 
-        for (final String msg : privateMsg) {
-            inboxStyle.addLine(msg);
+        if (userMessages != null) {
+            for (final String msg : userMessages) {
+                inboxStyle.addLine(msg);
+            }
         }
 
         return inboxStyle;
