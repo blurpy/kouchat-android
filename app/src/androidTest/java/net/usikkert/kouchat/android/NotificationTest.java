@@ -71,69 +71,69 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
 
     public void test01ShouldShowNotificationWhenKouChatIsHiddenAndSomeoneWritesInTheMainChat() {
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         RobotiumTestUtils.closeMainChat(this);
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         client.sendChatMessage("You have a new hidden message!");
         solo.sleep(1500);
-        assertNewMessageNotification();
+        assertNewMainChatMessageNotification();
 
         RobotiumTestUtils.launchMainChat(this);
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
     }
 
     public void test02ShouldShowNotificationWhenKouChatIsHiddenAndSomeoneWritesInThePrivateChat() {
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         RobotiumTestUtils.closeMainChat(this);
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         client.sendPrivateChatMessage("You have a new hidden private message!", me);
         solo.sleep(1500);
-        assertNewMessageNotification();
+        assertNewPrivateChatMessageNotification();
 
         RobotiumTestUtils.launchMainChat(this);
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         openPrivateChat(); // To reset envelope
     }
 
     public void test03ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInTheMainChat() {
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         client.sendChatMessage("You have a new visible message!");
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
     }
 
     public void test04ShouldNotShowNotificationWhenMainChatIsVisibleAndSomeUserWritesInThePrivateChat() {
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         client.sendPrivateChatMessage("You have another hidden private message!", me);
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         openPrivateChat(); // To reset envelope
     }
 
     public void test05ShouldNotShowNotificationWhenPrivateChatIsVisibleAndCurrentUserWritesInThePrivateChat() {
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         openPrivateChat();
 
         client.sendPrivateChatMessage("You have a new visible private message!", me);
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
     }
 
     public void test06ShouldShowNotificationWhenPrivateChatIsVisibleAndOtherUserWritesInAnotherPrivateChat() {
@@ -141,37 +141,37 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         otherUser.logon();
 
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 3, 3, "Test");
 
         otherUser.sendPrivateChatMessage("You should get a notification now!", me);
         solo.sleep(1500);
-        assertNewMessageNotification();
+        assertNewPrivateChatMessageNotification();
 
         RobotiumTestUtils.goHome(solo);
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
     }
 
     public void test07ShouldShowNotificationWhenPrivateChatIsVisibleAndSomeUserWritesInTheMainChat() {
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         openPrivateChat();
 
         client.sendChatMessage("You have been notified!");
         solo.sleep(1500);
-        assertNewMessageNotification();
+        assertNewMainChatMessageNotification();
 
         RobotiumTestUtils.goHome(solo);
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
     }
 
     public void test08ShouldNotRemoveNotificationWhenReturningToPrivateChatFromPauseAfterNewMessageInMainChat() {
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         openPrivateChat();
         solo.sleep(500);
@@ -182,7 +182,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
 
         client.sendChatMessage("You should stay notified until you see this!");
         solo.sleep(500);
-        assertNewMessageNotification();
+        assertNewMainChatMessageNotification();
 
         // Pretend to return to the private chat using the list of running applications
         getInstrumentation().runOnMainSync(new Runnable() {
@@ -192,11 +192,11 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         });
 
         solo.sleep(1500);
-        assertNewMessageNotification();
+        assertNewMainChatMessageNotification();
 
         RobotiumTestUtils.goHome(solo);
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
     }
 
     public void test09ShouldNotRemoveNotificationWhenReturningToPrivateChatFromPauseAfterNewPrivateMessageFromOtherUser() {
@@ -204,7 +204,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         otherUser.logon();
 
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         RobotiumTestUtils.openPrivateChat(solo, getInstrumentation(), 3, 3, "Test");
         solo.sleep(500);
@@ -215,7 +215,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
 
         otherUser.sendPrivateChatMessage("You should stay notified until you are back in the main chat!", me);
         solo.sleep(500);
-        assertNewMessageNotification();
+        assertNewPrivateChatMessageNotification();
 
         // Pretend to return to the private chat using the list of running applications
         getInstrumentation().runOnMainSync(new Runnable() {
@@ -225,16 +225,16 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         });
 
         solo.sleep(1500);
-        assertNewMessageNotification();
+        assertNewPrivateChatMessageNotification();
 
         RobotiumTestUtils.goHome(solo);
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
     }
 
     public void test10ShouldRemoveNotificationWhenReturningToPrivateChatFromPauseAfterNewPrivateMessageFromCurrentUser() {
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
 
         openPrivateChat();
         solo.sleep(500);
@@ -245,7 +245,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
 
         client.sendPrivateChatMessage("The notification should be reset soon!", me);
         solo.sleep(500);
-        assertNewMessageNotification();
+        assertNewPrivateChatMessageNotification();
 
         // Pretend to return to the private chat using the list of running applications
         getInstrumentation().runOnMainSync(new Runnable() {
@@ -255,7 +255,7 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         });
 
         solo.sleep(1500);
-        assertDefaultNotification();
+        assertNoNotifications();
     }
 
     public void test99Quit() {
@@ -281,20 +281,28 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         System.gc();
     }
 
-    private void assertDefaultNotification() {
+    private void assertNoNotifications() {
         getInstrumentation().waitForIdleSync();
         solo.sleep(500);
 
-        assertEquals(R.string.notification_running, notificationService.getCurrentLatestInfoTextId());
-        assertEquals(R.drawable.ic_stat_notify_default, notificationService.getCurrentIconId());
+        assertFalse(notificationService.isMainChatActivity());
+        assertFalse(notificationService.isPrivateChatActivity());
     }
 
-    private void assertNewMessageNotification() {
+    private void assertNewMainChatMessageNotification() {
         getInstrumentation().waitForIdleSync();
         solo.sleep(500);
 
-        assertEquals(R.string.notification_new_message, notificationService.getCurrentLatestInfoTextId());
-        assertEquals(R.drawable.ic_stat_notify_activity, notificationService.getCurrentIconId());
+        assertTrue(notificationService.isMainChatActivity());
+        assertFalse(notificationService.isPrivateChatActivity());
+    }
+
+    private void assertNewPrivateChatMessageNotification() {
+        getInstrumentation().waitForIdleSync();
+        solo.sleep(500);
+
+        assertFalse(notificationService.isMainChatActivity());
+        assertTrue(notificationService.isPrivateChatActivity());
     }
 
     private void openPrivateChat() {

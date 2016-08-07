@@ -1,4 +1,3 @@
-
 /***************************************************************************
  *   Copyright 2006-2014 by Christian Ihle                                 *
  *   contact@kouchat.net                                                   *
@@ -22,7 +21,6 @@
 
 package net.usikkert.kouchat.android.notification;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import net.usikkert.kouchat.android.R;
@@ -65,13 +63,6 @@ public class NotificationService {
     private final FileTransferNotificationService fileTransferNotificationService;
     private final MessageNotificationService messageNotificationService;
 
-    private boolean mainChatActivity;
-    private final Set<User> privateChatActivityUsers;
-
-    // These are necessary because it's not otherwise possible to get the current notifications in integration tests
-    private int currentIconId;
-    private int currentLatestInfoTextId;
-
     /**
      * Constructor.
      *
@@ -84,9 +75,6 @@ public class NotificationService {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         fileTransferNotificationService = new FileTransferNotificationService(context, notificationManager);
         messageNotificationService = new MessageNotificationService(context, notificationManager);
-
-        mainChatActivity = false;
-        privateChatActivityUsers = new HashSet<>();
     }
 
     /**
@@ -97,6 +85,7 @@ public class NotificationService {
      * @return A complete notification.
      */
     public Notification createServiceNotification() {
+        resetAllNotifications();
         return createNotificationWithLatestInfo(R.drawable.ic_stat_notify_default, R.string.notification_running).build();
     }
 
@@ -116,10 +105,6 @@ public class NotificationService {
      */
     public void notifyNewMainChatMessage(final User user, final String message) {
         messageNotificationService.notifyNewMainChatMessage(user, message);
-
-        sendNewMessageNotification();
-
-        mainChatActivity = true;
     }
 
     /**
@@ -140,10 +125,6 @@ public class NotificationService {
         Validate.notNull(user, "User can not be null");
 
         messageNotificationService.notifyNewPrivateChatMessage(user, message);
-
-        sendNewMessageNotification();
-
-        privateChatActivityUsers.add(user);
     }
 
     /**
@@ -160,11 +141,6 @@ public class NotificationService {
      */
     public void resetAllNotifications() {
         messageNotificationService.resetAllNotifications();
-
-        sendDefaultNotification();
-
-        mainChatActivity = false;
-        privateChatActivityUsers.clear();
     }
 
     /**
@@ -189,29 +165,7 @@ public class NotificationService {
     public void resetPrivateChatNotification(final User user) {
         Validate.notNull(user, "User can not be null");
 
-        privateChatActivityUsers.remove(user);
-
-        if (!isMainChatActivity() && !isPrivateChatActivity()) {
-            sendDefaultNotification();
-        }
-    }
-
-    /**
-     * Gets the ID of the icon used in the last notification sent.
-     *
-     * @return The ID of the icon used in the currently visible notification.
-     */
-    public int getCurrentIconId() {
-        return currentIconId;
-    }
-
-    /**
-     * Gets the ID of the latest info text used in the last notification sent.
-     *
-     * @return The ID of the latest info text used in the currently visible notification.
-     */
-    public int getCurrentLatestInfoTextId() {
-        return currentLatestInfoTextId;
+        messageNotificationService.resetPrivateChatNotification(user);
     }
 
     /**
@@ -220,7 +174,7 @@ public class NotificationService {
      * @return If there is activity in the main chat.
      */
     public boolean isMainChatActivity() {
-        return mainChatActivity;
+        return messageNotificationService.isMainChatActivity();
     }
 
     /**
@@ -229,7 +183,7 @@ public class NotificationService {
      * @return If there is activity in the private chat.
      */
     public boolean isPrivateChatActivity() {
-        return !privateChatActivityUsers.isEmpty();
+        return messageNotificationService.isPrivateChatActivity();
     }
 
     /**
@@ -272,20 +226,6 @@ public class NotificationService {
         notificationManager.cancelAll();
     }
 
-    private void sendDefaultNotification() {
-        final NotificationCompat.Builder notification =
-                createNotificationWithLatestInfo(R.drawable.ic_stat_notify_default, R.string.notification_running);
-
-        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification.build());
-    }
-
-    private void sendNewMessageNotification() {
-        final NotificationCompat.Builder notification =
-                createNotificationWithLatestInfo(R.drawable.ic_stat_notify_activity, R.string.notification_new_message);
-
-        notificationManager.notify(SERVICE_NOTIFICATION_ID, notification.build());
-    }
-
     private NotificationCompat.Builder createNotificationWithLatestInfo(final int iconId,
                                                                         final int latestInfoTextId) {
         final NotificationCompat.Builder notification = createNotification(iconId);
@@ -297,8 +237,6 @@ public class NotificationService {
     }
 
     private NotificationCompat.Builder createNotification(final int iconId) {
-        currentIconId = iconId;
-
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
         notification.setSmallIcon(iconId);
         // Text shown when the notification arrives
@@ -317,8 +255,6 @@ public class NotificationService {
     private void setLatestEventInfo(final NotificationCompat.Builder notification,
                                     final PendingIntent pendingIntent,
                                     final int latestInfoTextId) {
-        currentLatestInfoTextId = latestInfoTextId;
-
         // First line of the notification in the drawer
         notification.setContentTitle(context.getText(R.string.app_name));
         // Second line of the notification in the drawer

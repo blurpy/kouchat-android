@@ -1,4 +1,3 @@
-
 /***************************************************************************
  *   Copyright 2006-2014 by Christian Ihle                                 *
  *   contact@kouchat.net                                                   *
@@ -124,7 +123,7 @@ public class MessageNotificationService {
 
     public void resetAllNotifications() {
         notificationManager.cancel(MESSAGE_NOTIFICATION_ID);
-        resetPrivateChatNotifications();
+        cancelPrivateChatNotifications();
 
         messages.clear();
         privateMessages.clear();
@@ -133,12 +132,18 @@ public class MessageNotificationService {
         privateMessageCount.clear();
     }
 
-    private void resetPrivateChatNotifications() {
+    private void cancelPrivateChatNotifications() {
         final Set<User> users = privateMessages.keySet();
 
         for (final User user : users) {
             notificationManager.cancel(getNotificationIdForUser(user));
         }
+    }
+
+    public void resetPrivateChatNotification(final User user) {
+        privateMessages.remove(user);
+        privateMessageCount.remove(user);
+        notificationManager.cancel(getNotificationIdForUser(user));
     }
 
     private NotificationCompat.InboxStyle fillMainChatInbox() {
@@ -181,5 +186,13 @@ public class MessageNotificationService {
         privateChatIntent.putExtra("userCode", user.getCode());
 
         return PendingIntent.getActivity(context, 0, privateChatIntent, 0);
+    }
+
+    public boolean isMainChatActivity() {
+        return messageCount > 0;
+    }
+
+    public boolean isPrivateChatActivity() {
+        return !privateMessageCount.isEmpty();
     }
 }
