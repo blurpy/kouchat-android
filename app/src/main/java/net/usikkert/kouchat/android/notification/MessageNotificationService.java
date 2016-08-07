@@ -30,6 +30,7 @@ import android.support.v7.app.NotificationCompat;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
+import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.User;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
@@ -91,7 +92,7 @@ public class MessageNotificationService {
         notification.setNumber(privateMessageCount);
         notification.setSmallIcon(R.drawable.ic_stat_notify_activity);
         notification.setStyle(fillPrivateChatInbox(user));
-        notification.setContentIntent(createIntentForMainChat());
+        notification.setContentIntent(createIntentForPrivateChat(user));
 
         notificationManager.notify(getNotificationIdForUser(user), notification.build());
     }
@@ -165,5 +166,12 @@ public class MessageNotificationService {
 
     private PendingIntent createIntentForMainChat() {
         return PendingIntent.getActivity(context, 0, new Intent(context, MainChatController.class), 0);
+    }
+
+    private PendingIntent createIntentForPrivateChat(final User user) {
+        final Intent privateChatIntent = new Intent(context, PrivateChatController.class);
+        privateChatIntent.putExtra("userCode", user.getCode());
+
+        return PendingIntent.getActivity(context, 0, privateChatIntent, 0);
     }
 }
