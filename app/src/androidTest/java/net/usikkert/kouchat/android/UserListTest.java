@@ -313,6 +313,7 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
     }
 
     private ListView getUserList() {
+        solo.sleep(100);
         return solo.getCurrentViews(ListView.class).get(0);
     }
 
