@@ -359,7 +359,7 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
         Validate.notNull(user.getPrivchat(), "Private chat can not be null");
 
         if (!isVisible() && !user.getPrivchat().isVisible()) {
-            notificationService.notifyNewPrivateChatMessage(user);
+            notificationService.notifyNewPrivateChatMessage(user, message);
         }
     }
 

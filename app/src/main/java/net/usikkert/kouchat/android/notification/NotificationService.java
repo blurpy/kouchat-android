@@ -134,9 +134,12 @@ public class NotificationService {
      * </ul>
      *
      * @param user The user who got a private message.
+     * @param message The private message sent by the user.
      */
-    public void notifyNewPrivateChatMessage(final User user) {
+    public void notifyNewPrivateChatMessage(final User user, final String message) {
         Validate.notNull(user, "User can not be null");
+
+        messageNotificationService.notifyNewPrivateChatMessage(user, message);
 
         sendNewMessageNotification();
 

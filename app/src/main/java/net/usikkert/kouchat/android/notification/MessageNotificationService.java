@@ -35,6 +35,9 @@ import net.usikkert.kouchat.misc.User;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Service for handling new message notifications.
@@ -43,19 +46,22 @@ import java.util.Collection;
  */
 public class MessageNotificationService {
 
-    private static final int MESSAGE_NOTIFICATION_ID = 20000;
+    private static final int MESSAGE_NOTIFICATION_ID = 100000000;
+    private static final int MAX_MESSAGES = 5; // Stores the 5 newest messages
 
     private final Context context;
     private final NotificationManager notificationManager;
 
     private final Collection<String> messages;
+    private final Map<User, Collection<String>> privateMessages;
 
     public MessageNotificationService(final Context context,
                                       final NotificationManager notificationManager) {
         this.context = context;
         this.notificationManager = notificationManager;
 
-        messages = new CircularFifoQueue<>(5); // Stores the 5 newest messages
+        messages = new CircularFifoQueue<>(MAX_MESSAGES);
+        privateMessages = new HashMap<>();
     }
 
     public void notifyNewMainChatMessage(final User user, final String message) {
@@ -72,9 +78,41 @@ public class MessageNotificationService {
         notificationManager.notify(MESSAGE_NOTIFICATION_ID, notification.build());
     }
 
+    public void notifyNewPrivateChatMessage(final User user, final String message) {
+        addPrivateMessageToList(user, message);
+
+        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+        notification.setContentTitle(user.getNick());
+        notification.setContentText(message);
+        notification.setSmallIcon(R.drawable.ic_stat_notify_activity);
+        notification.setStyle(fillPrivateInboxStyle(user));
+        notification.setContentIntent(createIntentForMainChat());
+
+        notificationManager.notify(getNotificationIdForUser(user), notification.build());
+    }
+
+    private void addPrivateMessageToList(final User user, final String message) {
+        if (!privateMessages.containsKey(user)) {
+            privateMessages.put(user, new CircularFifoQueue<String>(MAX_MESSAGES));
+        }
+
+        privateMessages.get(user).add(message);
+    }
+
     public void resetAllNotifications() {
-        messages.clear();
         notificationManager.cancel(MESSAGE_NOTIFICATION_ID);
+        resetPrivateChatNotifications();
+
+        messages.clear();
+        privateMessages.clear();
+    }
+
+    private void resetPrivateChatNotifications() {
+        final Set<User> users = privateMessages.keySet();
+
+        for (final User user : users) {
+            notificationManager.cancel(getNotificationIdForUser(user));
+        }
     }
 
     private NotificationCompat.InboxStyle fillInboxStyle() {
@@ -85,6 +123,21 @@ public class MessageNotificationService {
         }
 
         return inboxStyle;
+    }
+
+    private NotificationCompat.Style fillPrivateInboxStyle(final User user) {
+        final NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        final Collection<String> privateMsg = privateMessages.get(user);
+
+        for (final String msg : privateMsg) {
+            inboxStyle.addLine(msg);
+        }
+
+        return inboxStyle;
+    }
+
+    private int getNotificationIdForUser(final User user) {
+        return MESSAGE_NOTIFICATION_ID + user.getCode();
     }
 
     private PendingIntent createIntentForMainChat() {
