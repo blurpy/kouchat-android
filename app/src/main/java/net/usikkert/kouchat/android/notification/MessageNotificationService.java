@@ -55,6 +55,9 @@ public class MessageNotificationService {
     private final Collection<String> messages;
     private final Map<User, Collection<String>> privateMessages;
 
+    private int messageCount;
+    private int privateMessageCount;
+
     public MessageNotificationService(final Context context,
                                       final NotificationManager notificationManager) {
         this.context = context;
@@ -66,11 +69,12 @@ public class MessageNotificationService {
 
     public void notifyNewMainChatMessage(final User user, final String message) {
         final String latestMessage = user.getNick() + ": " + message;
-        messages.add(latestMessage);
+        addMainChatMessageToList(latestMessage);
 
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
-        notification.setContentTitle(context.getString(R.string.notification_new_message));
+        notification.setContentTitle(context.getString(R.string.notification_main_chat));
         notification.setContentText(latestMessage);
+        notification.setNumber(messageCount);
         notification.setSmallIcon(R.drawable.ic_stat_notify_activity);
         notification.setStyle(fillMainChatInbox());
         notification.setContentIntent(createIntentForMainChat());
@@ -84,11 +88,17 @@ public class MessageNotificationService {
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
         notification.setContentTitle(user.getNick());
         notification.setContentText(message);
+        notification.setNumber(privateMessageCount);
         notification.setSmallIcon(R.drawable.ic_stat_notify_activity);
         notification.setStyle(fillPrivateChatInbox(user));
         notification.setContentIntent(createIntentForMainChat());
 
         notificationManager.notify(getNotificationIdForUser(user), notification.build());
+    }
+
+    private void addMainChatMessageToList(final String latestMessage) {
+        messages.add(latestMessage);
+        messageCount++;
     }
 
     private void addPrivateMessageToList(final User user, final String message) {
@@ -100,6 +110,7 @@ public class MessageNotificationService {
         }
 
         userMessages.add(message);
+        privateMessageCount++;
     }
 
     public void resetAllNotifications() {
@@ -108,6 +119,9 @@ public class MessageNotificationService {
 
         messages.clear();
         privateMessages.clear();
+
+        messageCount = 0;
+        privateMessageCount = 0;
     }
 
     private void resetPrivateChatNotifications() {
@@ -125,6 +139,8 @@ public class MessageNotificationService {
             inboxStyle.addLine(msg);
         }
 
+        inboxStyle.setSummaryText(context.getString(R.string.notification_new_message));
+
         return inboxStyle;
     }
 
@@ -136,6 +152,8 @@ public class MessageNotificationService {
             for (final String msg : userMessages) {
                 inboxStyle.addLine(msg);
             }
+
+            inboxStyle.setSummaryText(context.getString(R.string.notification_new_private_message));
         }
 
         return inboxStyle;
