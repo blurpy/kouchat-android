@@ -56,8 +56,8 @@ public class MessageNotificationService {
     private final Collection<String> messages;
     private final Map<User, Collection<String>> privateMessages;
 
+    private final Map<User, Integer> privateMessageCount;
     private int messageCount;
-    private int privateMessageCount;
 
     public MessageNotificationService(final Context context,
                                       final NotificationManager notificationManager) {
@@ -66,6 +66,7 @@ public class MessageNotificationService {
 
         messages = new CircularFifoQueue<>(MAX_MESSAGES);
         privateMessages = new HashMap<>();
+        privateMessageCount = new HashMap<>();
     }
 
     public void notifyNewMainChatMessage(final User user, final String message) {
@@ -89,7 +90,7 @@ public class MessageNotificationService {
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
         notification.setContentTitle(user.getNick());
         notification.setContentText(message);
-        notification.setNumber(privateMessageCount);
+        notification.setNumber(privateMessageCount.get(user));
         notification.setSmallIcon(R.drawable.ic_stat_notify_activity);
         notification.setStyle(fillPrivateChatInbox(user));
         notification.setContentIntent(createIntentForPrivateChat(user));
@@ -111,7 +112,14 @@ public class MessageNotificationService {
         }
 
         userMessages.add(message);
-        privateMessageCount++;
+
+        final Integer userCount = privateMessageCount.get(user);
+
+        if (userCount == null) {
+            privateMessageCount.put(user, 1);
+        } else {
+            privateMessageCount.put(user, userCount +1);
+        }
     }
 
     public void resetAllNotifications() {
@@ -122,7 +130,7 @@ public class MessageNotificationService {
         privateMessages.clear();
 
         messageCount = 0;
-        privateMessageCount = 0;
+        privateMessageCount.clear();
     }
 
     private void resetPrivateChatNotifications() {
