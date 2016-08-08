@@ -43,44 +43,22 @@ public class ServiceNotificationService {
     }
 
     public Notification createServiceNotification() {
-        return createNotificationWithLatestInfo(R.drawable.ic_stat_notify_default, R.string.notification_running).build();
-    }
-
-    private NotificationCompat.Builder createNotificationWithLatestInfo(final int iconId,
-                                                                        final int latestInfoTextId) {
-        final NotificationCompat.Builder notification = createNotification(iconId);
-        final PendingIntent pendingIntent = createPendingIntent();
-
-        setLatestEventInfo(notification, pendingIntent, latestInfoTextId);
-
-        return notification;
-    }
-
-    private NotificationCompat.Builder createNotification(final int iconId) {
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
-        notification.setSmallIcon(iconId);
-        // Text shown when the notification arrives
+
+        notification.setSmallIcon(R.drawable.ic_stat_notify_default);
         notification.setTicker(context.getText(R.string.notification_startup));
+        notification.setContentTitle(context.getText(R.string.app_name));
+        notification.setContentText(context.getText(R.string.notification_running));
+        notification.setContentIntent(createPendingIntent());
 
         disableSwipeToCancel(notification);
 
-        return notification;
+        return notification.build();
     }
 
     private PendingIntent createPendingIntent() {
         // Used to launch KouChat when clicking on the notification in the drawer
         return PendingIntent.getActivity(context, 0, new Intent(context, MainChatController.class), 0);
-    }
-
-    private void setLatestEventInfo(final NotificationCompat.Builder notification,
-                                    final PendingIntent pendingIntent,
-                                    final int latestInfoTextId) {
-        // First line of the notification in the drawer
-        notification.setContentTitle(context.getText(R.string.app_name));
-        // Second line of the notification in the drawer
-        notification.setContentText(context.getText(latestInfoTextId));
-
-        notification.setContentIntent(pendingIntent);
     }
 
     private void disableSwipeToCancel(final NotificationCompat.Builder notification) {
