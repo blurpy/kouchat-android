@@ -39,7 +39,9 @@
   <string name="notification_startup">KouChat is up and running</string>
   <string name="notification_running">Running</string>
   <string name="notification_new_message">New unread messages</string>
+  <string name="notification_new_message_ticker">New message from %1$s</string>
   <string name="notification_new_private_message">New unread private messages</string>
+  <string name="notification_new_private_message_ticker">New private message from %1$s</string>
   <string name="notification_main_chat">Main Chat</string>
   <string name="notification_new_file_transfer">New file transfer request</string>
   <string name="notification_file_transfer_from">File transfer from %1$s</string>

@@ -74,6 +74,7 @@ public class MessageNotificationService {
         addMainChatMessageToList(latestMessage);
 
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+        notification.setTicker(context.getString(R.string.notification_new_message_ticker, user.getNick()));
         notification.setContentTitle(context.getString(R.string.notification_main_chat));
         notification.setContentText(latestMessage);
         notification.setNumber(messageCount);
@@ -88,6 +89,7 @@ public class MessageNotificationService {
         addPrivateMessageToList(user, message);
 
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+        notification.setTicker(context.getString(R.string.notification_new_private_message_ticker, user.getNick()));
         notification.setContentTitle(user.getNick());
         notification.setContentText(message);
         notification.setNumber(privateMessageCount.get(user));
