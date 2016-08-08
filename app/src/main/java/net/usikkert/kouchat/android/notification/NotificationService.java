@@ -24,8 +24,6 @@ package net.usikkert.kouchat.android.notification;
 
 import java.util.Set;
 
-import net.usikkert.kouchat.android.R;
-import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileTransfer;
@@ -33,10 +31,7 @@ import net.usikkert.kouchat.util.Validate;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.app.NotificationCompat;
 
 /**
  * Service for handling notifications.
@@ -57,10 +52,9 @@ import android.support.v7.app.NotificationCompat;
  */
 public class NotificationService {
 
-    public static final int SERVICE_NOTIFICATION_ID = 1001;
-
-    private final Context context;
     private final NotificationManager notificationManager;
+
+    private final ServiceNotificationService serviceNotificationService;
     private final FileTransferNotificationService fileTransferNotificationService;
     private final MessageNotificationService messageNotificationService;
 
@@ -71,9 +65,10 @@ public class NotificationService {
      */
     public NotificationService(final Context context) {
         Validate.notNull(context, "Context can not be null");
-        this.context = context;
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        serviceNotificationService = new ServiceNotificationService(context);
         fileTransferNotificationService = new FileTransferNotificationService(context, notificationManager);
         messageNotificationService = new MessageNotificationService(context, notificationManager);
     }
@@ -87,7 +82,7 @@ public class NotificationService {
      */
     public Notification createServiceNotification() {
         resetAllMessageNotifications();
-        return createNotificationWithLatestInfo(R.drawable.ic_stat_notify_default, R.string.notification_running).build();
+        return serviceNotificationService.createServiceNotification();
     }
 
     /**
@@ -225,46 +220,5 @@ public class NotificationService {
 
     public void onDestroy() {
         notificationManager.cancelAll();
-    }
-
-    private NotificationCompat.Builder createNotificationWithLatestInfo(final int iconId,
-                                                                        final int latestInfoTextId) {
-        final NotificationCompat.Builder notification = createNotification(iconId);
-        final PendingIntent pendingIntent = createPendingIntent();
-
-        setLatestEventInfo(notification, pendingIntent, latestInfoTextId);
-
-        return notification;
-    }
-
-    private NotificationCompat.Builder createNotification(final int iconId) {
-        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
-        notification.setSmallIcon(iconId);
-        // Text shown when the notification arrives
-        notification.setTicker(context.getText(R.string.notification_startup));
-
-        disableSwipeToCancel(notification);
-
-        return notification;
-    }
-
-    private PendingIntent createPendingIntent() {
-        // Used to launch KouChat when clicking on the notification in the drawer
-        return PendingIntent.getActivity(context, 0, new Intent(context, MainChatController.class), 0);
-    }
-
-    private void setLatestEventInfo(final NotificationCompat.Builder notification,
-                                    final PendingIntent pendingIntent,
-                                    final int latestInfoTextId) {
-        // First line of the notification in the drawer
-        notification.setContentTitle(context.getText(R.string.app_name));
-        // Second line of the notification in the drawer
-        notification.setContentText(context.getText(latestInfoTextId));
-
-        notification.setContentIntent(pendingIntent);
-    }
-
-    private void disableSwipeToCancel(final NotificationCompat.Builder notification) {
-        notification.setOngoing(true);
     }
 }
