@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android.service;
 
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.notification.NotificationService;
+import net.usikkert.kouchat.android.notification.ServiceNotificationService;
 import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.android.settings.AndroidSettingsLoader;
 
@@ -81,7 +82,7 @@ public class ChatService extends Service {
             androidUserInterface.logOn();
         }
 
-        startForeground(NotificationService.SERVICE_NOTIFICATION_ID, notificationService.createServiceNotification());
+        startForeground(ServiceNotificationService.SERVICE_NOTIFICATION_ID, notificationService.createServiceNotification());
 
         super.onStart(intent, startId);
     }

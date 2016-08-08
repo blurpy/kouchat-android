@@ -36,6 +36,8 @@ import net.usikkert.kouchat.android.controller.MainChatController;
  */
 public class ServiceNotificationService {
 
+    public static final int SERVICE_NOTIFICATION_ID = 1001;
+
     private final Context context;
 
     public ServiceNotificationService(final Context context) {
