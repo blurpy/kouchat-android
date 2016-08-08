@@ -77,6 +77,8 @@ public class FileTransferNotificationService {
                                                        fileReceiver.getUser().getNick()));
         notification.setContentText(fileReceiver.getFileName());
         notification.setContentIntent(createIntentForReceiveFileDialog(notificationId, fileReceiver));
+        notification.setPriority(NotificationCompat.PRIORITY_MAX);
+        notification.setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
         disableSwipeToCancel(notification);
 
@@ -111,6 +113,9 @@ public class FileTransferNotificationService {
             final PendingIntent pendingIntent = createIntentForCancel(notificationId, fileTransfer);
             notification.addAction(R.drawable.ic_button_cancel, context.getString(R.string.cancel), pendingIntent);
 
+            notification.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+            notification.setCategory(NotificationCompat.CATEGORY_PROGRESS);
+
             disableSwipeToCancel(notification);
 
             currentFileTransfers.put(fileTransfer, notification);
@@ -143,6 +148,8 @@ public class FileTransferNotificationService {
 
         notification.setProgress(100, fileTransfer.getPercent(), false);
         notification.setContentText(text + ": " + fileTransfer.getFileName());
+        notification.setPriority(NotificationCompat.PRIORITY_LOW);
+        notification.setCategory(NotificationCompat.CATEGORY_PROGRESS);
 
         enableSwipeToCancel(notification);
 

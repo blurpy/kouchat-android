@@ -52,6 +52,8 @@ public class ServiceNotificationService {
         notification.setContentTitle(context.getText(R.string.app_name));
         notification.setContentText(context.getText(R.string.notification_running));
         notification.setContentIntent(createPendingIntent());
+        notification.setPriority(NotificationCompat.PRIORITY_MIN);
+        notification.setCategory(NotificationCompat.CATEGORY_SERVICE);
 
         disableSwipeToCancel(notification);
 

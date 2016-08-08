@@ -81,6 +81,8 @@ public class MessageNotificationService {
         notification.setSmallIcon(R.drawable.ic_stat_notify_activity);
         notification.setStyle(fillMainChatInbox());
         notification.setContentIntent(createIntentForMainChat());
+        notification.setPriority(NotificationCompat.PRIORITY_MAX);
+        notification.setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
         notificationManager.notify(MESSAGE_NOTIFICATION_ID, notification.build());
     }
@@ -96,6 +98,8 @@ public class MessageNotificationService {
         notification.setSmallIcon(R.drawable.ic_stat_notify_activity);
         notification.setStyle(fillPrivateChatInbox(user));
         notification.setContentIntent(createIntentForPrivateChat(user));
+        notification.setPriority(NotificationCompat.PRIORITY_MAX);
+        notification.setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
         notificationManager.notify(getNotificationIdForUser(user), notification.build());
     }
