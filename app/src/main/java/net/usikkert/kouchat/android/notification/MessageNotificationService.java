@@ -26,7 +26,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.NotificationCompat;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
@@ -53,7 +56,7 @@ public class MessageNotificationService {
     private final Context context;
     private final NotificationManager notificationManager;
 
-    private final Collection<String> messages;
+    private final Collection<CharSequence> messages;
     private final Map<User, Collection<String>> privateMessages;
 
     private final Map<User, Integer> privateMessageCount;
@@ -70,7 +73,7 @@ public class MessageNotificationService {
     }
 
     public void notifyNewMainChatMessage(final User user, final String message) {
-        final String latestMessage = user.getNick() + ": " + message;
+        final CharSequence latestMessage = createMainChatMessage(user, message);
         addMainChatMessageToList(latestMessage);
 
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
@@ -104,7 +107,16 @@ public class MessageNotificationService {
         notificationManager.notify(getNotificationIdForUser(user), notification.build());
     }
 
-    private void addMainChatMessageToList(final String latestMessage) {
+    private CharSequence createMainChatMessage(final User user, final String message) {
+        final String nick = user.getNick();
+
+        final SpannableString messageWithBoldNick = new SpannableString(nick + ": " + message);
+        messageWithBoldNick.setSpan(new StyleSpan(Typeface.BOLD), 0, nick.length() +1, 0);
+
+        return messageWithBoldNick;
+    }
+
+    private void addMainChatMessageToList(final CharSequence latestMessage) {
         messages.add(latestMessage);
         messageCount++;
     }
@@ -156,7 +168,7 @@ public class MessageNotificationService {
     private NotificationCompat.InboxStyle fillMainChatInbox() {
         final NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
-        for (final String msg : messages) {
+        for (final CharSequence msg : messages) {
             inboxStyle.addLine(msg);
         }
 
