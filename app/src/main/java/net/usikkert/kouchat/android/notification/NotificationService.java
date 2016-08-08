@@ -85,7 +85,7 @@ public class NotificationService {
      * @return A complete notification.
      */
     public Notification createServiceNotification() {
-        resetAllNotifications();
+        resetAllMessageNotifications();
         return createNotificationWithLatestInfo(R.drawable.ic_stat_notify_default, R.string.notification_running).build();
     }
 
@@ -139,7 +139,7 @@ public class NotificationService {
      *   <li>Resets the flag for activity in all the private chats.</li>
      * </ul>
      */
-    public void resetAllNotifications() {
+    public void resetAllMessageNotifications() {
         messageNotificationService.resetAllNotifications();
     }
 
@@ -222,7 +222,7 @@ public class NotificationService {
         return fileTransferNotificationService.getCurrentFileTransferIds();
     }
 
-    public void removeAllNotifications() {
+    public void onDestroy() {
         notificationManager.cancelAll();
     }
 

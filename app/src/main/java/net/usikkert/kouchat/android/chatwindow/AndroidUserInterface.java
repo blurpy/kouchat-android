@@ -577,8 +577,8 @@ public class AndroidUserInterface implements UserInterface, ChatWindow {
     /**
      * Resets both private and main chat notifications using the notification service.
      */
-    public void resetAllNotifications() {
-        notificationService.resetAllNotifications();
+    public void resetAllMessageNotifications() {
+        notificationService.resetAllMessageNotifications();
     }
 
     /**

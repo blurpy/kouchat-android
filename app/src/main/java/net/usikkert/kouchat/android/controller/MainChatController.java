@@ -220,7 +220,7 @@ public class MainChatController extends AppCompatActivity implements UserListLis
         visible = true;
 
         if (androidUserInterface != null) { // Is null during initial startup. Doesn't matter.
-            androidUserInterface.resetAllNotifications();
+            androidUserInterface.resetAllMessageNotifications();
         }
     }
 
