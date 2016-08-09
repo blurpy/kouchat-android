@@ -55,6 +55,7 @@ public class MessageNotificationService {
 
     private final Context context;
     private final NotificationManager notificationManager;
+    private final NotificationHelper notificationHelper;
 
     private final Collection<CharSequence> messages;
     private final Map<User, Collection<String>> privateMessages;
@@ -67,6 +68,7 @@ public class MessageNotificationService {
         this.context = context;
         this.notificationManager = notificationManager;
 
+        notificationHelper = new NotificationHelper(context);
         messages = new CircularFifoQueue<>(MAX_MESSAGES);
         privateMessages = new HashMap<>();
         privateMessageCount = new HashMap<>();
@@ -87,6 +89,8 @@ public class MessageNotificationService {
         notification.setPriority(NotificationCompat.PRIORITY_MAX);
         notification.setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
+        notificationHelper.setFeedbackEffects(notification);
+
         notificationManager.notify(MESSAGE_NOTIFICATION_ID, notification.build());
     }
 
@@ -103,6 +107,8 @@ public class MessageNotificationService {
         notification.setContentIntent(createIntentForPrivateChat(user));
         notification.setPriority(NotificationCompat.PRIORITY_MAX);
         notification.setCategory(NotificationCompat.CATEGORY_MESSAGE);
+
+        notificationHelper.setFeedbackEffects(notification);
 
         notificationManager.notify(getNotificationIdForUser(user), notification.build());
     }

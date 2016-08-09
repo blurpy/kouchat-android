@@ -52,6 +52,7 @@ public class FileTransferNotificationService {
 
     private final Context context;
     private final NotificationManager notificationManager;
+    private final NotificationHelper notificationHelper;
 
     private final Set<Integer> currentFileTransferIds;
     private final Map<FileTransfer, NotificationCompat.Builder> currentFileTransfers;
@@ -61,6 +62,7 @@ public class FileTransferNotificationService {
         this.context = context;
         this.notificationManager = notificationManager;
 
+        notificationHelper = new NotificationHelper(context);
         currentFileTransferIds = new HashSet<>();
         currentFileTransfers = new HashMap<>();
     }
@@ -79,6 +81,8 @@ public class FileTransferNotificationService {
         notification.setContentIntent(createIntentForReceiveFileDialog(notificationId, fileReceiver));
         notification.setPriority(NotificationCompat.PRIORITY_MAX);
         notification.setCategory(NotificationCompat.CATEGORY_MESSAGE);
+
+        notificationHelper.setFeedbackEffects(notification);
 
         disableSwipeToCancel(notification);
 
