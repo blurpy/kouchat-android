@@ -81,7 +81,6 @@ public class NotificationService {
      * @return A complete notification.
      */
     public Notification createServiceNotification() {
-        resetAllMessageNotifications();
         return serviceNotificationService.createServiceNotification();
     }
 

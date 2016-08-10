@@ -137,6 +137,7 @@ public class MainChatController extends AppCompatActivity implements UserListLis
 
                 androidUserInterface = binder.getAndroidUserInterface();
                 androidUserInterface.registerMainChatController(MainChatController.this);
+                androidUserInterface.resetAllMessageNotifications();
                 androidUserInterface.showTopic();
 
                 userList = androidUserInterface.getUserList();
