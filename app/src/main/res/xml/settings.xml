@@ -38,15 +38,18 @@
 
     <SwitchPreference
         android:key="@string/settings_notification_light_key"
-        android:title="@string/settings_notification_light_title"/>
+        android:title="@string/settings_notification_light_title"
+        android:defaultValue="true"/>
 
     <SwitchPreference
         android:key="@string/settings_notification_sound_key"
-        android:title="@string/settings_notification_sound_title"/>
+        android:title="@string/settings_notification_sound_title"
+        android:defaultValue="true"/>
 
     <SwitchPreference
         android:key="@string/settings_notification_vibrate_key"
-        android:title="@string/settings_notification_vibrate_title"/>
+        android:title="@string/settings_notification_vibrate_title"
+        android:defaultValue="true"/>
 
   </PreferenceCategory>
 
