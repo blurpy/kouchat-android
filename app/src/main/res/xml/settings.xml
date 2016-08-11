@@ -33,4 +33,21 @@
       android:title="@string/settings_wake_lock_title"
       android:summary="@string/settings_wake_lock_summary"/>
 
+  <PreferenceCategory
+      android:title="@string/settings_notification_title">
+
+    <SwitchPreference
+        android:key="@string/settings_notification_light_key"
+        android:title="@string/settings_notification_light_title"/>
+
+    <SwitchPreference
+        android:key="@string/settings_notification_sound_key"
+        android:title="@string/settings_notification_sound_title"/>
+
+    <SwitchPreference
+        android:key="@string/settings_notification_vibrate_key"
+        android:title="@string/settings_notification_vibrate_title"/>
+
+  </PreferenceCategory>
+
 </PreferenceScreen>

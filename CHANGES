@@ -16,6 +16,7 @@
   - Removed line height fix on Android 5 and up, because of bug #77941 with ignored line spacing.
   - Added notification with progress bar and cancel button for file transfers.
   - Added separate notifications for unread messages.
+  - Added optional usage of light, sound and vibration on notifications.
   - Imported backend code from KouChat v1.3.0 for desktop.
   - Changing to switches instead of checkboxes in Settings.
 
