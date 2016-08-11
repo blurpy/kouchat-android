@@ -149,10 +149,6 @@ public class SettingsFragment extends PreferenceFragment
         androidUserInterface = null;
         settings = null;
         serviceConnection = null;
-        nickNameKey = null;
-        wakeLockKey = null;
-        ownColorKey = null;
-        systemColorKey = null;
 
         super.onDestroy();
     }
