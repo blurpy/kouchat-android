@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.support.v7.app.NotificationCompat;
 
 import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.android.settings.AndroidSettings;
 
 /**
  * Reusable helper methods for managing notifications.
@@ -39,21 +40,33 @@ public class NotificationHelper {
 
     private static final long[] VIBRATION_PATTERN = new long[] {50, 100, 50, 100};
 
+    private final AndroidSettings settings;
     private final Uri soundUri;
 
-    public NotificationHelper(final Context context) {
+    public NotificationHelper(final Context context, final AndroidSettings settings) {
+        this.settings = settings;
+
         soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                                   context.getPackageName() + "/" + R.raw.notification_sound);
     }
 
     /**
-     * Sets a notification sound, a vibration pattern and a blinking led.
+     * Sets a notification sound, a vibration pattern and a blinking led,
+     * but only if enabled in the settings.
      *
      * @param notification The notification to update with these effects.
      */
     public void setFeedbackEffects(final NotificationCompat.Builder notification) {
-        notification.setSound(soundUri);
-        notification.setVibrate(VIBRATION_PATTERN);
-        notification.setLights(Color.CYAN, 500, 2000);
+        if (settings.isNotificationSoundEnabled()) {
+            notification.setSound(soundUri);
+        }
+
+        if (settings.isNotificationVibrationEnabled()) {
+            notification.setVibrate(VIBRATION_PATTERN);
+        }
+
+        if (settings.isNotificationLightEnabled()) {
+            notification.setLights(Color.CYAN, 500, 2000);
+        }
     }
 }

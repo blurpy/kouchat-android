@@ -55,12 +55,11 @@ public class ChatService extends Service {
 
     @Override
     public void onCreate() {
-        notificationService = new NotificationService(this);
-
         final AndroidSettings settings = new AndroidSettings();
         final AndroidSettingsLoader androidSettingsLoader = new AndroidSettingsLoader();
         androidSettingsLoader.loadStoredSettings(this, settings);
 
+        notificationService = new NotificationService(this, settings);
         androidUserInterface = new AndroidUserInterface(this, settings, notificationService);
 
         final WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);

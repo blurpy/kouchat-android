@@ -34,6 +34,7 @@ import android.text.style.StyleSpan;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
+import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.misc.User;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
@@ -64,11 +65,12 @@ public class MessageNotificationService {
     private int messageCount;
 
     public MessageNotificationService(final Context context,
-                                      final NotificationManager notificationManager) {
+                                      final NotificationManager notificationManager,
+                                      final AndroidSettings settings) {
         this.context = context;
         this.notificationManager = notificationManager;
 
-        notificationHelper = new NotificationHelper(context);
+        notificationHelper = new NotificationHelper(context, settings);
         messages = new CircularFifoQueue<>(MAX_MESSAGES);
         privateMessages = new HashMap<>();
         privateMessageCount = new HashMap<>();

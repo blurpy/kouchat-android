@@ -31,6 +31,7 @@ import android.support.v7.app.NotificationCompat;
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.controller.ReceiveFileController;
 import net.usikkert.kouchat.android.service.CancelFileTransferService;
+import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileTransfer;
 import net.usikkert.kouchat.util.Validate;
@@ -58,11 +59,12 @@ public class FileTransferNotificationService {
     private final Map<FileTransfer, NotificationCompat.Builder> currentFileTransfers;
 
     public FileTransferNotificationService(final Context context,
-                                           final NotificationManager notificationManager) {
+                                           final NotificationManager notificationManager,
+                                           final AndroidSettings settings) {
         this.context = context;
         this.notificationManager = notificationManager;
 
-        notificationHelper = new NotificationHelper(context);
+        notificationHelper = new NotificationHelper(context, settings);
         currentFileTransferIds = new HashSet<>();
         currentFileTransfers = new HashMap<>();
     }

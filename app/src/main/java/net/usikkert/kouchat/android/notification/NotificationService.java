@@ -24,6 +24,7 @@ package net.usikkert.kouchat.android.notification;
 
 import java.util.Set;
 
+import net.usikkert.kouchat.android.settings.AndroidSettings;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.net.FileReceiver;
 import net.usikkert.kouchat.net.FileTransfer;
@@ -62,15 +63,17 @@ public class NotificationService {
      * Constructor.
      *
      * @param context Context to associate notifications with, and load resources.
+     * @param settings Settings to use for notifications.
      */
-    public NotificationService(final Context context) {
+    public NotificationService(final Context context, final AndroidSettings settings) {
         Validate.notNull(context, "Context can not be null");
+        Validate.notNull(settings, "Settings can not be null");
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         serviceNotificationService = new ServiceNotificationService(context);
-        fileTransferNotificationService = new FileTransferNotificationService(context, notificationManager);
-        messageNotificationService = new MessageNotificationService(context, notificationManager);
+        fileTransferNotificationService = new FileTransferNotificationService(context, notificationManager, settings);
+        messageNotificationService = new MessageNotificationService(context, notificationManager, settings);
     }
 
     /**
