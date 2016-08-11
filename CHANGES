@@ -17,6 +17,7 @@
   - Added notification with progress bar and cancel button for file transfers.
   - Added separate notifications for unread messages.
   - Imported backend code from KouChat v1.3.0 for desktop.
+  - Changing to switches instead of checkboxes in Settings.
 
 
 * version 1.0.2 (26.10.2014)

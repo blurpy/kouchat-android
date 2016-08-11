@@ -29,10 +29,10 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.TwoStatePreference;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
@@ -113,7 +113,7 @@ public class SettingsFragment extends PreferenceFragment
         }
 
         else if (key.equals(wakeLockKey)) {
-            final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(key);
+            final TwoStatePreference checkBoxPreference = (TwoStatePreference) findPreference(key);
             settings.setWakeLockEnabled(checkBoxPreference.isChecked());
         }
 

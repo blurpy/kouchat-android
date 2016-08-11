@@ -28,7 +28,7 @@
       android:dialogTitle="@string/settings_sys_color_title"
       android:dialogIcon="@drawable/ic_dialog"/>
 
-  <CheckBoxPreference
+  <SwitchPreference
       android:key="@string/settings_wake_lock_key"
       android:title="@string/settings_wake_lock_title"
       android:summary="@string/settings_wake_lock_summary"/>
