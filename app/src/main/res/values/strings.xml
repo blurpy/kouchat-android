@@ -36,8 +36,8 @@
   <string name="settings_notification_light_title">Enable light</string>
   <string name="settings_notification_sound_key">notification_sound</string>
   <string name="settings_notification_sound_title">Enable sound</string>
-  <string name="settings_notification_vibrate_key">notification_vibrate</string>
-  <string name="settings_notification_vibrate_title">Enable vibration</string>
+  <string name="settings_notification_vibration_key">notification_vibration</string>
+  <string name="settings_notification_vibration_title">Enable vibration</string>
   <string name="settings_title">Settings</string>
   <string name="private_chat_title">User not found</string>
   <string name="error_nick_name_invalid">Invalid nick name</string>

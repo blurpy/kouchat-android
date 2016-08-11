@@ -77,7 +77,7 @@ public class SettingsFragment extends PreferenceFragment
 
         notificationLightKey = getString(R.string.settings_notification_light_key);
         notificationSoundKey = getString(R.string.settings_notification_sound_key);
-        notificationVibrationKey = getString(R.string.settings_notification_vibrate_key);
+        notificationVibrationKey = getString(R.string.settings_notification_vibration_key);
 
         final Preference nickNamePreference = findPreference(nickNameKey);
         nickNamePreference.setOnPreferenceChangeListener(this);

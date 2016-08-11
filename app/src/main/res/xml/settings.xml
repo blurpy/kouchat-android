@@ -47,8 +47,8 @@
         android:defaultValue="true"/>
 
     <SwitchPreference
-        android:key="@string/settings_notification_vibrate_key"
-        android:title="@string/settings_notification_vibrate_title"
+        android:key="@string/settings_notification_vibration_key"
+        android:title="@string/settings_notification_vibration_title"
         android:defaultValue="true"/>
 
   </PreferenceCategory>

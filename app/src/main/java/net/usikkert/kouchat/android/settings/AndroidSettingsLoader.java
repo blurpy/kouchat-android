@@ -140,7 +140,7 @@ public class AndroidSettingsLoader {
 
     private void loadNotificationVibration(final Context context, final SharedPreferences preferences,
                                            final AndroidSettings settings) {
-        final String preferenceKey = context.getString(R.string.settings_notification_vibrate_key);
+        final String preferenceKey = context.getString(R.string.settings_notification_vibration_key);
         final boolean preferenceEnabled = preferences.getBoolean(preferenceKey, true);
 
         settings.setNotificationVibrationEnabled(preferenceEnabled);
