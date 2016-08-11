@@ -28,7 +28,8 @@
       android:dialogTitle="@string/settings_sys_color_title"
       android:dialogIcon="@drawable/ic_dialog"/>
 
-  <SwitchPreference
+  <CheckBoxPreference
+      android:widgetLayout="@layout/two_state_preference"
       android:key="@string/settings_wake_lock_key"
       android:title="@string/settings_wake_lock_title"
       android:summary="@string/settings_wake_lock_summary"/>
@@ -36,17 +37,20 @@
   <PreferenceCategory
       android:title="@string/settings_notification_title">
 
-    <SwitchPreference
+    <CheckBoxPreference
+        android:widgetLayout="@layout/two_state_preference"
         android:key="@string/settings_notification_light_key"
         android:title="@string/settings_notification_light_title"
         android:defaultValue="true"/>
 
-    <SwitchPreference
+    <CheckBoxPreference
+        android:widgetLayout="@layout/two_state_preference"
         android:key="@string/settings_notification_sound_key"
         android:title="@string/settings_notification_sound_title"
         android:defaultValue="true"/>
 
-    <SwitchPreference
+    <CheckBoxPreference
+        android:widgetLayout="@layout/two_state_preference"
         android:key="@string/settings_notification_vibration_key"
         android:title="@string/settings_notification_vibration_title"
         android:defaultValue="true"/>

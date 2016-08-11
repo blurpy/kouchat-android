@@ -18,7 +18,7 @@
   - Added separate notifications for unread messages.
   - Added optional usage of light, sound and vibration on notifications.
   - Imported backend code from KouChat v1.3.0 for desktop.
-  - Changing to switches instead of checkboxes in Settings.
+  - Changing to switches instead of checkboxes in Settings on Lollipop and newer.
 
 
 * version 1.0.2 (26.10.2014)
