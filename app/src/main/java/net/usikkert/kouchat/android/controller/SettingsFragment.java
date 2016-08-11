@@ -66,7 +66,7 @@ public class SettingsFragment extends PreferenceFragment
 
         addPreferencesFromResource(R.xml.settings);
 
-        nickNameKey = getString(R.string.settings_key_nick_name);
+        nickNameKey = getString(R.string.settings_nick_name_key);
         wakeLockKey = getString(R.string.settings_wake_lock_key);
         ownColorKey = getString(R.string.settings_own_color_key);
         systemColorKey = getString(R.string.settings_sys_color_key);

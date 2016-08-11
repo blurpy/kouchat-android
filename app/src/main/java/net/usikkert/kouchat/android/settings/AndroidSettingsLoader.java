@@ -70,7 +70,7 @@ public class AndroidSettingsLoader {
     }
 
     private void loadNickName(final Context context, final SharedPreferences preferences, final User me) {
-        final String nickNameKey = context.getString(R.string.settings_key_nick_name);
+        final String nickNameKey = context.getString(R.string.settings_nick_name_key);
         final String nickName = getNickNameFromPreferences(preferences, nickNameKey);
 
         me.setNick(nickName);

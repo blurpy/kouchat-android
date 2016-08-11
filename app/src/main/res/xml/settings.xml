@@ -4,7 +4,7 @@
                   android:title="@string/settings_title">
 
   <net.usikkert.kouchat.android.component.ThemedEditTextPreference
-      android:key="@string/settings_key_nick_name"
+      android:key="@string/settings_nick_name_key"
       android:title="@string/settings_nick_name_title"
       android:summary="@string/settings_nick_name_summary"
       android:maxLength="10"
