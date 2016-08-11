@@ -41,6 +41,9 @@ import android.preference.PreferenceManager;
  *   <li>Own color</li>
  *   <li>System color</li>
  *   <li>Wake lock</li>
+ *   <li>Notification light</li>
+ *   <li>Notification sound</li>
+ *   <li>Notification vibration</li>
  * </ul>
  *
  * <p>Also sets the client, but not from any stored setting.</p>
@@ -59,10 +62,15 @@ public class AndroidSettingsLoader {
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         loadClient(settings);
+
         loadNickName(context, preferences, settings.getMe());
         loadOwnColor(context, preferences, settings);
         loadSystemColor(context, preferences, settings);
         loadWakeLock(context, preferences, settings);
+
+        loadNotificationLight(context, preferences, settings);
+        loadNotificationSound(context, preferences, settings);
+        loadNotificationVibration(context, preferences, settings);
     }
 
     private void loadClient(final AndroidSettings settings) {
@@ -112,5 +120,29 @@ public class AndroidSettingsLoader {
         final boolean wakeLockEnabled = preferences.getBoolean(wakeLockKey, false);
 
         settings.setWakeLockEnabled(wakeLockEnabled);
+    }
+
+    private void loadNotificationLight(final Context context, final SharedPreferences preferences,
+                                       final AndroidSettings settings) {
+        final String preferenceKey = context.getString(R.string.settings_notification_light_key);
+        final boolean preferenceEnabled = preferences.getBoolean(preferenceKey, true);
+
+        settings.setNotificationLightEnabled(preferenceEnabled);
+    }
+
+    private void loadNotificationSound(final Context context, final SharedPreferences preferences,
+                                       final AndroidSettings settings) {
+        final String preferenceKey = context.getString(R.string.settings_notification_sound_key);
+        final boolean preferenceEnabled = preferences.getBoolean(preferenceKey, true);
+
+        settings.setNotificationSoundEnabled(preferenceEnabled);
+    }
+
+    private void loadNotificationVibration(final Context context, final SharedPreferences preferences,
+                                           final AndroidSettings settings) {
+        final String preferenceKey = context.getString(R.string.settings_notification_vibrate_key);
+        final boolean preferenceEnabled = preferences.getBoolean(preferenceKey, true);
+
+        settings.setNotificationVibrationEnabled(preferenceEnabled);
     }
 }

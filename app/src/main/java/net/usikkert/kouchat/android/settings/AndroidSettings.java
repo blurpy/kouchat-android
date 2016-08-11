@@ -34,8 +34,16 @@ public class AndroidSettings extends Settings {
     /** If the wake lock should be enabled. */
     private boolean wakeLockEnabled;
 
+    private boolean notificationLightEnabled;
+    private boolean notificationSoundEnabled;
+    private boolean notificationVibrationEnabled;
+
     public AndroidSettings() {
         wakeLockEnabled = false;
+
+        notificationLightEnabled = true;
+        notificationSoundEnabled = true;
+        notificationVibrationEnabled = true;
     }
 
     /**
@@ -59,5 +67,29 @@ public class AndroidSettings extends Settings {
             this.wakeLockEnabled = wakeLockEnabled;
             fireSettingChanged(AndroidSetting.WAKE_LOCK);
         }
+    }
+
+    public boolean isNotificationLightEnabled() {
+        return notificationLightEnabled;
+    }
+
+    public void setNotificationLightEnabled(final boolean notificationLightEnabled) {
+        this.notificationLightEnabled = notificationLightEnabled;
+    }
+
+    public boolean isNotificationSoundEnabled() {
+        return notificationSoundEnabled;
+    }
+
+    public void setNotificationSoundEnabled(final boolean notificationSoundEnabled) {
+        this.notificationSoundEnabled = notificationSoundEnabled;
+    }
+
+    public boolean isNotificationVibrationEnabled() {
+        return notificationVibrationEnabled;
+    }
+
+    public void setNotificationVibrationEnabled(final boolean notificationVibrationEnabled) {
+        this.notificationVibrationEnabled = notificationVibrationEnabled;
     }
 }

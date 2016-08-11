@@ -60,6 +60,10 @@ public class SettingsFragment extends PreferenceFragment
     private String ownColorKey;
     private String systemColorKey;
 
+    private String notificationLightKey;
+    private String notificationSoundKey;
+    private String notificationVibrationKey;
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +74,10 @@ public class SettingsFragment extends PreferenceFragment
         wakeLockKey = getString(R.string.settings_wake_lock_key);
         ownColorKey = getString(R.string.settings_own_color_key);
         systemColorKey = getString(R.string.settings_sys_color_key);
+
+        notificationLightKey = getString(R.string.settings_notification_light_key);
+        notificationSoundKey = getString(R.string.settings_notification_sound_key);
+        notificationVibrationKey = getString(R.string.settings_notification_vibrate_key);
 
         final Preference nickNamePreference = findPreference(nickNameKey);
         nickNamePreference.setOnPreferenceChangeListener(this);
@@ -102,6 +110,9 @@ public class SettingsFragment extends PreferenceFragment
      *   <li>Changed wake lock: stores the setting in the {@link AndroidSettings}.</li>
      *   <li>Changed own color: stores the setting in the {@link AndroidSettings}.</li>
      *   <li>Changed system color: stores the setting in the {@link AndroidSettings}.</li>
+     *   <li>Changed notification light: stores the setting in the {@link AndroidSettings}.</li>
+     *   <li>Changed notification sound: stores the setting in the {@link AndroidSettings}.</li>
+     *   <li>Changed notification vibration: stores the setting in the {@link AndroidSettings}.</li>
      * </ul>
      *
      * {@inheritDoc}
@@ -113,8 +124,8 @@ public class SettingsFragment extends PreferenceFragment
         }
 
         else if (key.equals(wakeLockKey)) {
-            final TwoStatePreference checkBoxPreference = (TwoStatePreference) findPreference(key);
-            settings.setWakeLockEnabled(checkBoxPreference.isChecked());
+            final TwoStatePreference preference = (TwoStatePreference) findPreference(key);
+            settings.setWakeLockEnabled(preference.isChecked());
         }
 
         else if (key.equals(ownColorKey)) {
@@ -125,6 +136,21 @@ public class SettingsFragment extends PreferenceFragment
         else if (key.equals(systemColorKey)) {
             final HoloColorPickerPreference preference = (HoloColorPickerPreference) findPreference(key);
             settings.setSysColor(preference.getPersistedColor());
+        }
+
+        else if (key.equals(notificationLightKey)) {
+            final TwoStatePreference preference = (TwoStatePreference) findPreference(key);
+            settings.setNotificationLightEnabled(preference.isChecked());
+        }
+
+        else if (key.equals(notificationSoundKey)) {
+            final TwoStatePreference preference = (TwoStatePreference) findPreference(key);
+            settings.setNotificationSoundEnabled(preference.isChecked());
+        }
+
+        else if (key.equals(notificationVibrationKey)) {
+            final TwoStatePreference preference = (TwoStatePreference) findPreference(key);
+            settings.setNotificationVibrationEnabled(preference.isChecked());
         }
     }
 
