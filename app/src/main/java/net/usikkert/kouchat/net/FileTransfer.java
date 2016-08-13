@@ -39,10 +39,10 @@ public interface FileTransfer {
     /**
      * Enum to describe if a file is being sent or received.
      */
-    public enum Direction {
+    enum Direction {
         SEND,
         RECEIVE
-    };
+    }
 
     /**
      * Gets if the file transfer is sending or receiving.

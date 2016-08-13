@@ -119,7 +119,7 @@ public class MessageNotificationService {
         final String nick = user.getNick();
 
         final SpannableString messageWithBoldNick = new SpannableString(nick + ": " + message);
-        messageWithBoldNick.setSpan(new StyleSpan(Typeface.BOLD), 0, nick.length() +1, 0);
+        messageWithBoldNick.setSpan(new StyleSpan(Typeface.BOLD), 0, nick.length() + 1, 0);
 
         return messageWithBoldNick;
     }
@@ -144,7 +144,7 @@ public class MessageNotificationService {
         if (userCount == null) {
             privateMessageCount.put(user, 1);
         } else {
-            privateMessageCount.put(user, userCount +1);
+            privateMessageCount.put(user, userCount + 1);
         }
     }
 

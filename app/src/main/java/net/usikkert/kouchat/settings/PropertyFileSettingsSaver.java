@@ -91,7 +91,7 @@ public class PropertyFileSettingsSaver implements SettingsSaver {
         }
 
         catch (final IOException e) {
-            LOG.log(Level.SEVERE, "Failed to save settings" , e);
+            LOG.log(Level.SEVERE, "Failed to save settings", e);
             errorHandler.showError(coreMessages.getMessage("core.settings.errorPopup.saveFailed", e));
         }
     }

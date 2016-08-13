@@ -483,7 +483,7 @@ public class FileReceiver implements FileTransfer {
         /**
          * Constructor. Sets the name of the thread.
          */
-        public TimeoutThread() {
+        TimeoutThread() {
             setName("TimeoutThread");
         }
 

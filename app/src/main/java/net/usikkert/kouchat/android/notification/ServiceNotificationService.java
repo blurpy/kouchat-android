@@ -33,6 +33,8 @@ import net.usikkert.kouchat.android.controller.MainChatController;
 
 /**
  * Service for handling the persistent service notification.
+ *
+ * @author Christian Ihle
  */
 public class ServiceNotificationService {
 

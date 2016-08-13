@@ -190,7 +190,7 @@ public class CommandParser {
     private void cmdAbout() {
         msgController.showSystemMessage(coreMessages.getMessage("core.command.about.systemMessage.about",
                                                                 Constants.APP_NAME, Constants.APP_VERSION,
-                                                                Constants.AUTHOR_NAME , Constants.AUTHOR_MAIL,
+                                                                Constants.AUTHOR_NAME, Constants.AUTHOR_MAIL,
                                                                 Constants.APP_WEB));
     }
 

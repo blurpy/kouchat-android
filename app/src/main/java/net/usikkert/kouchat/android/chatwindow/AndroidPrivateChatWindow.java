@@ -22,7 +22,6 @@
 
 package net.usikkert.kouchat.android.chatwindow;
 
-import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.android.controller.PrivateChatController;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.ui.PrivateChatWindow;

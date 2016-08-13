@@ -72,12 +72,20 @@ public class FileToSend {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         final FileToSend that = (FileToSend) o;
 
-        if (length != that.length) return false;
+        if (length != that.length) {
+            return false;
+        }
+
         return name != null ? name.equals(that.name) : that.name == null;
     }
 
@@ -85,6 +93,7 @@ public class FileToSend {
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (int) (length ^ (length >>> 32));
+
         return result;
     }
 
