@@ -19,3 +19,8 @@ See COPYING for details.
 
 The smileys in icons/smileys are taken from a GNOME icon theme.
 See the README in that folder for details.
+
+notification_sound.ogg is error.wav created by Nuno Povoa in encoded format
+and is part of the Oxygen theme (http://www.oxygen-icons.org/),
+available under the GNU Lesser General Public License
+(http://www.gnu.org/licenses/lgpl.html).
