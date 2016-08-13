@@ -1,6 +1,6 @@
 
 /***************************************************************************
- *   Copyright 2006-2014 by Christian Ihle                                 *
+ *   Copyright 2006-2016 by Christian Ihle                                 *
  *   contact@kouchat.net                                                   *
  *                                                                         *
  *   This file is part of KouChat.                                         *
