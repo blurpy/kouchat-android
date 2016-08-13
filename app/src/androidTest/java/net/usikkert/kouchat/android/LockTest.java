@@ -32,6 +32,9 @@ import net.usikkert.kouchat.testclient.TestUtils;
 import com.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 /**
  * Tests the multicast, wifi and wake locks in the settings.
@@ -129,11 +132,14 @@ public class LockTest extends ActivityInstrumentationTestCase2<MainChatControlle
     }
 
     private boolean wakeLockCheckBoxIsEnabled() {
-        return solo.isCheckBoxChecked(0);
+        final CompoundButton button = (CompoundButton) solo.getButton(0);
+        assertTrue(button instanceof Switch || button instanceof CheckBox);
+
+        return button.isChecked();
     }
 
     private void clickOnWakeLockCheckBox() {
-        solo.clickOnCheckBox(0);
+        solo.clickOnButton(0);
     }
 
     private void checkThatWakeLockIsEnabled() {
