@@ -131,7 +131,7 @@ public class LockHandler implements NetworkConnectionListener, SettingsListener 
     /**
      * Releases all the locks, if they are being held.
      */
-    public void releaseAllLocks() {
+    public synchronized void releaseAllLocks() {
         releaseMulticastLock();
         releaseWifiLock();
         releaseWakeLock();
