@@ -92,9 +92,9 @@ public class FileTransferNotificationService {
         currentFileTransferIds.add(fileReceiver.getId());
     }
 
-    public void updateFileTransferProgress(final FileTransfer fileTransfer, final String text) {
+    public void updateFileTransferProgress(final FileTransfer fileTransfer, final String status) {
         Validate.notNull(fileTransfer, "FileTransfer can not be null");
-        Validate.notEmpty(text, "Text can not be empty");
+        Validate.notEmpty(status, "Status can not be empty");
 
         final int notificationId = buildNotificationId(fileTransfer);
         final NotificationCompat.Builder notification;
@@ -127,7 +127,7 @@ public class FileTransferNotificationService {
             currentFileTransfers.put(fileTransfer, notification);
         }
 
-        final String contentText = text + ": " + fileTransfer.getFileName();
+        final String contentText = status + ": " + fileTransfer.getFileName();
         notification.setContentText(contentText);
         notification.setStyle(new NotificationCompat.BigTextStyle().bigText(contentText));
         notification.setProgress(100, fileTransfer.getPercent(), false);
@@ -135,9 +135,9 @@ public class FileTransferNotificationService {
         notificationManager.notify(notificationId, notification.build());
     }
 
-    public void completeFileTransferProgress(final FileTransfer fileTransfer, final String text) {
+    public void completeFileTransferProgress(final FileTransfer fileTransfer, final String status) {
         Validate.notNull(fileTransfer, "FileTransfer can not be null");
-        Validate.notEmpty(text, "Text can not be empty");
+        Validate.notEmpty(status, "Status can not be empty");
 
         final int notificationId = buildNotificationId(fileTransfer);
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
@@ -153,7 +153,7 @@ public class FileTransferNotificationService {
         }
 
         notification.setProgress(100, fileTransfer.getPercent(), false);
-        notification.setContentText(text + ": " + fileTransfer.getFileName());
+        notification.setContentText(status + ": " + fileTransfer.getFileName());
         notification.setPriority(NotificationCompat.PRIORITY_LOW);
         notification.setCategory(NotificationCompat.CATEGORY_PROGRESS);
 

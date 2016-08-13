@@ -37,17 +37,23 @@ import android.content.Context;
 /**
  * Service for handling notifications.
  *
- * <p>The main notification will always be running, but updated with new statuses when necessary.</p>
+ * <p>The service notification will always be running to keep the app from getting killed.</p>
  *
  * <p>Main chat activity will be notified when a new message arrives and the main chat is not visible.
- * F.ex when another application is on top, or if you are in a private chat.</p>
+ * F.ex when another application is on top, or if you are in a private chat.
+ * The 5 latest messages will be displayed in the notification, including nick name.</p>
  *
  * <p>Private chat activity will be notified when a new private message arrives and the private chat with that user
  * is not visible. F.ex when another application is on top, or if you are in a private chat with another user.
  * Activity will not be notified if the main chat is visible, because of the already existing new message icon
- * in the user list.</p>
+ * in the user list. There will be separate notifications for each user, with the
+ * 5 latest messages displayed for that user.</p>
  *
- * <p>New separate notifications will be created on file transfer requests.</p>
+ * <p>Notifications will also be created on file transfer requests,
+ * with a progress bar and a cancel button.</p>
+ *
+ * <p>All non-persistent notifications can optionally use blinking light, sound or vibration.
+ * Configurable in the Settings.</p>
  *
  * @author Christian Ihle
  */
@@ -77,9 +83,7 @@ public class NotificationService {
     }
 
     /**
-     * Creates a notification for association with a foreground service.
-     *
-     * <p>The latest info text is set to "Running".</p>
+     * Creates a persistent notification for association with a foreground service.
      *
      * @return A complete notification.
      */
@@ -90,13 +94,7 @@ public class NotificationService {
     /**
      * Notifies about a new main chat message.
      *
-     * <p>Updates the current notification like this:</p>
-     *
-     * <ul>
-     *   <li>Sets the latest info text to "New unread messages".</li>
-     *   <li>Switches to the activity icon.</li>
-     *   <li>Sets the flag for activity in the main chat.</li>
-     * </ul>
+     * <p>Either creates a new notification, or appends to an existing.</p>
      *
      * @param user The user that sent the message.
      * @param message The message sent by the user.
@@ -108,13 +106,7 @@ public class NotificationService {
     /**
      * Notifies about a new private chat message.
      *
-     * <p>Updates the current notification like this:</p>
-     *
-     * <ul>
-     *   <li>Sets the latest info text to "New unread messages".</li>
-     *   <li>Switches to the activity icon.</li>
-     *   <li>Sets the flag for activity in the private chat with the specified user.</li>
-     * </ul>
+     * <p>Either creates a new notification for that user, or appends to an existing.</p>
      *
      * @param user The user who got a private message.
      * @param message The private message sent by the user.
@@ -126,37 +118,16 @@ public class NotificationService {
     }
 
     /**
-     * Resets the notification to default.
+     * Resets all the message notifications.
      *
-     * <p>Updates the current notification like this:</p>
-     *
-     * <ul>
-     *   <li>Sets the latest info text to "Running".</li>
-     *   <li>Switches to the regular icon.</li>
-     *   <li>Resets the flag for activity in the main chat.</li>
-     *   <li>Resets the flag for activity in all the private chats.</li>
-     * </ul>
+     * <p>The main chat notification is removed, and all the private chat notifications.</p>
      */
     public void resetAllMessageNotifications() {
         messageNotificationService.resetAllNotifications();
     }
 
     /**
-     * Removes the activity flag for the specified user, and resets the notification if there is no more activity
-     * in neither the main chat nor the private chats.
-     *
-     * <p>Updates the current notification like this:</p>
-     *
-     * <ul>
-     *   <li>Resets the flag for activity in the private chat for the specified user.</li>
-     * </ul>
-     *
-     * <p>If no more activity after that, then also updates the notification like this:</p>
-     *
-     * <ul>
-     *   <li>Sets the latest info text to "Running".</li>
-     *   <li>Switches to the regular icon.</li>
-     * </ul>
+     * Removes the private chat notification for the specified user.
      *
      * @param user The user that should no longer have a notification.
      */
@@ -188,22 +159,51 @@ public class NotificationService {
      * Notifies the user that a file transfer request has arrived. Clicking on the notification
      * should open the activity to accept or reject the file transfer.
      *
+     * <p>The notification can not be swept away while in this state, but will either update
+     * with progress (see below) or be removed if rejected.</p>
+     *
      * @param fileReceiver The file receiver to create the notification for.
      */
     public void notifyNewFileTransfer(final FileReceiver fileReceiver) {
         fileTransferNotificationService.notifyNewFileTransfer(fileReceiver);
     }
 
-    public void updateFileTransferProgress(final FileTransfer fileTransfer, final String text) {
-        fileTransferNotificationService.updateFileTransferProgress(fileTransfer, text);
-    }
-
-    public void completeFileTransferProgress(final FileTransfer fileTransfer, final String text) {
-        fileTransferNotificationService.completeFileTransferProgress(fileTransfer, text);
+    /**
+     * Creates or updates a file transfer notification with the current status from the
+     * file transfer object.
+     *
+     * <p>The first call here will update the notification created above when it's a
+     * file being received, but when sending a file there will be no existing notification
+     * to update. A new one will therefore be created.</p>
+     *
+     * <p>The notification displays a progress bar with current progress and a cancel button.
+     * This method is expected to run every time status or progress changes.</p>
+     *
+     * <p>The notification can not be swept away while it's in this state.</p>
+     *
+     * @param fileTransfer The file receiver to create/update the notification for.
+     * @param status Status text to display in the notification.
+     */
+    public void updateFileTransferProgress(final FileTransfer fileTransfer, final String status) {
+        fileTransferNotificationService.updateFileTransferProgress(fileTransfer, status);
     }
 
     /**
-     * Cancels an ongoing notification for a file transfer request.
+     * Completes the file transfer. Either because it completes, one of the users press
+     * cancel, or something unexpected interrupts.
+     *
+     * <p>The notification can now be swept away, and the cancel button is removed.</p>
+     *
+     * @param fileTransfer The file receiver to create/update the notification for.
+     * @param status Status text to display in the notification.
+     */
+    public void completeFileTransferProgress(final FileTransfer fileTransfer, final String status) {
+        fileTransferNotificationService.completeFileTransferProgress(fileTransfer, status);
+    }
+
+    /**
+     * Cancels an ongoing notification for a file transfer request. That is, the notification is
+     * removed. Most likely because you didn't accept a file transfer request before it started.
      *
      * @param fileReceiver The file receiver to cancel the notification for.
      */
@@ -220,6 +220,9 @@ public class NotificationService {
         return fileTransferNotificationService.getCurrentFileTransferIds();
     }
 
+    /**
+     * Removes absolutely all visible notifications. Does not clean up any state.
+     */
     public void onDestroy() {
         notificationManager.cancelAll();
     }
