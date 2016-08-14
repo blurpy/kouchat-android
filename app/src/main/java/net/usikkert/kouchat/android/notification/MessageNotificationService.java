@@ -211,6 +211,7 @@ public class MessageNotificationService {
     private PendingIntent createIntentForPrivateChat(final User user) {
         final Intent privateChatIntent = new Intent(context, PrivateChatController.class);
         privateChatIntent.putExtra("userCode", user.getCode());
+        privateChatIntent.setAction("openPrivateChat " + System.currentTimeMillis()); // Unique - to avoid it being cached
 
         return PendingIntent.getActivity(context, 0, privateChatIntent, 0);
     }
