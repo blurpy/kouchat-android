@@ -2,4 +2,9 @@
 - KouChat Android INSTALL
 
 KouChat is built with Gradle.
-Use './gradlew clean build' to create an installable .apk in the app/build/outputs/apk folder.
+
+Use './gradlew clean test lint assembleDebug' to create an installable debug .apk in the app/build/outputs/apk folder.
+
+To create a signed release .apk you need to configure a keystore.
+Update gradle.properties with valid values and build using './gradlew clean build'.
+See this page for details: https://developer.android.com/studio/publish/app-signing.html
