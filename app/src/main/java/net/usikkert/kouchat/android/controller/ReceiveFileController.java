@@ -133,6 +133,7 @@ public class ReceiveFileController extends Activity {
 
                 else {
                     fileReceiver.reject();
+                    finish();
                 }
             }
         }
