@@ -30,6 +30,7 @@ import android.support.v7.app.NotificationCompat;
 
 import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.settings.AndroidSettings;
+import net.usikkert.kouchat.misc.User;
 
 /**
  * Reusable helper methods for managing notifications.
@@ -54,15 +55,21 @@ public class NotificationHelper {
      * Sets a notification sound, a vibration pattern and a blinking led,
      * but only if enabled in the settings.
      *
+     * <p>Only the blinking led can be used when the user is away.</p>
+     *
      * @param notification The notification to update with these effects.
      */
     public void setFeedbackEffects(final NotificationCompat.Builder notification) {
-        if (settings.isNotificationSoundEnabled()) {
-            notification.setSound(soundUri);
-        }
+        final User me = settings.getMe();
 
-        if (settings.isNotificationVibrationEnabled()) {
-            notification.setVibrate(VIBRATION_PATTERN);
+        if (!me.isAway()) {
+            if (settings.isNotificationSoundEnabled()) {
+                notification.setSound(soundUri);
+            }
+
+            if (settings.isNotificationVibrationEnabled()) {
+                notification.setVibrate(VIBRATION_PATTERN);
+            }
         }
 
         if (settings.isNotificationLightEnabled()) {
