@@ -8,9 +8,9 @@
   <suppress checks="HideUtilityClassConstructor" files="[/\\]test[/\\]java[/\\]"/>
   <suppress checks="VisibilityModifier" files="[/\\]test[/\\]java[/\\]"/>
 
-  <suppress checks="MagicNumber" files="kouchat-android-test[/\\]"/>
-  <suppress checks="JavadocMethod" files="kouchat-android-test[/\\]"/>
-  <suppress checks="JavadocPackage" files="kouchat-android-test[/\\]"/>
-  <suppress checks="HideUtilityClassConstructor" files="kouchat-android-test[/\\]"/>
-  <suppress checks="VisibilityModifier" files="kouchat-android-test[/\\]"/>
+  <suppress checks="MagicNumber" files="[/\\]androidTest[/\\]java[/\\]"/>
+  <suppress checks="JavadocMethod" files="[/\\]androidTest[/\\]java[/\\]"/>
+  <suppress checks="JavadocPackage" files="[/\\]androidTest[/\\]java[/\\]"/>
+  <suppress checks="HideUtilityClassConstructor" files="[/\\]androidTest[/\\]java[/\\]"/>
+  <suppress checks="VisibilityModifier" files="[/\\]androidTest[/\\]java[/\\]"/>
 </suppressions>

@@ -11,13 +11,13 @@
 <module name="Checker">
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
-    <module name="JavadocMethod">
-      <property name="severity" value="info"/>
-      <property name="scope" value="protected"/>
-      <property name="allowUndeclaredRTE" value="true"/>
-      <property name="logLoadErrors" value="true"/>
-      <property name="suppressLoadErrors" value="true"/>
-    </module>
+    <!--<module name="JavadocMethod">-->
+      <!--<property name="severity" value="info"/>-->
+      <!--<property name="scope" value="protected"/>-->
+      <!--<property name="allowUndeclaredRTE" value="true"/>-->
+      <!--<property name="logLoadErrors" value="true"/>-->
+      <!--<property name="suppressLoadErrors" value="true"/>-->
+    <!--</module>-->
     <module name="JavadocType">
       <property name="severity" value="warning"/>
       <property name="authorFormat" value="Christian Ihle"/>
@@ -82,13 +82,13 @@
     </module>
     <module name="IllegalInstantiation"/>
     <module name="InnerAssignment"/>
-    <module name="MagicNumber"/>
+    <!--<module name="MagicNumber"/>-->
     <module name="MissingSwitchDefault"/>
     <module name="SimplifyBooleanExpression"/>
     <module name="SimplifyBooleanReturn"/>
     <module name="FinalClass"/>
     <module name="HideUtilityClassConstructor"/>
-    <module name="InterfaceIsType"/>
+    <!--<module name="InterfaceIsType"/>-->
     <module name="VisibilityModifier"/>
     <module name="ArrayTypeStyle"/>
     <module name="FinalParameters"/>
