@@ -22,6 +22,7 @@
 
 package net.usikkert.kouchat.android.controller;
 
+import net.usikkert.kouchat.android.R;
 import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
 import net.usikkert.kouchat.android.component.ReceiveFileDialog;
 import net.usikkert.kouchat.android.service.ChatService;
@@ -40,6 +41,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 /**
  * Controller for showing a accept/reject file transfer dialog, after clicking on a notification.
@@ -132,6 +134,9 @@ public class ReceiveFileController extends Activity {
                 }
 
                 else {
+                    Toast.makeText(getApplicationContext(), // "this" just makes it crash
+                                   R.string.receive_file_permission_denied,
+                                   Toast.LENGTH_LONG).show();
                     fileReceiver.reject();
                     finish();
                 }
