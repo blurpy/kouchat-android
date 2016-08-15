@@ -2,6 +2,10 @@
 - KouChat Android CHANGES
 
 
+* version 1.2.0 (TODO)
+  - TODO
+
+
 * version 1.1.0 (14.08.2016)
   - Changed oldest supported version of Android to 4.1, Jelly Bean.
   - Converted to Gradle for building.
