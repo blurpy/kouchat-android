@@ -95,7 +95,7 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         RobotiumTestUtils.clickOnChangeNickNameInTheSettings(solo);
         RobotiumTestUtils.changeNickNameTo(solo, "Christian");
 
-        sleep(15000); // Take screenshot of the settings
+        sleep(10000); // Take screenshot of the settings
 
         RobotiumTestUtils.goHome(solo);
         RobotiumTestUtils.quit(solo);
@@ -118,6 +118,8 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         sleep(7000);
         RobotiumTestUtils.writeLine(solo, "hey :)");
 
+        // Minimize the app
+
         sleep(10000);
         arthur.sendChatMessage("What are you doing?");
 
@@ -130,7 +132,9 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         sleep(7000);
         ford.sendChatMessage("Ask a glass of water.");
 
-        sleep(8000);
+        // Take screenshot of the notification and click to open app again
+
+        sleep(10000);
         trillian.goAway("It won't affect me, I'm already a woman.");
 
         sleep(6000);
@@ -188,7 +192,7 @@ public class HitchhikerTest extends ActivityInstrumentationTestCase2<MainChatCon
         ford.sendPrivateChatMessage("I know how you feel...", me);
 
         // Take screenshot of the private chat
-        sleep(15000);
+        sleep(10000);
 
         ford.logoff();
     }
