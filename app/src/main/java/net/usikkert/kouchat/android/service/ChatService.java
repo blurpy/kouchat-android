@@ -62,7 +62,7 @@ public class ChatService extends Service {
         notificationService = new NotificationService(this, settings);
         androidUserInterface = new AndroidUserInterface(this, settings, notificationService);
 
-        final WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         final PowerManager powerManager = (PowerManager) this.getSystemService(POWER_SERVICE);
         lockHandler = new LockHandler(androidUserInterface, settings, wifiManager, powerManager);
 
@@ -81,7 +81,17 @@ public class ChatService extends Service {
             androidUserInterface.logOn();
         }
 
-        startForeground(ServiceNotificationService.SERVICE_NOTIFICATION_ID, notificationService.createServiceNotification());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = new NotificationChannel("default",
+                    "Message notifications",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("Message Notofication");
+            mNotificationManager.createNotificationChannel(channel);
+        } else {
+            startForeground(ServiceNotificationService.SERVICE_NOTIFICATION_ID, notificationService.createServiceNotification());
+        }
 
         super.onStart(intent, startId);
     }
