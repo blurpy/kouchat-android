@@ -81,7 +81,17 @@ public class ChatService extends Service {
             androidUserInterface.logOn();
         }
 
-        startForeground(ServiceNotificationService.SERVICE_NOTIFICATION_ID, notificationService.createServiceNotification());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = new NotificationChannel("default",
+                    "Message notifications",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("Message Notofication");
+            mNotificationManager.createNotificationChannel(channel);
+        } else {
+            startForeground(ServiceNotificationService.SERVICE_NOTIFICATION_ID, notificationService.createServiceNotification());
+        }
 
         super.onStart(intent, startId);
     }
