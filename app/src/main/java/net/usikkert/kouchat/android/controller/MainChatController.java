@@ -109,6 +109,13 @@ public class MainChatController extends AppCompatActivity implements UserListLis
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_chat);
+        
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+        }
 
         mainChatInput = (EditText) findViewById(R.id.mainChatInput);
         mainChatUserList = (ListView) findViewById(R.id.mainChatUserList);
