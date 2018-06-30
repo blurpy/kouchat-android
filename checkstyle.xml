@@ -94,7 +94,7 @@
     <module name="FinalParameters"/>
     <module name="TodoComment"/>
     <module name="UpperEll"/>
-    <module name="FileContentsHolder"/>
+    <module name="SuppressionCommentFilter"/>
   </module>
   <module name="JavadocPackage"/>
   <module name="NewlineAtEndOfFile">
@@ -114,5 +114,4 @@
   <module name="SuppressionFilter">
     <property name="file" value="${basedir}/checkstyle-suppression.xml"/>
   </module>
-  <module name="SuppressionCommentFilter"/>
 </module>
