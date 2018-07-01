@@ -47,7 +47,8 @@ public class ServiceNotificationService {
     }
 
     public Notification createServiceNotification() {
-        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+        final String channelId = context.getString(R.string.notifications_channel_id_service);
+        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context, channelId);
 
         notification.setSmallIcon(R.drawable.ic_stat_notify_default);
         notification.setTicker(context.getText(R.string.notification_startup));

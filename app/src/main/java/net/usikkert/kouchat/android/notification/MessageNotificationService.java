@@ -80,7 +80,8 @@ public class MessageNotificationService {
         final CharSequence latestMessage = createMainChatMessage(user, message);
         addMainChatMessageToList(latestMessage);
 
-        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+        final String channelId = context.getString(R.string.notifications_channel_id_main_chat_messages);
+        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context, channelId);
         notification.setTicker(context.getString(R.string.notification_new_message_ticker, user.getNick()));
         notification.setContentTitle(context.getString(R.string.notification_main_chat));
         notification.setContentText(latestMessage);
@@ -99,7 +100,8 @@ public class MessageNotificationService {
     public void notifyNewPrivateChatMessage(final User user, final String message) {
         addPrivateMessageToList(user, message);
 
-        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+        final String channelId = context.getString(R.string.notifications_channel_id_private_chat_messages);
+        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context, channelId);
         notification.setTicker(context.getString(R.string.notification_new_private_message_ticker, user.getNick()));
         notification.setContentTitle(user.getNick());
         notification.setContentText(message);

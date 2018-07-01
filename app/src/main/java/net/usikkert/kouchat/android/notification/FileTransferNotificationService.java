@@ -73,7 +73,8 @@ public class FileTransferNotificationService {
         Validate.notNull(fileReceiver, "FileReceiver can not be null");
 
         final int notificationId = buildNotificationId(fileReceiver);
-        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+        final String channelId = context.getString(R.string.notifications_channel_id_file_transfers);
+        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context, channelId);
 
         notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
         notification.setTicker(context.getText(R.string.notification_new_file_transfer));
@@ -104,7 +105,8 @@ public class FileTransferNotificationService {
         }
 
         else {
-            notification = new NotificationCompat.Builder(context);
+            final String channelId = context.getString(R.string.notifications_channel_id_file_transfers);
+            notification = new NotificationCompat.Builder(context, channelId);
 
             if (fileTransfer.getDirection() == FileTransfer.Direction.RECEIVE) {
                 notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
@@ -140,7 +142,8 @@ public class FileTransferNotificationService {
         Validate.notEmpty(status, "Status can not be empty");
 
         final int notificationId = buildNotificationId(fileTransfer);
-        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+        final String channelId = context.getString(R.string.notifications_channel_id_file_transfers);
+        final NotificationCompat.Builder notification = new NotificationCompat.Builder(context, channelId);
 
         if (fileTransfer.getDirection() == FileTransfer.Direction.RECEIVE) {
             notification.setSmallIcon(R.drawable.ic_stat_notify_receive);
