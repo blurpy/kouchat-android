@@ -62,8 +62,8 @@ public class ChatService extends Service {
         notificationService = new NotificationService(this, settings);
         androidUserInterface = new AndroidUserInterface(this, settings, notificationService);
 
-        final WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        final PowerManager powerManager = (PowerManager) this.getSystemService(POWER_SERVICE);
+        final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        final PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         lockHandler = new LockHandler(androidUserInterface, settings, wifiManager, powerManager);
 
         chatServiceBinder = new ChatServiceBinder(androidUserInterface);

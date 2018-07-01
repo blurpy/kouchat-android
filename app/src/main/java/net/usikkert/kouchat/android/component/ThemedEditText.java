@@ -23,6 +23,7 @@
 package net.usikkert.kouchat.android.component;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.widget.EditText;
@@ -38,7 +39,7 @@ import net.usikkert.kouchat.android.R;
  *
  * @author Christian Ihle
  */
-public class ThemedEditText extends EditText {
+public class ThemedEditText extends AppCompatEditText {
 
     public ThemedEditText(final Context context, final AttributeSet attrs, final int defStyle) {
         super(createContextThemeWrapper(context), attrs, defStyle);
