@@ -60,6 +60,23 @@
   <string name="notification_completed">Completed</string>
   <string name="notification_failed">Failed</string>
   <string name="notification_receiving_file_from">Receiving %1$s from %2$s</string>
+
+  <string name="notifications_channel_id_service">service</string>
+  <string name="notifications_channel_name_service">Service</string>
+  <string name="notifications_channel_description_service">Notification displayed when the app is running.</string>
+
+  <string name="notifications_channel_id_file_transfers">file_transfers</string>
+  <string name="notifications_channel_name_file_transfers">File transfers</string>
+  <string name="notifications_channel_description_file_transfers">Notifications about files being sent and received.</string>
+
+  <string name="notifications_channel_id_main_chat_messages">main_chat_messages</string>
+  <string name="notifications_channel_name_main_chat_messages">Main chat messages</string>
+  <string name="notifications_channel_description_main_chat_messages">Notifications about new main chat messages.</string>
+
+  <string name="notifications_channel_id_private_chat_messages">private_chat_messages</string>
+  <string name="notifications_channel_name_private_chat_messages">Private chat messages</string>
+  <string name="notifications_channel_description_private_chat_messages">Notifications about new private chat messages.</string>
+
   <string name="cancel">Cancel</string>
   <string name="send_file_info">File name: %1$s \nFile size: %2$s</string>
   <string name="send_file_select_user">Please select the user to send the file to.</string>
