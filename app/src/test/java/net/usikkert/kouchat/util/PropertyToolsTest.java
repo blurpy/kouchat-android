@@ -124,7 +124,7 @@ public class PropertyToolsTest {
         }
 
         catch (final IOException e) {
-            verify(ioTools).close(any(InputStream.class));
+            verify(ioTools).close(nullable(InputStream.class));
         }
     }
 
@@ -257,8 +257,8 @@ public class PropertyToolsTest {
         }
 
         catch (final IOException e) {
-            verify(ioTools).flush(any(FileWriter.class));
-            verify(ioTools).close(any(FileWriter.class));
+            verify(ioTools).flush(nullable(FileWriter.class));
+            verify(ioTools).close(nullable(FileWriter.class));
         }
     }
 

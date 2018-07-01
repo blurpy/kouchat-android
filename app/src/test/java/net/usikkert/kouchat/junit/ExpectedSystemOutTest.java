@@ -22,15 +22,20 @@
 
 package net.usikkert.kouchat.junit;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 import net.usikkert.kouchat.util.Tools;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.Statement;
-import org.mockito.internal.util.MockUtil;
+import org.mockito.internal.util.DefaultMockingDetails;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -44,13 +49,9 @@ public class ExpectedSystemOutTest {
 
     private ExpectedSystemOut expectedSystemOut;
 
-    private MockUtil mockUtil;
-
     @Before
     public void setUp() {
         expectedSystemOut = new ExpectedSystemOut();
-
-        mockUtil = new MockUtil();
     }
 
     @Test(timeout = 5000)
@@ -65,7 +66,7 @@ public class ExpectedSystemOutTest {
 
         doAnswer(new Answer<Void>() {
             @Override
-            public Void answer(final InvocationOnMock invocation) throws Throwable {
+            public Void answer(final InvocationOnMock invocation) {
                 testIsRunning[0] = true;
 
                 while (testShouldWait[0]) {
@@ -93,7 +94,7 @@ public class ExpectedSystemOutTest {
         });
 
         // Checking that a real System.out is used before starting the test
-        assertFalse(mockUtil.isMock(System.out));
+        assertFalse(isMock(System.out));
 
         wrappedTestRunner.start(); // Run @Before and @Test
 
@@ -103,18 +104,18 @@ public class ExpectedSystemOutTest {
         }
 
         // Inside @Test now. System.out should be mocked
-        assertTrue(mockUtil.isMock(System.out));
+        assertTrue(isMock(System.out));
 
         testShouldWait[0] = false;
         wrappedTestRunner.join(); // Wait for @Test and @After to finish
 
         // Test is done, System.out should be back to the real value
-        assertFalse(mockUtil.isMock(System.out));
+        assertFalse(isMock(System.out));
     }
 
     @Test
     public void applyShouldResetMockedSystemOutAlsoOnFailure() throws Throwable {
-        assertFalse(mockUtil.isMock(System.out));
+        assertFalse(isMock(System.out));
 
         final Statement realTest = mock(Statement.class);
         doThrow(new Throwable("Something failed")).when(realTest).evaluate();
@@ -129,7 +130,11 @@ public class ExpectedSystemOutTest {
         catch (final Throwable throwable) {
             assertEquals("Something failed", throwable.getMessage());
             // Test failed, but System.out should be reset to real value
-            assertFalse(mockUtil.isMock(System.out));
+            assertFalse(isMock(System.out));
         }
+    }
+
+    private boolean isMock(final Object o) {
+        return new DefaultMockingDetails(o).isMock();
     }
 }

@@ -43,14 +43,14 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'org.mockito:mockito-core:2.13.0'
     testImplementation 'com.github.stefanbirkner:system-rules:1.5.0'
-    testImplementation 'org.powermock:powermock-module-junit4:1.6.4'
-    testImplementation 'org.powermock:powermock-api-mockito:1.6.4'
-    testImplementation 'joda-time:joda-time:2.4'
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.0-beta.5'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.0-beta.5'
+    testImplementation 'joda-time:joda-time:2.9.9'
 
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.6.0'
     androidTestImplementation 'org.easytesting:fest-reflect:1.4.1'
-    androidTestImplementation 'com.google.guava:guava:18.0'
-    androidTestImplementation 'commons-io:commons-io:2.5'
+    androidTestImplementation 'com.google.guava:guava:25.1-android'
+    androidTestImplementation 'commons-io:commons-io:2.6'
 }

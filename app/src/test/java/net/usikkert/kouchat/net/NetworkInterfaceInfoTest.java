@@ -22,8 +22,10 @@
 
 package net.usikkert.kouchat.net;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.net.NetworkInterface;
 
@@ -32,18 +34,12 @@ import net.usikkert.kouchat.junit.ExpectedException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * Test of {@link NetworkInterfaceInfo}.
  *
  * @author Christian Ihle
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(NetworkInterfaceInfo.class) // Must prepare the class using the class being mocked when it's a system class
 public class NetworkInterfaceInfoTest {
 
     @Rule
@@ -54,7 +50,7 @@ public class NetworkInterfaceInfoTest {
 
     @Before
     public void setUp() {
-        networkInterface = PowerMockito.mock(NetworkInterface.class);
+        networkInterface = mock(NetworkInterface.class);
         networkInterfaceInfo = new NetworkInterfaceInfo(networkInterface);
     }
 

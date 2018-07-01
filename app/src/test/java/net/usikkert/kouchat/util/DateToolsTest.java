@@ -48,7 +48,7 @@ public class DateToolsTest {
 
     @Test
     public void currentDateToStringShouldUseDateToStringWithNull() {
-        when(dateTools.dateToString(any(Date.class), anyString())).thenReturn("the date");
+        when(dateTools.dateToString(nullable(Date.class), anyString())).thenReturn("the date");
 
         final String dateAsString = dateTools.currentDateToString("EEEE, d MMMM yyyy");
 
