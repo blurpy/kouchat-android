@@ -37,19 +37,19 @@ android {
 
 dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.larswerkman:HoloColorPicker:1.3'
-    implementation 'org.jetbrains:annotations:13.0'
+    implementation 'com.larswerkman:HoloColorPicker:1.5'
+    implementation 'org.jetbrains:annotations:16.0.2'
     implementation 'org.apache.commons:commons-collections4:4.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.13.0'
-    testImplementation 'com.github.stefanbirkner:system-rules:1.5.0'
+    testImplementation 'com.github.stefanbirkner:system-rules:1.18.0'
     testImplementation 'org.powermock:powermock-module-junit4:2.0.0-beta.5'
     testImplementation 'org.powermock:powermock-api-mockito2:2.0.0-beta.5'
-    testImplementation 'joda-time:joda-time:2.9.9'
+    testImplementation 'joda-time:joda-time:2.10'
 
-    androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.6.0'
+    androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.6.3'
     androidTestImplementation 'org.easytesting:fest-reflect:1.4.1'
     androidTestImplementation 'com.google.guava:guava:25.1-android'
     androidTestImplementation 'commons-io:commons-io:2.6'
