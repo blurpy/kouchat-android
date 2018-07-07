@@ -39,7 +39,7 @@ public interface UserListListener {
      * the user was added.
      * @param user The user that was added.
      */
-    void userAdded(int pos, final User user);
+    void userAdded(int pos, User user);
 
     /**
      * A user has updated some of its fields,
@@ -48,7 +48,7 @@ public interface UserListListener {
      * @param pos The new position of the changed user in the user list.
      * @param user The (new) changed user.
      */
-    void userChanged(int pos, final User user);
+    void userChanged(int pos, User user);
 
     /**
      * A user has been removed from the user list.
@@ -56,5 +56,5 @@ public interface UserListListener {
      * @param pos The position where the user used to be in the user list.
      * @param user The user that was removed.
      */
-    void userRemoved(int pos, final User user);
+    void userRemoved(int pos, User user);
 }

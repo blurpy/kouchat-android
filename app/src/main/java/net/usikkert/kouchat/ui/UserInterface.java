@@ -59,7 +59,7 @@ public interface UserInterface {
     void showFileSave(FileReceiver fileReceiver);
 
     /**
-     * Creates a {@link FileTransferListener} for the file receiver,
+     * Creates a {@link net.usikkert.kouchat.event.FileTransferListener} for the file receiver,
      * and updates the ui of changes to the file reception.
      *
      * @param fileRes The file reception object.

@@ -48,7 +48,7 @@ public class CommandHistory {
         UP,
         MIDDLE,
         DOWN
-    };
+    }
 
     /** The last direction the user moved in the history. */
     private Direction direction;

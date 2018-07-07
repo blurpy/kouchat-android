@@ -35,5 +35,5 @@ public interface UncaughtExceptionListener {
      * @param thread The thread where the uncaught exception happened.
      * @param throwable The uncaught exception.
      */
-    void uncaughtException(final Thread thread, final Throwable throwable);
+    void uncaughtException(Thread thread, Throwable throwable);
 }
