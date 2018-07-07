@@ -43,7 +43,7 @@ import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 public class SettingsTest {
 
     @Rule
-    public RestoreSystemProperties restoreSystemProperties = new RestoreSystemProperties("file.separator");
+    public RestoreSystemProperties restoreSystemProperties = new RestoreSystemProperties();
 
     private Settings settings;
 

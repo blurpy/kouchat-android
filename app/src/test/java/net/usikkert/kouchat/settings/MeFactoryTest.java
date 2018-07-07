@@ -43,7 +43,7 @@ import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 public class MeFactoryTest {
 
     @Rule
-    public RestoreSystemProperties restoreSystemProperties = new RestoreSystemProperties("os.name", "user.name");
+    public RestoreSystemProperties restoreSystemProperties = new RestoreSystemProperties();
 
     private MeFactory meFactory;
 
