@@ -72,7 +72,7 @@ public class AutoCompleter {
         lastCompletedLine = "";
         lastCompletedWord = "";
         lastWord = "";
-        autoCompleteLists = new ArrayList<AutoCompleteList>();
+        autoCompleteLists = new ArrayList<>();
     }
 
     /**
@@ -254,7 +254,7 @@ public class AutoCompleter {
      * @return A list of suggestions.
      */
     private List<String> getAutoCompleteSuggestions(final String[] wordList, final String word) {
-        final List<String> suggestions = new ArrayList<String>();
+        final List<String> suggestions = new ArrayList<>();
 
         for (int i = 0; i < wordList.length; i++) {
             if (wordList[i].toLowerCase().startsWith(word.toLowerCase())) {

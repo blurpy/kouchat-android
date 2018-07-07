@@ -101,7 +101,7 @@ public class NetworkInformation implements NetworkInformationMBean {
      */
     @Override
     public String[] showUsableNetworks() {
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
 
         final Enumeration<NetworkInterface> networkInterfaces = networkUtils.getNetworkInterfaces();
 
@@ -129,7 +129,7 @@ public class NetworkInformation implements NetworkInformationMBean {
      */
     @Override
     public String[] showAllNetworks() {
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
 
         final Enumeration<NetworkInterface> networkInterfaces = networkUtils.getNetworkInterfaces();
 

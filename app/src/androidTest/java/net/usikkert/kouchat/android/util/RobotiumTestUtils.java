@@ -161,7 +161,7 @@ public final class RobotiumTestUtils {
      * @return All the lines if text in the textview. Each list item is one line.
      */
     public static List<String> getAllLinesOfText(final String fullText, final TextView textView) {
-        final List<String> allLines = new ArrayList<String>();
+        final List<String> allLines = new ArrayList<>();
 
         final Layout layout = textView.getLayout();
         final int lineCount = layout.getLineCount();
@@ -548,7 +548,7 @@ public final class RobotiumTestUtils {
         }
 
         final int startLine = findStartLine(allLinesOfText, textToFindIndex);
-        final List<Line> matchingLines = new ArrayList<Line>();
+        final List<Line> matchingLines = new ArrayList<>();
         final List<String> wordsFromTextToFind = splitOnBoundaries(textToFind);
         removeEmptyFirstWord(wordsFromTextToFind);
 
@@ -580,7 +580,7 @@ public final class RobotiumTestUtils {
     }
 
     private static List<String> splitOnBoundaries(final String text) {
-        return new ArrayList<String>(Arrays.asList(text.split("\\b")));
+        return new ArrayList<>(Arrays.asList(text.split("\\b")));
     }
 
     private static void removeEmptyFirstWord(final List<String> words) {

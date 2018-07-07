@@ -41,7 +41,7 @@ public class WaitingList {
      * Constructor.
      */
     public WaitingList() {
-        users = new ArrayList<Integer>();
+        users = new ArrayList<>();
     }
 
     /**

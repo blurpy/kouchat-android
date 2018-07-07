@@ -50,7 +50,7 @@ public class UncaughtExceptionLogger implements Thread.UncaughtExceptionHandler 
      */
     public UncaughtExceptionLogger() {
         Thread.setDefaultUncaughtExceptionHandler(this);
-        listeners = new ArrayList<UncaughtExceptionListener>();
+        listeners = new ArrayList<>();
     }
 
     /**

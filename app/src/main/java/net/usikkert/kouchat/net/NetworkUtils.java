@@ -308,7 +308,7 @@ public class NetworkUtils {
      * @see #isUsable(NetworkInterface)
      */
     public List<NetworkInterfaceInfo> getUsableNetworkInterfaces() {
-        final List<NetworkInterfaceInfo> usableNetworkInterfaces = new ArrayList<NetworkInterfaceInfo>();
+        final List<NetworkInterfaceInfo> usableNetworkInterfaces = new ArrayList<>();
         final Enumeration<NetworkInterface> allNetworkInterfaces = getNetworkInterfaces();
 
         if (allNetworkInterfaces == null) {

@@ -49,8 +49,8 @@ public class SortedUserList implements UserList {
      * Constructor.
      */
     public SortedUserList() {
-        userList = new ArrayList<User>();
-        listeners = new ArrayList<UserListListener>();
+        userList = new ArrayList<>();
+        listeners = new ArrayList<>();
     }
 
     /**

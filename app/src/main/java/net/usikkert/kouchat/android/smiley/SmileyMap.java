@@ -67,7 +67,7 @@ public class SmileyMap {
     public SmileyMap(final Context context) {
         Validate.notNull(context, "Context can not be null");
 
-        smileyMap = new HashMap<String, Drawable>();
+        smileyMap = new HashMap<>();
 
         loadSmileys(context.getResources());
     }

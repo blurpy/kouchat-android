@@ -41,7 +41,7 @@ public class ErrorHandler {
     private final List<ErrorListener> listeners;
 
     public ErrorHandler() {
-        listeners = new ArrayList<ErrorListener>();
+        listeners = new ArrayList<>();
     }
 
     /**

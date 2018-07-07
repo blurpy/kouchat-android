@@ -40,7 +40,7 @@ public class ResourceValidator {
      * Constructor.
      */
     public ResourceValidator() {
-        resourceMap = new LinkedHashMap<String, URL>();
+        resourceMap = new LinkedHashMap<>();
     }
 
     /**

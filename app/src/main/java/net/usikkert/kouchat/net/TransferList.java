@@ -48,8 +48,8 @@ public class TransferList {
      * Constructor.
      */
     public TransferList() {
-        senders = new ArrayList<FileSender>();
-        receivers = new ArrayList<FileReceiver>();
+        senders = new ArrayList<>();
+        receivers = new ArrayList<>();
     }
 
     /**
@@ -140,7 +140,7 @@ public class TransferList {
      * @return A list of all the file senders for the user.
      */
     public List<FileSender> getFileSenders(final User user) {
-        final List<FileSender> list = new ArrayList<FileSender>();
+        final List<FileSender> list = new ArrayList<>();
 
         for (final FileSender fs : senders) {
             if (fs.getUser() == user) {
@@ -157,7 +157,7 @@ public class TransferList {
      * @return A list of all the file senders.
      */
     public List<FileSender> getFileSenders() {
-        final List<FileSender> list = new ArrayList<FileSender>();
+        final List<FileSender> list = new ArrayList<>();
 
         for (final FileSender fs : senders) {
             list.add(fs);
@@ -197,7 +197,7 @@ public class TransferList {
      * @return A list of all the file receivers for the user.
      */
     public List<FileReceiver> getFileReceivers(final User user) {
-        final List<FileReceiver> list = new ArrayList<FileReceiver>();
+        final List<FileReceiver> list = new ArrayList<>();
 
         for (final FileReceiver fr : receivers) {
             if (fr.getUser() == user) {
@@ -251,7 +251,7 @@ public class TransferList {
      * @return A list of all the file receivers.
      */
     public List<FileReceiver> getFileReceivers() {
-        final List<FileReceiver> list = new ArrayList<FileReceiver>();
+        final List<FileReceiver> list = new ArrayList<>();
 
         for (final FileReceiver fr : receivers) {
             list.add(fr);

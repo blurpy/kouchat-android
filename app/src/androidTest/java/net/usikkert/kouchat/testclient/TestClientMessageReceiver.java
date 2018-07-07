@@ -38,7 +38,7 @@ public class TestClientMessageReceiver {
     private final Pattern messagePattern;
 
     public TestClientMessageReceiver() {
-        receivedMessages = new ArrayList<TestClientMessage>();
+        receivedMessages = new ArrayList<>();
         messagePattern = Pattern.compile("\\[\\d{2}:\\d{2}:\\d{2}\\] <(\\w+)>: (.+)");
     }
 
@@ -104,7 +104,7 @@ public class TestClientMessageReceiver {
     }
 
     public List<String> getMessages() {
-        final List<String> messages = new ArrayList<String>();
+        final List<String> messages = new ArrayList<>();
 
         for (final TestClientMessage receivedMessage : receivedMessages) {
             messages.add(receivedMessage.getMessage());

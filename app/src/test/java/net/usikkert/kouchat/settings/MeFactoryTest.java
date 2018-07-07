@@ -124,7 +124,7 @@ public class MeFactoryTest {
 
     @Test
     public void createMeShouldUseUniqueCodes() {
-        final List<Integer> uniqueCodes = new ArrayList<Integer>();
+        final List<Integer> uniqueCodes = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
             final User me = meFactory.createMe();

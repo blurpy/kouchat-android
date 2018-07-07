@@ -96,7 +96,7 @@ public class Settings {
         final MeFactory meFactory = new MeFactory();
 
         me = meFactory.createMe();
-        listeners = new ArrayList<SettingsListener>();
+        listeners = new ArrayList<>();
         browser = "";
         ownColor = -15987646;
         sysColor = -16759040;

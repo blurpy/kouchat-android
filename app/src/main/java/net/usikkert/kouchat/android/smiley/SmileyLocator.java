@@ -48,7 +48,7 @@ public class SmileyLocator {
     public SmileyLocator(final Set<String> smileyCodes) {
         Validate.notNull(smileyCodes, "Smiley codes can not be null");
 
-        smileyPatterns = new HashSet<Pattern>();
+        smileyPatterns = new HashSet<>();
         addSmileyPatterns(smileyCodes);
     }
 
@@ -61,7 +61,7 @@ public class SmileyLocator {
     public List<Smiley> findSmileys(final String text) {
         Validate.notNull(text, "Text can not be null");
 
-        final ArrayList<Smiley> detectedSmileys = new ArrayList<Smiley>();
+        final ArrayList<Smiley> detectedSmileys = new ArrayList<>();
 
         for (final Pattern smileyPattern : smileyPatterns) {
             final Matcher matcher = smileyPattern.matcher(text);

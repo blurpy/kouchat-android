@@ -63,7 +63,7 @@ public class CommandHistory {
      * Default constructor.
      */
     public CommandHistory() {
-        history = new ArrayList<String>();
+        history = new ArrayList<>();
         direction = Direction.MIDDLE;
     }
 
