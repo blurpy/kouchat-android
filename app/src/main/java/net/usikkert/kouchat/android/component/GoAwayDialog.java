@@ -48,7 +48,7 @@ public class GoAwayDialog {
         final LayoutInflater inflater = LayoutInflater.from(context);
 
         final View goAwayDialog = inflater.inflate(R.layout.go_away_dialog, null);
-        final EditText goAwayDialogInput = (EditText) goAwayDialog.findViewById(R.id.goAwayDialogInput);
+        final EditText goAwayDialogInput = goAwayDialog.findViewById(R.id.goAwayDialogInput);
 
         blockNewLinesInTheInput(goAwayDialogInput);
 

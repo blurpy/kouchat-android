@@ -47,7 +47,7 @@ public class ComeBackDialog {
         final LayoutInflater inflater = LayoutInflater.from(context);
 
         final View comeBackDialog = inflater.inflate(R.layout.come_back_dialog, null);
-        final TextView comeBackDialogMessage = (TextView) comeBackDialog.findViewById(R.id.comeBackDialogMessage);
+        final TextView comeBackDialogMessage = comeBackDialog.findViewById(R.id.comeBackDialogMessage);
 
         setComeBackMessage(androidUserInterface, context, comeBackDialogMessage);
 

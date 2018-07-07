@@ -112,7 +112,7 @@ public class HoloColorPickerPreference extends DialogPreference implements Color
     protected void onBindView(final View view) {
         super.onBindView(view);
 
-        colorPreviewImage = (ImageView) view.findViewById(R.id.colorPreviewImage);
+        colorPreviewImage = view.findViewById(R.id.colorPreviewImage);
         updatePreviewColor();
     }
 
@@ -127,9 +127,9 @@ public class HoloColorPickerPreference extends DialogPreference implements Color
     protected void onBindDialogView(final View view) {
         super.onBindDialogView(view);
 
-        final ColorPicker colorPicker = (ColorPicker) view.findViewById(R.id.colorPicker);
-        final ValueBar valueBar = (ValueBar) view.findViewById(R.id.colorPickerValueBar);
-        final SaturationBar saturationBar = (SaturationBar) view.findViewById(R.id.colorPickerSaturationBar);
+        final ColorPicker colorPicker = view.findViewById(R.id.colorPicker);
+        final ValueBar valueBar = view.findViewById(R.id.colorPickerValueBar);
+        final SaturationBar saturationBar = view.findViewById(R.id.colorPickerSaturationBar);
 
         colorPicker.setOnColorChangedListener(this);
         colorPicker.addValueBar(valueBar);

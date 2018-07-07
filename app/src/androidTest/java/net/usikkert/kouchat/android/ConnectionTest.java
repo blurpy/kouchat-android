@@ -220,7 +220,7 @@ public class ConnectionTest extends ActivityInstrumentationTestCase2<MainChatCon
 
     // This only works temporarily, as the text will be reloaded in the next test from the backend
     private void clearMainChat() {
-        final TextView mainChatView = (TextView) getActivity().findViewById(R.id.mainChatView);
+        final TextView mainChatView = getActivity().findViewById(R.id.mainChatView);
 
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override

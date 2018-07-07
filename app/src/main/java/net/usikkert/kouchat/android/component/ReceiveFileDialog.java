@@ -122,7 +122,7 @@ public class ReceiveFileDialog {
     }
 
     private void setTextSize(final Activity activity, final AlertDialog dialog) {
-        final TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
+        final TextView messageView = dialog.findViewById(android.R.id.message);
         final Resources resources = activity.getResources();
 
         messageView.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.text_size));

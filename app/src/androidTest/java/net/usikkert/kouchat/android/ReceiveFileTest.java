@@ -441,7 +441,7 @@ public class ReceiveFileTest extends ActivityInstrumentationTestCase2<MainChatCo
     }
 
     private void checkPastMainChatMessage(final String text) {
-        final TextView mainChatView = (TextView) getActivity().findViewById(R.id.mainChatView);
+        final TextView mainChatView = getActivity().findViewById(R.id.mainChatView);
         assertTrue(mainChatView.getText().toString().contains(text));
     }
 

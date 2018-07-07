@@ -48,7 +48,7 @@ public class TopicDialog {
         final LayoutInflater inflater = LayoutInflater.from(context);
 
         final View topicDialog = inflater.inflate(R.layout.topic_dialog, null);
-        final EditText topicDialogInput = (EditText) topicDialog.findViewById(R.id.topicDialogInput);
+        final EditText topicDialogInput = topicDialog.findViewById(R.id.topicDialogInput);
 
         blockNewLinesInTheInput(topicDialogInput);
         setCurrentTopicInTheInput(androidUserInterface, topicDialogInput);

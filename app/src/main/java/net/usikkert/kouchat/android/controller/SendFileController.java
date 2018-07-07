@@ -87,9 +87,9 @@ public class SendFileController extends Activity implements UserListListener {
 
         fileToSend = androidFileUtils.getFileFromUri(uriToFile, getApplicationContext().getContentResolver());
 
-        final TextView line1TextView = (TextView) findViewById(R.id.sendFileLine1TextView);
-        line2TextView = (TextView) findViewById(R.id.sendFileLine2TextView);
-        userListView = (ListView) findViewById(R.id.sendFileUserListView);
+        final TextView line1TextView = findViewById(R.id.sendFileLine1TextView);
+        line2TextView = findViewById(R.id.sendFileLine2TextView);
+        userListView = findViewById(R.id.sendFileUserListView);
 
         // File not found
         if (fileToSend == null) {
@@ -115,7 +115,7 @@ public class SendFileController extends Activity implements UserListListener {
             bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
         }
 
-        final Button cancelButton = (Button) findViewById(R.id.sendFileCancelButton);
+        final Button cancelButton = findViewById(R.id.sendFileCancelButton);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {

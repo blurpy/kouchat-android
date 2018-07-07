@@ -76,9 +76,9 @@ public class PrivateChatController extends AppCompatActivity {
 
         setContentView(R.layout.private_chat);
 
-        privateChatInput = (EditText) findViewById(R.id.privateChatInput);
-        privateChatView = (TextView) findViewById(R.id.privateChatView);
-        privateChatScroll = (ScrollView) findViewById(R.id.privateChatScroll);
+        privateChatInput = findViewById(R.id.privateChatInput);
+        privateChatView = findViewById(R.id.privateChatView);
+        privateChatScroll = findViewById(R.id.privateChatScroll);
 
         final Intent chatServiceIntent = createChatServiceIntent();
         serviceConnection = createServiceConnection();

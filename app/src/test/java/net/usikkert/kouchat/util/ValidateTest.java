@@ -60,7 +60,7 @@ public class ValidateTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("This is the message");
 
-        Validate.notEmpty((String) null, "This is the message");
+        Validate.notEmpty(null, "This is the message");
     }
 
     @Test

@@ -110,10 +110,10 @@ public class MainChatController extends AppCompatActivity implements UserListLis
 
         setContentView(R.layout.main_chat);
 
-        mainChatInput = (EditText) findViewById(R.id.mainChatInput);
-        mainChatUserList = (ListView) findViewById(R.id.mainChatUserList);
-        mainChatView = (TextView) findViewById(R.id.mainChatView);
-        mainChatScroll = (ScrollView) findViewById(R.id.mainChatScroll);
+        mainChatInput = findViewById(R.id.mainChatInput);
+        mainChatUserList = findViewById(R.id.mainChatUserList);
+        mainChatView = findViewById(R.id.mainChatView);
+        mainChatScroll = findViewById(R.id.mainChatScroll);
         actionBar = getSupportActionBar();
 
         registerMainChatInputListener();
