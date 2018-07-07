@@ -75,7 +75,7 @@ public class ChatService extends Service {
      * This method may execute every time the main chat is shown.
      */
     @Override
-    public void onStart(final Intent intent, final int startId) {
+    public int onStartCommand(final Intent intent, final int flags, final int startId) {
         if (!started) {
             started = true;
             androidUserInterface.logOn();
@@ -83,7 +83,7 @@ public class ChatService extends Service {
 
         startForeground(ServiceNotificationService.SERVICE_NOTIFICATION_ID, notificationService.createServiceNotification());
 
-        super.onStart(intent, startId);
+        return START_STICKY;
     }
 
     @Override
