@@ -143,7 +143,11 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         openPrivateChat();
 
         // Pretend to click "home" while in the private chat
-        getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+        getInstrumentation().runOnMainSync(new Runnable() {
+            public void run() {
+                getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+            }
+        });
 
         // Receive private message while "home"
         client.sendPrivateChatMessage("You are not looking!", me);
@@ -160,7 +164,11 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         openPrivateChat();
 
         // Pretend to turn off the screen while in the private chat
-        getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+        getInstrumentation().runOnMainSync(new Runnable() {
+            public void run() {
+                getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+            }
+        });
 
         // Receive private message while the screen is "off"
         client.sendPrivateChatMessage("You are still not looking!", me);
@@ -252,7 +260,11 @@ public class PrivateChatStateTest extends ActivityInstrumentationTestCase2<MainC
         assertTrue(solo.searchText("Message from user 1"));
 
         // Pretend to click "home" while in the private chat
-        getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+        getInstrumentation().runOnMainSync(new Runnable() {
+            public void run() {
+                getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+            }
+        });
 
         // Pretend to open the main chat from the list of running applications. This does not "resume" the private chat
         RobotiumTestUtils.goBack(solo);

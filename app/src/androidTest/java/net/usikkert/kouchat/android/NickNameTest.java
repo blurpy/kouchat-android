@@ -89,7 +89,7 @@ public class NickNameTest extends ActivityInstrumentationTestCase2<MainChatContr
         RobotiumTestUtils.changeNickNameTo(solo, "Test");
 
         assertTrue(solo.searchText("The nick name is in use by someone else.")); // Toast
-        assertFalse(solo.searchText("Test"));
+        assertFalse(solo.searchText("Test", true));
     }
 
     public void test04UpButtonShouldGoBackToMainChat() {

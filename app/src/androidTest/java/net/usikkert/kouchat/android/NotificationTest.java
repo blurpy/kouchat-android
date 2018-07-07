@@ -177,7 +177,11 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(500);
 
         // Pretend to start another application while in the private chat
-        getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+        getInstrumentation().runOnMainSync(new Runnable() {
+            public void run() {
+                getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+            }
+        });
         solo.sleep(500);
 
         client.sendChatMessage("You should stay notified until you see this!");
@@ -210,7 +214,11 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(500);
 
         // Pretend to start another application while in the private chat
-        getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+        getInstrumentation().runOnMainSync(new Runnable() {
+            public void run() {
+                getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+            }
+        });
         solo.sleep(500);
 
         otherUser.sendPrivateChatMessage("You should stay notified until you are back in the main chat!", me);
@@ -240,7 +248,11 @@ public class NotificationTest extends ActivityInstrumentationTestCase2<MainChatC
         solo.sleep(500);
 
         // Pretend to start another application while in the private chat
-        getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+        getInstrumentation().runOnMainSync(new Runnable() {
+            public void run() {
+                getInstrumentation().callActivityOnPause(solo.getCurrentActivity());
+            }
+        });
         solo.sleep(500);
 
         client.sendPrivateChatMessage("The notification should be reset soon!", me);
