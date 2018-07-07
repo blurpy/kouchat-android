@@ -6,6 +6,7 @@
   - Updated Gradle, build tools and dependencies.
   - Added Kotlin support.
   - Added notification channels for Android Oreo and newer.
+  - Added adaptive launcher icon for Android Oreo and newer.
 
 
 * version 1.1.0 (14.08.2016)

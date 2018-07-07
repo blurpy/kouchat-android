@@ -14,7 +14,7 @@
 
   <application android:label="@string/app_name"
                android:name=".app.KouChatApp"
-               android:icon="@drawable/ic_launcher"
+               android:icon="@mipmap/ic_launcher"
                android:theme="@style/Theme.KouChat.Light"
                android:allowBackup="true">
 
