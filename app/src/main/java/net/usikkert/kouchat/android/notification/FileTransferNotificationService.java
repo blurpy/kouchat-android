@@ -123,6 +123,7 @@ public class FileTransferNotificationService {
 
             notification.setPriority(NotificationCompat.PRIORITY_DEFAULT);
             notification.setCategory(NotificationCompat.CATEGORY_PROGRESS);
+            notification.setOnlyAlertOnce(true); // Avoid sound playing on every update
 
             disableSwipeToCancel(notification);
 
