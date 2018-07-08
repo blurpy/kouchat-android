@@ -39,6 +39,17 @@ import android.content.Context;
  */
 public class AndroidFileTransferListener implements FileTransferListener {
 
+    /**
+     * Android applies rate limiting to notification updates. Before Android 7 this was
+     * 50 updates pr second, but in Android 7 it was decreased to 10. For the whole app.
+     * The issue with rate limit is that the final "completed" update is likely to be ignored,
+     * making the notification stuck looking like it's still in progress but never finishing.
+     * This value means we can update the notification about 3 times per second, allowing 3
+     * parallel quick file transfers without issues. Users aren't likely to be able to start
+     * transfer of small files fast enough for the rate limit in Android to give us trouble.
+     */
+    private static final int MINIMUM_UPDATE_TIME = 334;
+
     private final FileTransfer fileTransfer;
     private final Context context;
     private final AndroidFileUtils androidFileUtils;
@@ -49,6 +60,7 @@ public class AndroidFileTransferListener implements FileTransferListener {
     private final String sendingText;
 
     private int percentTransferred;
+    private long lastTransferUpdate;
 
     public AndroidFileTransferListener(final FileTransfer fileTransfer,
                                        final Context context,
@@ -67,6 +79,7 @@ public class AndroidFileTransferListener implements FileTransferListener {
         this.messageController = messageController;
         this.notificationService = notificationService;
         this.percentTransferred = -1;
+        this.lastTransferUpdate = 0;
 
         receivingText = context.getString(R.string.notification_receiving);
         sendingText = context.getString(R.string.notification_sending);
@@ -145,9 +158,12 @@ public class AndroidFileTransferListener implements FileTransferListener {
     @Override
     public void transferUpdate() {
         final int percent = fileTransfer.getPercent();
+        final long currentTime = System.currentTimeMillis();
+        final long timePassedSinceUpdate = currentTime - lastTransferUpdate;
 
-        if (percent != percentTransferred) {
+        if (percent != percentTransferred && timePassedSinceUpdate > MINIMUM_UPDATE_TIME) {
             percentTransferred = percent;
+            lastTransferUpdate = currentTime;
 
             if (fileTransfer.getDirection() == FileTransfer.Direction.RECEIVE) {
                 notificationService.updateFileTransferProgress(fileTransfer, receivingText);
