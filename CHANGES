@@ -2,7 +2,7 @@
 - KouChat Android CHANGES
 
 
-* version 1.2.0 (TODO)
+* version 1.1.1 (TODO)
   - Updated Gradle, build tools and dependencies.
   - Added Kotlin support.
   - Added notification channels for Android Oreo and newer.
