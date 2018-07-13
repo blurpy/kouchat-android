@@ -25,7 +25,10 @@ package net.usikkert.kouchat.android.notification
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.Context
+import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.annotation.StringRes
@@ -33,7 +36,7 @@ import net.usikkert.kouchat.android.R
 import java.util.*
 
 /**
- * Configures the notification channels for Android Oreo and newer.
+ * Configures the notification channels for Android Oreo (8) and newer.
  *
  * Choices:
  *
@@ -46,6 +49,9 @@ import java.util.*
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
 class NotificationChannelSettings(private val context: Context) {
+
+    val soundUri: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+            context.packageName + "/" + R.raw.notification_sound)
 
     fun setupNotificationChannels() {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -109,9 +115,12 @@ class NotificationChannelSettings(private val context: Context) {
 
         channel.description = context.getString(description)
         channel.enableLights(lights)
+        channel.lightColor = Color.CYAN
         channel.enableVibration(vibration)
+        channel.vibrationPattern = NotificationHelper.VIBRATION_PATTERN
         channel.setShowBadge(badge)
         channel.lockscreenVisibility = visibility
+        channel.setSound(soundUri, Notification.AUDIO_ATTRIBUTES_DEFAULT)
 
         return channel
     }

@@ -39,7 +39,7 @@ import net.usikkert.kouchat.misc.User;
  */
 public class NotificationHelper {
 
-    private static final long[] VIBRATION_PATTERN = new long[] {50, 100, 50, 100};
+    public static final long[] VIBRATION_PATTERN = new long[] {50, 100, 50, 100};
 
     private final AndroidSettings settings;
     private final Uri soundUri;
@@ -56,6 +56,9 @@ public class NotificationHelper {
      * but only if enabled in the settings.
      *
      * <p>Only the blinking led can be used when the user is away.</p>
+     *
+     * <p>Note: these options don't have any effect on Android Oreo and newer.
+     * They need to be set on a notification channel.</p>
      *
      * @param notification The notification to update with these effects.
      */
