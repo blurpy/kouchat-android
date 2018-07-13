@@ -35,7 +35,7 @@ package net.usikkert.kouchat.android.notification
  *
  * <p>Since private chat notifications are the only notifications that are useful to
  * group automatically, they are the only ones to not have a group. Also, automatic grouping
- * doesn't happen until more than 4 ungrouped notifications are shown.</p>
+ * doesn't happen until 4 or more ungrouped notifications are shown.</p>
  *
  * @author Christian Ihle
  */
