@@ -74,7 +74,7 @@
   <string name="notifications_channel_description_main_chat_messages">Notifications about new main chat messages.</string>
 
   <string name="notifications_channel_id_main_chat_away_messages">main_chat_away_messages</string>
-  <string name="notifications_channel_name_main_chat_away_messages">Messages  while away</string>
+  <string name="notifications_channel_name_main_chat_away_messages">Messages while away</string>
   <string name="notifications_channel_description_main_chat_away_messages">Notifications about new main chat messages, while away.</string>
 
   <string name="notifications_channel_id_private_chat_messages">private_chat_messages</string>
