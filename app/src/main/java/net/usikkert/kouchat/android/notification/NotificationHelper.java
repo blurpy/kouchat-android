@@ -26,6 +26,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
+import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 
 import net.usikkert.kouchat.android.R;
@@ -49,6 +50,21 @@ public class NotificationHelper {
 
         soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                                   context.getPackageName() + "/" + R.raw.notification_sound);
+    }
+
+    /**
+     * To allow for silent notifications on Android 8 and newer when away,
+     * and the full effects when not away.
+     */
+    @StringRes
+    public int chooseMainChatChannel() {
+        final User me = settings.getMe();
+
+        if (me.isAway()) {
+            return R.string.notifications_channel_id_main_chat_away_messages;
+        } else {
+            return R.string.notifications_channel_id_main_chat_messages;
+        }
     }
 
     /**

@@ -43,6 +43,7 @@ import java.util.*
  * * service
  * * file_transfers
  * * main_chat_messages
+ * * main_chat_away_messages
  * * private_chat_messages
  *
  * @author Christian Ihle
@@ -59,10 +60,11 @@ class NotificationChannelSettings(private val context: Context) {
         val service = createServiceChannel()
         val fileTransfers = createFileTransfersChannel()
         val mainChatMessages = createMainChatMessagesChannel()
+        val mainChatAwayMessages = createMainChatAwayMessagesChannel()
         val privateChatMessages = createPrivateChatMessagesChannel()
 
         notificationManager.createNotificationChannels(
-                Arrays.asList(service, fileTransfers, mainChatMessages, privateChatMessages))
+                Arrays.asList(service, fileTransfers, mainChatMessages, mainChatAwayMessages, privateChatMessages))
     }
 
     private fun createServiceChannel(): NotificationChannel {
@@ -92,6 +94,16 @@ class NotificationChannelSettings(private val context: Context) {
                 R.string.notifications_channel_description_main_chat_messages,
                 NotificationManager.IMPORTANCE_DEFAULT,
                 true, true, true,
+                Notification.VISIBILITY_PRIVATE)
+    }
+
+    private fun createMainChatAwayMessagesChannel(): NotificationChannel {
+        return createChannel(
+                R.string.notifications_channel_id_main_chat_away_messages,
+                R.string.notifications_channel_name_main_chat_away_messages,
+                R.string.notifications_channel_description_main_chat_away_messages,
+                NotificationManager.IMPORTANCE_LOW,
+                false, false, true,
                 Notification.VISIBILITY_PRIVATE)
     }
 

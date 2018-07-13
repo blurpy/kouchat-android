@@ -80,7 +80,7 @@ public class MessageNotificationService {
         final CharSequence latestMessage = createMainChatMessage(user, message);
         addMainChatMessageToList(latestMessage);
 
-        final String channelId = context.getString(R.string.notifications_channel_id_main_chat_messages);
+        final String channelId = context.getString(notificationHelper.chooseMainChatChannel());
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context, channelId);
         notification.setTicker(context.getString(R.string.notification_new_message_ticker, user.getNick()));
         notification.setContentTitle(context.getString(R.string.notification_main_chat));
