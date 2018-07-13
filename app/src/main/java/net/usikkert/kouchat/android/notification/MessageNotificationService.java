@@ -27,6 +27,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -92,6 +93,10 @@ public class MessageNotificationService {
         notification.setPriority(NotificationCompat.PRIORITY_MAX);
         notification.setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            notification.setGroup(NotificationGroup.MAIN_CHAT.name());
+        }
+
         notificationHelper.setFeedbackEffects(notification);
 
         notificationManager.notify(MESSAGE_NOTIFICATION_ID, notification.build());
@@ -111,6 +116,10 @@ public class MessageNotificationService {
         notification.setContentIntent(createIntentForPrivateChat(user));
         notification.setPriority(NotificationCompat.PRIORITY_MAX);
         notification.setCategory(NotificationCompat.CATEGORY_MESSAGE);
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            notification.setGroup(NotificationGroup.PRIVATE_CHAT.name());
+//        }
 
         notificationHelper.setFeedbackEffects(notification);
 

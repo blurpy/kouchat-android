@@ -26,6 +26,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import net.usikkert.kouchat.android.R;
@@ -57,6 +58,10 @@ public class ServiceNotificationService {
         notification.setContentIntent(createPendingIntent());
         notification.setPriority(NotificationCompat.PRIORITY_MIN);
         notification.setCategory(NotificationCompat.CATEGORY_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            notification.setGroup(NotificationGroup.SERVICE.name());
+        }
 
         disableSwipeToCancel(notification);
 

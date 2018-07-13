@@ -26,6 +26,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import net.usikkert.kouchat.android.R;
@@ -84,6 +85,7 @@ public class FileTransferNotificationService {
         notification.setContentIntent(createIntentForReceiveFileDialog(notificationId, fileReceiver));
         notification.setPriority(NotificationCompat.PRIORITY_MAX);
         notification.setCategory(NotificationCompat.CATEGORY_MESSAGE);
+        setNotificationGroup(notification);
 
         notificationHelper.setFeedbackEffects(notification);
 
@@ -124,6 +126,7 @@ public class FileTransferNotificationService {
             notification.setPriority(NotificationCompat.PRIORITY_DEFAULT);
             notification.setCategory(NotificationCompat.CATEGORY_PROGRESS);
             notification.setOnlyAlertOnce(true); // Avoid sound playing on every update
+            setNotificationGroup(notification);
 
             disableSwipeToCancel(notification);
 
@@ -160,6 +163,7 @@ public class FileTransferNotificationService {
         notification.setContentText(status + ": " + fileTransfer.getFileName());
         notification.setPriority(NotificationCompat.PRIORITY_LOW);
         notification.setCategory(NotificationCompat.CATEGORY_PROGRESS);
+        setNotificationGroup(notification);
 
         enableSwipeToCancel(notification);
 
@@ -214,5 +218,11 @@ public class FileTransferNotificationService {
 
     private void disableSwipeToCancel(final NotificationCompat.Builder notification) {
         notification.setOngoing(true);
+    }
+
+    private void setNotificationGroup(final NotificationCompat.Builder notification) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            notification.setGroup(NotificationGroup.FILE_TRANSFER.name());
+        }
     }
 }
