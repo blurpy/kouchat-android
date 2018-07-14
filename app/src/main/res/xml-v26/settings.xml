@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:title="@string/settings_title">
+
+  <net.usikkert.kouchat.android.component.ThemedEditTextPreference
+      android:key="@string/settings_nick_name_key"
+      android:title="@string/settings_nick_name_title"
+      android:summary="@string/settings_nick_name_summary"
+      android:maxLength="10"
+      android:dialogTitle="@string/settings_nick_name_title"
+      android:dialogMessage="@string/settings_nick_name_dialog_message"
+      android:dialogIcon="@drawable/ic_dialog"/>
+
+  <net.usikkert.kouchat.android.component.HoloColorPickerPreference
+      android:key="@string/settings_own_color_key"
+      android:title="@string/settings_own_color_title"
+      android:summary="@string/settings_own_color_summary"
+      android:defaultValue="-15987646"
+      android:dialogTitle="@string/settings_own_color_title"
+      android:dialogIcon="@drawable/ic_dialog"/>
+
+  <net.usikkert.kouchat.android.component.HoloColorPickerPreference
+      android:key="@string/settings_sys_color_key"
+      android:title="@string/settings_sys_color_title"
+      android:summary="@string/settings_sys_color_summary"
+      android:defaultValue="-16759040"
+      android:dialogTitle="@string/settings_sys_color_title"
+      android:dialogIcon="@drawable/ic_dialog"/>
+
+  <CheckBoxPreference
+      android:widgetLayout="@layout/two_state_preference"
+      android:key="@string/settings_wake_lock_key"
+      android:title="@string/settings_wake_lock_title"
+      android:summary="@string/settings_wake_lock_summary"/>
+
+  <Preference
+      android:title="@string/settings_notification_open_external_title"
+      android:summary="@string/settings_notification_open_external_summary">
+    <intent android:action="android.settings.APP_NOTIFICATION_SETTINGS">
+      <extra android:name="android.provider.extra.APP_PACKAGE"
+             android:value="net.usikkert.kouchat.android" />
+    </intent>
+  </Preference>
+
+</PreferenceScreen>

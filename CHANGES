@@ -6,6 +6,7 @@
   - Updated Gradle, build tools and dependencies.
   - Added Kotlin support.
   - Added notification channels for Android Oreo and newer.
+  - Added button in settings to open system-provided notification settings on Android Oreo and newer.
   - Added adaptive launcher icon for Android Oreo and newer.
   - Fixed bug where file transfer notifications would get stuck in progress while actually completed.
 
