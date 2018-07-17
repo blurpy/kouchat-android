@@ -14,7 +14,7 @@
       android:text="@string/topic_dialog_message"
       android:padding="8dp"/>
 
-  <net.usikkert.kouchat.android.component.ThemedEditText
+  <EditText
       android:id="@+id/topicDialogInput"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"

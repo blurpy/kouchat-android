@@ -14,7 +14,7 @@
       android:text="@string/go_away_dialog_message"
       android:padding="8dp"/>
 
-  <net.usikkert.kouchat.android.component.ThemedEditText
+  <EditText
       android:id="@+id/goAwayDialogInput"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
