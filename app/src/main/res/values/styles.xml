@@ -2,7 +2,9 @@
 
 <resources>
 
-  <style name="Theme.KouChat.Light" parent="Theme.AppCompat.Light"/>
+  <style name="Theme.KouChat.Light" parent="Theme.AppCompat.Light">
+    <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+  </style>
 
   <style name="Theme.KouChat.Dialog" parent="android:Theme.DeviceDefault.Light.Dialog"/>
 

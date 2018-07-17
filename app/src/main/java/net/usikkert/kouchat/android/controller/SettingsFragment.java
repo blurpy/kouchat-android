@@ -22,6 +22,12 @@
 
 package net.usikkert.kouchat.android.controller;
 
+import net.usikkert.kouchat.android.R;
+import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
+import net.usikkert.kouchat.android.service.ChatService;
+import net.usikkert.kouchat.android.service.ChatServiceBinder;
+import net.usikkert.kouchat.android.settings.AndroidSettings;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -29,24 +35,17 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.TwoStatePreference;
-
-import net.usikkert.kouchat.android.R;
-import net.usikkert.kouchat.android.chatwindow.AndroidUserInterface;
-import net.usikkert.kouchat.android.component.HoloColorPickerPreference;
-import net.usikkert.kouchat.android.service.ChatService;
-import net.usikkert.kouchat.android.service.ChatServiceBinder;
-import net.usikkert.kouchat.android.settings.AndroidSettings;
+import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.TwoStatePreference;
 
 /**
  * Fragment for changing the settings.
  *
  * @author Christian Ihle
  */
-public class SettingsFragment extends PreferenceFragment
+public class SettingsFragment extends PreferenceFragmentCompat
                               implements Preference.OnPreferenceChangeListener,
                                          SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -68,6 +67,13 @@ public class SettingsFragment extends PreferenceFragment
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        serviceConnection = createServiceConnection();
+        final Intent chatServiceIntent = createChatServiceIntent();
+        getActivity().bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
+    }
+
+    @Override
+    public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey) {
         addPreferencesFromResource(R.xml.settings);
 
         nickNameKey = getString(R.string.settings_nick_name_key);
@@ -82,10 +88,6 @@ public class SettingsFragment extends PreferenceFragment
         final Preference nickNamePreference = findPreference(nickNameKey);
         nickNamePreference.setOnPreferenceChangeListener(this);
         setValueAsSummary(nickNamePreference);
-
-        serviceConnection = createServiceConnection();
-        final Intent chatServiceIntent = createChatServiceIntent();
-        getActivity().bindService(chatServiceIntent, serviceConnection, Context.BIND_NOT_FOREGROUND);
     }
 
     /**
@@ -128,15 +130,16 @@ public class SettingsFragment extends PreferenceFragment
             settings.setWakeLockEnabled(preference.isChecked());
         }
 
-        else if (key.equals(ownColorKey)) {
-            final HoloColorPickerPreference preference = (HoloColorPickerPreference) findPreference(key);
-            settings.setOwnColor(preference.getPersistedColor());
-        }
-
-        else if (key.equals(systemColorKey)) {
-            final HoloColorPickerPreference preference = (HoloColorPickerPreference) findPreference(key);
-            settings.setSysColor(preference.getPersistedColor());
-        }
+        // TODO
+//        else if (key.equals(ownColorKey)) {
+//            final HoloColorPickerPreference preference = (HoloColorPickerPreference) findPreference(key);
+//            settings.setOwnColor(preference.getPersistedColor());
+//        }
+//
+//        else if (key.equals(systemColorKey)) {
+//            final HoloColorPickerPreference preference = (HoloColorPickerPreference) findPreference(key);
+//            settings.setSysColor(preference.getPersistedColor());
+//        }
 
         else if (key.equals(notificationLightKey)) {
             final TwoStatePreference preference = (TwoStatePreference) findPreference(key);

@@ -25,7 +25,7 @@ package net.usikkert.kouchat.android.component;
 import net.usikkert.kouchat.android.R;
 
 import android.content.Context;
-import android.preference.EditTextPreference;
+import android.support.v7.preference.EditTextPreference;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 
@@ -61,7 +61,7 @@ public class ThemedEditTextPreference extends EditTextPreference {
      * Avoid getting new lines when pressing 'enter'.
      */
     private void blockNewLines() {
-        getEditText().addTextChangedListener(new NoNewLineTextWatcher());
+//        getEditText().addTextChangedListener(new NoNewLineTextWatcher()); TODO
     }
 
     private static ContextThemeWrapper createContextThemeWrapper(final Context originalContext) {
