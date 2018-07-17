@@ -27,7 +27,6 @@ import net.usikkert.kouchat.android.R;
 import android.content.Context;
 import android.support.v7.preference.EditTextPreference;
 import android.util.AttributeSet;
-import android.view.ContextThemeWrapper;
 
 /**
  * An {@link EditTextPreference} that uses the default dialog theme of the platform.
@@ -40,31 +39,25 @@ import android.view.ContextThemeWrapper;
  *
  * @author Christian Ihle
  */
-public class ThemedEditTextPreference extends EditTextPreference {
+public class NickNameEditTextPreference extends EditTextPreference {
 
-    public ThemedEditTextPreference(final Context context, final AttributeSet attrs, final int defStyle) {
-        super(createContextThemeWrapper(context), attrs, defStyle);
-        blockNewLines();
+    public NickNameEditTextPreference(final Context context, final AttributeSet attrs,
+                                      final int defStyleAttr, final int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+
+        setDialogLayoutResource(R.layout.preference_dialog_nickname);
     }
 
-    public ThemedEditTextPreference(final Context context, final AttributeSet attrs) {
-        super(createContextThemeWrapper(context), attrs);
-        blockNewLines();
+    public NickNameEditTextPreference(final Context context, final AttributeSet attrs,
+                                      final int defStyleAttr) {
+        this(context, attrs, defStyleAttr, 0);
     }
 
-    public ThemedEditTextPreference(final Context context) {
-        super(createContextThemeWrapper(context));
-        blockNewLines();
+    public NickNameEditTextPreference(final Context context, final AttributeSet attrs) {
+        this(context, attrs, R.attr.editTextPreferenceStyle);
     }
 
-    /**
-     * Avoid getting new lines when pressing 'enter'.
-     */
-    private void blockNewLines() {
-//        getEditText().addTextChangedListener(new NoNewLineTextWatcher()); TODO
-    }
-
-    private static ContextThemeWrapper createContextThemeWrapper(final Context originalContext) {
-        return new ContextThemeWrapper(originalContext, R.style.Theme_KouChat_Dialog);
+    public NickNameEditTextPreference(final Context context) {
+        this(context, null);
     }
 }

@@ -3,7 +3,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:title="@string/settings_title">
 
-  <net.usikkert.kouchat.android.component.ThemedEditTextPreference
+  <net.usikkert.kouchat.android.component.NickNameEditTextPreference
       android:key="@string/settings_nick_name_key"
       android:title="@string/settings_nick_name_title"
       android:summary="@string/settings_nick_name_summary"
