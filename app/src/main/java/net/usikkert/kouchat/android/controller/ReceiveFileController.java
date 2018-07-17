@@ -30,7 +30,6 @@ import net.usikkert.kouchat.android.service.ChatServiceBinder;
 import net.usikkert.kouchat.net.FileReceiver;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -41,6 +40,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 /**
@@ -48,7 +48,7 @@ import android.widget.Toast;
  *
  * @author Christian Ihle
  */
-public class ReceiveFileController extends Activity {
+public class ReceiveFileController extends AppCompatActivity {
 
     private static final int WRITE_REQUEST_CODE = 101;
     private static final String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
