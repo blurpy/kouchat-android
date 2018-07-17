@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:textColor="?android:attr/textColorSecondary"/>
 
-    <EditText
+    <net.usikkert.kouchat.android.component.EditTextWithNoNewLines
         android:id="@android:id/edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

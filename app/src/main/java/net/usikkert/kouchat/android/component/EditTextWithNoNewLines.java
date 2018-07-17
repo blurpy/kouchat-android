@@ -25,35 +25,29 @@ package net.usikkert.kouchat.android.component;
 import android.content.Context;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
-import android.view.ContextThemeWrapper;
 import android.widget.EditText;
 
-import net.usikkert.kouchat.android.R;
-
 /**
- * An {@link EditText} that uses the default dialog theme of the platform.
+ * An {@link EditText} that blocks 'enter'. This is an improvement to just setting
+ * max lines to 1, because pressing enter usually moves focus away from the text field.
  *
- * <p>This is necessary to make the dialog use correct default dialog colors on Android 4.</p>
- *
- * <p>Inspired by http://stackoverflow.com/questions/14032977/correct-text-color-appearance-in-alertdialog</p>
+ * <p>This subclass is for cases where it's easier to choose the class, than to access the
+ * instance, such as preferences.</p>
  *
  * @author Christian Ihle
  */
-public class ThemedEditText extends AppCompatEditText {
+public class EditTextWithNoNewLines extends AppCompatEditText {
 
-    public ThemedEditText(final Context context, final AttributeSet attrs, final int defStyle) {
-        super(createContextThemeWrapper(context), attrs, defStyle);
+    public EditTextWithNoNewLines(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+        addTextChangedListener(new NoNewLineTextWatcher());
     }
 
-    public ThemedEditText(final Context context, final AttributeSet attrs) {
-        super(createContextThemeWrapper(context), attrs);
+    public EditTextWithNoNewLines(final Context context, final AttributeSet attrs) {
+        this(context, attrs, android.support.v7.appcompat.R.attr.editTextStyle);
     }
 
-    public ThemedEditText(final Context context) {
-        super(createContextThemeWrapper(context));
-    }
-
-    private static ContextThemeWrapper createContextThemeWrapper(final Context originalContext) {
-        return new ContextThemeWrapper(originalContext, R.style.Theme_KouChat_Dialog);
+    public EditTextWithNoNewLines(final Context context) {
+        this(context, null);
     }
 }
