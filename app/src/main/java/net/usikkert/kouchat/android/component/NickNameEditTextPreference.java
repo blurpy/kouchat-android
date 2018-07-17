@@ -29,13 +29,11 @@ import android.support.v7.preference.EditTextPreference;
 import android.util.AttributeSet;
 
 /**
- * An {@link EditTextPreference} that uses the default dialog theme of the platform.
+ * An {@link EditTextPreference} for nick name that sets it's own dialog layout.
  *
- * <p>This is necessary because KouChat is using a light theme from ActionBarSherlock,
- * but the theme doesn't apply correctly to dialogs on Android 2.3.3. The dialogs in that version
- * are still dark, but the text changes to a dark color. So it's difficult to read.</p>
- *
- * <p>Inspired by http://stackoverflow.com/questions/14032977/correct-text-color-appearance-in-alertdialog</p>
+ * <p>This is necessary because the support library version of preferences
+ * won't allow any customization anymore, like setting max length and block
+ * 'enter'.</p>
  *
  * @author Christian Ihle
  */
