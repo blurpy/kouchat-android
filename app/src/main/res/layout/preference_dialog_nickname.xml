@@ -18,14 +18,15 @@
         android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="?android:attr/textColorSecondary" />
+        android:textColor="?android:attr/textColorSecondary"/>
 
     <EditText
         android:id="@android:id/edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="-4dp"
-        android:layout_marginRight="-4dp" />
+        android:layout_marginRight="-4dp"
+        android:maxLength="10"/>
 
   </LinearLayout>
 

@@ -7,7 +7,6 @@
       android:key="@string/settings_nick_name_key"
       android:title="@string/settings_nick_name_title"
       android:summary="@string/settings_nick_name_summary"
-      android:maxLength="10"
       android:dialogTitle="@string/settings_nick_name_title"
       android:dialogMessage="@string/settings_nick_name_dialog_message"
       android:dialogIcon="@drawable/ic_dialog"/>
