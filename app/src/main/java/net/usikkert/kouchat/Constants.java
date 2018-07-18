@@ -47,7 +47,7 @@ public interface Constants {
     /**
      * The home page of this application.
      */
-    String APP_WEB = "http://www.kouchat.net/";
+    String APP_WEB = "https://www.kouchat.net/";
 
     /**
      * Copyright from year, to year.

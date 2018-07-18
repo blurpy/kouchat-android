@@ -672,7 +672,7 @@ public class CommandParserTest {
 
         verify(messageController).showSystemMessage(
                 "This is KouChat v" + Constants.APP_VERSION +
-                        ", by Christian Ihle - contact@kouchat.net - http://www.kouchat.net/");
+                        ", by Christian Ihle - contact@kouchat.net - https://www.kouchat.net/");
     }
 
     /*

@@ -9,10 +9,10 @@
   <string name="about_text">
     \u0020Copyright 2006-2018 by Christian Ihle\n\n
     contact@kouchat.net\n
-    http://www.kouchat.net\n
+    https://www.kouchat.net\n
     https://www.facebook.com/kouchatapp\n\n
     Source available under the GNU LGPLv3:\n
-    http://www.gnu.org/licenses/lgpl-3.0.txt
+    https://www.gnu.org/licenses/lgpl-3.0.txt
   </string>
   <string name="settings_nick_name_dialog_message">
     A nick name can have between 1 and 10 characters. Legal characters are:\n“a-z”, “0-9”, “-” and “_”.
