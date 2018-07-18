@@ -8,6 +8,7 @@
   - Added notification channels for Android Oreo and newer.
   - Added button in settings to open system-provided notification settings on Android Oreo and newer.
   - Added adaptive launcher icon for Android Oreo and newer.
+  - Migrated all styling to support library to get a consistent look and feel across versions of Android.
   - Fixed bug where file transfer notifications would get stuck in progress while actually completed.
 
 

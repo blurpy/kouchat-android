@@ -24,32 +24,27 @@ package net.usikkert.kouchat.android.component;
 
 import net.usikkert.kouchat.android.R;
 
-import com.larswerkman.holocolorpicker.ColorPicker;
-import com.larswerkman.holocolorpicker.SaturationBar;
-import com.larswerkman.holocolorpicker.ValueBar;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.preference.DialogPreference;
+import android.support.v7.preference.DialogPreference;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 
 /**
- * A preference using the Holo Color Picker. Displays a dialog with the color picker,
- * and a preview of the persisted color on the preference itself.
+ * A preference using the Holo Color Picker.
+ *
+ * <p>Displays a dialog ({@link HoloColorPickerPreferenceDialog}) with the color picker,
+ * and a preview of the persisted color on the preference itself.</p>
  *
  * @author Christian Ihle
  */
-public class HoloColorPickerPreference extends DialogPreference implements ColorPicker.OnColorChangedListener {
+public class HoloColorPickerPreference extends DialogPreference {
 
     /** Used if default value is unspecified in xml. */
     private final int defaultColor = Color.BLACK;
-
-    /** The color last selected by the user. */
-    private int currentColor;
 
     /** The color that apply now. */
     private int persistedColor;
@@ -106,61 +101,26 @@ public class HoloColorPickerPreference extends DialogPreference implements Color
      *
      * <p>Runs when opening the settings.</p>
      *
-     * @param view The inflated preference layout. See <code>preference.xml</code> in the Android framework.
+     * @param holder The view holder with the inflated preference layout.
+     *               See <code>preference.xml</code> in the Android framework.
      */
     @Override
-    protected void onBindView(final View view) {
-        super.onBindView(view);
+    public void onBindViewHolder(final PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
 
-        colorPreviewImage = view.findViewById(R.id.colorPreviewImage);
+        colorPreviewImage = holder.itemView.findViewById(R.id.colorPreviewImage);
         updatePreviewColor();
     }
 
     /**
-     * Initializes the color picker dialog components.
+     * Saves currentColor in the preferences and updates the preview image.
      *
-     * <p>Runs when the dialog opens.</p>
-     *
-     * @param view The color picker dialog layout.
+     * @param currentColor The color to save.
      */
-    @Override
-    protected void onBindDialogView(final View view) {
-        super.onBindDialogView(view);
-
-        final ColorPicker colorPicker = view.findViewById(R.id.colorPicker);
-        final ValueBar valueBar = view.findViewById(R.id.colorPickerValueBar);
-        final SaturationBar saturationBar = view.findViewById(R.id.colorPickerSaturationBar);
-
-        colorPicker.setOnColorChangedListener(this);
-        colorPicker.addValueBar(valueBar);
-        colorPicker.addSaturationBar(saturationBar);
-        colorPicker.setColor(persistedColor);
-        colorPicker.setOldCenterColor(persistedColor);
-    }
-
-    /**
-     * Persists the chosen color and updates the preview image when closing the dialog with <code>OK</code>.
-     * Does nothing if closing with <code>Cancel</code>.
-     *
-     * @param positiveResult If the positive button (<code>OK</code>) was pressed.
-     */
-    @Override
-    protected void onDialogClosed(final boolean positiveResult) {
-        if (positiveResult) {
-            persistedColor = currentColor;
-            persistInt(persistedColor);
-            updatePreviewColor();
-        }
-    }
-
-    /**
-     * Sets the currently selected color whenever the user touches the color wheel or any of the sliders.
-     *
-     * @param color The currently selected color on the color wheel.
-     */
-    @Override
-    public void onColorChanged(final int color) {
-        currentColor = color;
+    public void persistColor(final int currentColor) {
+        persistedColor = currentColor;
+        persistInt(persistedColor);
+        updatePreviewColor();
     }
 
     /**

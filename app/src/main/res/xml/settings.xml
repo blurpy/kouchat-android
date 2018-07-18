@@ -11,22 +11,21 @@
       android:dialogMessage="@string/settings_nick_name_dialog_message"
       android:dialogIcon="@drawable/ic_dialog"/>
 
-  <!-- TODO -->
-  <!--<net.usikkert.kouchat.android.component.HoloColorPickerPreference-->
-      <!--android:key="@string/settings_own_color_key"-->
-      <!--android:title="@string/settings_own_color_title"-->
-      <!--android:summary="@string/settings_own_color_summary"-->
-      <!--android:defaultValue="-15987646"-->
-      <!--android:dialogTitle="@string/settings_own_color_title"-->
-      <!--android:dialogIcon="@drawable/ic_dialog"/>-->
+  <net.usikkert.kouchat.android.component.HoloColorPickerPreference
+      android:key="@string/settings_own_color_key"
+      android:title="@string/settings_own_color_title"
+      android:summary="@string/settings_own_color_summary"
+      android:defaultValue="-15987646"
+      android:dialogTitle="@string/settings_own_color_title"
+      android:dialogIcon="@drawable/ic_dialog"/>
 
-  <!--<net.usikkert.kouchat.android.component.HoloColorPickerPreference-->
-      <!--android:key="@string/settings_sys_color_key"-->
-      <!--android:title="@string/settings_sys_color_title"-->
-      <!--android:summary="@string/settings_sys_color_summary"-->
-      <!--android:defaultValue="-16759040"-->
-      <!--android:dialogTitle="@string/settings_sys_color_title"-->
-      <!--android:dialogIcon="@drawable/ic_dialog"/>-->
+  <net.usikkert.kouchat.android.component.HoloColorPickerPreference
+      android:key="@string/settings_sys_color_key"
+      android:title="@string/settings_sys_color_title"
+      android:summary="@string/settings_sys_color_summary"
+      android:defaultValue="-16759040"
+      android:dialogTitle="@string/settings_sys_color_title"
+      android:dialogIcon="@drawable/ic_dialog"/>
 
   <CheckBoxPreference
       android:widgetLayout="@layout/two_state_preference"
