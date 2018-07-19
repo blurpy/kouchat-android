@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dip"
     android:textAppearance="@style/Preference_TextAppearanceMaterialBody2"
-    android:textColor="@color/accent_material_light"
+    android:textColor="@color/preference_fallback_accent_color"
     android:layout_marginLeft="?android:attr/listPreferredItemPaddingLeft"
     android:layout_marginRight="?android:attr/listPreferredItemPaddingRight"
     android:layout_marginTop="16dip"/>
