@@ -137,7 +137,8 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
         checkIfBack();
 
         RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Away");
+        solo.sleep(500);
+        RobotiumTestUtils.clickMenuItem(solo, "Away");
         solo.sleep(500);
 
         assertTrue(solo.searchText("Go away?"));
@@ -241,7 +242,8 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
 
     private void openGoAwayDialog(final String awayMessage) {
         RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Away");
+        solo.sleep(500);
+        RobotiumTestUtils.clickMenuItem(solo, "Away");
         solo.sleep(500);
 
         assertTrue(solo.searchText("Go away?"));
@@ -252,7 +254,8 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
 
     private void openComeBackDialog(final String awayMessage) {
         RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Away");
+        solo.sleep(500);
+        RobotiumTestUtils.clickMenuItem(solo, "Away");
         solo.sleep(500);
 
         assertTrue(solo.searchText("Come back from '" + awayMessage + "'?"));

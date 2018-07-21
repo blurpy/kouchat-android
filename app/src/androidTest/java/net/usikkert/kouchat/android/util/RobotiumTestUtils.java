@@ -54,6 +54,7 @@ import android.text.Layout;
 import android.text.TextPaint;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -101,6 +102,17 @@ public final class RobotiumTestUtils {
     }
 
     /**
+     * Clicks a menu item in the action bar. Expects the menu to be open.
+     *
+     * @param solo The solo tester.
+     * @param title Title of the menu item to click.
+     */
+    public static void clickMenuItem(final Solo solo, final String title) {
+        final TextView topic = RobotiumTestUtils.getTextViewWithExactText(solo, title);
+        solo.clickOnView((View) topic.getParent());
+    }
+
+    /**
      * Adds a line of text to the first edittext field, and presses enter.
      *
      * @param solo The solo tester.
@@ -145,6 +157,26 @@ public final class RobotiumTestUtils {
 
         for (final TextView currentTextView : currentTextViews) {
             if (isTextView(currentTextView) && currentTextView.getText().toString().contains(text)) {
+                return currentTextView;
+            }
+        }
+
+        throw new IllegalArgumentException("Could not find TextView with text: " + text);
+    }
+
+    /**
+     * Gets a textview with the extact given text.
+     *
+     * @param solo The solo tester.
+     * @param text The text to look for in textviews.
+     * @return The textview with the text.
+     * @throws IllegalArgumentException If no textview was found with the given text.
+     */
+    public static TextView getTextViewWithExactText(final Solo solo, final String text) {
+        final List<TextView> currentTextViews = solo.getCurrentViews(TextView.class);
+
+        for (final TextView currentTextView : currentTextViews) {
+            if (isTextView(currentTextView) && currentTextView.getText().toString().equals(text)) {
                 return currentTextView;
             }
         }
@@ -375,7 +407,8 @@ public final class RobotiumTestUtils {
         solo.sleep(100);
         openMenu(solo);
 
-        solo.clickOnText("Topic");
+        solo.sleep(500);
+        clickMenuItem(solo, "Topic");
         solo.sleep(400);
 
         writeText(instrumentation, topic);
@@ -395,7 +428,8 @@ public final class RobotiumTestUtils {
         solo.sleep(100);
         openMenu(solo);
 
-        solo.clickOnText("Away");
+        solo.sleep(500);
+        clickMenuItem(solo, "Away");
         solo.sleep(400);
 
         writeText(instrumentation, awayMessage);

@@ -323,7 +323,8 @@ public class UserListTest extends ActivityInstrumentationTestCase2<MainChatContr
 
     private void comeBack(final String awayMessage) {
         RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Away");
+        solo.sleep(500);
+        RobotiumTestUtils.clickMenuItem(solo, "Away");
         solo.sleep(500);
 
         assertTrue(solo.searchText("Come back from '" + awayMessage + "'?"));

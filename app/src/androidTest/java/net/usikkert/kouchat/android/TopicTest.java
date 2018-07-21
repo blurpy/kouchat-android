@@ -121,7 +121,8 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(500);
 
         RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Topic");
+        solo.sleep(500);
+        RobotiumTestUtils.clickMenuItem(solo, "Topic");
         solo.sleep(500);
 
         assertTrue(solo.searchText("Set or change the current topic."));
@@ -139,7 +140,8 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(500);
 
         RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Topic");
+        solo.sleep(500);
+        RobotiumTestUtils.clickMenuItem(solo, "Topic");
         solo.sleep(500);
 
         solo.sendKey(KeyEvent.KEYCODE_DEL);
@@ -155,7 +157,8 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(500);
 
         RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Topic");
+        solo.sleep(500);
+        RobotiumTestUtils.clickMenuItem(solo, "Topic");
         solo.sleep(500);
 
         RobotiumTestUtils.writeText(instrumentation, "Line1");
@@ -170,7 +173,8 @@ public class TopicTest extends ActivityInstrumentationTestCase2<MainChatControll
         solo.sleep(500);
 
         RobotiumTestUtils.openMenu(solo);
-        solo.clickOnText("Topic");
+        solo.sleep(500);
+        RobotiumTestUtils.clickMenuItem(solo, "Topic");
         solo.sleep(500);
 
         RobotiumTestUtils.writeText(instrumentation, "Don't set this topic");
