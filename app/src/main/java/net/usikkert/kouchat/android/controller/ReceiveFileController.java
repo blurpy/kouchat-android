@@ -68,6 +68,17 @@ public class ReceiveFileController extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Override exit animation to avoid black screen when closing the dialog on
+        // some versions of Android, like KitKat.
+        // This was the only place the method had any effect.
+        overridePendingTransition(android.support.v7.appcompat.R.anim.abc_popup_enter,
+                                  android.support.v7.appcompat.R.anim.abc_popup_exit);
+    }
+
+    @Override
     protected void onDestroy() {
         unbindService(serviceConnection);
 
