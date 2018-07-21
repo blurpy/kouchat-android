@@ -47,6 +47,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.InstrumentationTestCase;
 import android.text.Layout;
@@ -143,8 +144,7 @@ public final class RobotiumTestUtils {
         final List<TextView> currentTextViews = solo.getCurrentViews(TextView.class);
 
         for (final TextView currentTextView : currentTextViews) {
-            if (currentTextView.getClass().equals(TextView.class) &&
-                    currentTextView.getText().toString().contains(text)) {
+            if (isTextView(currentTextView) && currentTextView.getText().toString().contains(text)) {
                 return currentTextView;
             }
         }
@@ -671,5 +671,10 @@ public final class RobotiumTestUtils {
         final int yPosition = layout.getLineBaseline(lineNumber) + textViewXYLocation[1] - textView.getScrollY();
 
         return new Point(xPosition, yPosition);
+    }
+
+    private static boolean isTextView(final TextView textView) {
+        return textView.getClass().equals(TextView.class) ||
+                textView.getClass().equals(AppCompatTextView.class);
     }
 }
