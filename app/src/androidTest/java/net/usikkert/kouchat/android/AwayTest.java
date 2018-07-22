@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.android;
 
+import java.util.ArrayList;
+
 import net.usikkert.kouchat.android.controller.MainChatController;
 import net.usikkert.kouchat.android.controller.SendFileController;
 import net.usikkert.kouchat.android.util.AndroidFile;
@@ -36,6 +38,7 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
+import android.view.View;
 
 /**
  * Testing away and back functionality.
@@ -202,7 +205,11 @@ public class AwayTest extends ActivityInstrumentationTestCase2<MainChatControlle
 
         openSendFileDialog();
 
-        solo.clickInList(1); // Click on Test
+        // Using hack because the regular clickInList sometimes clicks the main chat user list
+        final View sendFileUserListView = solo.getView(R.id.sendFileUserListView);
+        final ArrayList<View> results = new ArrayList<>();
+        sendFileUserListView.findViewsWithText(results, "Test", View.FIND_VIEWS_WITH_TEXT);
+        solo.clickOnView(results.get(0)); // Click on Test
 
         solo.sleep(500);
         assertTrue(solo.searchText("You can not send a file while away"));
