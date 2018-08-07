@@ -9,8 +9,8 @@ android {
         applicationId "net.usikkert.kouchat.android"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 16
-        versionName "1.1.1"
+        versionCode 17
+        versionName "1.1.2"
     }
 
     signingConfigs {
