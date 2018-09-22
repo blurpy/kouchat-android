@@ -3,7 +3,8 @@
 
 
 * version 1.1.2 (TODO)
-  - TODO
+  - Imported backend code from KouChat v1.4.0 for desktop.
+  - Added support for using direct tcp for chat messages.
 
 
 * version 1.1.1 (05.08.2018)

@@ -177,6 +177,7 @@ public interface MessageResponder {
      * @param timeSinceLogon Number of milliseconds since the user logged on.
      * @param operatingSystem The user's operating system.
      * @param privateChatPort The port to use for sending private chat messages to this user.
+     * @param tcpChatPort The port to use for sending chat messages to this user using tcp.
      */
-    void clientInfo(int userCode, String client, long timeSinceLogon, String operatingSystem, int privateChatPort);
+    void clientInfo(int userCode, String client, long timeSinceLogon, String operatingSystem, int privateChatPort, int tcpChatPort);
 }

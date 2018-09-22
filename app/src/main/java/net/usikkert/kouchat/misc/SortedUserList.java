@@ -29,6 +29,8 @@ import java.util.List;
 import net.usikkert.kouchat.event.UserListListener;
 import net.usikkert.kouchat.util.Validate;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * This is a sorted version of the user list.
  *
@@ -75,6 +77,7 @@ public class SortedUserList implements UserList {
     /**
      * {@inheritDoc}
      */
+    @Nullable
     @Override
     public User get(final int pos) {
         if (pos < userList.size()) {

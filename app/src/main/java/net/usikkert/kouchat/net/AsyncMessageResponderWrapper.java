@@ -229,8 +229,8 @@ public class AsyncMessageResponderWrapper implements MessageResponder {
 
     @Override
     public void clientInfo(final int userCode, final String client, final long timeSinceLogon,
-                           final String operatingSystem, final int privateChatPort) {
-        messageResponder.clientInfo(userCode, client, timeSinceLogon, operatingSystem, privateChatPort);
+                           final String operatingSystem, final int privateChatPort, final int tcpChatPort) {
+        messageResponder.clientInfo(userCode, client, timeSinceLogon, operatingSystem, privateChatPort, tcpChatPort);
     }
 
     /**

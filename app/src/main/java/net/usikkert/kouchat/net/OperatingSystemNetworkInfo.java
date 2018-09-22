@@ -36,6 +36,8 @@ import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * This class can find information about the network interface
  * the operating system has chosen for multicast.
@@ -140,6 +142,7 @@ public class OperatingSystemNetworkInfo {
      * @param listener The message listener.
      * @return The found network interface, or <code>null</code>.
      */
+    @Nullable
     private NetworkInterface findNetworkInterface(final SimpleReceiverListener listener) {
         if (listener.getIpAddress() == null) {
             return null;

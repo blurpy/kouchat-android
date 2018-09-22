@@ -24,6 +24,8 @@ package net.usikkert.kouchat.misc;
 
 import net.usikkert.kouchat.ui.PrivateChatWindow;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * This class represents a user in the chat.
  *
@@ -47,6 +49,7 @@ public class User implements Comparable<User> {
     private String client;
 
     /** The user's host name. */
+    @Nullable
     private String hostName;
 
     /** The unique code identifying this user. */
@@ -54,6 +57,12 @@ public class User implements Comparable<User> {
 
     /** The port to use when connecting to this user's private chat. */
     private int privateChatPort;
+
+    /** The port to use when connecting to this user directly using tcp. */
+    private int tcpChatPort;
+
+    /** Whether a tcp connection is enabled for this user. */
+    private boolean tcpEnabled;
 
     /** The time when the last idle message came from this user. */
     private long lastIdle;
@@ -80,6 +89,7 @@ public class User implements Comparable<User> {
     private boolean newMsg;
 
     /** The private chat window where the chat session with this user happens. */
+    @Nullable
     private PrivateChatWindow privchat;
 
     /** The chat logger used for logging communication with this user. */
@@ -107,6 +117,7 @@ public class User implements Comparable<User> {
         hostName = null;
         newMsg = false;
         privateChatPort = 0;
+        tcpChatPort = 0;
         privchat = null;
         online = true;
         newPrivMsg = false;
@@ -123,6 +134,7 @@ public class User implements Comparable<User> {
         hostName = null;
         newMsg = false;
         privateChatPort = 0;
+        tcpChatPort = 0;
         privchat = null;
         newPrivMsg = false;
     }
@@ -321,6 +333,7 @@ public class User implements Comparable<User> {
      *
      * @return The user's private chat window.
      */
+    @Nullable
     public PrivateChatWindow getPrivchat() {
         return privchat;
     }
@@ -371,6 +384,42 @@ public class User implements Comparable<User> {
     }
 
     /**
+     * Gets the port to use when sending chat messages to this user using tcp.
+     *
+     * @return The port to use for tcp chat with the user.
+     */
+    public int getTcpChatPort() {
+        return tcpChatPort;
+    }
+
+    /**
+     * Sets the port to use when sending chat messages to this user using tcp.
+     *
+     * @param tcpChatPort The port to use for tcp chat with the user.
+     */
+    public void setTcpChatPort(final int tcpChatPort) {
+        this.tcpChatPort = tcpChatPort;
+    }
+
+    /**
+     * Gets whether a tcp connection is enabled for this user.
+     *
+     * @return If a tcp connection is enabled for this user.
+     */
+    public boolean isTcpEnabled() {
+        return tcpEnabled;
+    }
+
+    /**
+     * Sets whether a tcp connection is enabled for this user.
+     *
+     * @param tcpEnabled If a tcp connection is enabled for this user.
+     */
+    public void setTcpEnabled(final boolean tcpEnabled) {
+        this.tcpEnabled = tcpEnabled;
+    }
+
+    /**
      * Checks if this user is logged on to the chat.
      *
      * @return If the user is online.
@@ -411,6 +460,7 @@ public class User implements Comparable<User> {
      *
      * @return The host name.
      */
+    @Nullable
     public String getHostName() {
         return hostName;
     }

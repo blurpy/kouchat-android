@@ -28,7 +28,6 @@ import static org.mockito.Mockito.*;
 import java.util.Arrays;
 import java.util.Date;
 
-import net.usikkert.kouchat.Constants;
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.junit.ExpectedException;
 import net.usikkert.kouchat.message.CoreMessages;
@@ -496,7 +495,7 @@ public class ControllerTest {
         verify(dayTimer).startTimer();
         verify(idleThread).start();
 
-        verify(messageController).showSystemMessage("Welcome to KouChat v" + Constants.APP_VERSION + "!");
+        verify(messageController).showSystemMessage("Welcome to KouChat!");
         verify(messageController).showSystemMessage("Today is X-mass");
         verify(dateTools).currentDateToString("EEEE, d MMMM yyyy");
     }

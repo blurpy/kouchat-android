@@ -37,7 +37,7 @@ public interface Constants {
     /**
      * The application version.
      */
-    String APP_VERSION = "1.1.2";
+    String APP_VERSION = "1.4.0";
 
     /**
      * Which license the application has.
@@ -76,6 +76,13 @@ public interface Constants {
      * If it is already in use, port +1 is tried, and so on.
      */
     int NETWORK_PRIVCHAT_PORT = 40656;
+
+    /**
+     * The tcp port used for sending and receiving
+     * packets for both main and private chats. This is only the starting port.
+     * If it is already in use, port +1 is tried, and so on.
+     */
+    int NETWORK_TCP_CHAT_PORT = 40656;
 
     /**
      * The temporary multicast udp port used for sending and

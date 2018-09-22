@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.net;
 
+import static net.usikkert.kouchat.net.NetworkUtils.IPTOS_RELIABILITY;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -127,6 +129,8 @@ public class UDPReceiver implements Runnable {
             while (counter < 50 && !connected) {
                 try {
                     udpSocket = new DatagramSocket(port);
+                    udpSocket.setTrafficClass(IPTOS_RELIABILITY);
+
                     connected = true;
 
                     // The background thread watching for messages from the network.

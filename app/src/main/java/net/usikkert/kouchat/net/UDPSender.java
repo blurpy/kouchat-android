@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.net;
 
+import static net.usikkert.kouchat.net.NetworkUtils.IPTOS_RELIABILITY;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -112,6 +114,8 @@ public class UDPSender {
         else {
             try {
                 udpSocket = new DatagramSocket();
+                udpSocket.setTrafficClass(IPTOS_RELIABILITY);
+
                 connected = true;
                 LOG.log(Level.FINE, "Connected.");
             }

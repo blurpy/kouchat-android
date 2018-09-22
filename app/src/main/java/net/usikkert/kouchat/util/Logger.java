@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A wrapper around {@link java.util.logging.Logger} to provide more convenient methods for logging,
@@ -45,6 +46,21 @@ public final class Logger {
 
     private Logger(final java.util.logging.Logger logger) {
         this.logger = logger;
+    }
+
+    public void fine(@NonNls final String message,
+                     @NonNls final Object... messageParameters) {
+        log(Level.FINE, message, messageParameters, null);
+    }
+
+    public void info(@NonNls final String message,
+                     @NonNls final Object... messageParameters) {
+        log(Level.INFO, message, messageParameters, null);
+    }
+
+    public void warning(@NonNls final String message,
+                        @NonNls final Object... messageParameters) {
+        log(Level.WARNING, message, messageParameters, null);
     }
 
     public void severe(@NonNls final String message,
@@ -82,6 +98,7 @@ public final class Logger {
         }
     }
 
+    @Nullable
     private String getFormattedMessageOrNull(final String message, final Object[] messageParameters) {
         if (message == null) {
             return null;

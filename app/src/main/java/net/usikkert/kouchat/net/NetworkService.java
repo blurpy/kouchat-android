@@ -27,7 +27,10 @@ import java.util.logging.Logger;
 
 import net.usikkert.kouchat.event.NetworkConnectionListener;
 import net.usikkert.kouchat.event.ReceiverListener;
+import net.usikkert.kouchat.misc.Controller;
 import net.usikkert.kouchat.misc.ErrorHandler;
+import net.usikkert.kouchat.misc.User;
+import net.usikkert.kouchat.net.tcp.TCPNetworkService;
 import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Validate;
 
@@ -56,16 +59,24 @@ public class NetworkService implements NetworkConnectionListener {
     /** The private message receiver. */
     private final UDPReceiver udpReceiver;
 
+    /** The network service for tcp connections. */
+    private final TCPNetworkService tcpNetworkService;
+
+    /** Proxy for deduplicating multicast and tcp messages. */
+    private final MessageDeduplicator messageDeduplicator;
+
     /** If private chat should be enabled. */
     private final boolean privateChatEnabled;
 
     /**
      * Constructor.
      *
+     * @param controller The controller to use.
      * @param settings The settings to use.
      * @param errorHandler The error handler to use.
      */
-    public NetworkService(final Settings settings, final ErrorHandler errorHandler) {
+    public NetworkService(final Controller controller, final Settings settings, final ErrorHandler errorHandler) {
+        Validate.notNull(controller, "Controller can not be null");
         Validate.notNull(settings, "Settings can not be null");
         Validate.notNull(errorHandler, "Error handler can not be null");
 
@@ -76,6 +87,8 @@ public class NetworkService implements NetworkConnectionListener {
         messageReceiver = new MessageReceiver(errorHandler);
         messageSender = new MessageSender(errorHandler);
         connectionWorker = new ConnectionWorker(settings, errorHandler);
+        tcpNetworkService = new TCPNetworkService(controller, settings, errorHandler);
+        messageDeduplicator = new MessageDeduplicator(controller);
 
         if (privateChatEnabled) {
             udpReceiver = new UDPReceiver(settings, errorHandler);
@@ -142,46 +155,50 @@ public class NetworkService implements NetworkConnectionListener {
     }
 
     /**
-     * Register a listener for incoming messages from the network.
+     * Register a listener for incoming main chat messages from the network.
      *
      * @param listener The listener to register.
      */
-    public void registerMessageReceiverListener(final ReceiverListener listener) {
-        messageReceiver.registerReceiverListener(listener);
+    public void registerMainChatMessageReceiverListener(final ReceiverListener listener) {
+        messageDeduplicator.registerMainChatReceiverListener(listener);
+        messageReceiver.registerReceiverListener(messageDeduplicator);
+        tcpNetworkService.registerReceiverListener(messageDeduplicator);
     }
 
     /**
-     * Register a listener for incoming UDP messages from the network.
+     * Register a listener for incoming private chat messages from the network.
      *
      * @param listener The listener to register.
      */
-    public void registerUDPReceiverListener(final ReceiverListener listener) {
+    public void registerPrivateChatReceiverListener(final ReceiverListener listener) {
         if (privateChatEnabled) {
-            udpReceiver.registerReceiverListener(listener);
+            messageDeduplicator.registerPrivateChatReceiverListener(listener);
+            udpReceiver.registerReceiverListener(messageDeduplicator);
         }
     }
 
     /**
-     * Send a message with multicast, to all users.
+     * Send a message to all users.
      *
      * @param message The message to send.
      * @return If the message was sent or not.
      */
-    public boolean sendMulticastMsg(final String message) {
+    public boolean sendMessageToAllUsers(final String message) {
+        tcpNetworkService.sendMessageToAll(message);
         return messageSender.send(message);
     }
 
     /**
-     * Send a message with UDP, to a single user.
+     * Send a message to a single user.
      *
      * @param message The message to send.
-     * @param ip The ip address of the user.
-     * @param port The port to send the message to.
+     * @param user The user to send the message to.
      * @return If the message was sent or not.
      */
-    public boolean sendUDPMsg(final String message, final String ip, final int port) {
+    public boolean sendMessageToUser(final String message, final User user) {
         if (privateChatEnabled) {
-            return udpSender.send(message, ip, port);
+            tcpNetworkService.sendMessageToUser(message, user);
+            return udpSender.send(message, user.getIpAddress(), user.getPrivateChatPort());
         }
 
         else {
@@ -211,6 +228,7 @@ public class NetworkService implements NetworkConnectionListener {
 
         messageSender.stopSender();
         messageReceiver.stopReceiver();
+        tcpNetworkService.stopService();
     }
 
     @Override
@@ -233,5 +251,6 @@ public class NetworkService implements NetworkConnectionListener {
         final NetworkInterface currentNetworkInterface = connectionWorker.getCurrentNetworkInterface();
         messageSender.startSender(currentNetworkInterface);
         messageReceiver.startReceiver(currentNetworkInterface);
+        tcpNetworkService.startService();
     }
 }

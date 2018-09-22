@@ -25,6 +25,8 @@ package net.usikkert.kouchat.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Utility methods for working with date and time.
  *
@@ -51,7 +53,7 @@ public class DateTools {
      * @return A converted date.
      * @see SimpleDateFormat
      */
-    public String dateToString(final Date date, final String format) {
+    public String dateToString(@Nullable final Date date, final String format) {
         return Tools.dateToString(date, format);
     }
 

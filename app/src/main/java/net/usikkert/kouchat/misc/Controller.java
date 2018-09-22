@@ -52,6 +52,8 @@ import net.usikkert.kouchat.util.TimerTools;
 import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * This controller gives access to the network and the state of the
  * application, like the user list and the topic.
@@ -130,14 +132,14 @@ public class Controller implements NetworkConnectionListener {
         wList = new WaitingList();
         idleThread = new IdleThread(this, ui, settings);
         dayTimer = new DayTimer(ui);
-        networkService = new NetworkService(settings, errorHandler);
+        networkService = new NetworkService(this, settings, errorHandler);
         final MessageResponder msgResponder = new DefaultMessageResponder(this, ui, settings, coreMessages);
         final AsyncMessageResponderWrapper msgResponderWrapper = new AsyncMessageResponderWrapper(msgResponder, this);
         final PrivateMessageResponder privmsgResponder = new DefaultPrivateMessageResponder(this, ui, settings);
         final MessageParser msgParser = new MessageParser(msgResponderWrapper, settings);
-        networkService.registerMessageReceiverListener(msgParser);
+        networkService.registerMainChatMessageReceiverListener(msgParser);
         final PrivateMessageParser privmsgParser = new PrivateMessageParser(privmsgResponder, settings);
-        networkService.registerUDPReceiverListener(privmsgParser);
+        networkService.registerPrivateChatReceiverListener(privmsgParser);
         networkMessages = new NetworkMessages(networkService, settings);
         networkService.registerNetworkConnectionListener(this);
         msgController = ui.getMessageController();
@@ -151,7 +153,7 @@ public class Controller implements NetworkConnectionListener {
         idleThread.start();
 
         msgController.showSystemMessage(coreMessages.getMessage("core.startup.systemMessage.welcome",
-                                                                Constants.APP_NAME, Constants.APP_VERSION));
+                                                                Constants.APP_NAME));
         final String date = dateTools.currentDateToString(coreMessages.getMessage("core.dateFormat.today"));
         msgController.showSystemMessage(coreMessages.getMessage("core.startup.systemMessage.todayIs", date));
     }
@@ -348,6 +350,7 @@ public class Controller implements NetworkConnectionListener {
      * @param code The user code for the user.
      * @return The user with the specified user code, or <em>null</em> if not found.
      */
+    @Nullable
     public User getUser(final int code) {
         return userListController.getUser(code);
     }
@@ -358,6 +361,7 @@ public class Controller implements NetworkConnectionListener {
      * @param nick The nick name to check for.
      * @return The user with the specified nick name, or <em>null</em> if not found.
      */
+    @Nullable
     public User getUser(final String nick) {
         return userListController.getUser(nick);
     }

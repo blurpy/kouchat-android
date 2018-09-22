@@ -20,53 +20,55 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.settings;
+package net.usikkert.kouchat.misc;
 
-import net.usikkert.kouchat.event.SettingsListener;
+import org.junit.Before;
+import org.junit.Test;
 
-import org.jetbrains.annotations.NonNls;
+import static org.junit.Assert.*;
 
 /**
- * An "enum" representing the different types of settings that can be changed.
- *
- * <p>Contains only the settings that can be used with {@link SettingsListener}.</p>
- *
- * <p>This is not a real enum because of the need to support inheritance. Use {@link #equals(Object)}
- * instead of <code>==</code> for comparison, to avoid issues with class loaders and serialization.</p>
+ * Test of {@link WaitingList}.
  *
  * @author Christian Ihle
  */
-public class Setting {
+public class WaitingListTest {
 
-    /** Maps to {@link Settings#isLogging()}. */
-    public static final Setting LOGGING = new Setting("LOGGING");
+    private WaitingList waitingList;
 
-    /** Maps to {@link Settings#isSystemTray()}. */
-    public static final Setting SYSTEM_TRAY = new Setting("SYSTEM_TRAY");
-
-    private final String name; // Must be unique
-
-    protected Setting(@NonNls final String name) {
-        this.name = name;
+    @Before
+    public void setUp() {
+        waitingList = new WaitingList();
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
+    @Test
+    public void addAndRemoveWaitingUserShouldWork() {
+        final int userCode = 123;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        waitingList.addWaitingUser(userCode);
+        assertTrue(waitingList.isWaitingUser(userCode));
 
-        final Setting setting = (Setting) o;
-
-        return name.equals(setting.name);
+        waitingList.removeWaitingUser(userCode);
+        assertFalse(waitingList.isWaitingUser(userCode));
     }
 
-    @Override
-    public int hashCode() {
-        return name.hashCode();
+    @Test
+    public void removeWaitingUserShouldRemoveEvenWhenAddedMultipleTimes() {
+        final int userCode = 124;
+
+        waitingList.addWaitingUser(userCode);
+        waitingList.addWaitingUser(userCode);
+        assertTrue(waitingList.isWaitingUser(userCode));
+
+        waitingList.removeWaitingUser(userCode);
+        assertFalse(waitingList.isWaitingUser(userCode));
+    }
+
+    @Test
+    public void removeWaitingUserShouldIgnoreUnknownUser() {
+        final int userCode = 125;
+
+        assertFalse(waitingList.isWaitingUser(userCode));
+        waitingList.removeWaitingUser(userCode);
     }
 }

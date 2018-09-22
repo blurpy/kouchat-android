@@ -35,6 +35,8 @@ import net.usikkert.kouchat.event.FileTransferListener;
 import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.util.ByteCounter;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * This is a class for sending files to other users.
  *
@@ -79,12 +81,15 @@ public class FileSender implements FileTransfer {
     private FileTransferListener listener;
 
     /** The input stream from the file. */
+    @Nullable
     private InputStream is;
 
     /** The output stream to the other user. */
+    @Nullable
     private OutputStream os;
 
     /** The socket connection to the other user. */
+    @Nullable
     private Socket sock;
 
     /**

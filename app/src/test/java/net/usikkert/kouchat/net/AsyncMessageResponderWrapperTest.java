@@ -329,9 +329,11 @@ public class AsyncMessageResponderWrapperTest {
 
     @Test
     public void clientInfoShouldPassThrough() {
-        wrapper.clientInfo(100, "client", 70000, "os", 4500);
+        wrapper.clientInfo(100, "client", 70000, "os",
+                           4500, 6000);
 
-        verify(messageResponder).clientInfo(100, "client", 70000, "os", 4500);
+        verify(messageResponder).clientInfo(100, "client", 70000, "os",
+                                            4500, 6000);
     }
 
     @Test

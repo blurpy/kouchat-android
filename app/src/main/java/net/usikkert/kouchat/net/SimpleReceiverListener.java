@@ -24,6 +24,8 @@ package net.usikkert.kouchat.net;
 
 import net.usikkert.kouchat.event.ReceiverListener;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * This is a very simple {@link ReceiverListener} for getting the message
  * and ip address when a message arrives.
@@ -36,9 +38,11 @@ public class SimpleReceiverListener implements ReceiverListener {
     private final String expectedMessage;
 
     /** The arrived message, or null. */
+    @Nullable
     private String message;
 
     /** The ip address of the arrived message, or null. */
+    @Nullable
     private String ipAddress;
 
     /**
@@ -71,6 +75,7 @@ public class SimpleReceiverListener implements ReceiverListener {
      *
      * @return The message.
      */
+    @Nullable
     public String getMessage() {
         return message;
     }
@@ -80,6 +85,7 @@ public class SimpleReceiverListener implements ReceiverListener {
      *
      * @return The ip address.
      */
+    @Nullable
     public String getIpAddress() {
         return ipAddress;
     }

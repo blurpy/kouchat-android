@@ -62,6 +62,7 @@ public class LogInitializer {
         Logger.getLogger(MAIN_PACKAGE);
         Logger.getLogger(MAIN_PACKAGE + ".misc");
         Logger.getLogger(MAIN_PACKAGE + ".net");
+        Logger.getLogger(MAIN_PACKAGE + ".net.tcp");
         Logger.getLogger(MAIN_PACKAGE + ".ui");
         Logger.getLogger(MAIN_PACKAGE + ".ui.console");
         Logger.getLogger(MAIN_PACKAGE + ".ui.swing");

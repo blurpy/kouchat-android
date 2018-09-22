@@ -47,13 +47,15 @@ public class MessageParserTest {
     private MessageParser messageParser;
 
     private Logger log;
+    private MessageResponder responder;
 
     @Before
     public void setUp() {
         final Settings settings = mock(Settings.class);
         when(settings.getMe()).thenReturn(new User("Test", 1234));
 
-        messageParser = new MessageParser(mock(MessageResponder.class), settings);
+        responder = mock(MessageResponder.class);
+        messageParser = new MessageParser(responder, settings);
 
         TestUtils.setFieldValue(messageParser, "loggedOn", true);
         log = TestUtils.setFieldValueWithMock(messageParser, "LOG", Logger.class);
@@ -99,6 +101,40 @@ public class MessageParserTest {
                         exceptionCaptor.capture());
 
         checkException(exceptionCaptor, NumberFormatException.class, "For input string: \"a40657\"");
+    }
+
+    @Test
+    public void messageArrivedShouldParseClientWithoutTcpChatPort() {
+        messageParser.messageArrived("19879835!CLIENT#Christian:(KouChat v1.3.0 Swing)[1854]{Linux}<40656>",
+                                     "192.168.1.1");
+
+        verify(responder).clientInfo(19879835, "KouChat v1.3.0 Swing", 1854,
+                                     "Linux", 40656, 0);
+    }
+
+    @Test
+    public void messageArrivedShouldParseClientWithTcpChatPort() {
+        messageParser.messageArrived("10066122!CLIENT#Christian:(KouChat v1.4.0 Swing)[1753]{Linux}<40656>/40657\\",
+                                     "192.168.1.1");
+
+        verify(responder).clientInfo(10066122, "KouChat v1.4.0 Swing", 1753,
+                                     "Linux", 40656, 40657);
+    }
+
+    @Test
+    public void messageArrivedShouldLogIfTcpChatPortCouldNotBeParsed() {
+        messageParser.messageArrived("10066122!CLIENT#Christian:(KouChat v1.4.0 Swing)[1753]{Linux}<40656>/b40657\\",
+                                     "192.168.1.1");
+
+        final ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
+
+        verify(log).log(eq(Level.WARNING),
+                        eq("Failed to parse tcp chat port. " +
+                                   "message=10066122!CLIENT#Christian:(KouChat v1.4.0 Swing)[1753]{Linux}<40656>/b40657\\, " +
+                                   "ipAddress=192.168.1.1"),
+                        exceptionCaptor.capture());
+
+        checkException(exceptionCaptor, NumberFormatException.class, "For input string: \"b40657\"");
     }
 
     @Test

@@ -28,6 +28,8 @@ import java.util.List;
 
 import net.usikkert.kouchat.misc.User;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * This class keeps a list of all the ongoing file transfers.
  *
@@ -83,6 +85,7 @@ public class TransferList {
      * @param fileHash The file's hash code.
      * @return The file sender object, or <code>null</code> if none was found.
      */
+    @Nullable
     public FileSender getFileSender(final User user, final String fileName, final int fileHash) {
         FileSender fileSender = null;
 
@@ -103,6 +106,7 @@ public class TransferList {
      * @param fileName The name of the file being sent.
      * @return The file sender object, or <code>null</code> if none was found.
      */
+    @Nullable
     public FileSender getFileSender(final User user, final String fileName) {
         FileSender fileSender = null;
 
@@ -123,6 +127,7 @@ public class TransferList {
      * @param id The file transfer id of the file being sent.
      * @return The file sender object, or <code>null</code> if none was found.
      */
+    @Nullable
     public FileSender getFileSender(final User user, final int id) {
         for (final FileSender fs : senders) {
             if (fs.getUser() == user && fs.getId() == id) {
@@ -215,6 +220,7 @@ public class TransferList {
      * @param fileName The name of the file being received.
      * @return The file receiver object, or <code>null</code> if none was found.
      */
+    @Nullable
     public FileReceiver getFileReceiver(final User user, final String fileName) {
         FileReceiver fileReceiver = null;
 
@@ -235,6 +241,7 @@ public class TransferList {
      * @param id TThe file transfer id of the file being received.
      * @return The file receiver object, or <code>null</code> if none was found.
      */
+    @Nullable
     public FileReceiver getFileReceiver(final User user, final int id) {
         for (final FileReceiver fr : receivers) {
             if (fr.getUser() == user && fr.getId() == id) {
@@ -268,6 +275,7 @@ public class TransferList {
      * @return Either a file receiver, a file sender, or <code>null</code>
      * if none of them was found.
      */
+    @Nullable
     public FileTransfer getFileTransfer(final User user, final String fileName) {
         final FileReceiver fileReceiver = getFileReceiver(user, fileName);
 
@@ -286,6 +294,7 @@ public class TransferList {
      * @return Either a file receiver, a file sender, or <code>null</code>
      * if none of them was found.
      */
+    @Nullable
     public FileTransfer getFileTransfer(final User user, final int id) {
         final FileReceiver fileReceiver = getFileReceiver(user, id);
 

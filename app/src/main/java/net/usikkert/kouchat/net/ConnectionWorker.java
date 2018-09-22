@@ -33,6 +33,8 @@ import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Validate;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * This thread is responsible for keeping the application connected
  * to the network.
@@ -62,9 +64,11 @@ public class ConnectionWorker implements Runnable {
     private boolean networkUp;
 
     /** The current network interface. */
+    @Nullable
     private NetworkInterface networkInterface;
 
     /** The working thread. */
+    @Nullable
     private Thread worker;
 
     /** A list of connection listeners. */
@@ -279,6 +283,7 @@ public class ConnectionWorker implements Runnable {
      * @return The network interface found, or <code>null</code>.
      * @see NetworkUtils#isUsable(NetworkInterface)
      */
+    @Nullable
     private NetworkInterface selectNetworkInterface() {
         final NetworkInterface firstUsableNetIf = networkUtils.findFirstUsableNetworkInterface();
 

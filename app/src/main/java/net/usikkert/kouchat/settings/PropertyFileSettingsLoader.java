@@ -68,6 +68,7 @@ public class PropertyFileSettingsLoader {
             setSysColor(settings, fileContents);
             setLogging(settings, fileContents);
             setBalloons(settings, fileContents);
+            setSystemTray(settings, fileContents);
             setBrowser(settings, fileContents);
             setLookAndFeel(settings, fileContents);
             setNetworkInterface(settings, fileContents);
@@ -119,6 +120,13 @@ public class PropertyFileSettingsLoader {
 
     private void setBalloons(final Settings settings, final Properties fileContents) {
         settings.setBalloons(Boolean.valueOf(fileContents.getProperty(BALLOONS.getKey())));
+    }
+
+    private void setSystemTray(final Settings settings, final Properties fileContents) {
+        // Defaults to true
+        if (fileContents.getProperty(SYSTEM_TRAY.getKey()) != null) {
+            settings.setSystemTray(Boolean.valueOf(fileContents.getProperty(SYSTEM_TRAY.getKey())));
+        }
     }
 
     private void setBrowser(final Settings settings, final Properties fileContents) {

@@ -25,6 +25,8 @@ package net.usikkert.kouchat.misc;
 import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.Validate;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * This is the controller responsible for the user list.
  *
@@ -58,6 +60,7 @@ public class UserListController {
      * @param code The unique code of the user to get.
      * @return The user, or <code>null</code> if the user was not found.
      */
+    @Nullable
     public User getUser(final int code) {
         User user = null;
 
@@ -79,6 +82,7 @@ public class UserListController {
      * @param nickname The unique nick name of the user to get.
      * @return The user, or <code>null</code> if the user was not found.
      */
+    @Nullable
     public User getUser(final String nickname) {
         User user = null;
 

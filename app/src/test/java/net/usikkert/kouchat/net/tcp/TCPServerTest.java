@@ -20,53 +20,48 @@
  *   If not, see <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
-package net.usikkert.kouchat.settings;
+package net.usikkert.kouchat.net.tcp;
 
-import net.usikkert.kouchat.event.SettingsListener;
+import static org.mockito.Mockito.mock;
 
-import org.jetbrains.annotations.NonNls;
+import net.usikkert.kouchat.junit.ExpectedException;
+import net.usikkert.kouchat.misc.ErrorHandler;
+import net.usikkert.kouchat.settings.Settings;
+
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
- * An "enum" representing the different types of settings that can be changed.
- *
- * <p>Contains only the settings that can be used with {@link SettingsListener}.</p>
- *
- * <p>This is not a real enum because of the need to support inheritance. Use {@link #equals(Object)}
- * instead of <code>==</code> for comparison, to avoid issues with class loaders and serialization.</p>
+ * Test of {@link TCPServer}.
  *
  * @author Christian Ihle
  */
-public class Setting {
+public class TCPServerTest {
 
-    /** Maps to {@link Settings#isLogging()}. */
-    public static final Setting LOGGING = new Setting("LOGGING");
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
-    /** Maps to {@link Settings#isSystemTray()}. */
-    public static final Setting SYSTEM_TRAY = new Setting("SYSTEM_TRAY");
+    @Test
+    public void constructorShouldThrowExceptionIfSettingsIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Settings can not be null");
 
-    private final String name; // Must be unique
-
-    protected Setting(@NonNls final String name) {
-        this.name = name;
+        new TCPServer(null, mock(ErrorHandler.class), mock(TCPConnectionListener.class));
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
+    @Test
+    public void constructorShouldThrowExceptionIfErrorHandlerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Error handler can not be null");
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final Setting setting = (Setting) o;
-
-        return name.equals(setting.name);
+        new TCPServer(mock(Settings.class), null, mock(TCPConnectionListener.class));
     }
 
-    @Override
-    public int hashCode() {
-        return name.hashCode();
+    @Test
+    public void constructorShouldThrowExceptionIfTCPConnectionListenerIsNull() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("TCP connection listener can not be null");
+
+        new TCPServer(mock(Settings.class), mock(ErrorHandler.class), null);
     }
 }

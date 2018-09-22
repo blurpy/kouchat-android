@@ -265,6 +265,8 @@ public class MessageParser implements ReceiverListener {
                     final int rightCurly = msg.indexOf("}");
                     final int lessThan = msg.indexOf("<");
                     final int greaterThan = msg.indexOf(">");
+                    final int slash = msg.indexOf("/");
+                    final int backslash = msg.indexOf("\\");
 
                     final String client = msg.substring(leftPara + 1, rightPara);
                     final long timeSinceLogon = Long.parseLong(msg.substring(leftBracket + 1, rightBracket));
@@ -280,7 +282,19 @@ public class MessageParser implements ReceiverListener {
                         LOG.log(Level.WARNING, "Failed to parse private chat port. message=" + message + ", ipAddress=" + ipAddress, e);
                     }
 
-                    responder.clientInfo(msgCode, client, timeSinceLogon, operatingSystem, privateChatPort);
+                    int tcpChatPort = 0;
+
+                    if (slash != -1 && backslash != -1) {
+                        try {
+                            tcpChatPort = Integer.parseInt(msg.substring(slash + 1, backslash));
+                        }
+
+                        catch (final NumberFormatException e) {
+                            LOG.log(Level.WARNING, "Failed to parse tcp chat port. message=" + message + ", ipAddress=" + ipAddress, e);
+                        }
+                    }
+
+                    responder.clientInfo(msgCode, client, timeSinceLogon, operatingSystem, privateChatPort, tcpChatPort);
                 }
             }
 

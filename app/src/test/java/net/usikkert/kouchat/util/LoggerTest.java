@@ -174,4 +174,43 @@ public class LoggerTest {
 
         verify(julLogger, never()).log(any(LogRecord.class));
     }
+
+    @Test
+    public void warningShouldLogMessageWithLevelWarning() {
+        when(julLogger.isLoggable(Level.WARNING)).thenReturn(true);
+
+        logger.warning("message to %s", "you");
+
+        verify(julLogger).log(logCaptor.capture());
+
+        final LogRecord logRecord = logCaptor.getValue();
+        assertEquals("message to you", logRecord.getMessage());
+        assertEquals(Level.WARNING, logRecord.getLevel());
+    }
+
+    @Test
+    public void infoShouldLogMessageWithLevelInfo() {
+        when(julLogger.isLoggable(Level.INFO)).thenReturn(true);
+
+        logger.info("message to %s", "you");
+
+        verify(julLogger).log(logCaptor.capture());
+
+        final LogRecord logRecord = logCaptor.getValue();
+        assertEquals("message to you", logRecord.getMessage());
+        assertEquals(Level.INFO, logRecord.getLevel());
+    }
+
+    @Test
+    public void fineShouldLogMessageWithLevelFine() {
+        when(julLogger.isLoggable(Level.FINE)).thenReturn(true);
+
+        logger.fine("message to %s", "you");
+
+        verify(julLogger).log(logCaptor.capture());
+
+        final LogRecord logRecord = logCaptor.getValue();
+        assertEquals("message to you", logRecord.getMessage());
+        assertEquals(Level.FINE, logRecord.getLevel());
+    }
 }

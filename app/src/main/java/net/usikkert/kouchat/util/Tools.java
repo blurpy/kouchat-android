@@ -36,6 +36,8 @@ import java.util.regex.Pattern;
 
 import net.usikkert.kouchat.Constants;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * A collection of static utility methods.
  *
@@ -91,7 +93,7 @@ public final class Tools {
      * @return A converted date.
      * @see SimpleDateFormat
      */
-    public static String dateToString(final Date d, final String format) {
+    public static String dateToString(@Nullable final Date d, final String format) {
         String date = "";
         final SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.ENGLISH);
 
@@ -126,7 +128,7 @@ public final class Tools {
      * @param nick The nick to check.
      * @return If the nick is valid.
      */
-    public static boolean isValidNick(final String nick) {
+    public static boolean isValidNick(@Nullable final String nick) {
         if (nick == null) {
             return false;
         }
@@ -196,7 +198,8 @@ public final class Tools {
      * @param word The word to capitalize the first letter of.
      * @return The modified word.
      */
-    public static String capitalizeFirstLetter(final String word) {
+    @Nullable
+    public static String capitalizeFirstLetter(@Nullable final String word) {
         if (word == null) {
             return null;
         }
@@ -215,7 +218,8 @@ public final class Tools {
      * @param length The max number of characters for the word.
      * @return The modified word.
      */
-    public static String shorten(final String word, final int length) {
+    @Nullable
+    public static String shorten(@Nullable final String word, final int length) {
         if (word == null) {
             return null;
         }
@@ -237,7 +241,8 @@ public final class Tools {
      * @param filename The file name to get the extension from.
      * @return The file extension, or <code>null</code> if file name is <code>null</code>.
      */
-    public static String getFileExtension(final String filename) {
+    @Nullable
+    public static String getFileExtension(@Nullable final String filename) {
         if (filename == null) {
             return null;
         }
@@ -258,7 +263,8 @@ public final class Tools {
      * @param filename The file name to get the base name from.
      * @return The base name, or <code>null</code> if file name is <code>null</code>.
      */
-    public static String getFileBaseName(final String filename) {
+    @Nullable
+    public static String getFileBaseName(@Nullable final String filename) {
         if (filename == null) {
             return null;
         }
@@ -323,7 +329,7 @@ public final class Tools {
      * @param string The string to check.
      * @return If the string is empty.
      */
-    public static boolean isEmpty(final String string) {
+    public static boolean isEmpty(@Nullable final String string) {
         return string == null || string.trim().isEmpty();
     }
 
@@ -391,7 +397,7 @@ public final class Tools {
      * @param string The string to check.
      * @return An empty string if the input is null, or the input string if not.
      */
-    public static String emptyIfNull(final String string) {
+    public static String emptyIfNull(@Nullable final String string) {
         if (string == null) {
             return "";
         }

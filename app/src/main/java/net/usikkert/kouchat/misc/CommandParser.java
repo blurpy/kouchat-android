@@ -41,6 +41,7 @@ import net.usikkert.kouchat.util.Tools;
 import net.usikkert.kouchat.util.Validate;
 
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Parses and executes commands. A command starts with a slash, and can
@@ -242,6 +243,11 @@ public class CommandParser {
                 }
 
                 info += "\n" + coreMessages.getMessage("core.command.whois.client", user.getClient());
+
+                if (user.isTcpEnabled()) {
+                    info += " " + coreMessages.getMessage("core.command.whois.tcp");
+                }
+
                 info += "\n" + coreMessages.getMessage("core.command.whois.operatingSystem", user.getOperatingSystem());
                 info += "\n" + coreMessages.getMessage("core.command.whois.online",
                                                        dateTools.howLongFromNow(user.getLogonTime()));
@@ -490,6 +496,7 @@ public class CommandParser {
         cancelFileTransfer(fileTransfer);
     }
 
+    @Nullable
     private Integer parseFileTransferId(final String argument) {
         try {
             return Integer.parseInt(argument);

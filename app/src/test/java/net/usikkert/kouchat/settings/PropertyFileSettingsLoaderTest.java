@@ -97,11 +97,12 @@ public class PropertyFileSettingsLoaderTest {
         properties.setProperty(LOGGING.getKey(), "true");
         properties.setProperty(SMILEYS.getKey(), "false");
         properties.setProperty(BALLOONS.getKey(), "true");
+        properties.setProperty(SYSTEM_TRAY.getKey(), "false");
         properties.setProperty(BROWSER.getKey(), "opera");
         properties.setProperty(LOOK_AND_FEEL.getKey(), "sega");
         properties.setProperty(NETWORK_INTERFACE.getKey(), "eth5");
 
-        assertEquals(10, properties.size());
+        assertEquals(11, properties.size());
 
         when(propertyTools.loadProperties(anyString())).thenReturn(properties);
 
@@ -116,6 +117,7 @@ public class PropertyFileSettingsLoaderTest {
         assertTrue(settings.isLogging());
         assertFalse(settings.isSmileys());
         assertTrue(settings.isBalloons());
+        assertFalse(settings.isSystemTray());
 
         assertEquals("opera", settings.getBrowser());
         assertEquals("sega", settings.getLookAndFeel());
@@ -130,6 +132,7 @@ public class PropertyFileSettingsLoaderTest {
         properties.setProperty(LOGGING.getKey(), "nah");
         properties.setProperty(SMILEYS.getKey(), "nope");
         properties.setProperty(BALLOONS.getKey(), "yey");
+        properties.setProperty(SYSTEM_TRAY.getKey(), "wow");
 
         when(propertyTools.loadProperties(anyString())).thenReturn(properties);
 
@@ -139,6 +142,7 @@ public class PropertyFileSettingsLoaderTest {
         assertFalse(settings.isLogging());
         assertFalse(settings.isSmileys());
         assertFalse(settings.isBalloons());
+        assertFalse(settings.isSystemTray());
     }
 
     @Test

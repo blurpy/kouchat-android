@@ -36,6 +36,7 @@ public enum PropertyFileSettings {
     SYS_COLOR("syscolor"),
     LOGGING("logging"),
     BALLOONS("balloons"),
+    SYSTEM_TRAY("systemTray"),
     BROWSER("browser"),
     LOOK_AND_FEEL("lookAndFeel"),
     NETWORK_INTERFACE("networkInterface"),

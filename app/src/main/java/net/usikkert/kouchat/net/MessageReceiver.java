@@ -22,6 +22,8 @@
 
 package net.usikkert.kouchat.net;
 
+import static net.usikkert.kouchat.net.NetworkUtils.IPTOS_RELIABILITY;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -35,6 +37,8 @@ import net.usikkert.kouchat.event.ReceiverListener;
 import net.usikkert.kouchat.misc.ErrorHandler;
 import net.usikkert.kouchat.util.Validate;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * This is the thread that listens for multicast messages from
  * the network, and notifies any listeners when messages arrive.
@@ -47,6 +51,7 @@ public class MessageReceiver implements Runnable {
     private static final Logger LOG = Logger.getLogger(MessageReceiver.class.getName());
 
     /** The multicast socket used for receiving messages. */
+    @Nullable
     private MulticastSocket mcSocket;
 
     /** The inetaddress object with the multicast ip address to receive messages from. */
@@ -161,7 +166,7 @@ public class MessageReceiver implements Runnable {
      * @param networkInterface The network interface to use, or <code>null</code>.
      * @return If connected to the network or not.
      */
-    public synchronized boolean startReceiver(final NetworkInterface networkInterface) {
+    public synchronized boolean startReceiver(@Nullable final NetworkInterface networkInterface) {
         LOG.log(Level.FINE, "Connecting to " + address.getHostAddress() + ":" + port + " on " + networkInterface);
 
         try {
@@ -177,6 +182,8 @@ public class MessageReceiver implements Runnable {
                 if (networkInterface != null) {
                     mcSocket.setNetworkInterface(networkInterface);
                 }
+
+                mcSocket.setTrafficClass(IPTOS_RELIABILITY);
 
                 mcSocket.joinGroup(address);
                 LOG.log(Level.FINE, "Connected to " + mcSocket.getNetworkInterface());

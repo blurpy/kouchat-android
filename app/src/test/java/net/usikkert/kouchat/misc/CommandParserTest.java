@@ -770,6 +770,28 @@ public class CommandParserTest {
     }
 
     @Test
+    public void whoisShouldShowUserDetailsForUserWithTCP() {
+        final User amy = new User("Amy", 123);
+        amy.setClient("JUnit");
+        amy.setOperatingSystem("DOS");
+        amy.setIpAddress("10.0.0.81");
+        amy.setHostName("amy.com");
+        amy.setTcpEnabled(true);
+
+        when(controller.getUser("amy")).thenReturn(amy);
+        when(dateTools.howLongFromNow(anyLong())).thenReturn("A year");
+
+        parser.parse("/whois amy");
+
+        verify(messageController).showSystemMessage("/whois - Amy:\n" +
+                                                            "IP address: 10.0.0.81\n" +
+                                                            "Host name: amy.com\n" +
+                                                            "Client: JUnit TCP\n" +
+                                                            "Operating System: DOS\n" +
+                                                            "Online: A year");
+    }
+
+    @Test
     public void whoisShouldShowUserDetailsForUserWhoIsAway() {
         final User amy = new User("Amy", 123);
         amy.setClient("JUnit");

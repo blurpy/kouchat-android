@@ -173,6 +173,7 @@ public class DefaultMessageResponder implements MessageResponder {
             newUser.setNick("" + newUser.getCode());
         }
 
+        wList.removeWaitingUser(newUser.getCode());
         controller.getUserList().add(newUser);
         msgController.showSystemMessage(newUser.getNick() + " logged on from " + newUser.getIpAddress());
     }
@@ -198,6 +199,7 @@ public class DefaultMessageResponder implements MessageResponder {
             newUser.setNick("" + newUser.getCode());
         }
 
+        wList.removeWaitingUser(newUser.getCode());
         controller.getUserList().add(newUser);
         msgController.showSystemMessage(newUser.getNick() + " showed up unexpectedly from " + newUser.getIpAddress());
     }
@@ -253,15 +255,12 @@ public class DefaultMessageResponder implements MessageResponder {
         if (controller.isNewUser(user.getCode())) {
             // Usually this happens when someone returns from a timeout
             if (chatState.isLogonCompleted()) {
-                if (wList.isWaitingUser(user.getCode())) {
-                    wList.removeWaitingUser(user.getCode());
-                }
-
                 userShowedUp(user);
             }
 
             // This should ONLY happen during logon
             else {
+                wList.removeWaitingUser(user.getCode());
                 controller.getUserList().add(user);
             }
         }
@@ -608,10 +607,11 @@ public class DefaultMessageResponder implements MessageResponder {
      * @param timeSinceLogon Number of milliseconds since the user logged on.
      * @param operatingSystem The user's operating system.
      * @param privateChatPort The port to use for sending private chat messages to this user.
+     * @param tcpChatPort The port to use for sending chat messages to this user using tcp.
      */
     @Override
     public void clientInfo(final int userCode, final String client, final long timeSinceLogon,
-                           final String operatingSystem, final int privateChatPort) {
+                           final String operatingSystem, final int privateChatPort, final int tcpChatPort) {
         final User user = controller.getUser(userCode);
 
         if (user != null) {
@@ -619,6 +619,7 @@ public class DefaultMessageResponder implements MessageResponder {
             user.setLogonTime(System.currentTimeMillis() - timeSinceLogon);
             user.setOperatingSystem(operatingSystem);
             user.setPrivateChatPort(privateChatPort);
+            user.setTcpChatPort(tcpChatPort);
         }
 
         else {
