@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "net.usikkert.kouchat.android"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 17
         versionName "1.5.0"
     }
@@ -36,18 +36,18 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:preference-v7:27.1.1'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:preference-v7:28.0.0'
     implementation 'com.larswerkman:HoloColorPicker:1.5'
     implementation 'org.jetbrains:annotations:16.0.2'
     implementation 'org.apache.commons:commons-collections4:4.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.13.0'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
     testImplementation 'com.github.stefanbirkner:system-rules:1.18.0'
-    testImplementation 'org.powermock:powermock-module-junit4:2.0.0-beta.5'
-    testImplementation 'org.powermock:powermock-api-mockito2:2.0.0-beta.5'
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.2'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.2'
     testImplementation 'joda-time:joda-time:2.10'
 
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.6.3'
