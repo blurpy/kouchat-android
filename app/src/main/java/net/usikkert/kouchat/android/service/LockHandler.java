@@ -52,8 +52,8 @@ import android.os.PowerManager;
  */
 public class LockHandler implements NetworkConnectionListener, SettingsListener {
 
-    public static final String WAKE_LOCK = "KouChat wake lock";
-    public static final String WIFI_LOCK = "KouChat wifi lock";
+    public static final String WAKE_LOCK = "KouChat: wake lock";
+    public static final String WIFI_LOCK = "KouChat: wifi lock";
     public static final String MULTICAST_LOCK = "KouChat multicast lock";
 
     private final PowerManager.WakeLock wakeLock;
