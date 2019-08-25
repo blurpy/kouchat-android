@@ -32,6 +32,7 @@ import net.usikkert.kouchat.misc.User;
 import net.usikkert.kouchat.settings.Settings;
 import net.usikkert.kouchat.util.TestUtils;
 
+import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -71,7 +72,8 @@ public class MessageParserTest {
                         eq("Failed to parse message. message=Error, ipAddress=192.168.1.1"),
                         exceptionCaptor.capture());
 
-        checkException(exceptionCaptor, StringIndexOutOfBoundsException.class, "String index out of range: -1");
+        // String index out of range: -1 - but different on JDK 11
+        checkException(exceptionCaptor, StringIndexOutOfBoundsException.class, null);
     }
 
     @Test
@@ -156,10 +158,13 @@ public class MessageParserTest {
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     private void checkException(final ArgumentCaptor<Exception> exceptionCaptor,
                                 final Class<? extends Exception> expectedException,
-                                final String expectedMessage) {
+                                @Nullable final String expectedMessage) {
         final Exception exception = exceptionCaptor.getValue();
 
         assertEquals(expectedException, exception.getClass());
-        assertEquals(expectedMessage, exception.getMessage());
+
+        if (expectedMessage != null) {
+            assertEquals(expectedMessage, exception.getMessage());
+        }
     }
 }

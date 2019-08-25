@@ -271,7 +271,7 @@ public class SortedUserListTest {
     @Test
     public void setShouldFailIfTryingToReplaceUserThatDoesNotExist() {
         expectedException.expect(IndexOutOfBoundsException.class);
-        expectedException.expectMessage("Index: 0, Size: 0");
+//        expectedException.expectMessage("Index: 0, Size: 0"); // Different on JDK 11
 
         userList.set(0, new User("Test1", 10));
     }
