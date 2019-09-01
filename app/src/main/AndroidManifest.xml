@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="net.usikkert.kouchat.android">
 
   <uses-permission android:name="android.permission.INTERNET"/>
@@ -16,7 +17,8 @@
                android:name=".app.KouChatApp"
                android:icon="@mipmap/ic_launcher"
                android:theme="@style/Theme.KouChat.Light"
-               android:allowBackup="true">
+               android:allowBackup="true"
+               tools:ignore="GoogleAppIndexingWarning">
 
     <!-- Sets launchMode to singleTask to make sure quit works like expected after using the private chat.
          If not set, then using quit from the main chat will open the last private chat,
