@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+  <string name="app_name">KouChat</string>
+  <string name="menu">Menu</string>
+  <string name="quit">Sair</string>
+  <string name="about">Sobre</string>
+  <string name="settings">Configurações</string>
+  <string name="about_text">
+    \u0020Copyright 2006-2019 por Christian Ihle\n\n
+    contact@kouchat.net\n
+    https://www.kouchat.net\n
+    https://www.facebook.com/kouchatapp\n\n
+    Fonte disponível sob a licença GNU LGPLv3:\n
+    https://www.gnu.org/licenses/lgpl-3.0.txt
+  </string>
+  <string name="settings_nick_name_dialog_message">
+    Um nome pode ter entre 1 e 10 caracteres. Os caracteres permitidos são:\n“a-z”, “0-9”, “-” and “_”.
+  </string>
+  <string name="settings_nick_name_title">Definir um nome</string>
+  <string name="settings_nick_name_key">nome</string>
+  <string name="settings_nick_name_summary">Defina seu nome pessoal para que outros possam identificá-lo no chat.</string>
+  <string name="settings_wake_lock_key">manter_ativo</string>
+  <string name="settings_wake_lock_title">Habilitar Manter Ativo</string>
+  <string name="settings_wake_lock_summary">
+    Habilite Manter Ativo para evitar que o dispositivo suspenda enquanto o KouChat estiver funcionando. Pode ajudar com problemas de tempo esgotado.
+  </string>
+  <string name="settings_own_color_key">cor_própria</string>
+  <string name="settings_own_color_title">Definir a cor da mensagem</string>
+  <string name="settings_own_color_summary">Defina a cor de suas mensagens.</string>
+  <string name="settings_sys_color_key">sis_cor</string>
+  <string name="settings_sys_color_title">Definir cor da mensagem de informação</string>
+  <string name="settings_sys_color_summary">Defina a cor das mensagens de informação.</string>
+  <string name="settings_notification_open_external_title">Configurar notificações</string>
+  <string name="settings_notification_open_external_summary">Abre a tela de configurações fornecidas pelo sistema.</string>
+  <string name="settings_notification_title">Notificações</string>
+  <string name="settings_notification_light_key">luz_de_notificação</string>
+  <string name="settings_notification_light_title">Habilitar a luz</string>
+  <string name="settings_notification_sound_key">som_de_notificação</string>
+  <string name="settings_notification_sound_title">Habilitar o som</string>
+  <string name="settings_notification_vibration_key">notificação_de_vibração</string>
+  <string name="settings_notification_vibration_title">Habilitar a vibração</string>
+  <string name="settings_title">Configurações</string>
+  <string name="private_chat_title">Usuário não encontrado</string>
+  <string name="error_nick_name_invalid">Nome inválido</string>
+  <string name="error_nick_name_in_use">O nome já está em uso por outra pessoa.</string>
+  <string name="message_your_nick_name_changed">Você mudou seu nome para %s</string>
+  <string name="notification_startup">KouChat está em funcionamento</string>
+  <string name="notification_running">Em funcionamento</string>
+  <string name="notification_new_message">Novas mensagens não lidas</string>
+  <string name="notification_new_message_ticker">Nova mensagem de %1$s</string>
+  <string name="notification_new_private_message">Novas mensagens privadas não lidas</string>
+  <string name="notification_new_private_message_ticker">Nova mensagem privada de %1$s</string>
+  <string name="notification_main_chat">Chat principal</string>
+  <string name="notification_new_file_transfer">Novo pedido de transferência de arquivo</string>
+  <string name="notification_file_transfer_from">Transferência de arquivos de %1$s</string>
+  <string name="notification_file_transfer_to">Transferência de arquivos para %1$s</string>
+  <string name="notification_waiting">Aguardando</string>
+  <string name="notification_connecting">Conectando</string>
+  <string name="notification_receiving">Recebendo</string>
+  <string name="notification_sending">Enviando</string>
+  <string name="notification_completed">Concluído</string>
+  <string name="notification_failed">Transferência falhou</string>
+  <string name="notification_receiving_file_from">Recebendo %1$s de %2$s</string>
+
+  <string name="notifications_channel_id_service">serviço</string>
+  <string name="notifications_channel_name_service">Serviço</string>
+  <string name="notifications_channel_description_service">Notificação é exibida quando o aplicativo está em funcionamento.</string>
+
+  <string name="notifications_channel_id_file_transfers">transferência_de_arquivos</string>
+  <string name="notifications_channel_name_file_transfers">Transferência de arquivos</string>
+  <string name="notifications_channel_description_file_transfers">Notificações sobre o envio e recebimento de arquivos.</string>
+
+  <string name="notifications_channel_id_main_chat_messages">mensagens_de_chat_principal</string>
+  <string name="notifications_channel_name_main_chat_messages">Mensagens de chat principal</string>
+  <string name="notifications_channel_description_main_chat_messages">Notificações sobre novas mensagens de chat principal.</string>
+
+  <string name="notifications_channel_id_main_chat_away_messages">mensagens_de_chat_principal_indisp.</string>
+  <string name="notifications_channel_name_main_chat_away_messages">Mensagens enquanto indisponível</string>
+  <string name="notifications_channel_description_main_chat_away_messages">Notificações sobre novas mensagens de chat principal, enquanto indisponível.</string>
+
+  <string name="notifications_channel_id_private_chat_messages">mensagens_de_chat_privado</string>
+  <string name="notifications_channel_name_private_chat_messages">Mensagens de chat privado</string>
+  <string name="notifications_channel_description_private_chat_messages">Notificações sobre novas mensagens de chat privado.</string>
+
+  <string name="cancel">Cancelar</string>
+  <string name="send_file_info">Nome do arquivo: %1$s \nTamanho do arquivo: %2$s</string>
+  <string name="send_file_select_user">Por favor selecione o usuário para quem o arquivo será enviado.</string>
+  <string name="send_file_no_users">-- Nenhum usuário conectado.</string>
+  <string name="send_file_no_file">Não foi possível localizar o arquivo a ser enviado.</string>
+  <string name="dialog_title_file_transfer_request">Pedido de transferência de arquivo</string>
+  <string name="dialog_receive_file_accept_question">%1$s está tentando enviar o arquivo ‘%2$s’ (%3$s). Você quer aceitar a transferência de arquivo?</string>
+  <string name="dialog_receive_file_not_found">Não foi possível encontrar o pedido de transferência do arquivo especificado.</string>
+  <string name="receive_file_permission_denied">Permissão para salvar o arquivo negada. Recusando.</string>
+  <string name="accept">Aceitar</string>
+  <string name="reject">Recusar</string>
+  <string name="topic">Tema</string>
+  <string name="topic_dialog_message">Definir ou alterar o tema atual.</string>
+  <string name="topic_dialog_enter_topic_hint">Digitar o tema</string>
+  <string name="away">Indisponível</string>
+  <string name="go_away_dialog_message">Ir embora?</string>
+  <string name="go_away_dialog_enter_away_message_hint">Digite uma mensagem a ser exibida</string>
+  <string name="come_back_dialog_message">Voltar de \'%1$s\'?</string>
+
+</resources>
